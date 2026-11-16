@@ -16,12 +16,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A rugged compact cyberdeck BACKUP DRIVE module, thick dark rectangular solid-state cartridge with two broad connector banks, on an antistatic electronics mat beside its host deck. Restrained cobalt status light, closed casing and functional seams, no screen code. Nighttime netrunner repair room.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7934-cover-v1.png",
-      "final": "final/mod-7934-cover.jpg"
+      "final": "final/mod-7934-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0d4be05d-eded-4a7a-b69b-dd53a4e9f1be.png",
+      "originalSha256": "95af92ef882d785456fcb9c745bf9af8b1dae81cde8266a71e0a75bb5911c867",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f9632d5b30dfde3252b4c9dcebcaf89a5d9a8ca10fa4728d12424381b0a90461",
+      "bytes": 318245,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Paired grip/jump/skate/web options, distinct leg materials and tiny talon verified. Cyberdeck modules have separate functional forms. No text/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50049,
+        "objectKey": "system-item-media/v1/items/7934/cover/f9632d5b30dfde3252b4c9dcebcaf89a5d9a8ca10fa4728d12424381b0a90461.jpg",
+        "fileSize": 318245
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7934/cover/f9632d5b30dfde3252b4c9dcebcaf89a5d9a8ca10fa4728d12424381b0a90461.jpg"
     },
     {
       "key": "mod-7940-cover",
@@ -33,12 +55,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A biometric DNA-LOCK module fitted flush into a rugged cyberdeck casing, an oval fingerprint sensor and small iris-scanning lens. Mature adult hand resting near sensor without procedural detail. No blood sample, code, bypass scene or lock diagram. Warm workbench with cool city reflections.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7940-cover-v1.png",
-      "final": "final/mod-7940-cover.jpg"
+      "final": "final/mod-7940-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e033a3b4-4be2-46a5-8348-db6d7c3e6dd8.png",
+      "originalSha256": "3bcd7e9c3d432f513e6ce1a186fc9bab4aba01068255e49c1f508ad495df4d11",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "0ebdbf2ab71f161da49fe47764daaee151f99b41562726d420dcda1739935b22",
+      "bytes": 385447,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Paired grip/jump/skate/web options, distinct leg materials and tiny talon verified. Cyberdeck modules have separate functional forms. No text/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50050,
+        "objectKey": "system-item-media/v1/items/7940/cover/0ebdbf2ab71f161da49fe47764daaee151f99b41562726d420dcda1739935b22.jpg",
+        "fileSize": 385447
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7940/cover/0ebdbf2ab71f161da49fe47764daaee151f99b41562726d420dcda1739935b22.jpg"
     },
     {
       "key": "mod-7963-cover",
@@ -50,12 +94,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A cyberdeck HARDENED CIRCUITRY module, compact electronics block protected by a grounded metal shell with fine copper shielding braid, closed protective housings and sealed ports. Displayed on dark antistatic mat. No lightning magic, circuit schematic or readable chips.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7963-cover-v1.png",
-      "final": "final/mod-7963-cover.jpg"
+      "final": "final/mod-7963-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-bbef3ec1-9673-4d91-8371-3be6858ca1dd.png",
+      "originalSha256": "b989a0f330cac63cceab0684ae674c68f0fdfda587ff1f9b4108c5e273f1d20c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "471a24c2814778606828b9354b5da7a1915bcee018ca1cdda5db1e84bf137856",
+      "bytes": 388278,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Paired grip/jump/skate/web options, distinct leg materials and tiny talon verified. Cyberdeck modules have separate functional forms. No text/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50051,
+        "objectKey": "system-item-media/v1/items/7963/cover/471a24c2814778606828b9354b5da7a1915bcee018ca1cdda5db1e84bf137856.jpg",
+        "fileSize": 388278
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7963/cover/471a24c2814778606828b9354b5da7a1915bcee018ca1cdda5db1e84bf137856.jpg"
     },
     {
       "key": "mod-7968-cover",
@@ -67,12 +133,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A small cyberdeck insulated-wiring bundle: thick heat-resistant woven sleeves around short internal cables, neat high-temperature connectors, beside a rugged deck on a repair mat. Material-focused black ceramic, burgundy fiber and steel, no flames or instructions.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7968-cover-v1.png",
-      "final": "final/mod-7968-cover.jpg"
+      "final": "final/mod-7968-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f7bc6807-01ac-4fd1-aec3-65e59f4b9491.png",
+      "originalSha256": "6b43a0b9d9a5b83d91bfbfa6bde564fb25aee361a6548d6827201b9f72c7dff1",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "dbc137f0c107c3676259ce0a4aa87219e9da5cbc7182a7a7acbcb3d5d4e6e15d",
+      "bytes": 364736,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Paired grip/jump/skate/web options, distinct leg materials and tiny talon verified. Cyberdeck modules have separate functional forms. No text/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50052,
+        "objectKey": "system-item-media/v1/items/7968/cover/dbc137f0c107c3676259ce0a4aa87219e9da5cbc7182a7a7acbcb3d5d4e6e15d.jpg",
+        "fileSize": 364736
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7968/cover/dbc137f0c107c3676259ce0a4aa87219e9da5cbc7182a7a7acbcb3d5d4e6e15d.jpg"
     },
     {
       "key": "mod-7969-cover",
@@ -84,12 +172,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A cyberdeck KRASH-BARRIER module, sturdy two-section signal-buffer hardware cartridge with two protected connector banks and a tiny steady amber status light. On a netrunner's service tray, functional enclosed electronic design, no magical wall or virtual monster, no code or labels.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7969-cover-v1.png",
-      "final": "final/mod-7969-cover.jpg"
+      "final": "final/mod-7969-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-088ee599-c60a-4665-99df-356be53a4ba4.png",
+      "originalSha256": "15ee7a2effa1938e49e12ea9e2217bb7a820a84935d06dab45872188686f0341",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "c1a68901cfe2fe3d0f35adedb9cf8696d10f08d0734b87747b735d582bbb4783",
+      "bytes": 355202,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Paired grip/jump/skate/web options, distinct leg materials and tiny talon verified. Cyberdeck modules have separate functional forms. No text/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50053,
+        "objectKey": "system-item-media/v1/items/7969/cover/c1a68901cfe2fe3d0f35adedb9cf8696d10f08d0734b87747b735d582bbb4783.jpg",
+        "fileSize": 355202
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7969/cover/c1a68901cfe2fe3d0f35adedb9cf8696d10f08d0734b87747b735d582bbb4783.jpg"
     },
     {
       "key": "mod-7975-cover",
@@ -101,12 +211,45 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A cyberdeck RANGE-UPGRADE module: compact folding antenna and protected signal amplifier fitted beside a rugged portable deck. All hardware visible on a worn electronics bench, cool teal edge light and warm desk lamp. No wireless hacking scene, network diagram or numbers.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7975-cover-v1.png",
-      "final": "final/mod-7975-cover.jpg"
+      "final": "final/mod-7975-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-adbf83a4-daff-4c8b-853f-d6862b859ae8.png",
+      "originalSha256": "2e91fc05cde9fddc4b32ddb5e500546acb6ef1a847e149157502b5f05f7694a0",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "88974f904f4ac1edc7b94791b3badc6abc8b4cc4ec5002b0a99146934f9b9258",
+      "bytes": 395566,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Paired grip/jump/skate/web options, distinct leg materials and tiny talon verified. Cyberdeck modules have separate functional forms. No text/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50054,
+        "objectKey": "system-item-media/v1/items/7975/cover/88974f904f4ac1edc7b94791b3badc6abc8b4cc4ec5002b0a99146934f9b9258.jpg",
+        "fileSize": 395566
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7975/cover/88974f904f4ac1edc7b94791b3badc6abc8b4cc4ec5002b0a99146934f9b9258.jpg"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T20:43:34.933Z",
+    "scenarios": 18,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-68\\live-qa.json"
+  }
 }

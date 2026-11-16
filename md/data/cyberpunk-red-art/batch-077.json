@@ -1,0 +1,255 @@
+{
+  "batch": 77,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-77",
+  "sourceAudit": "Live own media slots empty. Structured injuries from Core187–188 reviewed. Non-graphic examination/recovery scenes indicate location, no medical advice or icon changes.",
+  "assets": [
+    {
+      "key": "injury-7724-cover",
+      "target": {
+        "kind": "item",
+        "id": 7724,
+        "typeId": 25,
+        "name": "Повреждение мозга"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY mature detailed CEL-SHADED cyberpunk 2045 narrative illustration, WIDE PANORAMA 5:2 landscape. Fine variable ink line, broad painted light/shadow planes, reflected light, convincing adult anatomy, detailed fabric/medical equipment with soft lower-contrast setting. All defining faces, bodies, hands and equipment fully within the central panoramic composition. This is fictional game artwork, not a medical instruction chart. No labels, text, numbers, logos, UI overlays, photo or glossy 3D style. No blood, gore, open wounds, surgery, needles, exposed organs, severed parts or nudity. A mature adult sitting quietly during a neurological assessment, clinician nearby and a large softly glowing BRAIN scan behind them. Subtle tired/concentrating expression, whole head intact and natural, no exposed brain, blood or surgery, calm cyberpunk medical setting.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/injury-7724-cover-v1.png",
+      "final": "final/injury-7724-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4d58641c-8876-4a6e-a7f8-730c6db245f6.png",
+      "originalSha256": "472498751a779da16ea53a691f742161bf6ea257f9ea059c91966bb8c978569e",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "a7eefcb3fce7472d8d42de4fb48200f0158b14e490ed5e60b26a82f6c04ec935",
+      "bytes": 185104,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final 5:2 panoramas inspected: readable injury location through supports, clinical scans and rehabilitation, intact adult faces/hands, no gore or procedural scenes. Key features inside crop, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50111,
+        "objectKey": "system-item-media/v1/items/7724/cover/a7eefcb3fce7472d8d42de4fb48200f0158b14e490ed5e60b26a82f6c04ec935.webp",
+        "fileSize": 185104
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7724/cover/a7eefcb3fce7472d8d42de4fb48200f0158b14e490ed5e60b26a82f6c04ec935.webp"
+    },
+    {
+      "key": "injury-7725-cover",
+      "target": {
+        "kind": "item",
+        "id": 7725,
+        "typeId": 25,
+        "name": "Перелом челюсти"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY mature detailed CEL-SHADED cyberpunk 2045 narrative illustration, WIDE PANORAMA 5:2 landscape. Fine variable ink line, broad painted light/shadow planes, reflected light, convincing adult anatomy, detailed fabric/medical equipment with soft lower-contrast setting. All defining faces, bodies, hands and equipment fully within the central panoramic composition. This is fictional game artwork, not a medical instruction chart. No labels, text, numbers, logos, UI overlays, photo or glossy 3D style. No blood, gore, open wounds, surgery, needles, exposed organs, severed parts or nudity. A mature adult with a clean supportive JAW wrap seated in a clinic, chin supported naturally, medic reviewing a jaw scan. Mouth closed, natural face and proportions, no exposed teeth injury, blood or surgical procedure. Warm clinic light and cool city background.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/injury-7725-cover-v1.png",
+      "final": "final/injury-7725-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9aac3153-2055-442d-af8b-4df90c5c4ffe.png",
+      "originalSha256": "8637cc48365599c96e00fd753580e59550540716364c4263c96475d627c138a3",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "4a21e572fba5bf8fc041548c21da9df9d6ac2b5e1e06b752009d3c6e79c3bc81",
+      "bytes": 224158,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final 5:2 panoramas inspected: readable injury location through supports, clinical scans and rehabilitation, intact adult faces/hands, no gore or procedural scenes. Key features inside crop, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50112,
+        "objectKey": "system-item-media/v1/items/7725/cover/4a21e572fba5bf8fc041548c21da9df9d6ac2b5e1e06b752009d3c6e79c3bc81.webp",
+        "fileSize": 224158
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7725/cover/4a21e572fba5bf8fc041548c21da9df9d6ac2b5e1e06b752009d3c6e79c3bc81.webp"
+    },
+    {
+      "key": "injury-7726-cover",
+      "target": {
+        "kind": "item",
+        "id": 7726,
+        "typeId": 25,
+        "name": "Контузия"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY mature detailed CEL-SHADED cyberpunk 2045 narrative illustration, WIDE PANORAMA 5:2 landscape. Fine variable ink line, broad painted light/shadow planes, reflected light, convincing adult anatomy, detailed fabric/medical equipment with soft lower-contrast setting. All defining faces, bodies, hands and equipment fully within the central panoramic composition. This is fictional game artwork, not a medical instruction chart. No labels, text, numbers, logos, UI overlays, photo or glossy 3D style. No blood, gore, open wounds, surgery, needles, exposed organs, severed parts or nudity. A mature adult seated resting after a concussion, one hand near the temple, eyes slightly unfocused but awake; clinician beside them checks a small light without invasive contact. Intact face and skull, no wound or stars/cartoon effects. Mature grounded cyberpunk scene.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/injury-7726-cover-v1.png",
+      "final": "final/injury-7726-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a56625ad-65e9-400a-944c-4e0841cb7059.png",
+      "originalSha256": "a9601642df27adb2fb9e0d36c79709bde7ea0d88459a8789aa3f034005fe1a1c",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "ee89caa0a3b503b6c4ff252c7c3fdcb98b2c7a3ab97cf5b42e6eed3310bd242e",
+      "bytes": 198682,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final 5:2 panoramas inspected: readable injury location through supports, clinical scans and rehabilitation, intact adult faces/hands, no gore or procedural scenes. Key features inside crop, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50113,
+        "objectKey": "system-item-media/v1/items/7726/cover/ee89caa0a3b503b6c4ff252c7c3fdcb98b2c7a3ab97cf5b42e6eed3310bd242e.webp",
+        "fileSize": 198682
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7726/cover/ee89caa0a3b503b6c4ff252c7c3fdcb98b2c7a3ab97cf5b42e6eed3310bd242e.webp"
+    },
+    {
+      "key": "injury-7727-cover",
+      "target": {
+        "kind": "item",
+        "id": 7727,
+        "typeId": 25,
+        "name": "Перелом черепа"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY mature detailed CEL-SHADED cyberpunk 2045 narrative illustration, WIDE PANORAMA 5:2 landscape. Fine variable ink line, broad painted light/shadow planes, reflected light, convincing adult anatomy, detailed fabric/medical equipment with soft lower-contrast setting. All defining faces, bodies, hands and equipment fully within the central panoramic composition. This is fictional game artwork, not a medical instruction chart. No labels, text, numbers, logos, UI overlays, photo or glossy 3D style. No blood, gore, open wounds, surgery, needles, exposed organs, severed parts or nudity. A mature adult resting on a padded clinic bed with a clean head dressing, clinician looking at a dim SKULL scan showing a subtle single fracture line. Whole face intact, no open skull, blood or graphic injury, no procedural details. Serious calm composition.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/injury-7727-cover-v1.png",
+      "final": "final/injury-7727-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d381c353-8eeb-48c1-baba-f5d947e06093.png",
+      "originalSha256": "e3b73a1ce2e05e39f8675c11ef0db3d75a6b2d16801d12414eeb79890e2733b8",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "ab2fda9fb57335102be7d802ec05825538d48d65341dabfb73527261549fe8ed",
+      "bytes": 170632,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final 5:2 panoramas inspected: readable injury location through supports, clinical scans and rehabilitation, intact adult faces/hands, no gore or procedural scenes. Key features inside crop, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50114,
+        "objectKey": "system-item-media/v1/items/7727/cover/ab2fda9fb57335102be7d802ec05825538d48d65341dabfb73527261549fe8ed.webp",
+        "fileSize": 170632
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7727/cover/ab2fda9fb57335102be7d802ec05825538d48d65341dabfb73527261549fe8ed.webp"
+    },
+    {
+      "key": "injury-7728-cover",
+      "target": {
+        "kind": "item",
+        "id": 7728,
+        "typeId": 25,
+        "name": "Травма трахеи"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY mature detailed CEL-SHADED cyberpunk 2045 narrative illustration, WIDE PANORAMA 5:2 landscape. Fine variable ink line, broad painted light/shadow planes, reflected light, convincing adult anatomy, detailed fabric/medical equipment with soft lower-contrast setting. All defining faces, bodies, hands and equipment fully within the central panoramic composition. This is fictional game artwork, not a medical instruction chart. No labels, text, numbers, logos, UI overlays, photo or glossy 3D style. No blood, gore, open wounds, surgery, needles, exposed organs, severed parts or nudity. A mature adult in a medical chair with a clean protective THROAT dressing and oxygen mask resting nearby, communicating by a small blank gesture tablet while a medic listens. No visible neck wound, tubes inserted, blood or choking action. Intact anatomy, no text on tablet.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/injury-7728-cover-v1.png",
+      "final": "final/injury-7728-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-cc326748-7fcf-4e15-ad55-8188ed004258.png",
+      "originalSha256": "a1eef66514de937cf194df9f9071bac29936c1860791e7fdb66db8e2551f0e86",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "45ba380d3629bfc9cb5e03207287785be9de66e7daab6d4a2d339bf928184314",
+      "bytes": 206348,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final 5:2 panoramas inspected: readable injury location through supports, clinical scans and rehabilitation, intact adult faces/hands, no gore or procedural scenes. Key features inside crop, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50115,
+        "objectKey": "system-item-media/v1/items/7728/cover/45ba380d3629bfc9cb5e03207287785be9de66e7daab6d4a2d339bf928184314.webp",
+        "fileSize": 206348
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7728/cover/45ba380d3629bfc9cb5e03207287785be9de66e7daab6d4a2d339bf928184314.webp"
+    },
+    {
+      "key": "injury-7729-cover",
+      "target": {
+        "kind": "item",
+        "id": 7729,
+        "typeId": 25,
+        "name": "Повреждение уха"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY mature detailed CEL-SHADED cyberpunk 2045 narrative illustration, WIDE PANORAMA 5:2 landscape. Fine variable ink line, broad painted light/shadow planes, reflected light, convincing adult anatomy, detailed fabric/medical equipment with soft lower-contrast setting. All defining faces, bodies, hands and equipment fully within the central panoramic composition. This is fictional game artwork, not a medical instruction chart. No labels, text, numbers, logos, UI overlays, photo or glossy 3D style. No blood, gore, open wounds, surgery, needles, exposed organs, severed parts or nudity. A mature adult with ONE ear covered by a clean light dressing in a cyberpunk hearing-assessment booth, medic holding a small diagnostic instrument at a respectful distance. Other ear intact, calm expression, no blood, injury details or surgery.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/injury-7729-cover-v1.png",
+      "final": "final/injury-7729-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ae026ca3-d80e-42ca-b9c0-6b7af6d88efd.png",
+      "originalSha256": "e58d7b4592429f4a0d429e8f34d8b13cc3270cb9d71100b89cf2b55e5bcd8167",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "3af9cd85d65ba0c1b40a6fb2db6961f1dc21c3450a6b90dc7ac51f535467723f",
+      "bytes": 172830,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final 5:2 panoramas inspected: readable injury location through supports, clinical scans and rehabilitation, intact adult faces/hands, no gore or procedural scenes. Key features inside crop, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50116,
+        "objectKey": "system-item-media/v1/items/7729/cover/3af9cd85d65ba0c1b40a6fb2db6961f1dc21c3450a6b90dc7ac51f535467723f.webp",
+        "fileSize": 172830
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7729/cover/3af9cd85d65ba0c1b40a6fb2db6961f1dc21c3450a6b90dc7ac51f535467723f.webp"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T21:13:36.312Z",
+    "scenarios": 18,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-77\\live-qa.json"
+  }
+}

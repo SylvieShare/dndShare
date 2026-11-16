@@ -1,0 +1,146 @@
+{
+  "batch": 83,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-83",
+  "sourceAudit": "Live own slots empty. Structured facts and Core340–341,347–349 reviewed. Original finished fictional exterior design. Basic and named weapons form references for quality variants; no icon changes.",
+  "assets": [
+    {
+      "key": "weapon-8071-cover",
+      "target": {
+        "kind": "item",
+        "id": 8071,
+        "typeId": 37,
+        "name": "ПП"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A compact SUBMACHINE GUN, slim short receiver, small barrel shroud, pistol grip, narrow stick magazine and folded compact stock. Resting in a padded case, graphite and muted teal, complete exterior.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8071-cover-v1.png",
+      "final": "final/weapon-8071-cover.jpg"
+    },
+    {
+      "key": "weapon-8074-cover",
+      "target": {
+        "kind": "item",
+        "id": 8074,
+        "typeId": 37,
+        "name": "Снайперская винтовка"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A SNIPER RIFLE, long slender barrel and full shoulder stock, sturdy receiver, compact magazine and modest mounted optic. Resting on a padded horizontal rack, entire barrel and stock inside frame. No aiming view or targets.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8074-cover-v1.png",
+      "final": "final/weapon-8074-cover.jpg"
+    },
+    {
+      "key": "weapon-8077-cover",
+      "target": {
+        "kind": "item",
+        "id": 8077,
+        "typeId": 37,
+        "name": "Бита с гвоздями"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional SPIKED BAT stored as an inert finished prop in a clear protective display case, worn wooden bat with a few short evenly spaced dull metal spikes in its striking end and wrapped grip. No construction process, loose nails, impact, blood or target.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8077-cover-v1.png",
+      "final": "final/weapon-8077-cover.jpg"
+    },
+    {
+      "key": "weapon-8080-cover",
+      "target": {
+        "kind": "item",
+        "id": 8080,
+        "typeId": 37,
+        "name": "Оглушающая дубинка"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. One fictional STUN BATON, short sturdy insulated handle and smooth dark cylindrical striking body with subtle closed electrode strips. On a service tray, powered off, no sparks, arcs, person or instructions.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8080-cover-v1.png",
+      "final": "final/weapon-8080-cover.jpg"
+    },
+    {
+      "key": "weapon-8081-cover",
+      "target": {
+        "kind": "item",
+        "id": 8081,
+        "typeId": 37,
+        "name": "Шокер"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. One fictional STUN GUN, chunky one-handed pistol-shaped device with an enclosed battery grip and small protected contact/emitter head. Matte black and subdued yellow. In a padded case, no electrical arc, deployed leads, victim or diagram.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8081-cover-v1.png",
+      "final": "final/weapon-8081-cover.jpg"
+    },
+    {
+      "key": "weapon-8082-cover",
+      "target": {
+        "kind": "item",
+        "id": 8082,
+        "typeId": 37,
+        "name": "Меч"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. One modern SWORD, straight clean steel blade, compact unornamented guard and long wrapped dark grip, on a padded urban armory display rack. Functional contemporary construction, no medieval heraldry or magic, complete blade and hilt.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8082-cover-v1.png",
+      "final": "final/weapon-8082-cover.jpg"
+    },
+    {
+      "key": "weapon-8085-cover",
+      "target": {
+        "kind": "item",
+        "id": 8085,
+        "typeId": 37,
+        "name": "Метательное оружие"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional THROWABLE WEAPON represented by one closed inert futuristic hand-grenade prop in a fitted padded transport case, sturdy dark segmented external shell, no visible mechanism or exposed explosive. No hand throwing it, active fuse, blast, targets or instructions.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8085-cover-v1.png",
+      "final": "final/weapon-8085-cover.jpg"
+    },
+    {
+      "key": "weapon-8086-cover",
+      "target": {
+        "kind": "item",
+        "id": 8086,
+        "typeId": 37,
+        "name": "Томагавк"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. One modern TOMAHAWK, compact steel axe head with a clean cutting edge and short reinforced dark handle, on a padded tool tray. Entire axe visible, modest industrial finish, no throwing or impact.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8086-cover-v1.png",
+      "final": "final/weapon-8086-cover.jpg"
+    }
+  ]
+}

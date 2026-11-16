@@ -1,0 +1,162 @@
+{
+  "batch": 91,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-91",
+  "sourceAudit": "Live own slots empty. Quality variants derive from inspected base weapon cover, preserve silhouette. Exterior craftsmanship interpretation, no new mechanical capabilities or icon changes.",
+  "assets": [
+    {
+      "key": "weapon-8083-cover",
+      "target": {
+        "kind": "item",
+        "id": 8083,
+        "typeId": 37,
+        "name": "Меч (отличное)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8082,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-83/final/weapon-8082-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a HIGH-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Refine material finish: precise clean exterior seams, premium grip/fabric/composite or metal appropriate to this item, controlled polished highlights, careful craftsmanship and subtle restrained decorative accents. Keep it practical and recognizable; no gold fantasy ornament or new capabilities. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8083-cover-v1.png",
+      "final": "final/weapon-8083-cover.jpg"
+    },
+    {
+      "key": "weapon-8084-cover",
+      "target": {
+        "kind": "item",
+        "id": 8084,
+        "typeId": 37,
+        "name": "Меч (плохое)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8082,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-83/final/weapon-8082-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a LOW-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Change only external workmanship and condition: budget materials appropriate to the item, slightly uneven surface finish, modest cosmetic dents/scuffs, worn grip and mismatched replacement exterior panel finish where applicable. Keep it whole and functional, not a wreck; no additional sharp protrusions, missing structural components or visible internal mechanism. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8084-cover-v1.png",
+      "final": "final/weapon-8084-cover.jpg"
+    },
+    {
+      "key": "weapon-8087-cover",
+      "target": {
+        "kind": "item",
+        "id": 8087,
+        "typeId": 37,
+        "name": "Томагавк (отличное)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8086,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-83/final/weapon-8086-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a HIGH-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Refine material finish: precise clean exterior seams, premium grip/fabric/composite or metal appropriate to this item, controlled polished highlights, careful craftsmanship and subtle restrained decorative accents. Keep it practical and recognizable; no gold fantasy ornament or new capabilities. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8087-cover-v1.png",
+      "final": "final/weapon-8087-cover.jpg"
+    },
+    {
+      "key": "weapon-8088-cover",
+      "target": {
+        "kind": "item",
+        "id": 8088,
+        "typeId": 37,
+        "name": "Томагавк (плохое)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8086,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-83/final/weapon-8086-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a LOW-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Change only external workmanship and condition: budget materials appropriate to the item, slightly uneven surface finish, modest cosmetic dents/scuffs, worn grip and mismatched replacement exterior panel finish where applicable. Keep it whole and functional, not a wreck; no additional sharp protrusions, missing structural components or visible internal mechanism. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8088-cover-v1.png",
+      "final": "final/weapon-8088-cover.jpg"
+    },
+    {
+      "key": "weapon-8092-cover",
+      "target": {
+        "kind": "item",
+        "id": 8092,
+        "typeId": 37,
+        "name": "Очень тяжёлое оружие ближнего боя (отличное)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8091,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-84/final/weapon-8091-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a HIGH-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Refine material finish: precise clean exterior seams, premium grip/fabric/composite or metal appropriate to this item, controlled polished highlights, careful craftsmanship and subtle restrained decorative accents. Keep it practical and recognizable; no gold fantasy ornament or new capabilities. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8092-cover-v1.png",
+      "final": "final/weapon-8092-cover.jpg"
+    },
+    {
+      "key": "weapon-8093-cover",
+      "target": {
+        "kind": "item",
+        "id": 8093,
+        "typeId": 37,
+        "name": "Очень тяжёлое оружие ближнего боя (плохое)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8091,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-84/final/weapon-8091-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a LOW-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Change only external workmanship and condition: budget materials appropriate to the item, slightly uneven surface finish, modest cosmetic dents/scuffs, worn grip and mismatched replacement exterior panel finish where applicable. Keep it whole and functional, not a wreck; no additional sharp protrusions, missing structural components or visible internal mechanism. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8093-cover-v1.png",
+      "final": "final/weapon-8093-cover.jpg"
+    },
+    {
+      "key": "weapon-8095-cover",
+      "target": {
+        "kind": "item",
+        "id": 8095,
+        "typeId": 37,
+        "name": "Пистолет сверхкрупного калибра (отличное)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8094,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-84/final/weapon-8094-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a HIGH-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Refine material finish: precise clean exterior seams, premium grip/fabric/composite or metal appropriate to this item, controlled polished highlights, careful craftsmanship and subtle restrained decorative accents. Keep it practical and recognizable; no gold fantasy ornament or new capabilities. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8095-cover-v1.png",
+      "final": "final/weapon-8095-cover.jpg"
+    },
+    {
+      "key": "weapon-8096-cover",
+      "target": {
+        "kind": "item",
+        "id": 8096,
+        "typeId": 37,
+        "name": "Пистолет сверхкрупного калибра (плохое)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8094,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-84/final/weapon-8094-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a LOW-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Change only external workmanship and condition: budget materials appropriate to the item, slightly uneven surface finish, modest cosmetic dents/scuffs, worn grip and mismatched replacement exterior panel finish where applicable. Keep it whole and functional, not a wreck; no additional sharp protrusions, missing structural components or visible internal mechanism. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8096-cover-v1.png",
+      "final": "final/weapon-8096-cover.jpg"
+    }
+  ]
+}

@@ -1,0 +1,415 @@
+{
+  "batch": 74,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-74",
+  "sourceAudit": "Live slots empty. Core343–344 lists all ten weapon classes including rocket-launcher magazine variants. Exterior shape is original fictional interpretation, no real technical diagram. Icons unchanged.",
+  "assets": [
+    {
+      "key": "mod-7952-cover",
+      "target": {
+        "kind": "item",
+        "id": 7952,
+        "typeId": 35,
+        "name": "Увеличенный магазин (штурмовая винтовка)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk game artwork, opaque 3:2 landscape. A single CLOSED elongated protective equipment pouch on a worn storage bench. Dark graphite woven nylon, muted teal stitching, reinforced rim and a fastened flap; contents entirely hidden. No weapons, ammunition, open pouch, tools, mechanisms or technical diagram. Fine variable ink contours, broad painted shadows, reflected warm bench light and cool city-window light, believable fabric, softer background. No text, numbers, labels, logos, UI or watermark, no photorealism or 3D.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7952-cover-v1.png",
+      "final": "final/mod-7952-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3427898b-afdd-4c34-a43f-275aff0c991f.png",
+      "rejectedAttempt": {
+        "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk EXTENDED MAGAZINE for a assault rifle, long curved box body and broad reinforced base. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte graphite with muted teal material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+        "error": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID e40d03c9-a29f-402b-9a58-2a6a0dbcc7f9. safety_violations=[violence].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"input\\\",\\n      \\\"categories\\\": [\\n        \\\"violence\\\"\\n      ]\\n    }\\n  }\\n}\")"
+      },
+      "originalSha256": "345de28d0b20245551557bcea67ad080bc05776d4b3e43255b3de2143a01a208",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "af870ecfb017a56767b9634723333a7577e5878a503c4641e4e8f97afbbaf7d1",
+      "bytes": 323111,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten final exports inspected. Nine complete closed fictional magazine exteriors; input-rejected rifle magazine replaced by opaque closed pouch with contents hidden. No text, diagrams, ammunition or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50090,
+        "objectKey": "system-item-media/v1/items/7952/cover/af870ecfb017a56767b9634723333a7577e5878a503c4641e4e8f97afbbaf7d1.jpg",
+        "fileSize": 323111
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7952/cover/af870ecfb017a56767b9634723333a7577e5878a503c4641e4e8f97afbbaf7d1.jpg"
+    },
+    {
+      "key": "mod-7953-cover",
+      "target": {
+        "kind": "item",
+        "id": 7953,
+        "typeId": 35,
+        "name": "Увеличенный магазин (гранатомёт)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk EXTENDED MAGAZINE for a grenade launcher, large stout rectangular box body with thick protective edges. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte dark steel with amber material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7953-cover-v1.png",
+      "final": "final/mod-7953-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-cf01d644-1c79-4a7a-be04-32b638397c4c.png",
+      "originalSha256": "b9439e5cd065498d5cbbbe50f272b86d31d88ab76333c4ec46a8b72452e17611",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "c227b1eb5bbf5b0fe47aaaf3c8b4ffcff115f1eb8d742d496cba769810cec79c",
+      "bytes": 335389,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten final exports inspected. Nine complete closed fictional magazine exteriors; input-rejected rifle magazine replaced by opaque closed pouch with contents hidden. No text, diagrams, ammunition or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50091,
+        "objectKey": "system-item-media/v1/items/7953/cover/c227b1eb5bbf5b0fe47aaaf3c8b4ffcff115f1eb8d742d496cba769810cec79c.jpg",
+        "fileSize": 335389
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7953/cover/c227b1eb5bbf5b0fe47aaaf3c8b4ffcff115f1eb8d742d496cba769810cec79c.jpg"
+    },
+    {
+      "key": "mod-7954-cover",
+      "target": {
+        "kind": "item",
+        "id": 7954,
+        "typeId": 35,
+        "name": "Увеличенный магазин (пистолет крупного калибра)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk EXTENDED MAGAZINE for a heavy pistol, slim elongated straight body with a reinforced compact base. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte burgundy polymer and black material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7954-cover-v1.png",
+      "final": "final/mod-7954-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-bb075305-be11-4dfd-a24e-8f09de75ab72.png",
+      "originalSha256": "727f9803f47b340dd2ad6a965f603075e304c561b11b470bfbaeea9217fcf567",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "9801fd3b1affda0a03ade19bfbac88977fd3b1ca2c5b3e4dede116db928f2f25",
+      "bytes": 337085,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten final exports inspected. Nine complete closed fictional magazine exteriors; input-rejected rifle magazine replaced by opaque closed pouch with contents hidden. No text, diagrams, ammunition or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50092,
+        "objectKey": "system-item-media/v1/items/7954/cover/9801fd3b1affda0a03ade19bfbac88977fd3b1ca2c5b3e4dede116db928f2f25.jpg",
+        "fileSize": 337085
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7954/cover/9801fd3b1affda0a03ade19bfbac88977fd3b1ca2c5b3e4dede116db928f2f25.jpg"
+    },
+    {
+      "key": "mod-7955-cover",
+      "target": {
+        "kind": "item",
+        "id": 7955,
+        "typeId": 35,
+        "name": "Увеличенный магазин (ПП крупного калибра)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk EXTENDED MAGAZINE for a heavy submachine gun, long broad straight stick body with subtle curve at top. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte gray metal and red material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7955-cover-v1.png",
+      "final": "final/mod-7955-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-35847057-a844-4ecc-a9a5-3ab231148df3.png",
+      "originalSha256": "f9ef2eccdf355c0f89c16b51c4c687f5a3de2d3263827ca6b557d5c7cd2b21b4",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "0448afee3f4f77a2187190a8cfc1f0a01f9542de0c93275778a9c116c52d333d",
+      "bytes": 336886,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten final exports inspected. Nine complete closed fictional magazine exteriors; input-rejected rifle magazine replaced by opaque closed pouch with contents hidden. No text, diagrams, ammunition or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50093,
+        "objectKey": "system-item-media/v1/items/7955/cover/0448afee3f4f77a2187190a8cfc1f0a01f9542de0c93275778a9c116c52d333d.jpg",
+        "fileSize": 336886
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7955/cover/0448afee3f4f77a2187190a8cfc1f0a01f9542de0c93275778a9c116c52d333d.jpg"
+    },
+    {
+      "key": "mod-7956-cover",
+      "target": {
+        "kind": "item",
+        "id": 7956,
+        "typeId": 35,
+        "name": "Увеличенный магазин (пистолет среднего калибра)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk EXTENDED MAGAZINE for a medium pistol, slim narrow straight stick, compact proportions. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte black polymer and cream material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7956-cover-v1.png",
+      "final": "final/mod-7956-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ce96f71e-8cef-44b3-b7a5-090ada237dae.png",
+      "originalSha256": "592b1102703ed0c5e1e5ca3f431997ea7e877e74f9e7bf37e8c05291cbda3e56",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "0eda30e8da6342cf21b999f8f986f9141b5849d3c6626f6a454108db50cb0ba2",
+      "bytes": 317049,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten final exports inspected. Nine complete closed fictional magazine exteriors; input-rejected rifle magazine replaced by opaque closed pouch with contents hidden. No text, diagrams, ammunition or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50094,
+        "objectKey": "system-item-media/v1/items/7956/cover/0eda30e8da6342cf21b999f8f986f9141b5849d3c6626f6a454108db50cb0ba2.jpg",
+        "fileSize": 317049
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7956/cover/0eda30e8da6342cf21b999f8f986f9141b5849d3c6626f6a454108db50cb0ba2.jpg"
+    },
+    {
+      "key": "mod-7957-cover",
+      "target": {
+        "kind": "item",
+        "id": 7957,
+        "typeId": 35,
+        "name": "Увеличенный магазин (ракетница)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk EXTENDED MAGAZINE for a rocket launcher, large closed double-tube cassette, clearly oversized. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte graphite with muted teal material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7957-cover-v1.png",
+      "final": "final/mod-7957-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-039a1596-dbb1-4b67-9288-0905e1857055.png",
+      "originalSha256": "77145dde9e330b4bfc6336fa6b305ead0a4940f50764c3d6521f88815bb613c1",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "7ed948e6702b88245aa904cedad545a4517769efb7c37acf94b7016e99391d49",
+      "bytes": 309058,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten final exports inspected. Nine complete closed fictional magazine exteriors; input-rejected rifle magazine replaced by opaque closed pouch with contents hidden. No text, diagrams, ammunition or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50095,
+        "objectKey": "system-item-media/v1/items/7957/cover/7ed948e6702b88245aa904cedad545a4517769efb7c37acf94b7016e99391d49.jpg",
+        "fileSize": 309058
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7957/cover/7ed948e6702b88245aa904cedad545a4517769efb7c37acf94b7016e99391d49.jpg"
+    },
+    {
+      "key": "mod-7958-cover",
+      "target": {
+        "kind": "item",
+        "id": 7958,
+        "typeId": 35,
+        "name": "Увеличенный магазин (дробовик)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk EXTENDED MAGAZINE for a shotgun, thick broad curved box body. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte dark steel with amber material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7958-cover-v1.png",
+      "final": "final/mod-7958-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-61978293-46b4-4e98-9f8c-5012bac4fa05.png",
+      "originalSha256": "bf4398770d44d72b181ec4313323bfd531bbfaede93dd4708e7b3ccdf6afcb31",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "0c573415f935e31298daffe2e72162ba4856174d9332a5fd3b4f5b6f6fe1f1e4",
+      "bytes": 339821,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten final exports inspected. Nine complete closed fictional magazine exteriors; input-rejected rifle magazine replaced by opaque closed pouch with contents hidden. No text, diagrams, ammunition or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50096,
+        "objectKey": "system-item-media/v1/items/7958/cover/0c573415f935e31298daffe2e72162ba4856174d9332a5fd3b4f5b6f6fe1f1e4.jpg",
+        "fileSize": 339821
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7958/cover/0c573415f935e31298daffe2e72162ba4856174d9332a5fd3b4f5b6f6fe1f1e4.jpg"
+    },
+    {
+      "key": "mod-7959-cover",
+      "target": {
+        "kind": "item",
+        "id": 7959,
+        "typeId": 35,
+        "name": "Увеличенный магазин (ПП)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk EXTENDED MAGAZINE for a submachine gun, long narrow gently curved box body. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte burgundy polymer and black material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7959-cover-v1.png",
+      "final": "final/mod-7959-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d8ed681e-bc82-4d04-a6d8-7b660aeb6563.png",
+      "originalSha256": "f1a946633d1d94989b3765aa01350cd3a4da43e6692c24d25880cb2f2bb1a27e",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "e7be1abafd9b2741da0b31ed99b233dadeef7265fb413a3c67050159aa210da1",
+      "bytes": 340276,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten final exports inspected. Nine complete closed fictional magazine exteriors; input-rejected rifle magazine replaced by opaque closed pouch with contents hidden. No text, diagrams, ammunition or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50097,
+        "objectKey": "system-item-media/v1/items/7959/cover/e7be1abafd9b2741da0b31ed99b233dadeef7265fb413a3c67050159aa210da1.jpg",
+        "fileSize": 340276
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7959/cover/e7be1abafd9b2741da0b31ed99b233dadeef7265fb413a3c67050159aa210da1.jpg"
+    },
+    {
+      "key": "mod-7960-cover",
+      "target": {
+        "kind": "item",
+        "id": 7960,
+        "typeId": 35,
+        "name": "Увеличенный магазин (снайперская винтовка)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk EXTENDED MAGAZINE for a sniper rifle, long broad straight box body with low dark ribs. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte gray metal and red material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7960-cover-v1.png",
+      "final": "final/mod-7960-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6fd7243d-458c-4323-82b3-bd3ea4dbc04e.png",
+      "originalSha256": "626314d0c0858ae8f812603400743ac97482086a4a1edb15d27ec59840350fd2",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "5945ab0518e1481730a2dcf2481ead7a73dc4b3e0f87887cff177f059c180a24",
+      "bytes": 369126,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten final exports inspected. Nine complete closed fictional magazine exteriors; input-rejected rifle magazine replaced by opaque closed pouch with contents hidden. No text, diagrams, ammunition or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50098,
+        "objectKey": "system-item-media/v1/items/7960/cover/5945ab0518e1481730a2dcf2481ead7a73dc4b3e0f87887cff177f059c180a24.jpg",
+        "fileSize": 369126
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7960/cover/5945ab0518e1481730a2dcf2481ead7a73dc4b3e0f87887cff177f059c180a24.jpg"
+    },
+    {
+      "key": "mod-7961-cover",
+      "target": {
+        "kind": "item",
+        "id": 7961,
+        "typeId": 35,
+        "name": "Увеличенный магазин (пистолет сверхкрупного калибра)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk EXTENDED MAGAZINE for a very heavy pistol, thick long straight body with chunky base. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte black polymer and cream material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7961-cover-v1.png",
+      "final": "final/mod-7961-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5e10f048-d0f4-48cd-a784-cccd5463106e.png",
+      "originalSha256": "aec53075bd2324dd327be08b0a983659161952da2c5be6a3051c1142008a7ec0",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "beb447bff1cbad3545ae3c70894248b56d0b3b3d17e68e6480245675fd30e269",
+      "bytes": 344533,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten final exports inspected. Nine complete closed fictional magazine exteriors; input-rejected rifle magazine replaced by opaque closed pouch with contents hidden. No text, diagrams, ammunition or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50099,
+        "objectKey": "system-item-media/v1/items/7961/cover/beb447bff1cbad3545ae3c70894248b56d0b3b3d17e68e6480245675fd30e269.jpg",
+        "fileSize": 344533
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7961/cover/beb447bff1cbad3545ae3c70894248b56d0b3b3d17e68e6480245675fd30e269.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T21:08:56.271Z",
+    "scenarios": 30,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-74\\live-qa.json"
+  }
+}

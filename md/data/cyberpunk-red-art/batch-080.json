@@ -1,0 +1,226 @@
+{
+  "batch": 80,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-80",
+  "sourceAudit": "Live own slots empty. Structured facts and Core340–341,347–349 reviewed. Original finished fictional exterior design. Basic and named weapons form references for quality variants; no icon changes.",
+  "assets": [
+    {
+      "key": "weapon-8017-cover",
+      "target": {
+        "kind": "item",
+        "id": 8017,
+        "typeId": 37,
+        "name": "Монтировка"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. One sturdy steel CROWBAR, simple long shaft with a curved hooked end and flattened pry end, restrained paint wear. Lying alone on a repair-workshop bench, no lock, door or break-in scene.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8017-cover-v1.png",
+      "final": "final/weapon-8017-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8a47d9d2-554b-4172-b433-9383aa6a3ced.png",
+      "originalSha256": "833cedf2093ddcb4b2116920e032528d5f7b9f7f2d4faf91782fce0d3fb3f7da",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "2ab4f5dca5206eab0f04161337d1adc6066ea8126735f34cf0c246f7f46e9393",
+      "bytes": 288378,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "weapon-8020-cover",
+      "target": {
+        "kind": "item",
+        "id": 8020,
+        "typeId": 37,
+        "name": "Дротикомёт"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional DARTGUN, oversized one-handed pistol body with long narrow dart-launching shroud and a compact enclosed magazine housing. In a fitted equipment case, no dart, toxin, person or firing; exterior concept only.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8020-cover-v1.png",
+      "final": "final/weapon-8020-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c7e024cc-2737-4284-b759-7dd25203a6b1.png",
+      "originalSha256": "27aa1488cc6864bd437bb601c1de1f8962f027a1c214a7ab40bae3fbd61638e1",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "5a01d42637ff516f0ac5ef50c6bac239b11a3be3ddeadb923cfac571018e11e2",
+      "bytes": 299507,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "weapon-8021-cover",
+      "target": {
+        "kind": "item",
+        "id": 8021,
+        "typeId": 37,
+        "name": "Огнемёт"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional hand-carried FLAMETHROWER, heavy two-handed shotgun-like exterior with protected short nozzle housing, enclosed fuel-cell body and two grips. Resting on a rack, inert and unlit, no plumbing diagram, flames or targets.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8021-cover-v1.png",
+      "final": "final/weapon-8021-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-27e55d20-1a99-403d-98be-be4ad198134e.png",
+      "originalSha256": "445d694cef70d4ef61d4921fd020ba23d4c5bf0c4961e2abfdc440b667e49cd8",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "73522f091b0d8bfb99ceaa6c05db7d14058a0e317b8a692fee6c4c66c93c4197",
+      "bytes": 234617,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "weapon-8022-cover",
+      "target": {
+        "kind": "item",
+        "id": 8022,
+        "typeId": 37,
+        "name": "Гранатомёт"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional GRENADE LAUNCHER, compact two-handed longarm with a broad short barrel, shoulder stock and enclosed magazine housing. Resting in fitted armory case, no grenades or internal mechanism, static finished exterior.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8022-cover-v1.png",
+      "final": "final/weapon-8022-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-565a0167-6ed4-4c75-a14e-e56638ab144a.png",
+      "originalSha256": "989b49eec8d4f0f7a3015a3e7d0ebf71a7f95beee257d6990ebf94c46f7db9c3",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "18119fa2ca5e2c71cae9c676d5a8b22dc4986cc2b761a1a33bf3339056533142",
+      "bytes": 308343,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "weapon-8025-cover",
+      "target": {
+        "kind": "item",
+        "id": 8025,
+        "typeId": 37,
+        "name": "Тяжёлое оружие ближнего боя"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. An example of HEAVY MELEE WEAPON: a modern heavy one-handed steel-headed mace with a substantial plain striking head and reinforced textured handle. On padded cyberpunk armory bench. No fantasy decoration.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8025-cover-v1.png",
+      "final": "final/weapon-8025-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2f30d6db-0095-401e-b75a-a70750b8333e.png",
+      "originalSha256": "4e3fc9816c236059ab5c0a5c51b76f1e1687faefa9d4576b917e7fbc4a965a39",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d11eeaf75055ed3c60e9bbc7b5bca3de514a2e8d42b3317a02171c98f973a8e9",
+      "bytes": 268539,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "weapon-8028-cover",
+      "target": {
+        "kind": "item",
+        "id": 8028,
+        "typeId": 37,
+        "name": "Пистолет крупного калибра"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A HEAVY PISTOL, substantial one-handed handgun with broad slide and stout grip, medium-length barrel, dark metal and graphite polymer. Static side-three-quarter view in fitted case; complete exterior.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8028-cover-v1.png",
+      "final": "final/weapon-8028-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3aa04eac-0651-41f2-833a-9a9a07a6d510.png",
+      "originalSha256": "28e7ef4660a6f1fbeb604bdf3739bd6df5de28ddaf945490419ea1e43a0d146f",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b35a40058c01e3373646fe6d98ee5e99b4bc5fa761866dc00234dc2e2b6c7ff8",
+      "bytes": 275939,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "weapon-8031-cover",
+      "target": {
+        "kind": "item",
+        "id": 8031,
+        "typeId": 37,
+        "name": "ПП крупного калибра"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A HEAVY SUBMACHINE GUN, compact but chunky body, short barrel shroud, stout pistol grip and broad box magazine, folded stock. Resting on a padded rack; dark steel, burgundy accent.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8031-cover-v1.png",
+      "final": "final/weapon-8031-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a39754e2-c18b-49f1-b878-4672394a6e06.png",
+      "originalSha256": "2631ce6428e8a57f2fbf1e0ad0985e4fb8f6c69bbd8d659ae3a552e9e1591c1c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b29066e003a2e2ba4d7a15e907c3eb269f79ad586515232097c9f57a59864e3c",
+      "bytes": 257041,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "weapon-8034-cover",
+      "target": {
+        "kind": "item",
+        "id": 8034,
+        "typeId": 37,
+        "name": "Лопасти вертолёта"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A large stationary HELICOPTER ROTOR BLADE assembly on low hangar trestles, focus on long industrial composite blade and heavy central hub. No flying helicopter or person struck, full featured blade inside frame, no combat.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8034-cover-v1.png",
+      "final": "final/weapon-8034-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-edafe8f1-76a8-44a2-b5a0-70b2865b1697.png",
+      "originalSha256": "cbffe8b546ea4e7dcdeee457e2f6de6b35f3d067fb515b120d7866048faaf982",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "cb78f01aa90e2e4dae266441e7d2eb9fa44cd549c1273d007ac0d292b99ca4e4",
+      "bytes": 340608,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    }
+  ]
+}

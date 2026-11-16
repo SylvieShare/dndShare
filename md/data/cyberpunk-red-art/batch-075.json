@@ -1,0 +1,255 @@
+{
+  "batch": 75,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-75",
+  "sourceAudit": "Live own media slots empty. Structured injuries from Core187–188 reviewed. Non-graphic examination/recovery scenes indicate location, no medical advice or icon changes.",
+  "assets": [
+    {
+      "key": "injury-7713-cover",
+      "target": {
+        "kind": "item",
+        "id": 7713,
+        "typeId": 24,
+        "name": "Перелом руки"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY mature detailed CEL-SHADED cyberpunk 2045 narrative illustration, WIDE PANORAMA 5:2 landscape. Fine variable ink line, broad painted light/shadow planes, reflected light, convincing adult anatomy, detailed fabric/medical equipment with soft lower-contrast setting. All defining faces, bodies, hands and equipment fully within the central panoramic composition. This is fictional game artwork, not a medical instruction chart. No labels, text, numbers, logos, UI overlays, photo or glossy 3D style. No blood, gore, open wounds, surgery, needles, exposed organs, severed parts or nudity. A mature adult nomad seated in a cyberpunk clinic, one broken arm protected in a clean rigid support and sling, the other hand rests calmly on knee. A medic reviews a softly glowing arm scan in the background. Clothing intact, realistic guarded posture; no exposed fracture or blood.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/injury-7713-cover-v1.png",
+      "final": "final/injury-7713-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ce0824f2-21db-4710-9690-a2ed65923fb7.png",
+      "originalSha256": "0a50314ff4a7d9bc6c72abd6ce44f4ef110c27f54d3973cd3b4adbc486b57cb5",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "bcc9962e47e404f0af5a0a0a1fe95dcd3cac9a460e658b11b0366f85571042dd",
+      "bytes": 182412,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final 5:2 panoramas inspected: readable injury location through supports, clinical scans and rehabilitation, intact adult faces/hands, no gore or procedural scenes. Key features inside crop, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50100,
+        "objectKey": "system-item-media/v1/items/7713/cover/bcc9962e47e404f0af5a0a0a1fe95dcd3cac9a460e658b11b0366f85571042dd.webp",
+        "fileSize": 182412
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7713/cover/bcc9962e47e404f0af5a0a0a1fe95dcd3cac9a460e658b11b0366f85571042dd.webp"
+    },
+    {
+      "key": "injury-7714-cover",
+      "target": {
+        "kind": "item",
+        "id": 7714,
+        "typeId": 24,
+        "name": "Перелом ноги"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY mature detailed CEL-SHADED cyberpunk 2045 narrative illustration, WIDE PANORAMA 5:2 landscape. Fine variable ink line, broad painted light/shadow planes, reflected light, convincing adult anatomy, detailed fabric/medical equipment with soft lower-contrast setting. All defining faces, bodies, hands and equipment fully within the central panoramic composition. This is fictional game artwork, not a medical instruction chart. No labels, text, numbers, logos, UI overlays, photo or glossy 3D style. No blood, gore, open wounds, surgery, needles, exposed organs, severed parts or nudity. A mature adult street courier seated on an examination bench with ONE leg in a clean rigid splint supported on a padded stool, crutches nearby and medic checking a dim leg scan. No exposed fracture, blood or twisted anatomy.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/injury-7714-cover-v1.png",
+      "final": "final/injury-7714-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-49d8dbb0-b1f0-477a-9eea-f3d6c9d160b2.png",
+      "originalSha256": "8b2bb29566a31c9290b6e384af11fa4330b211e6a24651257e485137caba4ad7",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "368b87ce4b44133556e15db1db872362352fae0291ce5d5c43cf22046df417bc",
+      "bytes": 195414,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final 5:2 panoramas inspected: readable injury location through supports, clinical scans and rehabilitation, intact adult faces/hands, no gore or procedural scenes. Key features inside crop, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50101,
+        "objectKey": "system-item-media/v1/items/7714/cover/368b87ce4b44133556e15db1db872362352fae0291ce5d5c43cf22046df417bc.webp",
+        "fileSize": 195414
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7714/cover/368b87ce4b44133556e15db1db872362352fae0291ce5d5c43cf22046df417bc.webp"
+    },
+    {
+      "key": "injury-7715-cover",
+      "target": {
+        "kind": "item",
+        "id": 7715,
+        "typeId": 24,
+        "name": "Перелом рёбер"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY mature detailed CEL-SHADED cyberpunk 2045 narrative illustration, WIDE PANORAMA 5:2 landscape. Fine variable ink line, broad painted light/shadow planes, reflected light, convincing adult anatomy, detailed fabric/medical equipment with soft lower-contrast setting. All defining faces, bodies, hands and equipment fully within the central panoramic composition. This is fictional game artwork, not a medical instruction chart. No labels, text, numbers, logos, UI overlays, photo or glossy 3D style. No blood, gore, open wounds, surgery, needles, exposed organs, severed parts or nudity. A mature adult in an open outer jacket over a plain undershirt, seated slightly guarded with one hand gently resting over the side of the ribcage. Clinician studies a chest scan on a wall display, no labels. Subtle discomfort, no bandaging diagram, nudity or open wound.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/injury-7715-cover-v1.png",
+      "final": "final/injury-7715-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2a70c937-4e46-41be-97d8-9a433e86e96b.png",
+      "originalSha256": "ae16e68afab08fe6b0fdc0dae9fa236ce3d2216f1d49fee12b6b91a32f7e8c46",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "7593c41ae036b7ad7cf788e47410dffd71131927d776496662d04fd399d090c7",
+      "bytes": 198334,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final 5:2 panoramas inspected: readable injury location through supports, clinical scans and rehabilitation, intact adult faces/hands, no gore or procedural scenes. Key features inside crop, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50102,
+        "objectKey": "system-item-media/v1/items/7715/cover/7593c41ae036b7ad7cf788e47410dffd71131927d776496662d04fd399d090c7.webp",
+        "fileSize": 198334
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7715/cover/7593c41ae036b7ad7cf788e47410dffd71131927d776496662d04fd399d090c7.webp"
+    },
+    {
+      "key": "injury-7716-cover",
+      "target": {
+        "kind": "item",
+        "id": 7716,
+        "typeId": 24,
+        "name": "Разрыв лёгкого"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY mature detailed CEL-SHADED cyberpunk 2045 narrative illustration, WIDE PANORAMA 5:2 landscape. Fine variable ink line, broad painted light/shadow planes, reflected light, convincing adult anatomy, detailed fabric/medical equipment with soft lower-contrast setting. All defining faces, bodies, hands and equipment fully within the central panoramic composition. This is fictional game artwork, not a medical instruction chart. No labels, text, numbers, logos, UI overlays, photo or glossy 3D style. No blood, gore, open wounds, surgery, needles, exposed organs, severed parts or nudity. An adult patient reclining calmly in a futuristic clinic bed, simple oxygen mask and blanket, a medic watching a soft abstract chest scan with one lung less illuminated. No chest tubes being inserted, surgery, open wound or instructional detail. Adult grounded anatomy and compassionate mood.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/injury-7716-cover-v1.png",
+      "final": "final/injury-7716-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-895b355d-aaeb-4244-8b53-e9d6657d3991.png",
+      "originalSha256": "a06182dc4ede18d9c15dc2b374f12299961a40d6fa11f3dc92adebaca0a3035e",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "d32b3cad2b83228e9f8ae09c0f8f85fa891936b634d22b7f811429a6ce8e9f82",
+      "bytes": 231840,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final 5:2 panoramas inspected: readable injury location through supports, clinical scans and rehabilitation, intact adult faces/hands, no gore or procedural scenes. Key features inside crop, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50103,
+        "objectKey": "system-item-media/v1/items/7716/cover/d32b3cad2b83228e9f8ae09c0f8f85fa891936b634d22b7f811429a6ce8e9f82.webp",
+        "fileSize": 231840
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7716/cover/d32b3cad2b83228e9f8ae09c0f8f85fa891936b634d22b7f811429a6ce8e9f82.webp"
+    },
+    {
+      "key": "injury-7717-cover",
+      "target": {
+        "kind": "item",
+        "id": 7717,
+        "typeId": 24,
+        "name": "Перелом пальцев"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY mature detailed CEL-SHADED cyberpunk 2045 narrative illustration, WIDE PANORAMA 5:2 landscape. Fine variable ink line, broad painted light/shadow planes, reflected light, convincing adult anatomy, detailed fabric/medical equipment with soft lower-contrast setting. All defining faces, bodies, hands and equipment fully within the central panoramic composition. This is fictional game artwork, not a medical instruction chart. No labels, text, numbers, logos, UI overlays, photo or glossy 3D style. No blood, gore, open wounds, surgery, needles, exposed organs, severed parts or nudity. Close narrative scene of a mature adult's HAND with several fingers protected together in a clean compact support, palm/wrist connected to the seated clothed adult. Medic studies the hand without performing a procedure. Natural five-finger anatomy, no gore or exposed injury.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/injury-7717-cover-v1.png",
+      "final": "final/injury-7717-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d4438cac-50d1-4a7c-82eb-82ffc00f76e8.png",
+      "originalSha256": "ffc807da4800e72095105ec6858fcacce2775d9ffa654384358fbc24c3837164",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "6577070ff1c00aa2731b46b6939382613b902051389b8877fecba6d8a5828b5b",
+      "bytes": 187816,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final 5:2 panoramas inspected: readable injury location through supports, clinical scans and rehabilitation, intact adult faces/hands, no gore or procedural scenes. Key features inside crop, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50104,
+        "objectKey": "system-item-media/v1/items/7717/cover/6577070ff1c00aa2731b46b6939382613b902051389b8877fecba6d8a5828b5b.webp",
+        "fileSize": 187816
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7717/cover/6577070ff1c00aa2731b46b6939382613b902051389b8877fecba6d8a5828b5b.webp"
+    },
+    {
+      "key": "injury-7718-cover",
+      "target": {
+        "kind": "item",
+        "id": 7718,
+        "typeId": 24,
+        "name": "Оторванная рука"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY mature detailed CEL-SHADED cyberpunk 2045 narrative illustration, WIDE PANORAMA 5:2 landscape. Fine variable ink line, broad painted light/shadow planes, reflected light, convincing adult anatomy, detailed fabric/medical equipment with soft lower-contrast setting. All defining faces, bodies, hands and equipment fully within the central panoramic composition. This is fictional game artwork, not a medical instruction chart. No labels, text, numbers, logos, UI overlays, photo or glossy 3D style. No blood, gore, open wounds, surgery, needles, exposed organs, severed parts or nudity. A mature adult with a HEALED upper-arm amputation, residual limb fully covered by a clean protective sleeve, seated in a cyberpunk rehabilitation room considering a prosthetic arm on a stand. No severed limb, wound or blood. Dignified adult posture, focus on missing arm and future prosthesis.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/injury-7718-cover-v1.png",
+      "final": "final/injury-7718-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8e30f1c7-2561-4197-9803-af4d5e051180.png",
+      "originalSha256": "860c15bedbda328b2199e06d9fca2423f44f82d4d3b58a20c8415850f7a70657",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "13215c68c81178b69589f752c84cfb24cd611a3c219b04f3708492b91d9e92a3",
+      "bytes": 183146,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final 5:2 panoramas inspected: readable injury location through supports, clinical scans and rehabilitation, intact adult faces/hands, no gore or procedural scenes. Key features inside crop, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50105,
+        "objectKey": "system-item-media/v1/items/7718/cover/13215c68c81178b69589f752c84cfb24cd611a3c219b04f3708492b91d9e92a3.webp",
+        "fileSize": 183146
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7718/cover/13215c68c81178b69589f752c84cfb24cd611a3c219b04f3708492b91d9e92a3.webp"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T21:11:48.659Z",
+    "scenarios": 18,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-75\\live-qa.json"
+  }
+}

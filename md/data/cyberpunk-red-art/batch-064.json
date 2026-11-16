@@ -16,7 +16,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A complete cybernetic arm in smooth colored PLASTIC cosmetic panels, burgundy and muted cream with graphite mechanical joints. Shoulder to all five fingers visible on a salon maintenance stand. Clearly matte molded polymer, few broad clean shapes, detailed panel seams, no metal chrome reflections.",
       "width": 1536,
       "height": 1024,
@@ -31,7 +31,19 @@
       "sha256": "905a3af97e12258aac4ae51839048d02337a1194c45e138bcceebc26c8086ba3",
       "bytes": 281127,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final contact sheets inspected: five-digit hand anatomy, complete inert fictional hardware, connected natural limbs, distinct plastic/Realskinn/chrome/exposed coverings, fingers/tools/claws differentiated. No text, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50020,
+        "objectKey": "system-item-media/v1/items/7799/cover/905a3af97e12258aac4ae51839048d02337a1194c45e138bcceebc26c8086ba3.jpg",
+        "fileSize": 281127
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7799/cover/905a3af97e12258aac4ae51839048d02337a1194c45e138bcceebc26c8086ba3.jpg"
     },
     {
       "key": "cyber-7801-cover",
@@ -43,7 +55,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional cybernetic arm with an inert integrated pop-up grenade-launcher module displayed on a secure maintenance cradle. One short broad closed protective muzzle housing aligned with forearm, no ammunition or loading, no firing, no target, no mechanics diagram. Mature detailed cyberpunk illustration, entire arm visible.",
       "width": 1536,
       "height": 1024,
@@ -58,7 +70,19 @@
       "sha256": "2a0c6bd5896671710e63f492f5f060fa34238cfef6a50cf23c2e8908adb99738",
       "bytes": 390411,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final contact sheets inspected: five-digit hand anatomy, complete inert fictional hardware, connected natural limbs, distinct plastic/Realskinn/chrome/exposed coverings, fingers/tools/claws differentiated. No text, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50021,
+        "objectKey": "system-item-media/v1/items/7801/cover/2a0c6bd5896671710e63f492f5f060fa34238cfef6a50cf23c2e8908adb99738.jpg",
+        "fileSize": 390411
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7801/cover/2a0c6bd5896671710e63f492f5f060fa34238cfef6a50cf23c2e8908adb99738.jpg"
     },
     {
       "key": "cyber-7802-cover",
@@ -70,7 +94,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional cybernetic forearm on a maintenance cradle with one integrated short retractable blade shown in a static display position. A single clean blade, hand relaxed and empty, no combat, target, blood, operating instructions or mechanism diagram. Industrial clinic materials and soft plum background.",
       "width": 1536,
       "height": 1024,
@@ -85,7 +109,19 @@
       "sha256": "dfb3230345cd0e53fc02cad1c37fa90462b29f9cd8080604f580258eb0327bb2",
       "bytes": 272326,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final contact sheets inspected: five-digit hand anatomy, complete inert fictional hardware, connected natural limbs, distinct plastic/Realskinn/chrome/exposed coverings, fingers/tools/claws differentiated. No text, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50022,
+        "objectKey": "system-item-media/v1/items/7802/cover/dfb3230345cd0e53fc02cad1c37fa90462b29f9cd8080604f580258eb0327bb2.jpg",
+        "fileSize": 272326
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7802/cover/dfb3230345cd0e53fc02cad1c37fa90462b29f9cd8080604f580258eb0327bb2.jpg"
     },
     {
       "key": "cyber-7803-cover",
@@ -97,7 +133,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional cybernetic forearm with a compact integrated pop-up ranged-weapon housing shown as an inert manufactured exhibit, muzzle safely directed sideways away from viewer. Empty relaxed hand, no firing/ammunition/targets/operating instructions. Balanced ivory graphite and subdued teal.",
       "width": 1536,
       "height": 1024,
@@ -112,7 +148,19 @@
       "sha256": "04ae8c11a17083493d2ad66ee104f6db642127936c8f92d29b2b0597904e626b",
       "bytes": 341772,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final contact sheets inspected: five-digit hand anatomy, complete inert fictional hardware, connected natural limbs, distinct plastic/Realskinn/chrome/exposed coverings, fingers/tools/claws differentiated. No text, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50023,
+        "objectKey": "system-item-media/v1/items/7803/cover/04ae8c11a17083493d2ad66ee104f6db642127936c8f92d29b2b0597904e626b.jpg",
+        "fileSize": 341772
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7803/cover/04ae8c11a17083493d2ad66ee104f6db642127936c8f92d29b2b0597904e626b.jpg"
     },
     {
       "key": "cyber-7804-cover",
@@ -124,7 +172,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A complete cybernetic arm on a maintenance cradle with an integrated deployable ballistic SHIELD unfolded beside the forearm. Transparent smoked protective panel with reinforced thin dark rim, clearly attached to the arm. No gun or combat scene, main shield and whole arm visible.",
       "width": 1536,
       "height": 1024,
@@ -139,7 +187,19 @@
       "sha256": "9a31ac7339f67d8ae0c421b7e3abd4c09cbf1d94d7af99e9e689b5bb297bc4bc",
       "bytes": 337416,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final contact sheets inspected: five-digit hand anatomy, complete inert fictional hardware, connected natural limbs, distinct plastic/Realskinn/chrome/exposed coverings, fingers/tools/claws differentiated. No text, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50024,
+        "objectKey": "system-item-media/v1/items/7804/cover/9a31ac7339f67d8ae0c421b7e3abd4c09cbf1d94d7af99e9e689b5bb297bc4bc.jpg",
+        "fileSize": 337416
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7804/cover/9a31ac7339f67d8ae0c421b7e3abd4c09cbf1d94d7af99e9e689b5bb297bc4bc.jpg"
     },
     {
       "key": "cyber-7805-cover",
@@ -151,7 +211,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. Close view of a cyberarm quick-change SHOULDER coupling: two complementary circular manufactured socket components just separated on padded bench mounts, robust locking collar and sealed interfaces. No torso, flesh, installation instructions or exploded diagrams. Fine functional material detail.",
       "width": 1536,
       "height": 1024,
@@ -166,7 +226,19 @@
       "sha256": "6981170d9b8c38af817a1c2c77c0dcbdf995cfd048d2ee4e92df9f830b7c29cb",
       "bytes": 350838,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final contact sheets inspected: five-digit hand anatomy, complete inert fictional hardware, connected natural limbs, distinct plastic/Realskinn/chrome/exposed coverings, fingers/tools/claws differentiated. No text, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50025,
+        "objectKey": "system-item-media/v1/items/7805/cover/6981170d9b8c38af817a1c2c77c0dcbdf995cfd048d2ee4e92df9f830b7c29cb.jpg",
+        "fileSize": 350838
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7805/cover/6981170d9b8c38af817a1c2c77c0dcbdf995cfd048d2ee4e92df9f830b7c29cb.jpg"
     },
     {
       "key": "cyber-7811-cover",
@@ -178,7 +250,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fully clothed middle-aged adult with a cybernetic arm covered in lifelike synthetic skin, subtle neat wrist/upper-arm seam reveals manufactured identity. Natural warm skin surface and five fingers resting relaxed on salon counter. No cutaway, wound or dismemberment; real-skin-like covering is the focus.",
       "width": 1536,
       "height": 1024,
@@ -193,7 +265,19 @@
       "sha256": "10aafbb3837be09c629f088b4a256e40ff1bd152cf815e129c946aefeb864ecf",
       "bytes": 335804,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final contact sheets inspected: five-digit hand anatomy, complete inert fictional hardware, connected natural limbs, distinct plastic/Realskinn/chrome/exposed coverings, fingers/tools/claws differentiated. No text, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50026,
+        "objectKey": "system-item-media/v1/items/7811/cover/10aafbb3837be09c629f088b4a256e40ff1bd152cf815e129c946aefeb864ecf.jpg",
+        "fileSize": 335804
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7811/cover/10aafbb3837be09c629f088b4a256e40ff1bd152cf815e129c946aefeb864ecf.jpg"
     },
     {
       "key": "cyber-7813-cover",
@@ -205,7 +289,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A cybernetic five-finger hand on a neutral display cradle with extendable carbon-glass FINGERTIP claws visible. Thin translucent dark blades emerge from finger ends, distinguish from knuckle claws; static inert prop, no victims, blood or action. All fingertips comfortably within frame.",
       "width": 1536,
       "height": 1024,
@@ -220,7 +304,30 @@
       "sha256": "ed714b52578308cbaef1b5e9e09503b3028c4090f732b0a32b82a86f10c7dc83",
       "bytes": 360907,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final contact sheets inspected: five-digit hand anatomy, complete inert fictional hardware, connected natural limbs, distinct plastic/Realskinn/chrome/exposed coverings, fingers/tools/claws differentiated. No text, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50027,
+        "objectKey": "system-item-media/v1/items/7813/cover/ed714b52578308cbaef1b5e9e09503b3028c4090f732b0a32b82a86f10c7dc83.jpg",
+        "fileSize": 360907
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7813/cover/ed714b52578308cbaef1b5e9e09503b3028c4090f732b0a32b82a86f10c7dc83.jpg"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T20:34:36.690Z",
+    "scenarios": 24,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-64\\live-qa.json"
+  }
 }

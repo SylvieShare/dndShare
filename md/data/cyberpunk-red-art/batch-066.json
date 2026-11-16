@@ -16,12 +16,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A complete cybernetic leg from hip connector to foot, outer casing absent to show the exposed manufactured actuators, cables and mechanical frame; no tissue. Vertical fitting cradle, whole limb fits image. Nighttime clinic, warm bench lamp and graphite gray background.",
       "width": 1536,
       "height": 1024,
       "original": "originals/cyber-7762-cover-v1.png",
-      "final": "final/cyber-7762-cover.jpg"
+      "final": "final/cyber-7762-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d5061857-c8e6-4ea1-acc5-39fccf3910bf.png",
+      "originalSha256": "730e2b27ce47b96fad7bb74917106f849cc49cb6585798db44b65723c4a2bb43",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "65fb066574ef683003a13621c12fb66ddbe6be81ef66136687ab62db2f7a11df",
+      "bytes": 344058,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Paired grip/jump/skate/web options, distinct leg materials and tiny talon verified. Cyberdeck modules have separate functional forms. No text/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50036,
+        "objectKey": "system-item-media/v1/items/7762/cover/65fb066574ef683003a13621c12fb66ddbe6be81ef66136687ab62db2f7a11df.jpg",
+        "fileSize": 344058
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7762/cover/65fb066574ef683003a13621c12fb66ddbe6be81ef66136687ab62db2f7a11df.jpg"
     },
     {
       "key": "cyber-7766-cover",
@@ -33,12 +55,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A MATCHED PAIR of cybernetic feet resting on a fitting bench, soles angled toward viewer to show dense high-grip dark textured pads. Five articulated toes per foot, compact ankle connectors, no wheels or blades. Climbing aid materials, two complete feet clearly separated.",
       "width": 1536,
       "height": 1024,
       "original": "originals/cyber-7766-cover-v1.png",
-      "final": "final/cyber-7766-cover.jpg"
+      "final": "final/cyber-7766-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b22094c2-f425-4cb4-a5e9-7282cd8b2958.png",
+      "originalSha256": "b838a37c3b9d2af7339ae62650da28f27bc4e8578a39d71c90183b04ef9fb590",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "e6f1c757993bf6301545897e85025b99ab4aaec50f887736e77b65ddf27cd724",
+      "bytes": 426120,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Paired grip/jump/skate/web options, distinct leg materials and tiny talon verified. Cyberdeck modules have separate functional forms. No text/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50037,
+        "objectKey": "system-item-media/v1/items/7766/cover/e6f1c757993bf6301545897e85025b99ab4aaec50f887736e77b65ddf27cd724.jpg",
+        "fileSize": 426120
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7766/cover/e6f1c757993bf6301545897e85025b99ab4aaec50f887736e77b65ddf27cd724.jpg"
     },
     {
       "key": "cyber-7768-cover",
@@ -50,12 +94,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One complete cybernetic leg with sealed graphite armor, protected joints and a small manufactured panel revealing fine copper-colored shielding mesh. No magical/electrical aura. Full hip connector to foot visible on a clinic test stand, subdued plum and amber.",
       "width": 1536,
       "height": 1024,
       "original": "originals/cyber-7768-cover-v1.png",
-      "final": "final/cyber-7768-cover.jpg"
+      "final": "final/cyber-7768-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-bcba9176-797b-4182-8ba3-a799e819acac.png",
+      "originalSha256": "59e287214d538d8332fa56552ac94228b35936e686a3bf7d818a2403ae66c29f",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "687b02bd1efc87c79a510981ea52aa5f67fdb36e8e1efe010259efa1b20de438",
+      "bytes": 343006,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Paired grip/jump/skate/web options, distinct leg materials and tiny talon verified. Cyberdeck modules have separate functional forms. No text/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50038,
+        "objectKey": "system-item-media/v1/items/7768/cover/687b02bd1efc87c79a510981ea52aa5f67fdb36e8e1efe010259efa1b20de438.jpg",
+        "fileSize": 343006
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7768/cover/687b02bd1efc87c79a510981ea52aa5f67fdb36e8e1efe010259efa1b20de438.jpg"
     },
     {
       "key": "cyber-7777-cover",
@@ -67,12 +133,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A MATCHED PAIR of cybernetic legs on a manufactured standing test frame, reinforced hydraulic jumping pistons along calves and compact shock units at knees/ankles. Both complete feet and upper connectors visible. No rocket jets, wings or combat, detailed plausible cyberpunk hardware.",
       "width": 1536,
       "height": 1024,
       "original": "originals/cyber-7777-cover-v1.png",
-      "final": "final/cyber-7777-cover.jpg"
+      "final": "final/cyber-7777-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d811ecd7-e91a-49d2-8fc6-7f3d3e0c9a08.png",
+      "originalSha256": "acfe9375b5407715166a3bb69efa9910448bbb92733742c42c6e157e4aa85a70",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "2fa05f2f78aaa3b41df2dc3c0f76c5a9e50e50124c2be0516decb4c1e4030384",
+      "bytes": 422076,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Paired grip/jump/skate/web options, distinct leg materials and tiny talon verified. Cyberdeck modules have separate functional forms. No text/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50039,
+        "objectKey": "system-item-media/v1/items/7777/cover/2fa05f2f78aaa3b41df2dc3c0f76c5a9e50e50124c2be0516decb4c1e4030384.jpg",
+        "fileSize": 422076
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7777/cover/2fa05f2f78aaa3b41df2dc3c0f76c5a9e50e50124c2be0516decb4c1e4030384.jpg"
     },
     {
       "key": "cyber-7783-cover",
@@ -84,12 +172,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. An intact ordinary adult human FOOT resting naturally on a footrest, ankle and lower leg clearly continuing upward into casual rolled trousers of a seated adult. Natural toes and skin, no implant or wound or detached limb. Cyberpunk apartment, soft morning light.",
       "width": 1536,
       "height": 1024,
       "original": "originals/cyber-7783-cover-v1.png",
-      "final": "final/cyber-7783-cover.jpg"
+      "final": "final/cyber-7783-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-db25d932-a29b-4212-b3fd-d0cd8033a619.png",
+      "originalSha256": "ece8382bf7e9d625ec9fb2419d3dcc9ba6a0756bdafa45c5281eef3a62148241",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "6fd6ebb501f9c1bcc0caff3a66208e238469cb309a3e32494ae728aed40231d8",
+      "bytes": 350174,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Paired grip/jump/skate/web options, distinct leg materials and tiny talon verified. Cyberdeck modules have separate functional forms. No text/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50040,
+        "objectKey": "system-item-media/v1/items/7783/cover/6fd6ebb501f9c1bcc0caff3a66208e238469cb309a3e32494ae728aed40231d8.jpg",
+        "fileSize": 350174
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7783/cover/6fd6ebb501f9c1bcc0caff3a66208e238469cb309a3e32494ae728aed40231d8.jpg"
     },
     {
       "key": "cyber-7785-cover",
@@ -101,12 +211,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. An intact ordinary adult human LEG of a fully clothed adult in knee-length utilitarian shorts sitting on an apartment bench, knee, calf and foot connected naturally. No implant, severed part, injury or suggestive pose. Calm mature everyday cyberpunk scene.",
       "width": 1536,
       "height": 1024,
       "original": "originals/cyber-7785-cover-v1.png",
-      "final": "final/cyber-7785-cover.jpg"
+      "final": "final/cyber-7785-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-023cdb51-1743-49b0-8208-4a7670665187.png",
+      "originalSha256": "4bf130377beca2fcb686334fad01b741281d405488067757279d19b9dde38894",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "86fcade252b9da90f6ef77930dfeff9d261e0e2a32aa3006d60dc597bb2e05ff",
+      "bytes": 420765,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Paired grip/jump/skate/web options, distinct leg materials and tiny talon verified. Cyberdeck modules have separate functional forms. No text/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50041,
+        "objectKey": "system-item-media/v1/items/7785/cover/86fcade252b9da90f6ef77930dfeff9d261e0e2a32aa3006d60dc597bb2e05ff.jpg",
+        "fileSize": 420765
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7785/cover/86fcade252b9da90f6ef77930dfeff9d261e0e2a32aa3006d60dc597bb2e05ff.jpg"
     },
     {
       "key": "cyber-7787-cover",
@@ -118,12 +250,45 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A complete basic medical prosthetic leg from hip connector through knee to foot, modest smooth ivory polymer and simple graphite joints, human proportions, no combat parts or booster. Upright fitting stand in a practical clinic, entire limb within frame.",
       "width": 1536,
       "height": 1024,
       "original": "originals/cyber-7787-cover-v1.png",
-      "final": "final/cyber-7787-cover.jpg"
+      "final": "final/cyber-7787-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6df58509-03c4-4b20-b231-3e0ae703fb4a.png",
+      "originalSha256": "da06d7d7a25c81efa55bb2e8415a7d9b825423aa155c52cf1438fa6689ea0920",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "a2ba58d431cdd71378f722113ee5a6557c7125beff899ac0505b62de9eceea35",
+      "bytes": 333440,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Paired grip/jump/skate/web options, distinct leg materials and tiny talon verified. Cyberdeck modules have separate functional forms. No text/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50042,
+        "objectKey": "system-item-media/v1/items/7787/cover/a2ba58d431cdd71378f722113ee5a6557c7125beff899ac0505b62de9eceea35.jpg",
+        "fileSize": 333440
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7787/cover/a2ba58d431cdd71378f722113ee5a6557c7125beff899ac0505b62de9eceea35.jpg"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T20:41:23.157Z",
+    "scenarios": 21,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-66\\live-qa.json"
+  }
 }

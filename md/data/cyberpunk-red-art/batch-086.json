@@ -1,0 +1,162 @@
+{
+  "batch": 86,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-86",
+  "sourceAudit": "Live own slots empty. Quality variants derive from inspected base weapon cover, preserve silhouette. Exterior craftsmanship interpretation, no new mechanical capabilities or icon changes.",
+  "assets": [
+    {
+      "key": "weapon-8011-cover",
+      "target": {
+        "kind": "item",
+        "id": 8011,
+        "typeId": 37,
+        "name": "Боевой нож (отличное)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8010,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-79/final/weapon-8010-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a HIGH-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Refine material finish: precise clean exterior seams, premium grip/fabric/composite or metal appropriate to this item, controlled polished highlights, careful craftsmanship and subtle restrained decorative accents. Keep it practical and recognizable; no gold fantasy ornament or new capabilities. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8011-cover-v1.png",
+      "final": "final/weapon-8011-cover.jpg"
+    },
+    {
+      "key": "weapon-8012-cover",
+      "target": {
+        "kind": "item",
+        "id": 8012,
+        "typeId": 37,
+        "name": "Боевой нож (плохое)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8010,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-79/final/weapon-8010-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a LOW-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Change only external workmanship and condition: budget materials appropriate to the item, slightly uneven surface finish, modest cosmetic dents/scuffs, worn grip and mismatched replacement exterior panel finish where applicable. Keep it whole and functional, not a wreck; no additional sharp protrusions, missing structural components or visible internal mechanism. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8012-cover-v1.png",
+      "final": "final/weapon-8012-cover.jpg"
+    },
+    {
+      "key": "weapon-8015-cover",
+      "target": {
+        "kind": "item",
+        "id": 8015,
+        "typeId": 37,
+        "name": "Арбалет (отличное)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8014,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-79/final/weapon-8014-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a HIGH-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Refine material finish: precise clean exterior seams, premium grip/fabric/composite or metal appropriate to this item, controlled polished highlights, careful craftsmanship and subtle restrained decorative accents. Keep it practical and recognizable; no gold fantasy ornament or new capabilities. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8015-cover-v1.png",
+      "final": "final/weapon-8015-cover.jpg"
+    },
+    {
+      "key": "weapon-8016-cover",
+      "target": {
+        "kind": "item",
+        "id": 8016,
+        "typeId": 37,
+        "name": "Арбалет (плохое)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8014,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-79/final/weapon-8014-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a LOW-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Change only external workmanship and condition: budget materials appropriate to the item, slightly uneven surface finish, modest cosmetic dents/scuffs, worn grip and mismatched replacement exterior panel finish where applicable. Keep it whole and functional, not a wreck; no additional sharp protrusions, missing structural components or visible internal mechanism. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8016-cover-v1.png",
+      "final": "final/weapon-8016-cover.jpg"
+    },
+    {
+      "key": "weapon-8018-cover",
+      "target": {
+        "kind": "item",
+        "id": 8018,
+        "typeId": 37,
+        "name": "Монтировка (отличное)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8017,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-80/final/weapon-8017-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a HIGH-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Refine material finish: precise clean exterior seams, premium grip/fabric/composite or metal appropriate to this item, controlled polished highlights, careful craftsmanship and subtle restrained decorative accents. Keep it practical and recognizable; no gold fantasy ornament or new capabilities. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8018-cover-v1.png",
+      "final": "final/weapon-8018-cover.jpg"
+    },
+    {
+      "key": "weapon-8019-cover",
+      "target": {
+        "kind": "item",
+        "id": 8019,
+        "typeId": 37,
+        "name": "Монтировка (плохое)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8017,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-80/final/weapon-8017-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a LOW-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Change only external workmanship and condition: budget materials appropriate to the item, slightly uneven surface finish, modest cosmetic dents/scuffs, worn grip and mismatched replacement exterior panel finish where applicable. Keep it whole and functional, not a wreck; no additional sharp protrusions, missing structural components or visible internal mechanism. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8019-cover-v1.png",
+      "final": "final/weapon-8019-cover.jpg"
+    },
+    {
+      "key": "weapon-8023-cover",
+      "target": {
+        "kind": "item",
+        "id": 8023,
+        "typeId": 37,
+        "name": "Гранатомёт (отличное)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8022,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-80/final/weapon-8022-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a HIGH-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Refine material finish: precise clean exterior seams, premium grip/fabric/composite or metal appropriate to this item, controlled polished highlights, careful craftsmanship and subtle restrained decorative accents. Keep it practical and recognizable; no gold fantasy ornament or new capabilities. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8023-cover-v1.png",
+      "final": "final/weapon-8023-cover.jpg"
+    },
+    {
+      "key": "weapon-8024-cover",
+      "target": {
+        "kind": "item",
+        "id": 8024,
+        "typeId": 37,
+        "name": "Гранатомёт (плохое)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "baseItemId": 8022,
+      "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-80/final/weapon-8022-cover.jpg",
+      "prompt": "Edit the supplied finished fictional game illustration into a LOW-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Change only external workmanship and condition: budget materials appropriate to the item, slightly uneven surface finish, modest cosmetic dents/scuffs, worn grip and mismatched replacement exterior panel finish where applicable. Keep it whole and functional, not a wreck; no additional sharp protrusions, missing structural components or visible internal mechanism. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8024-cover-v1.png",
+      "final": "final/weapon-8024-cover.jpg"
+    }
+  ]
+}

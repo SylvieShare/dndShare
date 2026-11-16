@@ -16,12 +16,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A single fictional BAYONET in a fitted display case, short clean steel blade, dark textured grip and sturdy mounting ring; no gun, combat or target. Matte metal and worn fabric, whole blade safely inside frame. Cyberpunk armory storage illustration, no assembly detail or labels.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7935-cover-v1.png",
-      "final": "final/mod-7935-cover.jpg"
+      "final": "final/mod-7935-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0cbbc97e-673a-4c18-b58a-e533313ebf55.png",
+      "originalSha256": "fb768d549ded955ea45710d9488f216ff604d9291e3aef483df4a287dd6f3812",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "086c33d87f3aad6184d5107dc3aadba47759fa2759ceacf41d8f39d18de3151a",
+      "bytes": 352686,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50074,
+        "objectKey": "system-item-media/v1/items/7935/cover/086c33d87f3aad6184d5107dc3aadba47759fa2759ceacf41d8f39d18de3151a.jpg",
+        "fileSize": 352686
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7935/cover/086c33d87f3aad6184d5107dc3aadba47759fa2759ceacf41d8f39d18de3151a.jpg"
     },
     {
       "key": "mod-7962-cover",
@@ -33,12 +55,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional UNDERBARREL GRENADE-LAUNCHER attachment displayed as one inert compact short tube housing on a padded armory cradle. External finished shell and top mounting rail only, no ammunition, firearm, firing, target or instructional diagram. Whole module inside frame, dark graphite and muted amber.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7962-cover-v1.png",
-      "final": "final/mod-7962-cover.jpg"
+      "final": "final/mod-7962-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-31cf50d2-f5b2-44d0-95e2-68362dcad656.png",
+      "originalSha256": "61f75dc4938926aaa8ef0ba70745dba7581f2c45b1bff0b1e4f02444697ab93b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "1776e8734d776bef322c1246b2b43064ade9466566558f64e810522efea87de7",
+      "bytes": 331290,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50075,
+        "objectKey": "system-item-media/v1/items/7962/cover/1776e8734d776bef322c1246b2b43064ade9466566558f64e810522efea87de7.jpg",
+        "fileSize": 331290
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7962/cover/1776e8734d776bef322c1246b2b43064ade9466566558f64e810522efea87de7.jpg"
     },
     {
       "key": "mod-7967-cover",
@@ -50,12 +94,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One INFRARED NIGHT-VISION SCOPE resting on a padded bench, large dark coated objective lens, rugged sensor housing and rubber eyecup. No weapon or through-scope target, no reticle, labels or diagrams. Fine optics and broad cel-painted reflections, cyberpunk armory.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7967-cover-v1.png",
-      "final": "final/mod-7967-cover.jpg"
+      "final": "final/mod-7967-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-271f5c79-e3f4-4692-a416-82e9a1c5fce5.png",
+      "originalSha256": "d10cc0853c0998d3d26ffa71004548e38cd73c632a7d96c455212be7aeca47dc",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "cb89e8f910e776156279e43191df0f82a36360848056e65ae344c54eda2a0c03",
+      "bytes": 389161,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50076,
+        "objectKey": "system-item-media/v1/items/7967/cover/cb89e8f910e776156279e43191df0f82a36360848056e65ae344c54eda2a0c03.jpg",
+        "fileSize": 389161
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7967/cover/cb89e8f910e776156279e43191df0f82a36360848056e65ae344c54eda2a0c03.jpg"
     },
     {
       "key": "mod-7978-cover",
@@ -67,12 +133,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional UNDERBARREL SHOTGUN attachment, compact narrow two-shot housing on a padded armory cradle, external finished casing and mounting rail only. No ammunition, firing, targets, construction or operating details. Full module comfortably inside frame, graphite and worn polymer.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7978-cover-v1.png",
-      "final": "final/mod-7978-cover.jpg"
+      "final": "final/mod-7978-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-90293c52-e92b-41e3-b128-93e66a21e607.png",
+      "originalSha256": "1ecafcfa68f8b9934fce10568ed970bc7a2882f294a0087974295e98b17d9fc2",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d43a1215c3f51f47fc22a33e0f67390b0fa16ed69db3d8672387e9975217ae5c",
+      "bytes": 368624,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50077,
+        "objectKey": "system-item-media/v1/items/7978/cover/d43a1215c3f51f47fc22a33e0f67390b0fa16ed69db3d8672387e9975217ae5c.jpg",
+        "fileSize": 368624
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7978/cover/d43a1215c3f51f47fc22a33e0f67390b0fa16ed69db3d8672387e9975217ae5c.jpg"
     },
     {
       "key": "mod-7979-cover",
@@ -84,12 +172,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SMARTGUN LINK electronic connector module, compact rugged adapter with a short protected interface lead and sealed contact plate on a service tray. No weapon, targeting scene, code or wiring diagram. Rich cel-shaded metal/rubber/glass materials, warm bench lamp and cool room.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7979-cover-v1.png",
-      "final": "final/mod-7979-cover.jpg"
+      "final": "final/mod-7979-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-fcea42a3-338c-4a69-ab43-9fe7ce3de191.png",
+      "originalSha256": "06fb6a2e819e61393f6244e5a2ca6555d176b16a9f2efac9ee0525a690bd9c4a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ac96f86649bce424071b5ca7c4fa2d87d082effb0e4066676137a8e149a93427",
+      "bytes": 381640,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50078,
+        "objectKey": "system-item-media/v1/items/7979/cover/ac96f86649bce424071b5ca7c4fa2d87d082effb0e4066676137a8e149a93427.jpg",
+        "fileSize": 381640
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7979/cover/ac96f86649bce424071b5ca7c4fa2d87d082effb0e4066676137a8e149a93427.jpg"
     },
     {
       "key": "mod-7981-cover",
@@ -101,12 +211,45 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One long SNIPING SCOPE on a padded optics bench, elongated dark tube with large objective lens, subtle adjustment housings and rubber eyecup. No firearm, target view or reticle, no readable scales. Entire optical instrument visible, detailed cel shading, graphite and plum highlights.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7981-cover-v1.png",
-      "final": "final/mod-7981-cover.jpg"
+      "final": "final/mod-7981-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e15b940c-8f4a-4f0e-9c49-a46a3ac865a2.png",
+      "originalSha256": "c78cc565f201ae8098941b80067bef6d85cdef69c348605b9b720b5e1effc82d",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "187f16cef585430c40bfaa5a0309bc3077f3380752a53f713c3ff487f8f23955",
+      "bytes": 363486,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50079,
+        "objectKey": "system-item-media/v1/items/7981/cover/187f16cef585430c40bfaa5a0309bc3077f3380752a53f713c3ff487f8f23955.jpg",
+        "fileSize": 363486
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7981/cover/187f16cef585430c40bfaa5a0309bc3077f3380752a53f713c3ff487f8f23955.jpg"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T21:01:34.909Z",
+    "scenarios": 18,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-72\\live-qa.json"
+  }
 }

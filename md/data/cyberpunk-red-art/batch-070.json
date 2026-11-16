@@ -16,12 +16,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A HEAVY VEHICLE CHASSIS on a workshop lift, robust reinforced longitudinal frame rails and beefier crossmembers beneath a rugged van, towing eye and neatly coiled towing cable visible. No body armor plating emphasis, distinguish strong structural skeleton from armor. Warm garage and cool daylight.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7964-cover-v1.png",
-      "final": "final/mod-7964-cover.jpg"
+      "final": "final/mod-7964-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-039a009f-16a1-4ec7-98e2-6376a4850147.png",
+      "originalSha256": "75ad0a1b5c71785d8b9b5941d9f01013cc14c10267ed89e97c42e1ca716f1435",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "fdb49a519820fa0fa8334ee56e2892aff1b7dc1c70ecf238693ef1428c380ba9",
+      "bytes": 441269,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected: vehicle armor vs structural frame, glass, six radios, hover fans, jets, two seats, three pod caps, empty mount and safe storage distinguished. Mature cel shading, no readable typography or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50062,
+        "objectKey": "system-item-media/v1/items/7964/cover/fdb49a519820fa0fa8334ee56e2892aff1b7dc1c70ecf238693ef1428c380ba9.jpg",
+        "fileSize": 441269
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7964/cover/fdb49a519820fa0fa8334ee56e2892aff1b7dc1c70ecf238693ef1428c380ba9.jpg"
     },
     {
       "key": "mod-7965-cover",
@@ -33,12 +55,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A compact HOUSING COMPARTMENT built into a nomad vehicle: ONE narrow bed, tiny kitchenette, and a small enclosed bathroom/shower door. View through open side door, practical packed storage and lived-in cloth, adult scale. No people necessary, no logos or labels.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7965-cover-v1.png",
-      "final": "final/mod-7965-cover.jpg"
+      "final": "final/mod-7965-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7238dd66-2cea-40a4-a62a-468acfbfc889.png",
+      "originalSha256": "2644052f474cc0f5a0e39b43df2c77d96bb355ddf5c534c40a6410cc583cc0f7",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d95d47d67f1073fd073fe744b7ae6a0478d8b1cdb73e662addb865db5daa8015",
+      "bytes": 439055,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected: vehicle armor vs structural frame, glass, six radios, hover fans, jets, two seats, three pod caps, empty mount and safe storage distinguished. Mature cel shading, no readable typography or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50063,
+        "objectKey": "system-item-media/v1/items/7965/cover/d95d47d67f1073fd073fe744b7ae6a0478d8b1cdb73e662addb865db5daa8015.jpg",
+        "fileSize": 439055
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7965/cover/d95d47d67f1073fd073fe744b7ae6a0478d8b1cdb73e662addb865db5daa8015.jpg"
     },
     {
       "key": "mod-7966-cover",
@@ -50,12 +94,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A retrofuturist land car converted with an AIR-CUSHION HOVER upgrade, parked on a wet dock with clearly visible powerful downward-facing ducted fans under chassis and flexible perimeter skirt. Plausible hovercraft, no flying high, no jet flames or levitation magic. Warm/cool reflected light.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7966-cover-v1.png",
-      "final": "final/mod-7966-cover.jpg"
+      "final": "final/mod-7966-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2037c18a-5008-454b-b725-487e69991997.png",
+      "originalSha256": "9f4ac13f40826450c4ccc59ece5ff407d32d9eb93a8203f36948daa8fdafccc9",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "361167e48671c639f3edfd43fe3083c12424d570c6f63e8a9b957d23511efc86",
+      "bytes": 481400,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected: vehicle armor vs structural frame, glass, six radios, hover fans, jets, two seats, three pod caps, empty mount and safe storage distinguished. Mature cel shading, no readable typography or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50064,
+        "objectKey": "system-item-media/v1/items/7966/cover/361167e48671c639f3edfd43fe3083c12424d570c6f63e8a9b957d23511efc86.jpg",
+        "fileSize": 481400
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7966/cover/361167e48671c639f3edfd43fe3083c12424d570c6f63e8a9b957d23511efc86.jpg"
     },
     {
       "key": "mod-7970-cover",
@@ -67,12 +133,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional vehicle NITROUS BOOST module shown as one sealed metal canister secured in a padded bracket within a retrofuturist car's rear compartment. Closed finished hardware with protected opaque connectors; no exposed plumbing, gauges, chemistry, diagrams or installation instructions. Workshop illustration.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7970-cover-v1.png",
-      "final": "final/mod-7970-cover.jpg"
+      "final": "final/mod-7970-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-18699a21-7bf4-421c-813a-4a41d20df5f2.png",
+      "originalSha256": "2280dfbcbb8621c8f17d2ccc1475d8f0f9d5e7b7d5b6926d502093838e3780f3",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "a74584790bf6c692d5fc405e2d36893d27e0525ae9cee9c77aa05162e356b51b",
+      "bytes": 414640,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected: vehicle armor vs structural frame, glass, six radios, hover fans, jets, two seats, three pod caps, empty mount and safe storage distinguished. Mature cel shading, no readable typography or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50065,
+        "objectKey": "system-item-media/v1/items/7970/cover/a74584790bf6c692d5fc405e2d36893d27e0525ae9cee9c77aa05162e356b51b.jpg",
+        "fileSize": 414640
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7970/cover/a74584790bf6c692d5fc405e2d36893d27e0525ae9cee9c77aa05162e356b51b.jpg"
     },
     {
       "key": "mod-7971-cover",
@@ -84,12 +172,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional ONBOARD FLAMETHROWER module built into the side of a rugged parked retrofuturist vehicle. Static inert compact nozzle housing and protected rounded reservoir visible as closed housings; no flame, firing, human target or construction/operating details. Industrial garage, mature cel shading.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7971-cover-v1.png",
-      "final": "final/mod-7971-cover.jpg"
+      "final": "final/mod-7971-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a1b51b09-e932-4266-9e42-f08f94779484.png",
+      "originalSha256": "475fda9708b925674b186c2b41fdbb5203e19310eadd68a94841ba5d3192a7d3",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "862ba70e75191adefad550e26bd0055d202f82987003b78fe8e563d510176c45",
+      "bytes": 369130,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected: vehicle armor vs structural frame, glass, six radios, hover fans, jets, two seats, three pod caps, empty mount and safe storage distinguished. Mature cel shading, no readable typography or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50066,
+        "objectKey": "system-item-media/v1/items/7971/cover/862ba70e75191adefad550e26bd0055d202f82987003b78fe8e563d510176c45.jpg",
+        "fileSize": 369130
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7971/cover/862ba70e75191adefad550e26bd0055d202f82987003b78fe8e563d510176c45.jpg"
     },
     {
       "key": "mod-7972-cover",
@@ -101,12 +211,45 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional fixed ONBOARD MACHINE-GUN housing integrated into the FRONT of a parked rugged vehicle, short dark barrel behind armored fairing, no rotating rooftop turret. Static inert equipment, no ammunition, firing, human target or instructions. Wide garage view with complete front of car.",
       "width": 1536,
       "height": 1024,
       "original": "originals/mod-7972-cover-v1.png",
-      "final": "final/mod-7972-cover.jpg"
+      "final": "final/mod-7972-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e16d8118-248f-49d4-ab9b-f3afffb52874.png",
+      "originalSha256": "8502b9d012e856bedf10e5784b2111745616522a8af5bdaaff24d18a1ace67a9",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "df75d6407c021ba99b6b92ca9d97578858c247c8ee33bb1ed2a3fdff21e6f595",
+      "bytes": 416805,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected: vehicle armor vs structural frame, glass, six radios, hover fans, jets, two seats, three pod caps, empty mount and safe storage distinguished. Mature cel shading, no readable typography or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50067,
+        "objectKey": "system-item-media/v1/items/7972/cover/df75d6407c021ba99b6b92ca9d97578858c247c8ee33bb1ed2a3fdff21e6f595.jpg",
+        "fileSize": 416805
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7972/cover/df75d6407c021ba99b6b92ca9d97578858c247c8ee33bb1ed2a3fdff21e6f595.jpg"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T20:51:24.717Z",
+    "scenarios": 18,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-70\\live-qa.json"
+  }
 }

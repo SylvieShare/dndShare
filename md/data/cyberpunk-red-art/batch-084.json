@@ -1,0 +1,78 @@
+{
+  "batch": 84,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-84",
+  "sourceAudit": "Live own slots empty. Structured facts and Core340–341,347–349 reviewed. Original finished fictional exterior design. Basic and named weapons form references for quality variants; no icon changes.",
+  "assets": [
+    {
+      "key": "weapon-8089-cover",
+      "target": {
+        "kind": "item",
+        "id": 8089,
+        "typeId": 37,
+        "name": "«Спираль» от Цунами армс"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional HELIX heavy automatic weapon, large two-handed industrial longarm with robust cylindrical forward barrel housing, heavy enclosed receiver and broad drum-like magazine. On a sturdy support stand. No firing, exposed mechanism, ammunition or logo; original sci-fi silhouette.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8089-cover-v1.png",
+      "final": "final/weapon-8089-cover.jpg"
+    },
+    {
+      "key": "weapon-8090-cover",
+      "target": {
+        "kind": "item",
+        "id": 8090,
+        "typeId": 37,
+        "name": "Без оружия"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A clearly mature adult brawler in a cyberpunk gym preparing with empty hands in a relaxed defensive guard, five fingers naturally curled, natural adult anatomy. Worn training clothes, padded bag in background. No weapons, contact strike, injury or aggressive threat toward viewer.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8090-cover-v1.png",
+      "final": "final/weapon-8090-cover.jpg"
+    },
+    {
+      "key": "weapon-8091-cover",
+      "target": {
+        "kind": "item",
+        "id": 8091,
+        "typeId": 37,
+        "name": "Очень тяжёлое оружие ближнего боя"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. An example of VERY HEAVY MELEE WEAPON: a massive industrial two-handed maul with a broad blocky steel head and long reinforced grip, displayed on a strong floor rack. Full silhouette, cyberpunk workshop background, no fantasy runes.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8091-cover-v1.png",
+      "final": "final/weapon-8091-cover.jpg"
+    },
+    {
+      "key": "weapon-8094-cover",
+      "target": {
+        "kind": "item",
+        "id": 8094,
+        "typeId": 37,
+        "name": "Пистолет сверхкрупного калибра"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A VERY HEAVY PISTOL, oversized substantial one-handed handgun with long thick barrel shroud, broad tall slide and chunky grip, dark graphite and cream metal accents. In a padded armory case, complete exterior, heavier silhouette than ordinary pistols.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/weapon-8094-cover-v1.png",
+      "final": "final/weapon-8094-cover.jpg"
+    }
+  ]
+}

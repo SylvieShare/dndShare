@@ -1,0 +1,411 @@
+{
+  "batch": 73,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-73",
+  "sourceAudit": "Live slots empty. Core343–344 lists all ten weapon classes including rocket-launcher magazine variants. Exterior shape is original fictional interpretation, no real technical diagram. Icons unchanged.",
+  "assets": [
+    {
+      "key": "mod-7941-cover",
+      "target": {
+        "kind": "item",
+        "id": 7941,
+        "typeId": 35,
+        "name": "Барабанный магазин (штурмовая винтовка)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk DRUM MAGAZINE for a assault rifle, medium-wide curved feed neck, circular low-profile drum. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte graphite with muted teal material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7941-cover-v1.png",
+      "final": "final/mod-7941-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-aaa34270-0d2e-4202-b93d-dab62352149f.png",
+      "originalSha256": "6d224ad8526ae42bbc6e981417687c5b22de3301f5adfb51dfcd2cfa89f90229",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "7b91469063d79ebd8f2a727c7f88a23787a3f1c99a092aa63f1e45e765a7836e",
+      "bytes": 329588,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50080,
+        "objectKey": "system-item-media/v1/items/7941/cover/7b91469063d79ebd8f2a727c7f88a23787a3f1c99a092aa63f1e45e765a7836e.jpg",
+        "fileSize": 329588
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7941/cover/7b91469063d79ebd8f2a727c7f88a23787a3f1c99a092aa63f1e45e765a7836e.jpg"
+    },
+    {
+      "key": "mod-7942-cover",
+      "target": {
+        "kind": "item",
+        "id": 7942,
+        "typeId": 35,
+        "name": "Барабанный магазин (гранатомёт)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk DRUM MAGAZINE for a grenade launcher, large wide cylindrical closed drum with broad collar. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte dark steel with amber material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7942-cover-v1.png",
+      "final": "final/mod-7942-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-513e1ddb-de60-4668-a395-09ca60748f74.png",
+      "originalSha256": "8c100ef7045639f6e1e332df1c3d9244172a03e2b0e5a472a0d7b542a71b6d47",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "1f57a110692305cc7a07a21074e0ae84188f799ad43e2f43eec4fc0bf680729d",
+      "bytes": 310025,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50081,
+        "objectKey": "system-item-media/v1/items/7942/cover/1f57a110692305cc7a07a21074e0ae84188f799ad43e2f43eec4fc0bf680729d.jpg",
+        "fileSize": 310025
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7942/cover/1f57a110692305cc7a07a21074e0ae84188f799ad43e2f43eec4fc0bf680729d.jpg"
+    },
+    {
+      "key": "mod-7943-cover",
+      "target": {
+        "kind": "item",
+        "id": 7943,
+        "typeId": 35,
+        "name": "Барабанный магазин (пистолет крупного калибра)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk DRUM MAGAZINE for a heavy pistol, compact round drum with a short narrow upright neck. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte burgundy polymer and black material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7943-cover-v1.png",
+      "final": "final/mod-7943-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d2df9387-3a91-4b42-be12-f61e13feff27.png",
+      "originalSha256": "4aebff1165db662def29d77d06bab1128d9c7bb59df3f6ddaff4a64914c69c33",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "0b678f9c295368cd9101b26c0644444dda8f3eaad42cfe14b4316cda1724fa13",
+      "bytes": 328872,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50082,
+        "objectKey": "system-item-media/v1/items/7943/cover/0b678f9c295368cd9101b26c0644444dda8f3eaad42cfe14b4316cda1724fa13.jpg",
+        "fileSize": 328872
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7943/cover/0b678f9c295368cd9101b26c0644444dda8f3eaad42cfe14b4316cda1724fa13.jpg"
+    },
+    {
+      "key": "mod-7944-cover",
+      "target": {
+        "kind": "item",
+        "id": 7944,
+        "typeId": 35,
+        "name": "Барабанный магазин (ПП крупного калибра)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk DRUM MAGAZINE for a heavy submachine gun, wide round drum with robust tall neck. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte gray metal and red material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7944-cover-v1.png",
+      "final": "final/mod-7944-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2944bf55-6e2f-405a-87ee-8777a6c4a071.png",
+      "originalSha256": "301e0ef7d4df9521a72cfa5587df0bc1abdd2b7908d84522afa6afda12427114",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "9d83a8184b1f99dcc06a2df240c2bba2d50ea133638e9f2ef63040f541f5e653",
+      "bytes": 304221,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50083,
+        "objectKey": "system-item-media/v1/items/7944/cover/9d83a8184b1f99dcc06a2df240c2bba2d50ea133638e9f2ef63040f541f5e653.jpg",
+        "fileSize": 304221
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7944/cover/9d83a8184b1f99dcc06a2df240c2bba2d50ea133638e9f2ef63040f541f5e653.jpg"
+    },
+    {
+      "key": "mod-7945-cover",
+      "target": {
+        "kind": "item",
+        "id": 7945,
+        "typeId": 35,
+        "name": "Барабанный магазин (пистолет среднего калибра)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk DRUM MAGAZINE for a medium pistol, small slim round drum with delicate short feed neck. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte black polymer and cream material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7945-cover-v1.png",
+      "final": "final/mod-7945-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5893c38b-4caf-4159-ba2a-5b4124f300bc.png",
+      "originalSha256": "e58424633adeb61d12f6462c703a569ead49b1d74b481301b494bcf4dc84f3a1",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "12197848f3b692c99c5170d1febaa34477dde6504c46a1564d9bad11839c1d9a",
+      "bytes": 320039,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50084,
+        "objectKey": "system-item-media/v1/items/7945/cover/12197848f3b692c99c5170d1febaa34477dde6504c46a1564d9bad11839c1d9a.jpg",
+        "fileSize": 320039
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7945/cover/12197848f3b692c99c5170d1febaa34477dde6504c46a1564d9bad11839c1d9a.jpg"
+    },
+    {
+      "key": "mod-7946-cover",
+      "target": {
+        "kind": "item",
+        "id": 7946,
+        "typeId": 35,
+        "name": "Барабанный магазин (ракетница)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk DRUM MAGAZINE for a rocket launcher, bulky cylindrical closed three-lobed pod, large scale. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte graphite with muted teal material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7946-cover-v1.png",
+      "final": "final/mod-7946-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c9ed2bc3-f466-4449-942e-877677add4f3.png",
+      "originalSha256": "3983b6e6fb6450b89a926936c294918d700a5e0f11767edca8b03916f3405868",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "4b94a8db66a7b717e848de6a9ece8b0a7ec4151d9a5a7ed8ee1a263bbfbb780e",
+      "bytes": 323061,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50085,
+        "objectKey": "system-item-media/v1/items/7946/cover/4b94a8db66a7b717e848de6a9ece8b0a7ec4151d9a5a7ed8ee1a263bbfbb780e.jpg",
+        "fileSize": 323061
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7946/cover/4b94a8db66a7b717e848de6a9ece8b0a7ec4151d9a5a7ed8ee1a263bbfbb780e.jpg"
+    },
+    {
+      "key": "mod-7947-cover",
+      "target": {
+        "kind": "item",
+        "id": 7947,
+        "typeId": 35,
+        "name": "Барабанный магазин (дробовик)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk DRUM MAGAZINE for a shotgun, broad deep round drum with stout short neck. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte dark steel with amber material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7947-cover-v1.png",
+      "final": "final/mod-7947-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-38e3ced9-6057-4f0f-9db7-0c111e434e8c.png",
+      "originalSha256": "2fc448c09ed0eade299e9e1e15979583debcf5af7dacd2c042bee0f720febd69",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "6dd3a7e9128b7fdda0b164a0b5f98d468e97e533c922c054f59aa15816273fa2",
+      "bytes": 305944,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50086,
+        "objectKey": "system-item-media/v1/items/7947/cover/6dd3a7e9128b7fdda0b164a0b5f98d468e97e533c922c054f59aa15816273fa2.jpg",
+        "fileSize": 305944
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7947/cover/6dd3a7e9128b7fdda0b164a0b5f98d468e97e533c922c054f59aa15816273fa2.jpg"
+    },
+    {
+      "key": "mod-7948-cover",
+      "target": {
+        "kind": "item",
+        "id": 7948,
+        "typeId": 35,
+        "name": "Барабанный магазин (ПП)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk DRUM MAGAZINE for a submachine gun, compact lightweight round drum with a long narrow neck. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte burgundy polymer and black material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7948-cover-v1.png",
+      "final": "final/mod-7948-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7560c4e3-28d7-4072-be2c-a66ebbc63feb.png",
+      "originalSha256": "156eb4272a2b05872282dc5b10ec2aaeb57c3b17d0c48b6727a4f5f8893900db",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "2f92218733a2deafe1970121302b16079ed95d7391beb3ff66765b95e83175d0",
+      "bytes": 269020,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50087,
+        "objectKey": "system-item-media/v1/items/7948/cover/2f92218733a2deafe1970121302b16079ed95d7391beb3ff66765b95e83175d0.jpg",
+        "fileSize": 269020
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7948/cover/2f92218733a2deafe1970121302b16079ed95d7391beb3ff66765b95e83175d0.jpg"
+    },
+    {
+      "key": "mod-7949-cover",
+      "target": {
+        "kind": "item",
+        "id": 7949,
+        "typeId": 35,
+        "name": "Барабанный магазин (снайперская винтовка)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk DRUM MAGAZINE for a sniper rifle, deep sturdy round drum with a short broad neck. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte gray metal and red material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7949-cover-v1.png",
+      "final": "final/mod-7949-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a6ee1f6e-a251-4d8b-a1b0-a71a012f2523.png",
+      "originalSha256": "4b9dd9a9f12c6c6e9394e8640495724a0c4ba372f1e89c3f53b550e78564bb3b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "dfc1037339c87e544a9b24acf59f4a9cace63e3858e65efa2ecc8b0eaccd2b17",
+      "bytes": 312807,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50088,
+        "objectKey": "system-item-media/v1/items/7949/cover/dfc1037339c87e544a9b24acf59f4a9cace63e3858e65efa2ecc8b0eaccd2b17.jpg",
+        "fileSize": 312807
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7949/cover/dfc1037339c87e544a9b24acf59f4a9cace63e3858e65efa2ecc8b0eaccd2b17.jpg"
+    },
+    {
+      "key": "mod-7950-cover",
+      "target": {
+        "kind": "item",
+        "id": 7950,
+        "typeId": 35,
+        "name": "Барабанный магазин (пистолет сверхкрупного калибра)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SINGLE fictional cyberpunk DRUM MAGAZINE for a very heavy pistol, thick squat round drum with a stout compact neck. Static closed external prop displayed alone in a padded storage case, complete exterior silhouette visible. Matte black polymer and cream material, fine functional seams and restrained wear. Empty inert display with covered feed opening; no cartridges, firearm, internal mechanism, dimensional drawing, assembly or operating instructions. Worn armory storage bench in background with soft warm lamp and cool reflected light; no person needed. Differentiate this particular magazine by its specified silhouette, not by text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7950-cover-v1.png",
+      "final": "final/mod-7950-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4fe110cd-60d4-484f-8cfe-b1a8a2afe41b.png",
+      "originalSha256": "ae2eff2cec188985637c421046fcfa9145b9d6ce414a6c66e9e157cc4d177e2a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "02498c43d2e79df147717e0effc267ee7535582f87706db08be03aa469dce3ff",
+      "bytes": 289675,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: complete external attachments and ten distinct drum-magazine silhouettes, fictional closed props with no ammunition or diagrams. Mature cel shading, no text/logos or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50089,
+        "objectKey": "system-item-media/v1/items/7950/cover/02498c43d2e79df147717e0effc267ee7535582f87706db08be03aa469dce3ff.jpg",
+        "fileSize": 289675
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7950/cover/02498c43d2e79df147717e0effc267ee7535582f87706db08be03aa469dce3ff.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T21:03:03.293Z",
+    "scenarios": 30,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-73\\live-qa.json"
+  }
+}
