@@ -1,0 +1,112 @@
+{
+  "batch": 103,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-103",
+  "sourceAudit": "Live own dictionary slots empty in dict-values-live-before.json. Value identity is(typeId,id), section fallback not counted. Structured names/codes and previously read Core categories guide original narrative scenes. Icons unchanged.",
+  "assets": [
+    {
+      "key": "dict-31-371-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 371,
+        "typeId": 31,
+        "name": "Демон"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A clearly VIRTUAL NET daemon represented by a deliberate geometric guardian construct hovering over branching control platforms, translucent angular surfaces, cyan/amber data light. Not a physical monster or supernatural demon, no text.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-31-371-cover-v1.png",
+      "final": "final/dict-31-371-cover.webp"
+    },
+    {
+      "key": "dict-31-367-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 367,
+        "typeId": 31,
+        "name": "Пароль"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A clearly virtual password barrier in NET: a closed luminous geometric gate with a small key-shaped access token floating before it, abstract data corridor and a distant mature netrunner avatar. No real password, symbols or readable code.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-31-367-cover-v1.png",
+      "final": "final/dict-31-367-cover.webp"
+    },
+    {
+      "key": "dict-31-372-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 372,
+        "typeId": 31,
+        "name": "Программа"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature netrunner avatar observing several small distinct translucent PROGRAM constructs suspended in a virtual grid room, coherent holographic space, no computer screen frame, labels or code.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-31-372-cover-v1.png",
+      "final": "final/dict-31-372-cover.webp"
+    },
+    {
+      "key": "dict-31-369-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 369,
+        "typeId": 31,
+        "name": "Управляющий узел"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A virtual CONTROL NODE: a central illuminated hub connected to several translucent modeled drones and door mechanisms in separate abstract platforms. Clearly digital scene, no wiring diagrams or real-world hacking instructions.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-31-369-cover-v1.png",
+      "final": "final/dict-31-369-cover.webp"
+    },
+    {
+      "key": "dict-31-368-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 368,
+        "typeId": 31,
+        "name": "Файл"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A virtual DATA FILE represented as a solid translucent archive capsule with layered blank luminous sheets inside, held by a mature netrunner avatar in a grid corridor. No readable document or code.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-31-368-cover-v1.png",
+      "final": "final/dict-31-368-cover.webp"
+    },
+    {
+      "key": "dict-31-370-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 370,
+        "typeId": 31,
+        "name": "Чёрный ЛЁД"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A clearly virtual BLACK ICE guardian, dark faceted predatory hound silhouette with restrained red data glints blocking a NET corridor, mature netrunner far away. No physical animal injury or graphic attack.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-31-370-cover-v1.png",
+      "final": "final/dict-31-370-cover.webp"
+    }
+  ]
+}

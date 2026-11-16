@@ -1,0 +1,163 @@
+{
+  "batch": 102,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-102",
+  "sourceAudit": "Live own dictionary slots empty in dict-values-live-before.json. Value identity is(typeId,id), section fallback not counted. Structured names/codes and previously read Core categories guide original narrative scenes. Icons unchanged.",
+  "assets": [
+    {
+      "key": "dict-30-366-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 366,
+        "typeId": 30,
+        "name": "Боргирование"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature technician examining a large manufactured full-body borg frame on a workshop stand, extra shoulder sockets and robust mechanical reinforcement visible. Whole synthetic frame and natural adult technician, no real anatomy or surgery.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-30-366-cover-v1.png",
+      "final": "final/dict-30-366-cover.webp"
+    },
+    {
+      "key": "dict-30-365-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 365,
+        "typeId": 30,
+        "name": "Внешние"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature clinician displays flexible synthetic skin armor samples and an empty manufactured storage-pocket model on a padded table. External body enhancements theme, no real wound or operation.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-30-365-cover-v1.png",
+      "final": "final/dict-30-365-cover.webp"
+    },
+    {
+      "key": "dict-30-364-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 364,
+        "typeId": 30,
+        "name": "Внутренние"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A sealed manufactured torso training model beside small closed air-reservoir and filtering modules, mature clinician explaining to adult client, internal cyberware theme without exposed organic anatomy.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-30-364-cover-v1.png",
+      "final": "final/dict-30-364-cover.webp"
+    },
+    {
+      "key": "dict-30-361-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 361,
+        "typeId": 30,
+        "name": "Кибераудио"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature audio technician comparing tiny cyberaudio modules beside a neutral artificial ear/head model, fine acoustic grilles and connectors, no headphones dominating scene.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-30-361-cover-v1.png",
+      "final": "final/dict-30-361-cover.webp"
+    },
+    {
+      "key": "dict-30-363-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 363,
+        "typeId": 30,
+        "name": "Кибернога"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult tests one complete cybernetic LEG on a fitting platform with rail support, technician observing; hip/knee/ankle joints and foot visible, no open tissue or surgery.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-30-363-cover-v1.png",
+      "final": "final/dict-30-363-cover.webp"
+    },
+    {
+      "key": "dict-30-360-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 360,
+        "typeId": 30,
+        "name": "Кибероптика"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature clinician holding a tiny mechanical cybereye beside optical lens modules in a foam tray, warm/cool lens reflections, artificial head model behind, no organic eyeball.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-30-360-cover-v1.png",
+      "final": "final/dict-30-360-cover.webp"
+    },
+    {
+      "key": "dict-30-362-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 362,
+        "typeId": 30,
+        "name": "Киберрука"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult flexes a complete mechanical cyberARM during a calm fitting, five fingers, shoulder/elbow/wrist hardware detailed, technician watches, no surgery.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-30-362-cover-v1.png",
+      "final": "final/dict-30-362-cover.webp"
+    },
+    {
+      "key": "dict-30-359-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 359,
+        "typeId": 30,
+        "name": "Нейроимпланты"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A set of small neural chips and closed interface modules displayed beside an intact synthetic head model with neat connector ports, mature technician, no exposed brain or operative imagery.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-30-359-cover-v1.png",
+      "final": "final/dict-30-359-cover.webp"
+    },
+    {
+      "key": "dict-30-358-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 358,
+        "typeId": 30,
+        "name": "Стилевые"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. An adult with subtle luminous skin threading and colored techhair choosing style samples at a cyberpunk salon mirror, mature face and natural hands, decorative fashionware focus.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-30-358-cover-v1.png",
+      "final": "final/dict-30-358-cover.webp"
+    }
+  ]
+}

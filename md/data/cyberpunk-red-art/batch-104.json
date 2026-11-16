@@ -1,0 +1,146 @@
+{
+  "batch": 104,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-104",
+  "sourceAudit": "Live own dictionary slots empty in dict-values-live-before.json. Value identity is(typeId,id), section fallback not counted. Structured names/codes and previously read Core categories guide original narrative scenes. Icons unchanged.",
+  "assets": [
+    {
+      "key": "dict-32-373-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 373,
+        "typeId": 32,
+        "name": "Наука (Антропология)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature anthropologist interviewing adult residents at a cyberpunk community archive table with everyday objects and old photos, respectful ordinary urban people, no exoticizing costumes or readable documents.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-32-373-cover-v1.png",
+      "final": "final/dict-32-373-cover.webp"
+    },
+    {
+      "key": "dict-32-374-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 374,
+        "typeId": 32,
+        "name": "Наука (Биология)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature biologist examining harmless leaf and plant-cell samples under a microscope in a city greenhouse lab, living plants and sealed sample dishes, no pathogens or procedures.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-32-374-cover-v1.png",
+      "final": "final/dict-32-374-cover.webp"
+    },
+    {
+      "key": "dict-32-376-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 376,
+        "typeId": 32,
+        "name": "Наука (Геология)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature geologist comparing clearly different rock cores and mineral samples on a field table near a futuristic city excavation, rugged cases and hand lens, no text labels.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-32-376-cover-v1.png",
+      "final": "final/dict-32-376-cover.webp"
+    },
+    {
+      "key": "dict-32-380-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 380,
+        "typeId": 32,
+        "name": "Наука (Зоология)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature zoologist observing a calm small urban bird through a safe window habitat, tablet with abstract shapes and ecological notes not legible, cyberpunk research setting, no animal experiments.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-32-380-cover-v1.png",
+      "final": "final/dict-32-380-cover.webp"
+    },
+    {
+      "key": "dict-32-377-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 377,
+        "typeId": 32,
+        "name": "Наука (История)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature historian studying old city photographs and architectural models in a cyberpunk archive, layered evidence and a desk lamp, no legible dates or text.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-32-377-cover-v1.png",
+      "final": "final/dict-32-377-cover.webp"
+    },
+    {
+      "key": "dict-32-378-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 378,
+        "typeId": 32,
+        "name": "Наука (Математика)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature mathematician considering translucent geometric solids and tessellated models on a table in a city study, precise spatial forms, no equations or written numbers.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-32-378-cover-v1.png",
+      "final": "final/dict-32-378-cover.webp"
+    },
+    {
+      "key": "dict-32-379-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 379,
+        "typeId": 32,
+        "name": "Наука (Физика)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature physicist examining an enclosed optical experiment with prisms and soft colored light beams on a lab bench, no dangerous apparatus, circuit diagram or instructions.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-32-379-cover-v1.png",
+      "final": "final/dict-32-379-cover.webp"
+    },
+    {
+      "key": "dict-32-375-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 375,
+        "typeId": 32,
+        "name": "Наука (Химия)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature chemist checking sealed benign sample containers beside a clean laboratory analyzer, colored glass reflections and protective eyewear, no reactions, formulas, recipes or open hazardous substances.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-32-375-cover-v1.png",
+      "final": "final/dict-32-375-cover.webp"
+    }
+  ]
+}

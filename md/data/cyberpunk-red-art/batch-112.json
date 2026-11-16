@@ -1,0 +1,146 @@
+{
+  "batch": 112,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-112",
+  "sourceAudit": "Live dictionary own slots empty. Structured names/codes/stat associations reviewed. Original fictional narrative of skill/class, no mechanical rule or operational instruction depicted. Icons unchanged.",
+  "assets": [
+    {
+      "key": "dict-38-455-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 455,
+        "typeId": 38,
+        "name": "Выживание"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature nomad preparing a small sheltered camp beside a parked vehicle in scrubland beyond a cyberpunk skyline, water bottle and practical bedding, no dangerous survival procedure. No weapon operation, assembly steps, technical diagram or readable code.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-38-455-cover-v1.png",
+      "final": "final/dict-38-455-cover.webp"
+    },
+    {
+      "key": "dict-38-433-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 433,
+        "typeId": 38,
+        "name": "Выносливость"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature athlete finishing a long steady run on an elevated city path, tired but determined posture, full natural body, soft dawn skyline. No weapon operation, assembly steps, technical diagram or readable code.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-38-433-cover-v1.png",
+      "final": "final/dict-38-433-cover.webp"
+    },
+    {
+      "key": "dict-38-429-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 429,
+        "typeId": 38,
+        "name": "Выслеживание"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature field scout examining ordinary footprints in muddy ground at an abandoned industrial lot, hand lamp and weathered surroundings, no pursuit of a specific person. No weapon operation, assembly steps, technical diagram or readable code.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-38-429-cover-v1.png",
+      "final": "final/dict-38-429-cover.webp"
+    },
+    {
+      "key": "dict-38-475-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 475,
+        "typeId": 38,
+        "name": "Гардероб и стиль"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature stylist helping an adult choose a well-fitted cyberpunk jacket at a salon mirror, several contrasting garments on a rack, detailed cloth and trim. No weapon operation, assembly steps, technical diagram or readable code.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-38-475-cover-v1.png",
+      "final": "final/dict-38-475-cover.webp"
+    },
+    {
+      "key": "dict-38-431-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 431,
+        "typeId": 38,
+        "name": "Гибкость"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult performer practicing a controlled flexibility stretch on a padded studio floor, plausible joints and full body, no extreme distortion or peril. No weapon operation, assembly steps, technical diagram or readable code.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-38-431-cover-v1.png",
+      "final": "final/dict-38-431-cover.webp"
+    },
+    {
+      "key": "dict-38-447-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 447,
+        "typeId": 38,
+        "name": "Дедукция"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature detective comparing several unmarked photos and small everyday objects on a desk, a subtle moment of realization, no readable case board or accusations. No weapon operation, assembly steps, technical diagram or readable code.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-38-447-cover-v1.png",
+      "final": "final/dict-38-447-cover.webp"
+    },
+    {
+      "key": "dict-38-466-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 466,
+        "typeId": 38,
+        "name": "Длинноствольное оружие"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult inspecting a closed long equipment case beside a padded supervised training bench, hearing protection and a thoughtful posture, no aiming instruction or firing. No weapon operation, assembly steps, technical diagram or readable code.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-38-466-cover-v1.png",
+      "final": "final/dict-38-466-cover.webp"
+    },
+    {
+      "key": "dict-38-470-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 470,
+        "typeId": 38,
+        "name": "Допрос"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Two mature adults in a calm formal interview room across a plain table, investigator asking a question with an open hand while the other considers it. No restraints, intimidation, violence or readable transcript. No weapon operation, assembly steps, technical diagram or readable code.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-38-470-cover-v1.png",
+      "final": "final/dict-38-470-cover.webp"
+    }
+  ]
+}

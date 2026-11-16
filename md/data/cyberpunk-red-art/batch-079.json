@@ -16,7 +16,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A compact one-handed PAINTBALL AIR PISTOL, chunky polymer grip, short smooth barrel and small sealed compressed-air chamber, resting in a padded sporting-equipment tray. No paintballs, acid, spray or firing. Original fictional design, modest civilian finish.",
       "width": 1536,
       "height": 1024,
@@ -31,7 +31,19 @@
       "sha256": "47915f0807b8c4b512c8bcd70c4aef268ffaf29640cf227bab8027081d3abc2a",
       "bytes": 350993,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final exports inspected: finished fictional weapon silhouettes, materials, complete framing, crystalline Mono-Three and smart-interface pistol distinguished; controlled martial-arts practice has natural adult anatomy. No text, gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50122,
+        "objectKey": "system-item-media/v1/items/7997/cover/47915f0807b8c4b512c8bcd70c4aef268ffaf29640cf227bab8027081d3abc2a.jpg",
+        "fileSize": 350993
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7997/cover/47915f0807b8c4b512c8bcd70c4aef268ffaf29640cf227bab8027081d3abc2a.jpg"
     },
     {
       "key": "weapon-7998-cover",
@@ -43,7 +55,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A standard cyberpunk ASSAULT RIFLE, two-handed full-length silhouette, shoulder stock, modest long barrel and curved box magazine. Graphite metal, dark polymer handguard, restrained orange accent. On a padded armory rack, complete muzzle to stock visible.",
       "width": 1536,
       "height": 1024,
@@ -58,7 +70,19 @@
       "sha256": "cbb01fa36ef3592aa15a019825cf3c4cbfef5ae81881c8cfbe1399da8f9f769c",
       "bytes": 255870,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final exports inspected: finished fictional weapon silhouettes, materials, complete framing, crystalline Mono-Three and smart-interface pistol distinguished; controlled martial-arts practice has natural adult anatomy. No text, gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50123,
+        "objectKey": "system-item-media/v1/items/7998/cover/cbb01fa36ef3592aa15a019825cf3c4cbfef5ae81881c8cfbe1399da8f9f769c.jpg",
+        "fileSize": 255870
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7998/cover/cbb01fa36ef3592aa15a019825cf3c4cbfef5ae81881c8cfbe1399da8f9f769c.jpg"
     },
     {
       "key": "weapon-8001-cover",
@@ -70,7 +94,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. One plain BASEBALL BAT, smooth worn wood barrel tapering to a wrapped dark grip and round knob. On a cyberpunk locker bench, sports bag softly behind. No spikes, nails, blood or action.",
       "width": 1536,
       "height": 1024,
@@ -85,7 +109,19 @@
       "sha256": "d5e3a7b9fe5407d4ffb2b7de1b0b3c7a4017a0b575132bb9c9c2088dc98edf24",
       "bytes": 220425,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final exports inspected: finished fictional weapon silhouettes, materials, complete framing, crystalline Mono-Three and smart-interface pistol distinguished; controlled martial-arts practice has natural adult anatomy. No text, gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50124,
+        "objectKey": "system-item-media/v1/items/8001/cover/d5e3a7b9fe5407d4ffb2b7de1b0b3c7a4017a0b575132bb9c9c2088dc98edf24.jpg",
+        "fileSize": 220425
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8001/cover/d5e3a7b9fe5407d4ffb2b7de1b0b3c7a4017a0b575132bb9c9c2088dc98edf24.jpg"
     },
     {
       "key": "weapon-8004-cover",
@@ -97,7 +133,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A modern composite ARCHERY BOW, symmetrical flexible limbs, a single taut string and textured central grip. Resting horizontally in an open sporting case, no arrow nocked. Complete limbs/string visible, no medieval ornament.",
       "width": 1536,
       "height": 1024,
@@ -112,7 +148,19 @@
       "sha256": "544f5a9c499d7ef0a7c6e3778686fb12ee84ea64582e5928a30f976ff8409596",
       "bytes": 290182,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final exports inspected: finished fictional weapon silhouettes, materials, complete framing, crystalline Mono-Three and smart-interface pistol distinguished; controlled martial-arts practice has natural adult anatomy. No text, gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50125,
+        "objectKey": "system-item-media/v1/items/8004/cover/544f5a9c499d7ef0a7c6e3778686fb12ee84ea64582e5928a30f976ff8409596.jpg",
+        "fileSize": 290182
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8004/cover/544f5a9c499d7ef0a7c6e3778686fb12ee84ea64582e5928a30f976ff8409596.jpg"
     },
     {
       "key": "weapon-8007-cover",
@@ -124,7 +172,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. One heavy industrial CHAINSAW, closed motor housing, two practical handles and a long stationary chain bar, graphite and muted orange finish. Motor off, on a service bench, no cutting action or material being cut.",
       "width": 1536,
       "height": 1024,
@@ -139,7 +187,19 @@
       "sha256": "ff2d16e85fe4528bfbfb4948cbfb47a62ee79b84e5a0a673391879d28e028cee",
       "bytes": 293106,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final exports inspected: finished fictional weapon silhouettes, materials, complete framing, crystalline Mono-Three and smart-interface pistol distinguished; controlled martial-arts practice has natural adult anatomy. No text, gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50126,
+        "objectKey": "system-item-media/v1/items/8007/cover/ff2d16e85fe4528bfbfb4948cbfb47a62ee79b84e5a0a673391879d28e028cee.jpg",
+        "fileSize": 293106
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8007/cover/ff2d16e85fe4528bfbfb4948cbfb47a62ee79b84e5a0a673391879d28e028cee.jpg"
     },
     {
       "key": "weapon-8010-cover",
@@ -151,7 +211,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. One COMBAT KNIFE with a clean medium-length steel blade, short guard and textured dark grip, plain sheath beside it on a padded display tray. Modern functional design, no ornate fantasy motifs.",
       "width": 1536,
       "height": 1024,
@@ -166,7 +226,19 @@
       "sha256": "2207e2488e258b3f065c2cad3b2bf28b21e47b0a36c8f1101e2cf991aca6dd7d",
       "bytes": 253977,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final exports inspected: finished fictional weapon silhouettes, materials, complete framing, crystalline Mono-Three and smart-interface pistol distinguished; controlled martial-arts practice has natural adult anatomy. No text, gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50127,
+        "objectKey": "system-item-media/v1/items/8010/cover/2207e2488e258b3f065c2cad3b2bf28b21e47b0a36c8f1101e2cf991aca6dd7d.jpg",
+        "fileSize": 253977
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8010/cover/2207e2488e258b3f065c2cad3b2bf28b21e47b0a36c8f1101e2cf991aca6dd7d.jpg"
     },
     {
       "key": "weapon-8013-cover",
@@ -178,7 +250,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional HURRICANE assault shotgun, very heavy two-handed automatic-shotgun silhouette with bulky round drum magazine and thick barrel shroud, resting on a sturdy support cradle. Graphite and burgundy casing, no labels or brand marks.",
       "width": 1536,
       "height": 1024,
@@ -193,7 +265,19 @@
       "sha256": "29b69c79571dd758d21210368307f998d9d2cda7535b2b8599567953cd8d1077",
       "bytes": 267680,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final exports inspected: finished fictional weapon silhouettes, materials, complete framing, crystalline Mono-Three and smart-interface pistol distinguished; controlled martial-arts practice has natural adult anatomy. No text, gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50128,
+        "objectKey": "system-item-media/v1/items/8013/cover/29b69c79571dd758d21210368307f998d9d2cda7535b2b8599567953cd8d1077.jpg",
+        "fileSize": 267680
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8013/cover/29b69c79571dd758d21210368307f998d9d2cda7535b2b8599567953cd8d1077.jpg"
     },
     {
       "key": "weapon-8014-cover",
@@ -205,7 +289,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A modern composite CROSSBOW, horizontal limbs and string, solid shoulder stock and dark grip, empty bolt rail. On a padded cyberpunk storage rack, full bow and stock inside frame, no bolt loaded.",
       "width": 1536,
       "height": 1024,
@@ -220,7 +304,30 @@
       "sha256": "d4c08b7e04d85db16c67854aab230e2ae7e69ad543e5f69372fa1d5863294a27",
       "bytes": 260207,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final exports inspected: finished fictional weapon silhouettes, materials, complete framing, crystalline Mono-Three and smart-interface pistol distinguished; controlled martial-arts practice has natural adult anatomy. No text, gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50129,
+        "objectKey": "system-item-media/v1/items/8014/cover/d4c08b7e04d85db16c67854aab230e2ae7e69ad543e5f69372fa1d5863294a27.jpg",
+        "fileSize": 260207
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8014/cover/d4c08b7e04d85db16c67854aab230e2ae7e69ad543e5f69372fa1d5863294a27.jpg"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T21:26:15.962Z",
+    "scenarios": 24,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-79\\live-qa.json"
+  }
 }

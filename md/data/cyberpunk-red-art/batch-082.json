@@ -16,12 +16,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional MICROWAVER pistol, oversized one-handed device with a broad flat electromagnetic emitter face and enclosed battery housing, no conventional bullet barrel. On a service cradle, inert, no emitted energy, circuit diagrams or targets.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8055-cover-v1.png",
-      "final": "final/weapon-8055-cover.jpg"
+      "final": "final/weapon-8055-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f14d8cd6-8a37-4dbe-9dd3-c32a8b944eb1.png",
+      "originalSha256": "270ee6c88f3aa2f209de1233f60485787c3499960c384b27e5dae04bd6e02acc",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "97613b605d860c2e960e237a5b805d3f88e8f00c9fc5bd6d11d78caa2826bb65",
+      "bytes": 261194,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Complete inert weapon exteriors and clear distinct emitter/sonic/railgun/rocket/longarm shapes; natural adult unarmed stance. No labels, gore, diagrams or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50146,
+        "objectKey": "system-item-media/v1/items/8055/cover/97613b605d860c2e960e237a5b805d3f88e8f00c9fc5bd6d11d78caa2826bb65.jpg",
+        "fileSize": 261194
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8055/cover/97613b605d860c2e960e237a5b805d3f88e8f00c9fc5bd6d11d78caa2826bb65.jpg"
     },
     {
       "key": "weapon-8056-cover",
@@ -33,12 +55,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional COWBOY heavy grenade launcher, large two-handed body with a stout broad barrel and bulky enclosed four-round magazine housing. On a heavy support stand, matte steel and muted olive panels, no grenades/brand names/operating diagram.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8056-cover-v1.png",
-      "final": "final/weapon-8056-cover.jpg"
+      "final": "final/weapon-8056-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-10496288-ecf2-4958-a5d7-d9486e597457.png",
+      "originalSha256": "6074ab674d5afe5b027893f7c8f2195822c6cee73ef7c3878cb9d0dd13e111df",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b6c896a976bdb31ecc3bdb2ca0a006646fe7a56f3f42ed57a985eee83ea0144a",
+      "bytes": 245322,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Complete inert weapon exteriors and clear distinct emitter/sonic/railgun/rocket/longarm shapes; natural adult unarmed stance. No labels, gore, diagrams or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50147,
+        "objectKey": "system-item-media/v1/items/8056/cover/b6c896a976bdb31ecc3bdb2ca0a006646fe7a56f3f42ed57a985eee83ea0144a.jpg",
+        "fileSize": 245322
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8056/cover/b6c896a976bdb31ecc3bdb2ca0a006646fe7a56f3f42ed57a985eee83ea0144a.jpg"
     },
     {
       "key": "weapon-8057-cover",
@@ -50,12 +94,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A modern cyberpunk NAGINATA, long composite pole with a single elegant curved steel blade and simple reinforced collar, dark wrapped grip sections. Entire pole and blade displayed horizontally on a wide wall rack. No fantasy ornament or cropped tip.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8057-cover-v1.png",
-      "final": "final/weapon-8057-cover.jpg"
+      "final": "final/weapon-8057-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7dd956ae-92c1-41cb-bf29-de8079c4bc29.png",
+      "originalSha256": "6f7792e437b29d0d0450046b087ecf058ed9050dfa8777a1dfb66c5b7a86ed55",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "305c25b46ae1441ff5543eebb8001bb263f57b4d5f6b86f54d8a7eed95e474ab",
+      "bytes": 248693,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Complete inert weapon exteriors and clear distinct emitter/sonic/railgun/rocket/longarm shapes; natural adult unarmed stance. No labels, gore, diagrams or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50148,
+        "objectKey": "system-item-media/v1/items/8057/cover/305c25b46ae1441ff5543eebb8001bb263f57b4d5f6b86f54d8a7eed95e474ab.jpg",
+        "fileSize": 248693
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8057/cover/305c25b46ae1441ff5543eebb8001bb263f57b4d5f6b86f54d8a7eed95e474ab.jpg"
     },
     {
       "key": "weapon-8060-cover",
@@ -67,12 +133,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional EMG railgun, very heavy two-handed longarm with a long squared electromagnetic barrel shroud, large enclosed power housing and two sturdy grips, on a support cradle. No exposed rail mechanism, energy discharge, diagrams or targets. Original industrial sci-fi design.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8060-cover-v1.png",
-      "final": "final/weapon-8060-cover.jpg"
+      "final": "final/weapon-8060-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2110d66c-6f9e-487a-b251-358fe03b14b2.png",
+      "originalSha256": "115ed68dee3dd5e9b0fbe069eae90210811af5d1ab1a67c592b3442d265a5bd8",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "567fbc7be6d8b68a5b6adc812c81442c105e1f331d3f45cca8629037c4e752b7",
+      "bytes": 231708,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Complete inert weapon exteriors and clear distinct emitter/sonic/railgun/rocket/longarm shapes; natural adult unarmed stance. No labels, gore, diagrams or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50149,
+        "objectKey": "system-item-media/v1/items/8060/cover/567fbc7be6d8b68a5b6adc812c81442c105e1f331d3f45cca8629037c4e752b7.jpg",
+        "fileSize": 231708
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8060/cover/567fbc7be6d8b68a5b6adc812c81442c105e1f331d3f45cca8629037c4e752b7.jpg"
     },
     {
       "key": "weapon-8061-cover",
@@ -84,12 +172,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional ROCKET LAUNCHER, one heavy shoulder-fired cylindrical tube with two simple grips and a padded shoulder support, both ends capped for storage. On an armory stand, no rocket, ammunition, firing or internal details.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8061-cover-v1.png",
-      "final": "final/weapon-8061-cover.jpg"
+      "final": "final/weapon-8061-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1988c53d-53ae-40f1-90dc-a2e82da07867.png",
+      "originalSha256": "e5857a9610af2989b695de5ee240580ec8265b8d2329545b10b67a8c03d0f115",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ebd46e0f336a40b634ea08c403dc4e66bf21de1b287af1b4c4d9f2785be58f30",
+      "bytes": 230282,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Complete inert weapon exteriors and clear distinct emitter/sonic/railgun/rocket/longarm shapes; natural adult unarmed stance. No labels, gore, diagrams or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50150,
+        "objectKey": "system-item-media/v1/items/8061/cover/ebd46e0f336a40b634ea08c403dc4e66bf21de1b287af1b4c4d9f2785be58f30.jpg",
+        "fileSize": 230282
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8061/cover/ebd46e0f336a40b634ea08c403dc4e66bf21de1b287af1b4c4d9f2785be58f30.jpg"
     },
     {
       "key": "weapon-8064-cover",
@@ -101,12 +211,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A standard SHOTGUN, two-handed longarm with a broad barrel, tubular fore-end, plain stock and sturdy receiver, dark metal and weathered polymer. On a padded bench, complete exterior, no shells.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8064-cover-v1.png",
-      "final": "final/weapon-8064-cover.jpg"
+      "final": "final/weapon-8064-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-53ffd294-c099-496b-97c5-988f80e4ecdb.png",
+      "originalSha256": "92bec0ed73fb0bd78d3850f25c8752659ebee5069b390aae0706c81fd1cbcc00",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f5aee1b552c61067ab8cf20880f3dbf672ec1270adff3cd4d96fe3a86cdee6c2",
+      "bytes": 263433,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Complete inert weapon exteriors and clear distinct emitter/sonic/railgun/rocket/longarm shapes; natural adult unarmed stance. No labels, gore, diagrams or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50151,
+        "objectKey": "system-item-media/v1/items/8064/cover/f5aee1b552c61067ab8cf20880f3dbf672ec1270adff3cd4d96fe3a86cdee6c2.jpg",
+        "fileSize": 263433
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8064/cover/f5aee1b552c61067ab8cf20880f3dbf672ec1270adff3cd4d96fe3a86cdee6c2.jpg"
     },
     {
       "key": "weapon-8067-cover",
@@ -118,12 +250,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional SHRIEKER sonic pistol, oversized one-handed sound projector with a wide circular acoustic grille and enclosed battery grip. Resting on an equipment tray beside folded hearing protectors, no sound waves, victim or operating detail.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8067-cover-v1.png",
-      "final": "final/weapon-8067-cover.jpg"
+      "final": "final/weapon-8067-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-620e0364-1599-445e-9c55-a4fd718bd05f.png",
+      "originalSha256": "258ae4f7351efe630e9bf5751bba9ef0b0c41c49729e039333476122f6035f57",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "19f90b9b66797aa729083ded92952d991d52d3de07fee50ec359b3d0712250ee",
+      "bytes": 278924,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Complete inert weapon exteriors and clear distinct emitter/sonic/railgun/rocket/longarm shapes; natural adult unarmed stance. No labels, gore, diagrams or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50152,
+        "objectKey": "system-item-media/v1/items/8067/cover/19f90b9b66797aa729083ded92952d991d52d3de07fee50ec359b3d0712250ee.jpg",
+        "fileSize": 278924
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8067/cover/19f90b9b66797aa729083ded92952d991d52d3de07fee50ec359b3d0712250ee.jpg"
     },
     {
       "key": "weapon-8068-cover",
@@ -135,12 +289,45 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. One SLEDGEHAMMER with a massive rectangular steel head, long reinforced composite shaft and dark two-handed grip. Lying diagonally on a garage bench, whole object visible. No impact action.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8068-cover-v1.png",
-      "final": "final/weapon-8068-cover.jpg"
+      "final": "final/weapon-8068-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-51ff2320-2f8e-4951-aa4c-0ff1532f61bf.png",
+      "originalSha256": "1cd7275b02b385a7e97f18d620460b506e137117ec789753bcfc1e6777dc50b7",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f2825529b5472460d120fa10ba985fbc0a1ece61eceb057c400171f5f8a1cc32",
+      "bytes": 289180,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Complete inert weapon exteriors and clear distinct emitter/sonic/railgun/rocket/longarm shapes; natural adult unarmed stance. No labels, gore, diagrams or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50153,
+        "objectKey": "system-item-media/v1/items/8068/cover/f2825529b5472460d120fa10ba985fbc0a1ece61eceb057c400171f5f8a1cc32.jpg",
+        "fileSize": 289180
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8068/cover/f2825529b5472460d120fa10ba985fbc0a1ece61eceb057c400171f5f8a1cc32.jpg"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T21:44:59.185Z",
+    "scenarios": 24,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-82\\live-qa.json"
+  }
 }

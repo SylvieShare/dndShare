@@ -1,0 +1,95 @@
+{
+  "batch": 98,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-98",
+  "sourceAudit": "Live own dictionary slots empty in dict-values-live-before.json. Value identity is(typeId,id), section fallback not counted. Structured names/codes and previously read Core categories guide original narrative scenes. Icons unchanged.",
+  "assets": [
+    {
+      "key": "dict-25-331-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 331,
+        "typeId": 25,
+        "name": "Игра на инструменте (Гитара)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. An adult street musician plays a detailed electric GUITAR on a small rooftop stage, full instrument and both hands visible, realistic fingering, repaired amplifier nearby and attentive adults in softer background.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-25-331-cover-v1.png",
+      "final": "final/dict-25-331-cover.webp"
+    },
+    {
+      "key": "dict-25-333-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 333,
+        "typeId": 25,
+        "name": "Игра на инструменте (Пение)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. An adult SINGER at a simple microphone in a smoky neon club, natural mouth shape and expressive posture, a few adult listeners beyond, no speech bubbles or visible lyrics.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-25-333-cover-v1.png",
+      "final": "final/dict-25-333-cover.webp"
+    },
+    {
+      "key": "dict-25-334-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 334,
+        "typeId": 25,
+        "name": "Игра на инструменте (Скрипка)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. An adult VIOLINIST performs in a cyberpunk transit arcade, violin supported under chin and bow held plausibly, entire bow/hands comfortably framed, softer city commuters.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-25-334-cover-v1.png",
+      "final": "final/dict-25-334-cover.webp"
+    },
+    {
+      "key": "dict-25-330-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 330,
+        "typeId": 25,
+        "name": "Игра на инструменте (Ударные)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. An adult DRUMMER at a compact acoustic/electronic hybrid kit in an industrial rehearsal room, two sticks, believable hands, warm cymbal reflections and coiled audio cables.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-25-330-cover-v1.png",
+      "final": "final/dict-25-330-cover.webp"
+    },
+    {
+      "key": "dict-25-332-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 332,
+        "typeId": 25,
+        "name": "Игра на инструменте (Фортепиано)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. An adult pianist seated at a compact electric PIANO in a late-night city lounge, both hands on visible keys, whole keyboard within scene, soft warm lamp and blue window reflections.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-25-332-cover-v1.png",
+      "final": "final/dict-25-332-cover.webp"
+    }
+  ]
+}

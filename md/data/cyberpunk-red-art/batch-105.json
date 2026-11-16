@@ -1,0 +1,78 @@
+{
+  "batch": 105,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-105",
+  "sourceAudit": "Live own dictionary slots empty in dict-values-live-before.json. Value identity is(typeId,id), section fallback not counted. Structured names/codes and previously read Core categories guide original narrative scenes. Icons unchanged.",
+  "assets": [
+    {
+      "key": "dict-33-381-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 381,
+        "typeId": 33,
+        "name": "Боевые искусства (Айкидо)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Two mature AIKIDO practitioners in plain training clothes calmly practicing balanced circular footwork and an open-hand partner grip on a padded cyberpunk dojo floor. Natural anatomy, no painful lock or step-by-step sequence.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-33-381-cover-v1.png",
+      "final": "final/dict-33-381-cover.webp"
+    },
+    {
+      "key": "dict-33-382-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 382,
+        "typeId": 33,
+        "name": "Боевые искусства (Дзюдо)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Two mature JUDO practitioners in plain durable gis practicing a stable standing lapel grip on padded mats, no throw in progress, collision or injury. Cyberpunk community gym, believable hands.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-33-382-cover-v1.png",
+      "final": "final/dict-33-382-cover.webp"
+    },
+    {
+      "key": "dict-33-383-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 383,
+        "typeId": 33,
+        "name": "Боевые искусства (Карате)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature KARATE practitioner in a cyberpunk dojo holding a grounded controlled stance with one straight arm and the other at the hip, no opponent struck, natural adult proportions.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-33-383-cover-v1.png",
+      "final": "final/dict-33-383-cover.webp"
+    },
+    {
+      "key": "dict-33-384-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 384,
+        "typeId": 33,
+        "name": "Боевые искусства (Тхэквондо)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature TAEKWONDO practitioner holding a controlled raised-leg practice pose beside a coach and padded target, no contact or injury, whole limbs within frame, realistic balance in a cyberpunk gym.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-33-384-cover-v1.png",
+      "final": "final/dict-33-384-cover.webp"
+    }
+  ]
+}

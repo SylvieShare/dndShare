@@ -16,7 +16,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. One sturdy steel CROWBAR, simple long shaft with a curved hooked end and flattened pry end, restrained paint wear. Lying alone on a repair-workshop bench, no lock, door or break-in scene.",
       "width": 1536,
       "height": 1024,
@@ -31,7 +31,19 @@
       "sha256": "2ab4f5dca5206eab0f04161337d1adc6066ea8126735f34cf0c246f7f46e9393",
       "bytes": 288378,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final silhouettes and framing inspected. Dartgun white logo-like mark removed via image_gen v2, replacement inspected. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50138,
+        "objectKey": "system-item-media/v1/items/8017/cover/2ab4f5dca5206eab0f04161337d1adc6066ea8126735f34cf0c246f7f46e9393.jpg",
+        "fileSize": 288378
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8017/cover/2ab4f5dca5206eab0f04161337d1adc6066ea8126735f34cf0c246f7f46e9393.jpg"
     },
     {
       "key": "weapon-8020-cover",
@@ -43,22 +55,44 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional DARTGUN, oversized one-handed pistol body with long narrow dart-launching shroud and a compact enclosed magazine housing. In a fitted equipment case, no dart, toxin, person or firing; exterior concept only.",
       "width": 1536,
       "height": 1024,
-      "original": "originals/weapon-8020-cover-v1.png",
+      "original": "originals/weapon-8020-cover-v2.png",
       "final": "final/weapon-8020-cover.jpg",
-      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c7e024cc-2737-4284-b759-7dd25203a6b1.png",
-      "originalSha256": "27aa1488cc6864bd437bb601c1de1f8962f027a1c214a7ab40bae3fbd61638e1",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4162731e-048a-43ca-a383-25fff675b506.png",
+      "originalSha256": "22536f9167ed7fd985a09308cb6f2222aba97e6166f1d8dbe99f71ef20cf2e87",
       "sourceDimensions": {
         "width": 1536,
         "height": 1024
       },
-      "sha256": "5a01d42637ff516f0ac5ef50c6bac239b11a3be3ddeadb923cfac571018e11e2",
-      "bytes": 299507,
+      "sha256": "d3f90f68f565456e6c1b3026bd69cb1d6a3b6ae88cbf09cccf86b511cf43aefd",
+      "bytes": 245060,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "previousVariants": [
+        {
+          "original": "originals/weapon-8020-cover-v1.png",
+          "sourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c7e024cc-2737-4284-b759-7dd25203a6b1.png",
+          "originalSha256": "27aa1488cc6864bd437bb601c1de1f8962f027a1c214a7ab40bae3fbd61638e1",
+          "sha256": "5a01d42637ff516f0ac5ef50c6bac239b11a3be3ddeadb923cfac571018e11e2",
+          "reason": "White logo-like mark on upper slide removed before publication."
+        }
+      ],
+      "revisionPrompt": "Edit this illustration only to REMOVE the small white logo-like marking on the upper rear slide of the fictional dartgun. Replace it with matching plain worn metal surface. Preserve the exact object shape, all other details, lighting, framing, material finish and mature cel-shaded style. No added text, marks, labels, logo or new object.",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final silhouettes and framing inspected. Dartgun white logo-like mark removed via image_gen v2, replacement inspected. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50139,
+        "objectKey": "system-item-media/v1/items/8020/cover/d3f90f68f565456e6c1b3026bd69cb1d6a3b6ae88cbf09cccf86b511cf43aefd.jpg",
+        "fileSize": 245060
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8020/cover/d3f90f68f565456e6c1b3026bd69cb1d6a3b6ae88cbf09cccf86b511cf43aefd.jpg"
     },
     {
       "key": "weapon-8021-cover",
@@ -70,7 +104,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional hand-carried FLAMETHROWER, heavy two-handed shotgun-like exterior with protected short nozzle housing, enclosed fuel-cell body and two grips. Resting on a rack, inert and unlit, no plumbing diagram, flames or targets.",
       "width": 1536,
       "height": 1024,
@@ -85,7 +119,19 @@
       "sha256": "73522f091b0d8bfb99ceaa6c05db7d14058a0e317b8a692fee6c4c66c93c4197",
       "bytes": 234617,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final silhouettes and framing inspected. Dartgun white logo-like mark removed via image_gen v2, replacement inspected. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50140,
+        "objectKey": "system-item-media/v1/items/8021/cover/73522f091b0d8bfb99ceaa6c05db7d14058a0e317b8a692fee6c4c66c93c4197.jpg",
+        "fileSize": 234617
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8021/cover/73522f091b0d8bfb99ceaa6c05db7d14058a0e317b8a692fee6c4c66c93c4197.jpg"
     },
     {
       "key": "weapon-8022-cover",
@@ -97,7 +143,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A fictional GRENADE LAUNCHER, compact two-handed longarm with a broad short barrel, shoulder stock and enclosed magazine housing. Resting in fitted armory case, no grenades or internal mechanism, static finished exterior.",
       "width": 1536,
       "height": 1024,
@@ -112,7 +158,19 @@
       "sha256": "18119fa2ca5e2c71cae9c676d5a8b22dc4986cc2b761a1a33bf3339056533142",
       "bytes": 308343,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final silhouettes and framing inspected. Dartgun white logo-like mark removed via image_gen v2, replacement inspected. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50141,
+        "objectKey": "system-item-media/v1/items/8022/cover/18119fa2ca5e2c71cae9c676d5a8b22dc4986cc2b761a1a33bf3339056533142.jpg",
+        "fileSize": 308343
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8022/cover/18119fa2ca5e2c71cae9c676d5a8b22dc4986cc2b761a1a33bf3339056533142.jpg"
     },
     {
       "key": "weapon-8025-cover",
@@ -124,7 +182,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. An example of HEAVY MELEE WEAPON: a modern heavy one-handed steel-headed mace with a substantial plain striking head and reinforced textured handle. On padded cyberpunk armory bench. No fantasy decoration.",
       "width": 1536,
       "height": 1024,
@@ -139,7 +197,19 @@
       "sha256": "d11eeaf75055ed3c60e9bbc7b5bca3de514a2e8d42b3317a02171c98f973a8e9",
       "bytes": 268539,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final silhouettes and framing inspected. Dartgun white logo-like mark removed via image_gen v2, replacement inspected. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50142,
+        "objectKey": "system-item-media/v1/items/8025/cover/d11eeaf75055ed3c60e9bbc7b5bca3de514a2e8d42b3317a02171c98f973a8e9.jpg",
+        "fileSize": 268539
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8025/cover/d11eeaf75055ed3c60e9bbc7b5bca3de514a2e8d42b3317a02171c98f973a8e9.jpg"
     },
     {
       "key": "weapon-8028-cover",
@@ -151,7 +221,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A HEAVY PISTOL, substantial one-handed handgun with broad slide and stout grip, medium-length barrel, dark metal and graphite polymer. Static side-three-quarter view in fitted case; complete exterior.",
       "width": 1536,
       "height": 1024,
@@ -166,7 +236,19 @@
       "sha256": "b35a40058c01e3373646fe6d98ee5e99b4bc5fa761866dc00234dc2e2b6c7ff8",
       "bytes": 275939,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final silhouettes and framing inspected. Dartgun white logo-like mark removed via image_gen v2, replacement inspected. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50143,
+        "objectKey": "system-item-media/v1/items/8028/cover/b35a40058c01e3373646fe6d98ee5e99b4bc5fa761866dc00234dc2e2b6c7ff8.jpg",
+        "fileSize": 275939
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8028/cover/b35a40058c01e3373646fe6d98ee5e99b4bc5fa761866dc00234dc2e2b6c7ff8.jpg"
     },
     {
       "key": "weapon-8031-cover",
@@ -178,7 +260,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A HEAVY SUBMACHINE GUN, compact but chunky body, short barrel shroud, stout pistol grip and broad box magazine, folded stock. Resting on a padded rack; dark steel, burgundy accent.",
       "width": 1536,
       "height": 1024,
@@ -193,7 +275,19 @@
       "sha256": "b29066e003a2e2ba4d7a15e907c3eb269f79ad586515232097c9f57a59864e3c",
       "bytes": 257041,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final silhouettes and framing inspected. Dartgun white logo-like mark removed via image_gen v2, replacement inspected. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50144,
+        "objectKey": "system-item-media/v1/items/8031/cover/b29066e003a2e2ba4d7a15e907c3eb269f79ad586515232097c9f57a59864e3c.jpg",
+        "fileSize": 257041
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8031/cover/b29066e003a2e2ba4d7a15e907c3eb269f79ad586515232097c9f57a59864e3c.jpg"
     },
     {
       "key": "weapon-8034-cover",
@@ -205,7 +299,7 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "exported",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for a fictional Cyberpunk RED 2045 game reference. Mature detailed cel shading, fine varied ink, broad painted shadow/light planes, material-specific reflections, fine exterior seams and restrained wear; soft low-contrast lived-in cyberpunk background. Opaque 3:2 landscape. One coherent scene, main object complete and comfortably framed. Original finished prop concept, not an engineering document. No text, numbers, logos, labels, dimensions, diagrams, exploded view, internal mechanism, construction/operating instructions, ammunition, firing, targets, blood or injury. No toy-like proportions, thick cartoon outline, photorealism or glossy 3D. A large stationary HELICOPTER ROTOR BLADE assembly on low hangar trestles, focus on long industrial composite blade and heavy central hub. No flying helicopter or person struck, full featured blade inside frame, no combat.",
       "width": 1536,
       "height": 1024,
@@ -220,7 +314,30 @@
       "sha256": "cb78f01aa90e2e4dae266441e7d2eb9fa44cd549c1273d007ac0d292b99ca4e4",
       "bytes": 340608,
       "mimeType": "image/jpeg",
-      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final silhouettes and framing inspected. Dartgun white logo-like mark removed via image_gen v2, replacement inspected. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50145,
+        "objectKey": "system-item-media/v1/items/8034/cover/cb78f01aa90e2e4dae266441e7d2eb9fa44cd549c1273d007ac0d292b99ca4e4.jpg",
+        "fileSize": 340608
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8034/cover/cb78f01aa90e2e4dae266441e7d2eb9fa44cd549c1273d007ac0d292b99ca4e4.jpg"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T21:37:49.910Z",
+    "scenarios": 24,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-80\\live-qa.json"
+  }
 }

@@ -1,0 +1,146 @@
+{
+  "batch": 100,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-100",
+  "sourceAudit": "Live own dictionary slots empty in dict-values-live-before.json. Value identity is(typeId,id), section fallback not counted. Structured names/codes and previously read Core categories guide original narrative scenes. Icons unchanged.",
+  "assets": [
+    {
+      "key": "dict-27-346-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 346,
+        "typeId": 27,
+        "name": "Госпиталь"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A spacious cyberpunk HOSPITAL reception and treatment corridor, professional adult staff, sophisticated enclosed scanning equipment, clean surfaces and urban window light, no operation or injury.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-27-346-cover-v1.png",
+      "final": "final/dict-27-346-cover.webp"
+    },
+    {
+      "key": "dict-27-345-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 345,
+        "typeId": 27,
+        "name": "Клиника"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A modest neighborhood ripperdoc CLINIC consultation room, mature medic greeting a clothed adult client beside a prosthetic display, practical repaired equipment, no surgery.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-27-345-cover-v1.png",
+      "final": "final/dict-27-345-cover.webp"
+    },
+    {
+      "key": "dict-27-344-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 344,
+        "typeId": 27,
+        "name": "Торговый центр"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A cyberpunk SHOPPING MALL cyberware salon kiosk, mature clerk displaying decorative contacts in a closed case to an adult shopper, polished mall walkway and neon architecture, no text signs.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-27-344-cover-v1.png",
+      "final": "final/dict-27-344-cover.webp"
+    },
+    {
+      "key": "dict-28-347-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 347,
+        "typeId": 28,
+        "name": "Без ранений"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A healthy mature adult stretches comfortably outside a cyberpunk apartment at morning light, relaxed shoulders and steady stance, no injuries or medical devices.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-28-347-cover-v1.png",
+      "final": "final/dict-28-347-cover.webp"
+    },
+    {
+      "key": "dict-28-348-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 348,
+        "typeId": 28,
+        "name": "Лёгкое ранение"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult with a small clean forearm dressing sits at a street-clinic bench, otherwise alert and comfortable, medic nearby. Minor injury represented calmly, no blood.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-28-348-cover-v1.png",
+      "final": "final/dict-28-348-cover.webp"
+    },
+    {
+      "key": "dict-28-350-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 350,
+        "typeId": 28,
+        "name": "Смертельное ранение"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A seriously ill adult reclining on a futuristic emergency stretcher under a blanket with oxygen mask, focused mature medical team close by, tense but non-graphic care, no open wound or procedure.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-28-350-cover-v1.png",
+      "final": "final/dict-28-350-cover.webp"
+    },
+    {
+      "key": "dict-28-351-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 351,
+        "typeId": 28,
+        "name": "Смерть"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A quiet cyberpunk memorial scene: an EMPTY chair, a neatly folded worn jacket, an unlit closed personal case and a few flowers under city window light. Somber stillness, no body, gore, ghost or religious symbol required.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-28-351-cover-v1.png",
+      "final": "final/dict-28-351-cover.webp"
+    },
+    {
+      "key": "dict-28-349-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 349,
+        "typeId": 28,
+        "name": "Тяжёлое ранение"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult resting in a clinic chair with a clean torso support under a loose jacket, guarded tired posture and medic checking a dim scan. Clearly more support than a small dressing, no graphic wound.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-28-349-cover-v1.png",
+      "final": "final/dict-28-349-cover.webp"
+    }
+  ]
+}

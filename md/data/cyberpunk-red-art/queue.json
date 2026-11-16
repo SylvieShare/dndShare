@@ -391,8 +391,11 @@
       "id": 7550,
       "name": "Стрела (бронебойная)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 92,
+      "sha256": "5abfb32b5926bc984a3b4b9b3a4c607b8030dbac7288c12a9cb1a82159ba529d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7550/cover/5abfb32b5926bc984a3b4b9b3a4c607b8030dbac7288c12a9cb1a82159ba529d.jpg"
     },
     {
       "kind": "item",
@@ -407,8 +410,11 @@
       "id": 7551,
       "name": "Стрела (стандартная)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 92,
+      "sha256": "b1795e1e3cc07c18a16945f4c28ad0c05500d134fa3b15abbbac881222d4d595",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7551/cover/b1795e1e3cc07c18a16945f4c28ad0c05500d134fa3b15abbbac881222d4d595.jpg"
     },
     {
       "kind": "item",
@@ -423,8 +429,11 @@
       "id": 7552,
       "name": "Стрела (с биотоксином)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 92,
+      "sha256": "d7352b54790613a020737d019a60412056fabec5eacdb9c13d1a1dd9f762f1c4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7552/cover/d7352b54790613a020737d019a60412056fabec5eacdb9c13d1a1dd9f762f1c4.jpg"
     },
     {
       "kind": "item",
@@ -439,8 +448,11 @@
       "id": 7553,
       "name": "Стрела (экспансивная)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 92,
+      "sha256": "37a33bfad1b19a33364c676ab45930ab1d737e10c5fcab1863e08eb0f837f9d1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7553/cover/37a33bfad1b19a33364c676ab45930ab1d737e10c5fcab1863e08eb0f837f9d1.jpg"
     },
     {
       "kind": "item",
@@ -455,8 +467,11 @@
       "id": 7554,
       "name": "Стрела (зажигательная)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 92,
+      "sha256": "9f526a02955d20152ed5bd8b0ed9a560f9c11f4d65fd21e78966e91427aaa8d1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7554/cover/9f526a02955d20152ed5bd8b0ed9a560f9c11f4d65fd21e78966e91427aaa8d1.jpg"
     },
     {
       "kind": "item",
@@ -471,8 +486,11 @@
       "id": 7555,
       "name": "Стрела (с ядом)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 92,
+      "sha256": "4b8d130a982d496b825612330fe77094d2983f282c2e80b02969c83a410901a1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7555/cover/4b8d130a982d496b825612330fe77094d2983f282c2e80b02969c83a410901a1.jpg"
     },
     {
       "kind": "item",
@@ -487,8 +505,11 @@
       "id": 7556,
       "name": "Стрела (резиновая)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 92,
+      "sha256": "3af2ab2eeb5a73f8d282b3d39d128f15d25aae3cb028e13edda57385d43548ca",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7556/cover/3af2ab2eeb5a73f8d282b3d39d128f15d25aae3cb028e13edda57385d43548ca.jpg"
     },
     {
       "kind": "item",
@@ -503,8 +524,11 @@
       "id": 7557,
       "name": "Стрела (усыпляющая)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 92,
+      "sha256": "3309a9791e9d9c77ae3fbf7341dc1db6323045f7a9f39c546805d0d72461a2ae",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7557/cover/3309a9791e9d9c77ae3fbf7341dc1db6323045f7a9f39c546805d0d72461a2ae.jpg"
     },
     {
       "kind": "item",
@@ -519,8 +543,11 @@
       "id": 7558,
       "name": "Стрела (умная)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 92,
+      "sha256": "b643808981815474830f6861de7ef49c17fb4669c099c6437856b73625539558",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7558/cover/b643808981815474830f6861de7ef49c17fb4669c099c6437856b73625539558.jpg"
     },
     {
       "kind": "item",
@@ -535,8 +562,11 @@
       "id": 7559,
       "name": "Аккумулятор",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 92,
+      "sha256": "3def635e122af01ab4a63cd04d9fa7578f0dc37d6a65da4bd5281ec0daaa6c41",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7559/cover/3def635e122af01ab4a63cd04d9fa7578f0dc37d6a65da4bd5281ec0daaa6c41.jpg"
     },
     {
       "kind": "item",
@@ -551,8 +581,11 @@
       "id": 7560,
       "name": "Граната (бронебойная)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 93,
+      "sha256": "e241c41922e4a21b238b44e1b4176b9e62467604d677d57e5b1e652e97c845ed",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7560/cover/e241c41922e4a21b238b44e1b4176b9e62467604d677d57e5b1e652e97c845ed.jpg"
     },
     {
       "kind": "item",
@@ -567,8 +600,11 @@
       "id": 7561,
       "name": "Граната (с биотоксином)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 93,
+      "sha256": "ef6308b39a97a5ed1541b750fbbb74806b0f9195e63aa58c81e20ca731d223bf",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7561/cover/ef6308b39a97a5ed1541b750fbbb74806b0f9195e63aa58c81e20ca731d223bf.jpg"
     },
     {
       "kind": "item",
@@ -583,8 +619,11 @@
       "id": 7562,
       "name": "Граната (ЭМИ)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 93,
+      "sha256": "10c9a55f9e27d1374db28d771945229560599749bb5f088554a245ef02ba8fed",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7562/cover/10c9a55f9e27d1374db28d771945229560599749bb5f088554a245ef02ba8fed.jpg"
     },
     {
       "kind": "item",
@@ -599,8 +638,11 @@
       "id": 7563,
       "name": "Граната (светошумовая)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 93,
+      "sha256": "35c9e08c0dbd76b90ac0d95ef503f13f1ab3a8211d71a82d5ac971d00e73ef0e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7563/cover/35c9e08c0dbd76b90ac0d95ef503f13f1ab3a8211d71a82d5ac971d00e73ef0e.jpg"
     },
     {
       "kind": "item",
@@ -615,8 +657,11 @@
       "id": 7564,
       "name": "Граната (зажигательная)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 93,
+      "sha256": "6497e6e7ccafce52af51eba16d6e60f13540ef82c566987b85b0b8b068d12170",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7564/cover/6497e6e7ccafce52af51eba16d6e60f13540ef82c566987b85b0b8b068d12170.jpg"
     },
     {
       "kind": "item",
@@ -631,8 +676,11 @@
       "id": 7565,
       "name": "Граната (с ядом)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 93,
+      "sha256": "a1331d1aa88b8931af9ce30899ea131f08906ea3d2f601f7e9ea07a02fce8204",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7565/cover/a1331d1aa88b8931af9ce30899ea131f08906ea3d2f601f7e9ea07a02fce8204.jpg"
     },
     {
       "kind": "item",
@@ -647,8 +695,11 @@
       "id": 7566,
       "name": "Граната (усыпляющая)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 93,
+      "sha256": "3fa6ca1e8de258d04b3bfa754e7bde334a38a7e26a8c955d1e0c0656cdab1dac",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7566/cover/3fa6ca1e8de258d04b3bfa754e7bde334a38a7e26a8c955d1e0c0656cdab1dac.jpg"
     },
     {
       "kind": "item",
@@ -663,8 +714,11 @@
       "id": 7567,
       "name": "Граната (дымовая)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 93,
+      "sha256": "27becddb93e9a715343df85f5e8aa80f618d9a74628017af2575bccf48b60b00",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7567/cover/27becddb93e9a715343df85f5e8aa80f618d9a74628017af2575bccf48b60b00.jpg"
     },
     {
       "kind": "item",
@@ -679,8 +733,11 @@
       "id": 7568,
       "name": "Граната (со слезоточивым газом)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 93,
+      "sha256": "04e38bf99327f8f7b45ed70e3a0509daef5a7e19c110624b1e5c2b88bb7badaf",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7568/cover/04e38bf99327f8f7b45ed70e3a0509daef5a7e19c110624b1e5c2b88bb7badaf.jpg"
     },
     {
       "kind": "item",
@@ -695,8 +752,10 @@
       "id": 7569,
       "name": "Для пистолета крупного калибра (бронебойный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 94,
+      "sha256": "40f0b2aa0a5ae47af12522864445101f1dbc3780da7200aa2540f79d2a0c4a1e"
     },
     {
       "kind": "item",
@@ -711,8 +770,10 @@
       "id": 7570,
       "name": "Для пистолета крупного калибра (стандартный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 94,
+      "sha256": "66c3ec435758672223d17712963301afbc4529c398c3740d67fda6756a37b181"
     },
     {
       "kind": "item",
@@ -727,8 +788,10 @@
       "id": 7571,
       "name": "Для пистолета крупного калибра (экспансивный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 94,
+      "sha256": "b84a55508f7a787e2006d5b8d434ac6df4f2bf2f6c8408d6415675588467dd03"
     },
     {
       "kind": "item",
@@ -743,8 +806,10 @@
       "id": 7572,
       "name": "Для пистолета крупного калибра (зажигательный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 94,
+      "sha256": "261cbaec1664622fe60ff635817282f45d513dc58d97732d42e40881e35afc0d"
     },
     {
       "kind": "item",
@@ -759,8 +824,10 @@
       "id": 7573,
       "name": "Для пистолета крупного калибра (резиновый)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 94,
+      "sha256": "6d6a1de2dd639b6dd86fba479ec510eee0408af6822da28d1e170999c613d4c7"
     },
     {
       "kind": "item",
@@ -775,8 +842,10 @@
       "id": 7574,
       "name": "Для пистолета крупного калибра (умный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 94,
+      "sha256": "230878e705db8d670cdccd2850a38d2061735e8593f40e8821e5f9eac76563b2"
     },
     {
       "kind": "item",
@@ -791,8 +860,10 @@
       "id": 7575,
       "name": "Для пистолета среднего калибра (бронебойный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 94,
+      "sha256": "f156c3632a49d05f7b614b099e4944efe8ada6bc692e576b87b464876ac714c3"
     },
     {
       "kind": "item",
@@ -807,8 +878,10 @@
       "id": 7576,
       "name": "Для пистолета среднего калибра (стандартный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 94,
+      "sha256": "bd5f3898ba9dccaabdab92a306488f9a8344799838547900245f552f7f140b80"
     },
     {
       "kind": "item",
@@ -823,8 +896,10 @@
       "id": 7577,
       "name": "Для пистолета среднего калибра (экспансивный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 94,
+      "sha256": "75458522e7bfeae62dd4444e717ee048132bb4d9bcfc4875c40b9be65a312e81"
     },
     {
       "kind": "item",
@@ -839,8 +914,10 @@
       "id": 7578,
       "name": "Для пистолета среднего калибра (зажигательный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 94,
+      "sha256": "d166957b17c8f63be128ce0ca7c04821fc7ef35fb65dd2aebbf5fc98496d1b68"
     },
     {
       "kind": "item",
@@ -855,8 +932,10 @@
       "id": 7579,
       "name": "Для пистолета среднего калибра (резиновый)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 94,
+      "sha256": "41ab1e17bdb42d88cd25ab5c586c0ed862ce4eba55bd88cd3f9e395c1a5f8f35"
     },
     {
       "kind": "item",
@@ -871,8 +950,10 @@
       "id": 7580,
       "name": "Для пистолета среднего калибра (умный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 94,
+      "sha256": "5f0daea2295d88980c5745225aa0b47c27ff49b737844816407e49644a5bae64"
     },
     {
       "kind": "item",
@@ -887,8 +968,10 @@
       "id": 7581,
       "name": "Пейнтбольный шарик (с кислотой)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 95,
+      "sha256": "803412749ad56244585b2b9c7ed7888cafc53272345663519b429ffbae3318f9"
     },
     {
       "kind": "item",
@@ -903,8 +986,10 @@
       "id": 7582,
       "name": "Пейнтбольный шарик (стандартный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 95,
+      "sha256": "2b06a2e6c6d1e9028c7f9c9389f533490d8b5bda60d3d1b2c89acf7866780e43"
     },
     {
       "kind": "item",
@@ -919,8 +1004,10 @@
       "id": 7583,
       "name": "Винтовочный (бронебойный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 95,
+      "sha256": "33e809f4907eb11fe106cb5098c2750ad86aaa3a02fa94e96fb60fdf6e4d9dbe"
     },
     {
       "kind": "item",
@@ -935,8 +1022,10 @@
       "id": 7584,
       "name": "Винтовочный (стандартный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 95,
+      "sha256": "fedcc808697c4a52290cf47db2b032e18260d9cb3847ea582db91f196a89bc70"
     },
     {
       "kind": "item",
@@ -951,8 +1040,10 @@
       "id": 7585,
       "name": "Винтовочный (экспансивный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 95,
+      "sha256": "f8f68e9eec91df37b4c936c4aa5bf8c1aa1cfe9ebee2561f5dfca5fbfa8990ee"
     },
     {
       "kind": "item",
@@ -967,8 +1058,10 @@
       "id": 7586,
       "name": "Винтовочный (зажигательный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 95,
+      "sha256": "6aaa571e73c3335b1ba17d3b6f987500b2e5cef15d5005ae9396a607d6f31c1d"
     },
     {
       "kind": "item",
@@ -983,8 +1076,10 @@
       "id": 7587,
       "name": "Винтовочный (резиновый)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 95,
+      "sha256": "b7a9673d25bd1ed73b56cd0622c4997916e47ee9106ed893e89d69a5d3760c4f"
     },
     {
       "kind": "item",
@@ -999,8 +1094,10 @@
       "id": 7588,
       "name": "Винтовочный (умный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 95,
+      "sha256": "d9185e94d0c41b9d158bef6fe4ccaee4b9338959a07c50aacc87bb8f9592e80f"
     },
     {
       "kind": "item",
@@ -1015,8 +1112,10 @@
       "id": 7589,
       "name": "Ракета (бронебойная)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 96,
+      "sha256": "3fbd720be4da4b2f8225d2f3eddd6b8c928e979ccd89e63bd029774e56fce117"
     },
     {
       "kind": "item",
@@ -1031,8 +1130,10 @@
       "id": 7590,
       "name": "Ракета (умная)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 96,
+      "sha256": "40496cf230323bef0b2ddc7060d7f5d79e499527fa17f123655aad1389009b1e"
     },
     {
       "kind": "item",
@@ -1047,8 +1148,10 @@
       "id": 7591,
       "name": "Дробь (стандартная)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 96,
+      "sha256": "2fd86296bc22062bac616084d6afa8bcc429252a831b6d15688ed27d683cd840"
     },
     {
       "kind": "item",
@@ -1063,8 +1166,10 @@
       "id": 7592,
       "name": "Дробь (зажигательная)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 96,
+      "sha256": "33520b67a210ae4b45707f8b548ade0e2eef0116c4931fbd35981358fbd9009e"
     },
     {
       "kind": "item",
@@ -1079,8 +1184,10 @@
       "id": 7593,
       "name": "Жакан (бронебойный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 96,
+      "sha256": "8698f774eb09f01682cacb566472f5c234814526946c9b3e68b5b6a25daecef9"
     },
     {
       "kind": "item",
@@ -1095,8 +1202,10 @@
       "id": 7594,
       "name": "Жакан (стандартный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 96,
+      "sha256": "941c93941bc72ba4a48847ad813cc4c0344eea2092b6da687a4227011b7feef5"
     },
     {
       "kind": "item",
@@ -1111,8 +1220,10 @@
       "id": 7595,
       "name": "Жакан (экспансивный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 96,
+      "sha256": "945e553564d94b0e294c7c2006f545410937f8697b08a044f0297da03092311f"
     },
     {
       "kind": "item",
@@ -1127,8 +1238,10 @@
       "id": 7596,
       "name": "Жакан (зажигательный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 96,
+      "sha256": "020cdee58b1c7175a450e39327ec633e36668397ff189c465aaf6ba50d231f38"
     },
     {
       "kind": "item",
@@ -1143,8 +1256,10 @@
       "id": 7597,
       "name": "Жакан (резиновый)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 96,
+      "sha256": "468b6b2b53016e8e87ead63d3b1612b1abfe29eba157a89b6373411cdd8dff94"
     },
     {
       "kind": "item",
@@ -1159,8 +1274,10 @@
       "id": 7598,
       "name": "Жакан (умный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 96,
+      "sha256": "41d10111e3046b89cd6303d977f0274b7462283498171373a8bd6494579f34e4"
     },
     {
       "kind": "item",
@@ -1175,8 +1292,9 @@
       "id": 7599,
       "name": "Для пистолета сверхкрупного калибра (бронебойный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 97
     },
     {
       "kind": "item",
@@ -1191,8 +1309,9 @@
       "id": 7600,
       "name": "Для пистолета сверхкрупного калибра (стандартный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 97
     },
     {
       "kind": "item",
@@ -1207,8 +1326,9 @@
       "id": 7601,
       "name": "Для пистолета сверхкрупного калибра (экспансивный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 97
     },
     {
       "kind": "item",
@@ -1223,8 +1343,9 @@
       "id": 7602,
       "name": "Для пистолета сверхкрупного калибра (зажигательный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 97
     },
     {
       "kind": "item",
@@ -1239,8 +1360,9 @@
       "id": 7603,
       "name": "Для пистолета сверхкрупного калибра (резиновый)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 97
     },
     {
       "kind": "item",
@@ -1255,8 +1377,9 @@
       "id": 7604,
       "name": "Для пистолета сверхкрупного калибра (умный)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 97
     },
     {
       "kind": "item",
@@ -8719,9 +8842,11 @@
       "id": 7997,
       "name": "Пневматический пистолет",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 79
+      "batch": 79,
+      "sha256": "47915f0807b8c4b512c8bcd70c4aef268ffaf29640cf227bab8027081d3abc2a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7997/cover/47915f0807b8c4b512c8bcd70c4aef268ffaf29640cf227bab8027081d3abc2a.jpg"
     },
     {
       "kind": "item",
@@ -8736,9 +8861,11 @@
       "id": 7998,
       "name": "Штурмовая винтовка",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 79
+      "batch": 79,
+      "sha256": "cbb01fa36ef3592aa15a019825cf3c4cbfef5ae81881c8cfbe1399da8f9f769c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7998/cover/cbb01fa36ef3592aa15a019825cf3c4cbfef5ae81881c8cfbe1399da8f9f769c.jpg"
     },
     {
       "kind": "item",
@@ -8753,9 +8880,11 @@
       "id": 7999,
       "name": "Штурмовая винтовка (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 85
+      "batch": 85,
+      "sha256": "f34425780dcc9eff40d3a43062ac09a3a6da925d8c31b9431a6246d034029ef0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7999/cover/f34425780dcc9eff40d3a43062ac09a3a6da925d8c31b9431a6246d034029ef0.jpg"
     },
     {
       "kind": "item",
@@ -8770,9 +8899,11 @@
       "id": 8000,
       "name": "Штурмовая винтовка (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 85
+      "batch": 85,
+      "sha256": "a746159cbfba400babf2a971e66cfb79eb7d1e6fc3e39ab6dce1ad7466dda85f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8000/cover/a746159cbfba400babf2a971e66cfb79eb7d1e6fc3e39ab6dce1ad7466dda85f.jpg"
     },
     {
       "kind": "item",
@@ -8787,9 +8918,11 @@
       "id": 8001,
       "name": "Бейсбольная бита",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 79
+      "batch": 79,
+      "sha256": "d5e3a7b9fe5407d4ffb2b7de1b0b3c7a4017a0b575132bb9c9c2088dc98edf24",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8001/cover/d5e3a7b9fe5407d4ffb2b7de1b0b3c7a4017a0b575132bb9c9c2088dc98edf24.jpg"
     },
     {
       "kind": "item",
@@ -8804,9 +8937,11 @@
       "id": 8002,
       "name": "Бейсбольная бита (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 85
+      "batch": 85,
+      "sha256": "3704e007130100e8ca8d24558a7e2eb9e48cd503cc69dd0252a52c4bdb5ec0bb",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8002/cover/3704e007130100e8ca8d24558a7e2eb9e48cd503cc69dd0252a52c4bdb5ec0bb.jpg"
     },
     {
       "kind": "item",
@@ -8821,9 +8956,11 @@
       "id": 8003,
       "name": "Бейсбольная бита (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 85
+      "batch": 85,
+      "sha256": "cbea19728db1ad45cb08303dd60e3894a7af3ac14cd8a872d2d5cd0d32f87668",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8003/cover/cbea19728db1ad45cb08303dd60e3894a7af3ac14cd8a872d2d5cd0d32f87668.jpg"
     },
     {
       "kind": "item",
@@ -8838,9 +8975,11 @@
       "id": 8004,
       "name": "Лук",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 79
+      "batch": 79,
+      "sha256": "544f5a9c499d7ef0a7c6e3778686fb12ee84ea64582e5928a30f976ff8409596",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8004/cover/544f5a9c499d7ef0a7c6e3778686fb12ee84ea64582e5928a30f976ff8409596.jpg"
     },
     {
       "kind": "item",
@@ -8855,9 +8994,11 @@
       "id": 8005,
       "name": "Лук (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 85
+      "batch": 85,
+      "sha256": "d232f728fc52331ed22dfddb79a10009d8d49c3986d34b6e08babb5bbebb5d34",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8005/cover/d232f728fc52331ed22dfddb79a10009d8d49c3986d34b6e08babb5bbebb5d34.jpg"
     },
     {
       "kind": "item",
@@ -8872,9 +9013,11 @@
       "id": 8006,
       "name": "Лук (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 85
+      "batch": 85,
+      "sha256": "76371fd201734d3d2c01215d50b2455ca2c4475e0425b0110f64d0190c18d77b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8006/cover/76371fd201734d3d2c01215d50b2455ca2c4475e0425b0110f64d0190c18d77b.jpg"
     },
     {
       "kind": "item",
@@ -8889,9 +9032,11 @@
       "id": 8007,
       "name": "Бензопила",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 79
+      "batch": 79,
+      "sha256": "ff2d16e85fe4528bfbfb4948cbfb47a62ee79b84e5a0a673391879d28e028cee",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8007/cover/ff2d16e85fe4528bfbfb4948cbfb47a62ee79b84e5a0a673391879d28e028cee.jpg"
     },
     {
       "kind": "item",
@@ -8906,9 +9051,11 @@
       "id": 8008,
       "name": "Бензопила (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 85
+      "batch": 85,
+      "sha256": "e94a4cf7a05edffbf2973a3e1647b25179c4b53298dbde0384e680c54590d4b0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8008/cover/e94a4cf7a05edffbf2973a3e1647b25179c4b53298dbde0384e680c54590d4b0.jpg"
     },
     {
       "kind": "item",
@@ -8923,9 +9070,11 @@
       "id": 8009,
       "name": "Бензопила (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 85
+      "batch": 85,
+      "sha256": "6bb8bd76d3eaa12a68b10796375093e73d5f3857fc58693621f7dd12a1297ba0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8009/cover/6bb8bd76d3eaa12a68b10796375093e73d5f3857fc58693621f7dd12a1297ba0.jpg"
     },
     {
       "kind": "item",
@@ -8940,9 +9089,11 @@
       "id": 8010,
       "name": "Боевой нож",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 79
+      "batch": 79,
+      "sha256": "2207e2488e258b3f065c2cad3b2bf28b21e47b0a36c8f1101e2cf991aca6dd7d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8010/cover/2207e2488e258b3f065c2cad3b2bf28b21e47b0a36c8f1101e2cf991aca6dd7d.jpg"
     },
     {
       "kind": "item",
@@ -8957,9 +9108,11 @@
       "id": 8011,
       "name": "Боевой нож (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 86
+      "batch": 86,
+      "sha256": "96776506f801ca19efcdc6e94b9c2188a4ab2b8867a9ee55af5b7543593d0800",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8011/cover/96776506f801ca19efcdc6e94b9c2188a4ab2b8867a9ee55af5b7543593d0800.jpg"
     },
     {
       "kind": "item",
@@ -8974,9 +9127,11 @@
       "id": 8012,
       "name": "Боевой нож (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 86
+      "batch": 86,
+      "sha256": "e7d12b1eae3447f5337bfa88f98538f54c27163b4dcffc5ea672060a56fe114c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8012/cover/e7d12b1eae3447f5337bfa88f98538f54c27163b4dcffc5ea672060a56fe114c.jpg"
     },
     {
       "kind": "item",
@@ -8991,9 +9146,11 @@
       "id": 8013,
       "name": "Штурмовое орудие «Ураган» от Конститьюшнал армс",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 79
+      "batch": 79,
+      "sha256": "29b69c79571dd758d21210368307f998d9d2cda7535b2b8599567953cd8d1077",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8013/cover/29b69c79571dd758d21210368307f998d9d2cda7535b2b8599567953cd8d1077.jpg"
     },
     {
       "kind": "item",
@@ -9008,9 +9165,11 @@
       "id": 8014,
       "name": "Арбалет",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 79
+      "batch": 79,
+      "sha256": "d4c08b7e04d85db16c67854aab230e2ae7e69ad543e5f69372fa1d5863294a27",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8014/cover/d4c08b7e04d85db16c67854aab230e2ae7e69ad543e5f69372fa1d5863294a27.jpg"
     },
     {
       "kind": "item",
@@ -9025,9 +9184,11 @@
       "id": 8015,
       "name": "Арбалет (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 86
+      "batch": 86,
+      "sha256": "c306717f58016ed268fdec822afbb1bb8bb261fbeb5917eb1fee8e105d9b0d10",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8015/cover/c306717f58016ed268fdec822afbb1bb8bb261fbeb5917eb1fee8e105d9b0d10.jpg"
     },
     {
       "kind": "item",
@@ -9042,9 +9203,11 @@
       "id": 8016,
       "name": "Арбалет (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 86
+      "batch": 86,
+      "sha256": "7124e3b3259ee3c66db679aba3bb6f97b4a5b46d5191d1a12c9c498c18db6599",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8016/cover/7124e3b3259ee3c66db679aba3bb6f97b4a5b46d5191d1a12c9c498c18db6599.jpg"
     },
     {
       "kind": "item",
@@ -9059,9 +9222,11 @@
       "id": 8017,
       "name": "Монтировка",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 80
+      "batch": 80,
+      "sha256": "2ab4f5dca5206eab0f04161337d1adc6066ea8126735f34cf0c246f7f46e9393",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8017/cover/2ab4f5dca5206eab0f04161337d1adc6066ea8126735f34cf0c246f7f46e9393.jpg"
     },
     {
       "kind": "item",
@@ -9076,9 +9241,11 @@
       "id": 8018,
       "name": "Монтировка (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 86
+      "batch": 86,
+      "sha256": "65ebbdac866dccaefaefbdef7db03dd1d86bc32d438f17bfa296636cc8e51168",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8018/cover/65ebbdac866dccaefaefbdef7db03dd1d86bc32d438f17bfa296636cc8e51168.jpg"
     },
     {
       "kind": "item",
@@ -9093,9 +9260,11 @@
       "id": 8019,
       "name": "Монтировка (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 86
+      "batch": 86,
+      "sha256": "551d2fbfc7feb26c899c165e3f1d479a1bd5cc48d2ab4b7d80bc0d90e9abf26a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8019/cover/551d2fbfc7feb26c899c165e3f1d479a1bd5cc48d2ab4b7d80bc0d90e9abf26a.jpg"
     },
     {
       "kind": "item",
@@ -9110,9 +9279,11 @@
       "id": 8020,
       "name": "Дротикомёт",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 80
+      "batch": 80,
+      "sha256": "d3f90f68f565456e6c1b3026bd69cb1d6a3b6ae88cbf09cccf86b511cf43aefd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8020/cover/d3f90f68f565456e6c1b3026bd69cb1d6a3b6ae88cbf09cccf86b511cf43aefd.jpg"
     },
     {
       "kind": "item",
@@ -9127,9 +9298,11 @@
       "id": 8021,
       "name": "Огнемёт",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 80
+      "batch": 80,
+      "sha256": "73522f091b0d8bfb99ceaa6c05db7d14058a0e317b8a692fee6c4c66c93c4197",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8021/cover/73522f091b0d8bfb99ceaa6c05db7d14058a0e317b8a692fee6c4c66c93c4197.jpg"
     },
     {
       "kind": "item",
@@ -9144,9 +9317,11 @@
       "id": 8022,
       "name": "Гранатомёт",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 80
+      "batch": 80,
+      "sha256": "18119fa2ca5e2c71cae9c676d5a8b22dc4986cc2b761a1a33bf3339056533142",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8022/cover/18119fa2ca5e2c71cae9c676d5a8b22dc4986cc2b761a1a33bf3339056533142.jpg"
     },
     {
       "kind": "item",
@@ -9161,9 +9336,11 @@
       "id": 8023,
       "name": "Гранатомёт (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 86
+      "batch": 86,
+      "sha256": "e2ccbfd33675953664084093a3707b64472803c3a94dec8dad80e8dc2f9a2576",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8023/cover/e2ccbfd33675953664084093a3707b64472803c3a94dec8dad80e8dc2f9a2576.jpg"
     },
     {
       "kind": "item",
@@ -9178,9 +9355,11 @@
       "id": 8024,
       "name": "Гранатомёт (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 86
+      "batch": 86,
+      "sha256": "650111de203cf4ca1dbd4525c266d5bd4c5af3f3d94fd98f11a4adab5e0f4417",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8024/cover/650111de203cf4ca1dbd4525c266d5bd4c5af3f3d94fd98f11a4adab5e0f4417.jpg"
     },
     {
       "kind": "item",
@@ -9195,9 +9374,11 @@
       "id": 8025,
       "name": "Тяжёлое оружие ближнего боя",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 80
+      "batch": 80,
+      "sha256": "d11eeaf75055ed3c60e9bbc7b5bca3de514a2e8d42b3317a02171c98f973a8e9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8025/cover/d11eeaf75055ed3c60e9bbc7b5bca3de514a2e8d42b3317a02171c98f973a8e9.jpg"
     },
     {
       "kind": "item",
@@ -9212,9 +9393,11 @@
       "id": 8026,
       "name": "Тяжёлое оружие ближнего боя (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 87
+      "batch": 87,
+      "sha256": "1bdaa0f6ae2eb9f2fdb20924b3c548c866799f6f1e8460a9b9c3ecd18701a255",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8026/cover/1bdaa0f6ae2eb9f2fdb20924b3c548c866799f6f1e8460a9b9c3ecd18701a255.jpg"
     },
     {
       "kind": "item",
@@ -9229,9 +9412,11 @@
       "id": 8027,
       "name": "Тяжёлое оружие ближнего боя (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 87
+      "batch": 87,
+      "sha256": "3fb0a59ab2af85ea8ef9cd59ee529135e189f0c8812156edddf1160b7b7fb468",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8027/cover/3fb0a59ab2af85ea8ef9cd59ee529135e189f0c8812156edddf1160b7b7fb468.jpg"
     },
     {
       "kind": "item",
@@ -9246,9 +9431,11 @@
       "id": 8028,
       "name": "Пистолет крупного калибра",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 80
+      "batch": 80,
+      "sha256": "b35a40058c01e3373646fe6d98ee5e99b4bc5fa761866dc00234dc2e2b6c7ff8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8028/cover/b35a40058c01e3373646fe6d98ee5e99b4bc5fa761866dc00234dc2e2b6c7ff8.jpg"
     },
     {
       "kind": "item",
@@ -9263,9 +9450,11 @@
       "id": 8029,
       "name": "Пистолет крупного калибра (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 87
+      "batch": 87,
+      "sha256": "32c23ac2b0aaaa2c729c7542090ab343c6ffbb7183a314134a457c4b07e27f5c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8029/cover/32c23ac2b0aaaa2c729c7542090ab343c6ffbb7183a314134a457c4b07e27f5c.jpg"
     },
     {
       "kind": "item",
@@ -9280,9 +9469,11 @@
       "id": 8030,
       "name": "Пистолет крупного калибра (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 87
+      "batch": 87,
+      "sha256": "751acf0038d39466eab5f9fce678640dc6f6e13819d0659df8ae4d842f7f3bfc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8030/cover/751acf0038d39466eab5f9fce678640dc6f6e13819d0659df8ae4d842f7f3bfc.jpg"
     },
     {
       "kind": "item",
@@ -9297,9 +9488,11 @@
       "id": 8031,
       "name": "ПП крупного калибра",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 80
+      "batch": 80,
+      "sha256": "b29066e003a2e2ba4d7a15e907c3eb269f79ad586515232097c9f57a59864e3c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8031/cover/b29066e003a2e2ba4d7a15e907c3eb269f79ad586515232097c9f57a59864e3c.jpg"
     },
     {
       "kind": "item",
@@ -9314,9 +9507,11 @@
       "id": 8032,
       "name": "ПП крупного калибра (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 87
+      "batch": 87,
+      "sha256": "3c77e5194f3ce04ffbcee6b24828f8e5ccb926035a26c7735b576aa104571dc3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8032/cover/3c77e5194f3ce04ffbcee6b24828f8e5ccb926035a26c7735b576aa104571dc3.jpg"
     },
     {
       "kind": "item",
@@ -9331,9 +9526,11 @@
       "id": 8033,
       "name": "ПП крупного калибра (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 87
+      "batch": 87,
+      "sha256": "3ab980e1a4df80380a57f2ddc715d5c09c9c2845a4eac97a380db6dd1fee600e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8033/cover/3ab980e1a4df80380a57f2ddc715d5c09c9c2845a4eac97a380db6dd1fee600e.jpg"
     },
     {
       "kind": "item",
@@ -9348,9 +9545,11 @@
       "id": 8034,
       "name": "Лопасти вертолёта",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 80
+      "batch": 80,
+      "sha256": "cb78f01aa90e2e4dae266441e7d2eb9fa44cd549c1273d007ac0d292b99ca4e4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8034/cover/cb78f01aa90e2e4dae266441e7d2eb9fa44cd549c1273d007ac0d292b99ca4e4.jpg"
     },
     {
       "kind": "item",
@@ -9365,9 +9564,11 @@
       "id": 8035,
       "name": "Лопасти вертолёта (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 87
+      "batch": 87,
+      "sha256": "84ca4fa052563b6759f57a134fcce2e91950988550956dfdae66321adb574461",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8035/cover/84ca4fa052563b6759f57a134fcce2e91950988550956dfdae66321adb574461.jpg"
     },
     {
       "kind": "item",
@@ -9382,9 +9583,11 @@
       "id": 8036,
       "name": "Лопасти вертолёта (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 87
+      "batch": 87,
+      "sha256": "c78497a4c45a79a53fb9fa23f00726271de2b840c1ec4b1550ae6df9511c6059",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8036/cover/c78497a4c45a79a53fb9fa23f00726271de2b840c1ec4b1550ae6df9511c6059.jpg"
     },
     {
       "kind": "item",
@@ -9399,9 +9602,11 @@
       "id": 8037,
       "name": "«Моно-три» от Кэндати",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 81
+      "batch": 81,
+      "sha256": "dbe96280591cb391c9afd7fa17976261e5005cb897a78fe35a4843ebfe826389",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8037/cover/dbe96280591cb391c9afd7fa17976261e5005cb897a78fe35a4843ebfe826389.jpg"
     },
     {
       "kind": "item",
@@ -9416,9 +9621,11 @@
       "id": 8038,
       "name": "Свинцовая труба",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 81
+      "batch": 81,
+      "sha256": "4c57e59a11341cfdb90db9e5accf29e5814a1a3f86222ea8f64fbd0207f4238d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8038/cover/4c57e59a11341cfdb90db9e5accf29e5814a1a3f86222ea8f64fbd0207f4238d.jpg"
     },
     {
       "kind": "item",
@@ -9433,9 +9640,11 @@
       "id": 8039,
       "name": "Свинцовая труба (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 88
+      "batch": 88,
+      "sha256": "ca07e3999ee2ed00b41f2e32f266f6601d549e51d7b9816cce1fe6d8e6594872",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8039/cover/ca07e3999ee2ed00b41f2e32f266f6601d549e51d7b9816cce1fe6d8e6594872.jpg"
     },
     {
       "kind": "item",
@@ -9450,9 +9659,11 @@
       "id": 8040,
       "name": "Свинцовая труба (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 88
+      "batch": 88,
+      "sha256": "f1fb0d297284266cd4c54ebaff9bf5ab3c8f53e268bd9877b8d9435f6df604dd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8040/cover/f1fb0d297284266cd4c54ebaff9bf5ab3c8f53e268bd9877b8d9435f6df604dd.jpg"
     },
     {
       "kind": "item",
@@ -9467,9 +9678,11 @@
       "id": 8041,
       "name": "Лёгкое оружие ближнего боя",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 81
+      "batch": 81,
+      "sha256": "01b30a1b170454b56b5546570e969cb3029136c78381a1584b737fd86916b699",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8041/cover/01b30a1b170454b56b5546570e969cb3029136c78381a1584b737fd86916b699.jpg"
     },
     {
       "kind": "item",
@@ -9484,9 +9697,11 @@
       "id": 8042,
       "name": "Лёгкое оружие ближнего боя (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 88
+      "batch": 88,
+      "sha256": "ebb315548ffca086743b1576dd3fe5e8ed580a64abd89fb0f2d8dd79fdbeb123",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8042/cover/ebb315548ffca086743b1576dd3fe5e8ed580a64abd89fb0f2d8dd79fdbeb123.jpg"
     },
     {
       "kind": "item",
@@ -9501,9 +9716,11 @@
       "id": 8043,
       "name": "Лёгкое оружие ближнего боя (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 88
+      "batch": 88,
+      "sha256": "b16e8733aef93b4f35fb795b0454f1a757e18ed8c44f17e123f64d6ec264cae8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8043/cover/b16e8733aef93b4f35fb795b0454f1a757e18ed8c44f17e123f64d6ec264cae8.jpg"
     },
     {
       "kind": "item",
@@ -9518,9 +9735,11 @@
       "id": 8044,
       "name": "Мачете",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 81
+      "batch": 81,
+      "sha256": "42d57f2b9ee790df31bca8de5f09b7195bf4d3077356d330ead94666f49ed482",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8044/cover/42d57f2b9ee790df31bca8de5f09b7195bf4d3077356d330ead94666f49ed482.jpg"
     },
     {
       "kind": "item",
@@ -9535,9 +9754,11 @@
       "id": 8045,
       "name": "Мачете (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 88
+      "batch": 88,
+      "sha256": "ccb9fda7672c630bf650400cb94ccfe118103b8d765f71f65df750d8fcaa5169",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8045/cover/ccb9fda7672c630bf650400cb94ccfe118103b8d765f71f65df750d8fcaa5169.jpg"
     },
     {
       "kind": "item",
@@ -9552,9 +9773,11 @@
       "id": 8046,
       "name": "Мачете (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 88
+      "batch": 88,
+      "sha256": "36f41536f607ec729c3e4c9a5e5bdae482187060e56ad746b02ae05d54a74079",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8046/cover/36f41536f607ec729c3e4c9a5e5bdae482187060e56ad746b02ae05d54a74079.jpg"
     },
     {
       "kind": "item",
@@ -9569,9 +9792,11 @@
       "id": 8047,
       "name": "Малориан армс 3516",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 81
+      "batch": 81,
+      "sha256": "e3c634f59d2730509cd43146c69bf0213552d58b8afcceb87317448df06c7202",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8047/cover/e3c634f59d2730509cd43146c69bf0213552d58b8afcceb87317448df06c7202.jpg"
     },
     {
       "kind": "item",
@@ -9586,9 +9811,11 @@
       "id": 8048,
       "name": "Боевые искусства",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 81
+      "batch": 81,
+      "sha256": "dd5d6deb4083167f7e4ec5fa291df85631aa22cd52abf89041949cd6699064ad",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8048/cover/dd5d6deb4083167f7e4ec5fa291df85631aa22cd52abf89041949cd6699064ad.jpg"
     },
     {
       "kind": "item",
@@ -9603,9 +9830,11 @@
       "id": 8049,
       "name": "Среднее оружие ближнего боя",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 81
+      "batch": 81,
+      "sha256": "8f8e3dc69468bfd927c3aa74d3b4ae0da9384640e418d2d7cc93973d56d88ca2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8049/cover/8f8e3dc69468bfd927c3aa74d3b4ae0da9384640e418d2d7cc93973d56d88ca2.jpg"
     },
     {
       "kind": "item",
@@ -9620,9 +9849,11 @@
       "id": 8050,
       "name": "Среднее оружие ближнего боя (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 88
+      "batch": 88,
+      "sha256": "15b69883c910eaf4e7ca77244b1e78977bc0af3ab4b74c86ce484282b9d32f01",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8050/cover/15b69883c910eaf4e7ca77244b1e78977bc0af3ab4b74c86ce484282b9d32f01.jpg"
     },
     {
       "kind": "item",
@@ -9637,9 +9868,11 @@
       "id": 8051,
       "name": "Среднее оружие ближнего боя (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 88
+      "batch": 88,
+      "sha256": "7abb50006c7f998d178d1779950b834349989967b875621315818cd4255d5188",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8051/cover/7abb50006c7f998d178d1779950b834349989967b875621315818cd4255d5188.jpg"
     },
     {
       "kind": "item",
@@ -9654,9 +9887,11 @@
       "id": 8052,
       "name": "Пистолет среднего калибра",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 81
+      "batch": 81,
+      "sha256": "f8132b9f80b82d6cfc24bfa5904873c0346028d295f4939f22dc797c43a50783",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8052/cover/f8132b9f80b82d6cfc24bfa5904873c0346028d295f4939f22dc797c43a50783.jpg"
     },
     {
       "kind": "item",
@@ -9671,9 +9906,11 @@
       "id": 8053,
       "name": "Пистолет среднего калибра (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 89
+      "batch": 89,
+      "sha256": "fa8249d2cdea5cb2c0697408c7455986de3fc411652e6df4c726aac5fe2592b5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8053/cover/fa8249d2cdea5cb2c0697408c7455986de3fc411652e6df4c726aac5fe2592b5.jpg"
     },
     {
       "kind": "item",
@@ -9688,9 +9925,11 @@
       "id": 8054,
       "name": "Пистолет среднего калибра (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 89
+      "batch": 89,
+      "sha256": "1e0f2ad7ad183a988693095ecd73cd119aa261bfb429796a4165cae0af140207",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8054/cover/1e0f2ad7ad183a988693095ecd73cd119aa261bfb429796a4165cae0af140207.jpg"
     },
     {
       "kind": "item",
@@ -9705,9 +9944,11 @@
       "id": 8055,
       "name": "Микроволновка",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 82
+      "batch": 82,
+      "sha256": "97613b605d860c2e960e237a5b805d3f88e8f00c9fc5bd6d11d78caa2826bb65",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8055/cover/97613b605d860c2e960e237a5b805d3f88e8f00c9fc5bd6d11d78caa2826bb65.jpg"
     },
     {
       "kind": "item",
@@ -9722,9 +9963,11 @@
       "id": 8056,
       "name": "Гранатомёт U-56 «Ковбой» от Милитех",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 82
+      "batch": 82,
+      "sha256": "b6c896a976bdb31ecc3bdb2ca0a006646fe7a56f3f42ed57a985eee83ea0144a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8056/cover/b6c896a976bdb31ecc3bdb2ca0a006646fe7a56f3f42ed57a985eee83ea0144a.jpg"
     },
     {
       "kind": "item",
@@ -9739,9 +9982,11 @@
       "id": 8057,
       "name": "Нагината",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 82
+      "batch": 82,
+      "sha256": "305c25b46ae1441ff5543eebb8001bb263f57b4d5f6b86f54d8a7eed95e474ab",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8057/cover/305c25b46ae1441ff5543eebb8001bb263f57b4d5f6b86f54d8a7eed95e474ab.jpg"
     },
     {
       "kind": "item",
@@ -9756,9 +10001,11 @@
       "id": 8058,
       "name": "Нагината (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 89
+      "batch": 89,
+      "sha256": "1dfcd8e39039e1283415c77c60784d4d33b3ad8ee9c9072c8d6f31fb11cd4093",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8058/cover/1dfcd8e39039e1283415c77c60784d4d33b3ad8ee9c9072c8d6f31fb11cd4093.jpg"
     },
     {
       "kind": "item",
@@ -9773,9 +10020,11 @@
       "id": 8059,
       "name": "Нагината (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 89
+      "batch": 89,
+      "sha256": "fa0a2c38b623fe00c32bc139142998251bf7a8c2f86ed83f0c8636d359444ec5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8059/cover/fa0a2c38b623fe00c32bc139142998251bf7a8c2f86ed83f0c8636d359444ec5.jpg"
     },
     {
       "kind": "item",
@@ -9790,9 +10039,11 @@
       "id": 8060,
       "name": "Рельсотрон ЭМП-86 от Рейнметалл",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 82
+      "batch": 82,
+      "sha256": "567fbc7be6d8b68a5b6adc812c81442c105e1f331d3f45cca8629037c4e752b7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8060/cover/567fbc7be6d8b68a5b6adc812c81442c105e1f331d3f45cca8629037c4e752b7.jpg"
     },
     {
       "kind": "item",
@@ -9807,9 +10058,11 @@
       "id": 8061,
       "name": "Ракетница",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 82
+      "batch": 82,
+      "sha256": "ebd46e0f336a40b634ea08c403dc4e66bf21de1b287af1b4c4d9f2785be58f30",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8061/cover/ebd46e0f336a40b634ea08c403dc4e66bf21de1b287af1b4c4d9f2785be58f30.jpg"
     },
     {
       "kind": "item",
@@ -9824,9 +10077,11 @@
       "id": 8062,
       "name": "Ракетница (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 89
+      "batch": 89,
+      "sha256": "42ffcf4480d00a2903c37882cd413d0b9aa0b3bf7863a25ca0dc908e1d240f9d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8062/cover/42ffcf4480d00a2903c37882cd413d0b9aa0b3bf7863a25ca0dc908e1d240f9d.jpg"
     },
     {
       "kind": "item",
@@ -9841,9 +10096,11 @@
       "id": 8063,
       "name": "Ракетница (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 89
+      "batch": 89,
+      "sha256": "3374a0a6d916fb99d00acfa49b2c2fb5af8ee8c3b7b3b15ea6be38611b5ca1a8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8063/cover/3374a0a6d916fb99d00acfa49b2c2fb5af8ee8c3b7b3b15ea6be38611b5ca1a8.jpg"
     },
     {
       "kind": "item",
@@ -9858,9 +10115,11 @@
       "id": 8064,
       "name": "Дробовик",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 82
+      "batch": 82,
+      "sha256": "f5aee1b552c61067ab8cf20880f3dbf672ec1270adff3cd4d96fe3a86cdee6c2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8064/cover/f5aee1b552c61067ab8cf20880f3dbf672ec1270adff3cd4d96fe3a86cdee6c2.jpg"
     },
     {
       "kind": "item",
@@ -9875,9 +10134,11 @@
       "id": 8065,
       "name": "Дробовик (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 89
+      "batch": 89,
+      "sha256": "0a265546ae8354c451e5ac6a59bf8891cc9b20d895d12df877c86307252090f9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8065/cover/0a265546ae8354c451e5ac6a59bf8891cc9b20d895d12df877c86307252090f9.jpg"
     },
     {
       "kind": "item",
@@ -9892,9 +10153,11 @@
       "id": 8066,
       "name": "Дробовик (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 89
+      "batch": 89,
+      "sha256": "57318adb9572182e63b34dc9da1aa0add94ef112f72eabe49a4857dffa9237b1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8066/cover/57318adb9572182e63b34dc9da1aa0add94ef112f72eabe49a4857dffa9237b1.jpg"
     },
     {
       "kind": "item",
@@ -9909,9 +10172,11 @@
       "id": 8067,
       "name": "Крикун",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 82
+      "batch": 82,
+      "sha256": "19f90b9b66797aa729083ded92952d991d52d3de07fee50ec359b3d0712250ee",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8067/cover/19f90b9b66797aa729083ded92952d991d52d3de07fee50ec359b3d0712250ee.jpg"
     },
     {
       "kind": "item",
@@ -9926,9 +10191,11 @@
       "id": 8068,
       "name": "Кувалда",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 82
+      "batch": 82,
+      "sha256": "f2825529b5472460d120fa10ba985fbc0a1ece61eceb057c400171f5f8a1cc32",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8068/cover/f2825529b5472460d120fa10ba985fbc0a1ece61eceb057c400171f5f8a1cc32.jpg"
     },
     {
       "kind": "item",
@@ -9943,9 +10210,11 @@
       "id": 8069,
       "name": "Кувалда (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 90
+      "batch": 90,
+      "sha256": "c5dfe4487be3e16963a218a88243c6dbbfd57d42c6f3027a70a49feea4a88b6e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8069/cover/c5dfe4487be3e16963a218a88243c6dbbfd57d42c6f3027a70a49feea4a88b6e.jpg"
     },
     {
       "kind": "item",
@@ -9960,9 +10229,11 @@
       "id": 8070,
       "name": "Кувалда (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 90
+      "batch": 90,
+      "sha256": "4e330623dc6d3170918799b5579f7bb6bbb3c66e2d4c02ff704d6bddb0a9b2a6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8070/cover/4e330623dc6d3170918799b5579f7bb6bbb3c66e2d4c02ff704d6bddb0a9b2a6.jpg"
     },
     {
       "kind": "item",
@@ -9977,9 +10248,11 @@
       "id": 8071,
       "name": "ПП",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 83
+      "batch": 83,
+      "sha256": "439077757306ad4690eedc4388b521bed47d278395e6109b7a489a2c9c8067f4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8071/cover/439077757306ad4690eedc4388b521bed47d278395e6109b7a489a2c9c8067f4.jpg"
     },
     {
       "kind": "item",
@@ -9994,9 +10267,11 @@
       "id": 8072,
       "name": "ПП (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 90
+      "batch": 90,
+      "sha256": "1b2931af68e3724e2bb01f469fdf14b1124cac5c58ad9b633ba4127ef8e66d3b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8072/cover/1b2931af68e3724e2bb01f469fdf14b1124cac5c58ad9b633ba4127ef8e66d3b.jpg"
     },
     {
       "kind": "item",
@@ -10011,9 +10286,11 @@
       "id": 8073,
       "name": "ПП (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 90
+      "batch": 90,
+      "sha256": "fb8db45f546c1651d9d7b0c85de589ce4394cae7b50de876d7710a1786ffb084",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8073/cover/fb8db45f546c1651d9d7b0c85de589ce4394cae7b50de876d7710a1786ffb084.jpg"
     },
     {
       "kind": "item",
@@ -10028,9 +10305,11 @@
       "id": 8074,
       "name": "Снайперская винтовка",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 83
+      "batch": 83,
+      "sha256": "278857f71c752ba16ae9a2d84f7aa7534ca7e0663c904efc352b30ac9ab6eb62",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8074/cover/278857f71c752ba16ae9a2d84f7aa7534ca7e0663c904efc352b30ac9ab6eb62.jpg"
     },
     {
       "kind": "item",
@@ -10045,9 +10324,11 @@
       "id": 8075,
       "name": "Снайперская винтовка (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 90
+      "batch": 90,
+      "sha256": "82bdc4864087dccdc9d6be9f070d0a5f19adb6268483332247501a2ba6364a92",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8075/cover/82bdc4864087dccdc9d6be9f070d0a5f19adb6268483332247501a2ba6364a92.jpg"
     },
     {
       "kind": "item",
@@ -10062,9 +10343,11 @@
       "id": 8076,
       "name": "Снайперская винтовка (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 90
+      "batch": 90,
+      "sha256": "86f9d05212f0f5f321302d8163f60ce3fc1eea2ffe3a76ffb4349b3fcd606eaf",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8076/cover/86f9d05212f0f5f321302d8163f60ce3fc1eea2ffe3a76ffb4349b3fcd606eaf.jpg"
     },
     {
       "kind": "item",
@@ -10079,9 +10362,11 @@
       "id": 8077,
       "name": "Бита с гвоздями",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 83
+      "batch": 83,
+      "sha256": "45edea6b4fd99728aabe8756a3078feb4ada560bf4c13a17e1bd8ab02b0ba7cd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8077/cover/45edea6b4fd99728aabe8756a3078feb4ada560bf4c13a17e1bd8ab02b0ba7cd.jpg"
     },
     {
       "kind": "item",
@@ -10096,9 +10381,11 @@
       "id": 8078,
       "name": "Бита с гвоздями (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 90
+      "batch": 90,
+      "sha256": "6251d97ff6273310a0a97303731222d67aa6191e000e4ce437f16d3ce388e016",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8078/cover/6251d97ff6273310a0a97303731222d67aa6191e000e4ce437f16d3ce388e016.jpg"
     },
     {
       "kind": "item",
@@ -10113,9 +10400,11 @@
       "id": 8079,
       "name": "Бита с гвоздями (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 90
+      "batch": 90,
+      "sha256": "5a0bf79a8f60ac5515612377a3e479369b1c571f517970053af102ab4d24ff3e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8079/cover/5a0bf79a8f60ac5515612377a3e479369b1c571f517970053af102ab4d24ff3e.jpg"
     },
     {
       "kind": "item",
@@ -10130,9 +10419,11 @@
       "id": 8080,
       "name": "Оглушающая дубинка",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 83
+      "batch": 83,
+      "sha256": "c9b0f42d16ba373973b72d98673350caba46040114dca1afd7095691dcc3293a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8080/cover/c9b0f42d16ba373973b72d98673350caba46040114dca1afd7095691dcc3293a.jpg"
     },
     {
       "kind": "item",
@@ -10147,9 +10438,11 @@
       "id": 8081,
       "name": "Шокер",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 83
+      "batch": 83,
+      "sha256": "858467ac9ff1e8e27992271e9f1cb8f708ddb25385c33ec82c35a9e390292e1c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8081/cover/858467ac9ff1e8e27992271e9f1cb8f708ddb25385c33ec82c35a9e390292e1c.jpg"
     },
     {
       "kind": "item",
@@ -10164,9 +10457,11 @@
       "id": 8082,
       "name": "Меч",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 83
+      "batch": 83,
+      "sha256": "eb9e3be8578f60500d2f14d6ef7f4dc9ad163fcc156cf6c324aadc02b1d308c1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8082/cover/eb9e3be8578f60500d2f14d6ef7f4dc9ad163fcc156cf6c324aadc02b1d308c1.jpg"
     },
     {
       "kind": "item",
@@ -10181,9 +10476,11 @@
       "id": 8083,
       "name": "Меч (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 91
+      "batch": 91,
+      "sha256": "1693e293bd951f3dcd90b26d76567a4d7191ce33968f30fda58e0c5b133d036f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8083/cover/1693e293bd951f3dcd90b26d76567a4d7191ce33968f30fda58e0c5b133d036f.jpg"
     },
     {
       "kind": "item",
@@ -10198,9 +10495,11 @@
       "id": 8084,
       "name": "Меч (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 91
+      "batch": 91,
+      "sha256": "3dd7a5c4c9f553bd684dd43f1caa445ca7b08279e9f9500fde7e9535bda20970",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8084/cover/3dd7a5c4c9f553bd684dd43f1caa445ca7b08279e9f9500fde7e9535bda20970.jpg"
     },
     {
       "kind": "item",
@@ -10215,9 +10514,11 @@
       "id": 8085,
       "name": "Метательное оружие",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 83
+      "batch": 83,
+      "sha256": "3cb57fbac7e50fb34cbd7948d53f4556b768032b3c0ca1225fc27d939d419646",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8085/cover/3cb57fbac7e50fb34cbd7948d53f4556b768032b3c0ca1225fc27d939d419646.jpg"
     },
     {
       "kind": "item",
@@ -10232,9 +10533,11 @@
       "id": 8086,
       "name": "Томагавк",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 83
+      "batch": 83,
+      "sha256": "6f27ee54d561a2f00072829bc5ccb8cc9d8393cd013932bea0f37826b4bc2ab6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8086/cover/6f27ee54d561a2f00072829bc5ccb8cc9d8393cd013932bea0f37826b4bc2ab6.jpg"
     },
     {
       "kind": "item",
@@ -10249,9 +10552,11 @@
       "id": 8087,
       "name": "Томагавк (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 91
+      "batch": 91,
+      "sha256": "3137f155ced0127dbab34cadd718711528ad448d83afff9447fe014cb748bcf2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8087/cover/3137f155ced0127dbab34cadd718711528ad448d83afff9447fe014cb748bcf2.jpg"
     },
     {
       "kind": "item",
@@ -10266,9 +10571,11 @@
       "id": 8088,
       "name": "Томагавк (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 91
+      "batch": 91,
+      "sha256": "99d74c730e1ca002d2b99c54f1644f157e2c604561588ae972d3739ce57bba72",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8088/cover/99d74c730e1ca002d2b99c54f1644f157e2c604561588ae972d3739ce57bba72.jpg"
     },
     {
       "kind": "item",
@@ -10283,9 +10590,11 @@
       "id": 8089,
       "name": "«Спираль» от Цунами армс",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 84
+      "batch": 84,
+      "sha256": "136d74a137457d8715768b8911cde2a7e687cef3016e3b595aa40772d21bae0a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8089/cover/136d74a137457d8715768b8911cde2a7e687cef3016e3b595aa40772d21bae0a.jpg"
     },
     {
       "kind": "item",
@@ -10300,9 +10609,11 @@
       "id": 8090,
       "name": "Без оружия",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 84
+      "batch": 84,
+      "sha256": "9c6a767f904b8857c35a318f838c8221f1ce110a2a0721ebbbff5c60db0fd8cb",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8090/cover/9c6a767f904b8857c35a318f838c8221f1ce110a2a0721ebbbff5c60db0fd8cb.jpg"
     },
     {
       "kind": "item",
@@ -10317,9 +10628,11 @@
       "id": 8091,
       "name": "Очень тяжёлое оружие ближнего боя",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 84
+      "batch": 84,
+      "sha256": "b27e957a85c91f25bee370b64fe74712adf4a24b4b4b5cdc6b740626be16c6cb",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8091/cover/b27e957a85c91f25bee370b64fe74712adf4a24b4b4b5cdc6b740626be16c6cb.jpg"
     },
     {
       "kind": "item",
@@ -10334,9 +10647,11 @@
       "id": 8092,
       "name": "Очень тяжёлое оружие ближнего боя (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 91
+      "batch": 91,
+      "sha256": "3cefaac426df6fb5b8d0725c644a66a10a2e3b85795c4bb7da99975f5b41321b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8092/cover/3cefaac426df6fb5b8d0725c644a66a10a2e3b85795c4bb7da99975f5b41321b.jpg"
     },
     {
       "kind": "item",
@@ -10351,9 +10666,11 @@
       "id": 8093,
       "name": "Очень тяжёлое оружие ближнего боя (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 91
+      "batch": 91,
+      "sha256": "5eb67d3b7fdfe12e404ef51441a817f8b94b5af79fc46b3b0f3a924f316ef534",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8093/cover/5eb67d3b7fdfe12e404ef51441a817f8b94b5af79fc46b3b0f3a924f316ef534.jpg"
     },
     {
       "kind": "item",
@@ -10368,9 +10685,11 @@
       "id": 8094,
       "name": "Пистолет сверхкрупного калибра",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 84
+      "batch": 84,
+      "sha256": "e6c072ecab4f335bf3f78bfd290fc30e91f55e245be8c98b98c8b9b55d951b04",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8094/cover/e6c072ecab4f335bf3f78bfd290fc30e91f55e245be8c98b98c8b9b55d951b04.jpg"
     },
     {
       "kind": "item",
@@ -10385,9 +10704,11 @@
       "id": 8095,
       "name": "Пистолет сверхкрупного калибра (отличное)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 91
+      "batch": 91,
+      "sha256": "c05f9cefa7f6f53d8e75ab8b4f1134813c42894f5d7cabb15009a76d4f1b95d1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8095/cover/c05f9cefa7f6f53d8e75ab8b4f1134813c42894f5d7cabb15009a76d4f1b95d1.jpg"
     },
     {
       "kind": "item",
@@ -10402,9 +10723,11 @@
       "id": 8096,
       "name": "Пистолет сверхкрупного калибра (плохое)",
       "slot": "cover",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 91
+      "batch": 91,
+      "sha256": "1f11188768f355beb15ae134d239e7b0033892dd1334b874fac5dd3c13f94c57",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8096/cover/1f11188768f355beb15ae134d239e7b0033892dd1334b874fac5dd3c13f94c57.jpg"
     },
     {
       "kind": "item",
@@ -11585,8 +11908,9 @@
       "name": "Игра на инструменте (Гитара)",
       "code": "play-instrument-guitar",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 98
     },
     {
       "kind": "suggest",
@@ -11605,8 +11929,9 @@
       "name": "Игра на инструменте (Пение)",
       "code": "play-instrument-singing",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 98
     },
     {
       "kind": "suggest",
@@ -11625,8 +11950,9 @@
       "name": "Игра на инструменте (Скрипка)",
       "code": "play-instrument-violin",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 98
     },
     {
       "kind": "suggest",
@@ -11645,8 +11971,9 @@
       "name": "Игра на инструменте (Ударные)",
       "code": "play-instrument-drums",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 98
     },
     {
       "kind": "suggest",
@@ -11665,8 +11992,9 @@
       "name": "Игра на инструменте (Фортепиано)",
       "code": "play-instrument-piano",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 98
     },
     {
       "kind": "suggest",
@@ -11685,8 +12013,9 @@
       "name": "Ближний бой",
       "code": "fighting",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 99
     },
     {
       "kind": "suggest",
@@ -11705,8 +12034,9 @@
       "name": "Восприятие",
       "code": "awareness",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 99
     },
     {
       "kind": "suggest",
@@ -11725,8 +12055,9 @@
       "name": "Выступление",
       "code": "performance",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 99
     },
     {
       "kind": "suggest",
@@ -11745,8 +12076,9 @@
       "name": "Знания",
       "code": "education",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 99
     },
     {
       "kind": "suggest",
@@ -11765,8 +12097,9 @@
       "name": "Общение",
       "code": "social",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 99
     },
     {
       "kind": "suggest",
@@ -11785,8 +12118,9 @@
       "name": "Стрельба",
       "code": "ranged",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 99
     },
     {
       "kind": "suggest",
@@ -11805,8 +12139,9 @@
       "name": "Тело",
       "code": "body",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 99
     },
     {
       "kind": "suggest",
@@ -11825,8 +12160,9 @@
       "name": "Техника",
       "code": "technique",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 99
     },
     {
       "kind": "suggest",
@@ -11845,8 +12181,9 @@
       "name": "Управление",
       "code": "control",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 99
     },
     {
       "kind": "suggest",
@@ -11865,8 +12202,9 @@
       "name": "Госпиталь",
       "code": "hospital",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 100
     },
     {
       "kind": "suggest",
@@ -11885,8 +12223,9 @@
       "name": "Клиника",
       "code": "clinic",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 100
     },
     {
       "kind": "suggest",
@@ -11905,8 +12244,9 @@
       "name": "Торговый центр",
       "code": "mall",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 100
     },
     {
       "kind": "suggest",
@@ -11925,8 +12265,9 @@
       "name": "Без ранений",
       "code": "healthy",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 100
     },
     {
       "kind": "suggest",
@@ -11945,8 +12286,9 @@
       "name": "Лёгкое ранение",
       "code": "light",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 100
     },
     {
       "kind": "suggest",
@@ -11965,8 +12307,9 @@
       "name": "Смертельное ранение",
       "code": "mortal",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 100
     },
     {
       "kind": "suggest",
@@ -11985,8 +12328,9 @@
       "name": "Смерть",
       "code": "dead",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 100
     },
     {
       "kind": "suggest",
@@ -12005,8 +12349,9 @@
       "name": "Тяжёлое ранение",
       "code": "serious",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 100
     },
     {
       "kind": "suggest",
@@ -12025,8 +12370,9 @@
       "name": "Голова",
       "code": "head",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 101
     },
     {
       "kind": "suggest",
@@ -12045,8 +12391,9 @@
       "name": "Левая нога",
       "code": "left-leg",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 101
     },
     {
       "kind": "suggest",
@@ -12065,8 +12412,9 @@
       "name": "Левая рука",
       "code": "left-arm",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 101
     },
     {
       "kind": "suggest",
@@ -12085,8 +12433,9 @@
       "name": "Правая нога",
       "code": "right-leg",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 101
     },
     {
       "kind": "suggest",
@@ -12105,8 +12454,9 @@
       "name": "Правая рука",
       "code": "right-arm",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 101
     },
     {
       "kind": "suggest",
@@ -12125,8 +12475,9 @@
       "name": "Тело",
       "code": "body",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 101
     },
     {
       "kind": "suggest",
@@ -12145,8 +12496,9 @@
       "name": "Боргирование",
       "code": "borgware",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 102
     },
     {
       "kind": "suggest",
@@ -12165,8 +12517,9 @@
       "name": "Внешние",
       "code": "cyberwareExternal",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 102
     },
     {
       "kind": "suggest",
@@ -12185,8 +12538,9 @@
       "name": "Внутренние",
       "code": "cyberwareInternal",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 102
     },
     {
       "kind": "suggest",
@@ -12205,8 +12559,9 @@
       "name": "Кибераудио",
       "code": "cyberAudioSuite",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 102
     },
     {
       "kind": "suggest",
@@ -12225,8 +12580,9 @@
       "name": "Кибернога",
       "code": "cyberLeg",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 102
     },
     {
       "kind": "suggest",
@@ -12245,8 +12601,9 @@
       "name": "Кибероптика",
       "code": "cyberEye",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 102
     },
     {
       "kind": "suggest",
@@ -12265,8 +12622,9 @@
       "name": "Киберрука",
       "code": "cyberArm",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 102
     },
     {
       "kind": "suggest",
@@ -12285,8 +12643,9 @@
       "name": "Нейроимпланты",
       "code": "neuralWare",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 102
     },
     {
       "kind": "suggest",
@@ -12305,8 +12664,9 @@
       "name": "Стилевые",
       "code": "fashionware",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 102
     },
     {
       "kind": "suggest",
@@ -12325,8 +12685,9 @@
       "name": "Демон",
       "code": "demon",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 103
     },
     {
       "kind": "suggest",
@@ -12345,8 +12706,9 @@
       "name": "Пароль",
       "code": "password",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 103
     },
     {
       "kind": "suggest",
@@ -12365,8 +12727,9 @@
       "name": "Программа",
       "code": "program",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 103
     },
     {
       "kind": "suggest",
@@ -12385,8 +12748,9 @@
       "name": "Управляющий узел",
       "code": "control",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 103
     },
     {
       "kind": "suggest",
@@ -12405,8 +12769,9 @@
       "name": "Файл",
       "code": "file",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 103
     },
     {
       "kind": "suggest",
@@ -12425,8 +12790,9 @@
       "name": "Чёрный ЛЁД",
       "code": "blackIce",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 103
     },
     {
       "kind": "suggest",
@@ -12445,8 +12811,9 @@
       "name": "Наука (Антропология)",
       "code": "science-anthropology",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 104
     },
     {
       "kind": "suggest",
@@ -12465,8 +12832,9 @@
       "name": "Наука (Биология)",
       "code": "science-biology",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 104
     },
     {
       "kind": "suggest",
@@ -12485,8 +12853,9 @@
       "name": "Наука (Геология)",
       "code": "science-geology",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 104
     },
     {
       "kind": "suggest",
@@ -12505,8 +12874,9 @@
       "name": "Наука (Зоология)",
       "code": "science-zoology",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 104
     },
     {
       "kind": "suggest",
@@ -12525,8 +12895,9 @@
       "name": "Наука (История)",
       "code": "science-history",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 104
     },
     {
       "kind": "suggest",
@@ -12545,8 +12916,9 @@
       "name": "Наука (Математика)",
       "code": "science-mathematics",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 104
     },
     {
       "kind": "suggest",
@@ -12565,8 +12937,9 @@
       "name": "Наука (Физика)",
       "code": "science-physics",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 104
     },
     {
       "kind": "suggest",
@@ -12585,8 +12958,9 @@
       "name": "Наука (Химия)",
       "code": "science-chemistry",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 104
     },
     {
       "kind": "suggest",
@@ -12605,8 +12979,9 @@
       "name": "Боевые искусства (Айкидо)",
       "code": "martial-arts-aikido",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 105
     },
     {
       "kind": "suggest",
@@ -12625,8 +13000,9 @@
       "name": "Боевые искусства (Дзюдо)",
       "code": "martial-arts-judo",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 105
     },
     {
       "kind": "suggest",
@@ -12645,8 +13021,9 @@
       "name": "Боевые искусства (Карате)",
       "code": "martial-arts-karate",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 105
     },
     {
       "kind": "suggest",
@@ -12665,8 +13042,9 @@
       "name": "Боевые искусства (Тхэквондо)",
       "code": "martial-arts-taekwondo",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 105
     },
     {
       "kind": "suggest",
@@ -12945,8 +13323,9 @@
       "name": "Законник",
       "code": "lawman",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 106
     },
     {
       "kind": "suggest",
@@ -12965,8 +13344,9 @@
       "name": "Корпорат",
       "code": "exec",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 106
     },
     {
       "kind": "suggest",
@@ -12985,8 +13365,9 @@
       "name": "Кочевник",
       "code": "nomad",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 106
     },
     {
       "kind": "suggest",
@@ -13005,8 +13386,9 @@
       "name": "Медиа",
       "code": "media",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 106
     },
     {
       "kind": "suggest",
@@ -13025,8 +13407,9 @@
       "name": "Медтехник",
       "code": "medtech",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 106
     },
     {
       "kind": "suggest",
@@ -13045,8 +13428,9 @@
       "name": "Нетраннер",
       "code": "netrunner",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 106
     },
     {
       "kind": "suggest",
@@ -13065,8 +13449,9 @@
       "name": "Рокер",
       "code": "rockerboy",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 106
     },
     {
       "kind": "suggest",
@@ -13085,8 +13470,9 @@
       "name": "Соло",
       "code": "solo",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 106
     },
     {
       "kind": "suggest",
@@ -13105,8 +13491,9 @@
       "name": "Техник",
       "code": "tech",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 106
     },
     {
       "kind": "suggest",
@@ -13125,8 +13512,9 @@
       "name": "Фиксер",
       "code": "fixer",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 106
     },
     {
       "kind": "suggest",
@@ -13145,8 +13533,9 @@
       "name": "Полный пакет",
       "code": "complete",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 107
     },
     {
       "kind": "suggest",
@@ -13165,8 +13554,9 @@
       "name": "Уличная крыса",
       "code": "streetrat",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 107
     },
     {
       "kind": "suggest",
@@ -13185,8 +13575,9 @@
       "name": "Эджраннер",
       "code": "edgerunner",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 107
     },
     {
       "kind": "suggest",
@@ -13205,8 +13596,9 @@
       "name": "Боевые искусства",
       "code": "martialArts",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 108
     },
     {
       "kind": "suggest",
@@ -13225,8 +13617,9 @@
       "name": "Гранатомёт",
       "code": "grenadeLauncher",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 108
     },
     {
       "kind": "suggest",
@@ -13245,8 +13638,9 @@
       "name": "Дробовик",
       "code": "shotgun",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 108
     },
     {
       "kind": "suggest",
@@ -13265,8 +13659,9 @@
       "name": "Лёгкое ближнее",
       "code": "lightMelee",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 108
     },
     {
       "kind": "suggest",
@@ -13285,8 +13680,9 @@
       "name": "Лук / арбалет",
       "code": "bow",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 108
     },
     {
       "kind": "suggest",
@@ -13305,8 +13701,9 @@
       "name": "Метательное",
       "code": "thrownWeapon",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 108
     },
     {
       "kind": "suggest",
@@ -13325,8 +13722,9 @@
       "name": "Очень тяжёлое ближнее",
       "code": "vHeavyMelee",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 108
     },
     {
       "kind": "suggest",
@@ -13345,8 +13743,9 @@
       "name": "Очень тяжёлый пистолет",
       "code": "vHeavyPistol",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 108
     },
     {
       "kind": "suggest",
@@ -13365,8 +13764,9 @@
       "name": "Пистолет-пулемёт",
       "code": "smg",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 109
     },
     {
       "kind": "suggest",
@@ -13385,8 +13785,9 @@
       "name": "Ракетная установка",
       "code": "rocketLauncher",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 109
     },
     {
       "kind": "suggest",
@@ -13405,8 +13806,9 @@
       "name": "Рукопашный бой",
       "code": "unarmed",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 109
     },
     {
       "kind": "suggest",
@@ -13425,8 +13827,9 @@
       "name": "Снайперская винтовка",
       "code": "sniperRifle",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 109
     },
     {
       "kind": "suggest",
@@ -13445,8 +13848,9 @@
       "name": "Среднее ближнее",
       "code": "medMelee",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 109
     },
     {
       "kind": "suggest",
@@ -13465,8 +13869,9 @@
       "name": "Средний пистолет",
       "code": "medPistol",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 109
     },
     {
       "kind": "suggest",
@@ -13485,8 +13890,9 @@
       "name": "Тяжёлое ближнее",
       "code": "heavyMelee",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 109
     },
     {
       "kind": "suggest",
@@ -13505,8 +13911,9 @@
       "name": "Тяжёлый пистолет",
       "code": "heavyPistol",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 109
     },
     {
       "kind": "suggest",
@@ -13525,8 +13932,9 @@
       "name": "Штурмовая винтовка",
       "code": "assaultRifle",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 109
     },
     {
       "kind": "suggest",
@@ -13545,8 +13953,9 @@
       "name": "Авиационная техника",
       "code": "air-vehicle-tech",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 110
     },
     {
       "kind": "suggest",
@@ -13565,8 +13974,9 @@
       "name": "Автоматический огонь",
       "code": "autofire",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 110
     },
     {
       "kind": "suggest",
@@ -13585,8 +13995,9 @@
       "name": "Азартные игры",
       "code": "gamble",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 110
     },
     {
       "kind": "suggest",
@@ -13605,8 +14016,9 @@
       "name": "Актёрское мастерство",
       "code": "acting",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 110
     },
     {
       "kind": "suggest",
@@ -13625,8 +14037,9 @@
       "name": "Атлетика",
       "code": "athletics",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 110
     },
     {
       "kind": "suggest",
@@ -13645,8 +14058,9 @@
       "name": "Базовая техника",
       "code": "basic-tech",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 110
     },
     {
       "kind": "suggest",
@@ -13665,8 +14079,9 @@
       "name": "Беседа",
       "code": "conversation",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 110
     },
     {
       "kind": "suggest",
@@ -13685,8 +14100,9 @@
       "name": "Бизнес",
       "code": "business",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 110
     },
     {
       "kind": "suggest",
@@ -13705,8 +14121,9 @@
       "name": "Боевые искусства",
       "code": "martial-arts",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 111
     },
     {
       "kind": "suggest",
@@ -13725,8 +14142,9 @@
       "name": "Бухгалтерия",
       "code": "accounting",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 111
     },
     {
       "kind": "suggest",
@@ -13745,8 +14163,9 @@
       "name": "Бюрократия",
       "code": "bureaucracy",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 111
     },
     {
       "kind": "suggest",
@@ -13765,8 +14184,9 @@
       "name": "Верховая езда",
       "code": "riding",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 111
     },
     {
       "kind": "suggest",
@@ -13785,8 +14205,9 @@
       "name": "Взлом замков",
       "code": "pick-lock",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 111
     },
     {
       "kind": "suggest",
@@ -13805,8 +14226,9 @@
       "name": "Взрывотехника",
       "code": "demolitions",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 111
     },
     {
       "kind": "suggest",
@@ -13825,8 +14247,9 @@
       "name": "Внимательность",
       "code": "perception",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 111
     },
     {
       "kind": "suggest",
@@ -13845,8 +14268,9 @@
       "name": "Вождение наземного транспорта",
       "code": "drive-land-vehicle",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 111
     },
     {
       "kind": "suggest",
@@ -13865,8 +14289,9 @@
       "name": "Выживание",
       "code": "wilderness-survival",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 112
     },
     {
       "kind": "suggest",
@@ -13885,8 +14310,9 @@
       "name": "Выносливость",
       "code": "endurance",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 112
     },
     {
       "kind": "suggest",
@@ -13905,8 +14331,9 @@
       "name": "Выслеживание",
       "code": "tracking",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 112
     },
     {
       "kind": "suggest",
@@ -13925,8 +14352,9 @@
       "name": "Гардероб и стиль",
       "code": "wardrobe-style",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 112
     },
     {
       "kind": "suggest",
@@ -13945,8 +14373,9 @@
       "name": "Гибкость",
       "code": "contortionist",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 112
     },
     {
       "kind": "suggest",
@@ -13965,8 +14394,9 @@
       "name": "Дедукция",
       "code": "deduction",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 112
     },
     {
       "kind": "suggest",
@@ -13985,8 +14415,9 @@
       "name": "Длинноствольное оружие",
       "code": "shoulder-arms",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 112
     },
     {
       "kind": "suggest",
@@ -14005,8 +14436,9 @@
       "name": "Допрос",
       "code": "interrogation",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 112
     },
     {
       "kind": "suggest",
@@ -14025,8 +14457,9 @@
       "name": "Знание местности",
       "code": "local-expert",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 113
     },
     {
       "kind": "suggest",
@@ -14045,8 +14478,9 @@
       "name": "Знание улиц",
       "code": "streetwise",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 113
     },
     {
       "kind": "suggest",
@@ -14065,8 +14499,9 @@
       "name": "Игра на инструменте",
       "code": "play-instrument",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 113
     },
     {
       "kind": "suggest",
@@ -14085,8 +14520,9 @@
       "name": "Изобразительное искусство",
       "code": "paint-draw-sculpt",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 113
     },
     {
       "kind": "suggest",
@@ -14105,8 +14541,9 @@
       "name": "Карманная кража",
       "code": "pick-pocket",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 113
     },
     {
       "kind": "suggest",
@@ -14125,8 +14562,9 @@
       "name": "Кибертехника",
       "code": "cybertech",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 113
     },
     {
       "kind": "suggest",
@@ -14145,8 +14583,9 @@
       "name": "Криминология",
       "code": "criminology",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 113
     },
     {
       "kind": "suggest",
@@ -14165,8 +14604,9 @@
       "name": "Криптография",
       "code": "cryptography",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 113
     },
     {
       "kind": "suggest",
@@ -14185,8 +14625,9 @@
       "name": "Наземная техника",
       "code": "land-vehicle-tech",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 114
     },
     {
       "kind": "suggest",
@@ -14205,8 +14646,9 @@
       "name": "Наука",
       "code": "science",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 114
     },
     {
       "kind": "suggest",
@@ -14225,8 +14667,9 @@
       "name": "Образование",
       "code": "education",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 114
     },
     {
       "kind": "suggest",
@@ -14245,8 +14688,9 @@
       "name": "Обращение с животными",
       "code": "animal-handling",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 114
     },
     {
       "kind": "suggest",
@@ -14265,8 +14709,9 @@
       "name": "Оружейная техника",
       "code": "weaponstech",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 114
     },
     {
       "kind": "suggest",
@@ -14285,8 +14730,9 @@
       "name": "Парамедицина",
       "code": "paramedic",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 114
     },
     {
       "kind": "suggest",
@@ -14305,8 +14751,9 @@
       "name": "Первая помощь",
       "code": "first-aid",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 114
     },
     {
       "kind": "suggest",
@@ -14325,8 +14772,9 @@
       "name": "Пилотирование воздушного транспорта",
       "code": "pilot-air-vehicle",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 114
     },
     {
       "kind": "suggest",
@@ -14345,8 +14793,9 @@
       "name": "Пистолеты",
       "code": "handgun",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 115
     },
     {
       "kind": "suggest",
@@ -14365,8 +14814,9 @@
       "name": "Подделка",
       "code": "forgery",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 115
     },
     {
       "kind": "suggest",
@@ -14385,8 +14835,9 @@
       "name": "Подкуп",
       "code": "bribery",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 115
     },
     {
       "kind": "suggest",
@@ -14405,8 +14856,9 @@
       "name": "Поиск информации",
       "code": "library-search",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 115
     },
     {
       "kind": "suggest",
@@ -14425,8 +14877,9 @@
       "name": "Проницательность",
       "code": "human-perception",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 115
     },
     {
       "kind": "suggest",
@@ -14445,8 +14898,9 @@
       "name": "Рукопашный бой",
       "code": "brawling",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 115
     },
     {
       "kind": "suggest",
@@ -14465,8 +14919,9 @@
       "name": "Скрытность",
       "code": "stealth",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 115
     },
     {
       "kind": "suggest",
@@ -14485,8 +14940,9 @@
       "name": "Сопротивление пыткам и препаратам",
       "code": "resist-torture-drugs",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 115
     },
     {
       "kind": "suggest",
@@ -14505,8 +14961,9 @@
       "name": "Сосредоточение",
       "code": "concentration",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 116
     },
     {
       "kind": "suggest",
@@ -14525,8 +14982,9 @@
       "name": "Сочинительство",
       "code": "composition",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 116
     },
     {
       "kind": "suggest",
@@ -14545,8 +15003,9 @@
       "name": "Спрятать / обнаружить предмет",
       "code": "conceal-reveal-object",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 116
     },
     {
       "kind": "suggest",
@@ -14565,8 +15024,9 @@
       "name": "Стрельба из лука",
       "code": "archery",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 116
     },
     {
       "kind": "suggest",
@@ -14585,8 +15045,9 @@
       "name": "Судовая техника",
       "code": "sea-vehicle-tech",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 116
     },
     {
       "kind": "suggest",
@@ -14605,8 +15066,9 @@
       "name": "Тактика",
       "code": "tactics",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 116
     },
     {
       "kind": "suggest",
@@ -14625,8 +15087,9 @@
       "name": "Танец",
       "code": "dance",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 116
     },
     {
       "kind": "suggest",
@@ -14645,8 +15108,9 @@
       "name": "Торговля",
       "code": "trading",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 116
     },
     {
       "kind": "suggest",
@@ -14665,8 +15129,9 @@
       "name": "Тяжёлое оружие",
       "code": "heavy-weapons",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 117
     },
     {
       "kind": "suggest",
@@ -14685,8 +15150,9 @@
       "name": "Убеждение",
       "code": "persuasion",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 117
     },
     {
       "kind": "suggest",
@@ -14705,8 +15171,9 @@
       "name": "Уклонение",
       "code": "evasion",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 117
     },
     {
       "kind": "suggest",
@@ -14725,8 +15192,9 @@
       "name": "Управление водным транспортом",
       "code": "pilot-sea-vehicle",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 117
     },
     {
       "kind": "suggest",
@@ -14745,8 +15213,9 @@
       "name": "Уход за внешностью",
       "code": "personal-grooming",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 117
     },
     {
       "kind": "suggest",
@@ -14765,8 +15234,9 @@
       "name": "Фото и видеосъёмка",
       "code": "photography-film",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 117
     },
     {
       "kind": "suggest",
@@ -14785,8 +15255,9 @@
       "name": "Холодное оружие",
       "code": "melee-weapon",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 117
     },
     {
       "kind": "suggest",
@@ -14805,8 +15276,9 @@
       "name": "Чтение по губам",
       "code": "lip-reading",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 117
     },
     {
       "kind": "suggest",
@@ -14825,8 +15297,9 @@
       "name": "Электроника и безопасность",
       "code": "electronics-security-tech",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 118
     },
     {
       "kind": "suggest",
@@ -14845,8 +15318,9 @@
       "name": "Язык",
       "code": "language",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 118
     },
     {
       "kind": "suggest",
@@ -14865,8 +15339,9 @@
       "name": "Высокое",
       "code": "excellent",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 107
     },
     {
       "kind": "suggest",
@@ -14885,8 +15360,9 @@
       "name": "Низкое",
       "code": "poor",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 107
     },
     {
       "kind": "suggest",
@@ -14905,8 +15381,9 @@
       "name": "Обычное",
       "code": "standard",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 107
     },
     {
       "kind": "suggest",
@@ -17145,8 +17622,9 @@
       "name": "Евробакс",
       "code": "eb",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 107
     },
     {
       "kind": "suggest",
@@ -17590,7 +18068,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 501,
+    "publishedSlots": 620,
     "readySlots": 0,
     "totalSlots": 1848
   }

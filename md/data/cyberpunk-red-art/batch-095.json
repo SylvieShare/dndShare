@@ -1,0 +1,226 @@
+{
+  "batch": 95,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-95",
+  "sourceAudit": "Live own slots empty. Core344–347 types/compatibility checked. Original fictional exterior/packaging, no claim of canonical real-world color code. Toxic/sedative variants represented by closed opaque packaging only. Icons unchanged.",
+  "assets": [
+    {
+      "key": "ammo-7581-cover",
+      "target": {
+        "kind": "item",
+        "id": 7581,
+        "typeId": 20,
+        "name": "Пейнтбольный шарик (с кислотой)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. One CLOSED opaque small spherical-capsule transport box, teal and dark gray exterior with sturdy latches and a plain smooth sealed lid. Contents entirely hidden: no arrows, grenades, chemicals, vials, liquids, gas, biological material, weapon mechanism or hazard instructions. Context is neutral futuristic game-equipment storage on a worn bench. Differentiate through case proportions, material and light, no symbols or text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7581-cover-v1.png",
+      "final": "final/ammo-7581-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-809939f3-1920-44d4-8a24-05c355b58ce1.png",
+      "originalSha256": "660aab347501cedead1d55f76ba44bcef1fffa8624ddc2e50dd40683db4c1a92",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "803412749ad56244585b2b9c7ed7888cafc53272345663519b429ffbae3318f9",
+      "bytes": 238315,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7582-cover",
+      "target": {
+        "kind": "item",
+        "id": 7582,
+        "typeId": 20,
+        "name": "Пейнтбольный шарик (стандартный)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small transparent sports container holding smooth round opaque PAINTBALLS, several bright magenta and blue spheres visible through the sealed lid, no spills, liquid, chemicals or marker gun. Cyberpunk sporting-equipment bench.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7582-cover-v1.png",
+      "final": "final/ammo-7582-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-be0b4a69-7081-4ef1-a18f-252cc7155f91.png",
+      "originalSha256": "fc7c88ede37bf2a366a3f999fa01503c502b93b13d07f76c4c5aaf11c83f66a2",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "2b06a2e6c6d1e9028c7f9c9389f533490d8b5bda60d3d1b2c89acf7866780e43",
+      "bytes": 326707,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7583-cover",
+      "target": {
+        "kind": "item",
+        "id": 7583,
+        "typeId": 20,
+        "name": "Винтовочный (бронебойный)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of long slender RIFLE cartridges with tapered pointed silhouettes in a molded storage tray, complete finished exteriors, no internal or loading details. Dark graphite external finish with a narrow violet identification band; solid finished silhouette, no exposed core or armor demonstration.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7583-cover-v1.png",
+      "final": "final/ammo-7583-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1eff0ae6-a357-4a89-90e5-41a25ba77710.png",
+      "originalSha256": "a8ac2ce4c599078fe8a574a0897eb3ab8a5d3179b96754e7a8195871afaa064d",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "33e809f4907eb11fe106cb5098c2750ad86aaa3a02fa94e96fb60fdf6e4d9dbe",
+      "bytes": 205541,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7584-cover",
+      "target": {
+        "kind": "item",
+        "id": 7584,
+        "typeId": 20,
+        "name": "Винтовочный (стандартный)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of long slender RIFLE cartridges with tapered pointed silhouettes in a molded storage tray, complete finished exteriors, no internal or loading details. Plain standard finish, brass and dark metal, small neutral gray packaging accents.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7584-cover-v1.png",
+      "final": "final/ammo-7584-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-05669edb-2e08-4ea5-b9b9-24e5b48c6c7f.png",
+      "originalSha256": "383a007f1f855abc1623ffede6806e54fb971be2d97d528a6208c734b9fc9962",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "fedcc808697c4a52290cf47db2b032e18260d9cb3847ea582db91f196a89bc70",
+      "bytes": 228975,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7585-cover",
+      "target": {
+        "kind": "item",
+        "id": 7585,
+        "typeId": 20,
+        "name": "Винтовочный (экспансивный)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of long slender RIFLE cartridges with tapered pointed silhouettes in a molded storage tray, complete finished exteriors, no internal or loading details. Muted burgundy external band and broader rounded tip silhouette; no opening, expanding action or exposed structure.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7585-cover-v1.png",
+      "final": "final/ammo-7585-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5dc153fe-bc02-4ec1-8cd8-3cf6d23baf75.png",
+      "originalSha256": "798c10f8cc80d85c8bc9aa2eb384340c678c9e435f2fa829bcf3437a13b3e366",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f8f68e9eec91df37b4c936c4aa5bf8c1aa1cfe9ebee2561f5dfca5fbfa8990ee",
+      "bytes": 253721,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7586-cover",
+      "target": {
+        "kind": "item",
+        "id": 7586,
+        "typeId": 20,
+        "name": "Винтовочный (зажигательный)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of long slender RIFLE cartridges with tapered pointed silhouettes in a molded storage tray, complete finished exteriors, no internal or loading details. Muted orange external identification band on a closed finished housing, unlit, no flame or exposed contents.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7586-cover-v1.png",
+      "final": "final/ammo-7586-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-96a06e6e-716a-4ff5-ab06-b7d1c364ee58.png",
+      "originalSha256": "3dc49b56f11e40ba97f5a43c8bf8904d97926d2e7af58f70710edbec993c7de0",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "6aaa571e73c3335b1ba17d3b6f987500b2e5cef15d5005ae9396a607d6f31c1d",
+      "bytes": 250740,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7587-cover",
+      "target": {
+        "kind": "item",
+        "id": 7587,
+        "typeId": 20,
+        "name": "Винтовочный (резиновый)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of long slender RIFLE cartridges with tapered pointed silhouettes in a molded storage tray, complete finished exteriors, no internal or loading details. Clearly matte black RUBBER blunt tip with subtle broad soft-looking curvature, contrasting metal casing where applicable; no impact demonstration.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7587-cover-v1.png",
+      "final": "final/ammo-7587-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-375bb28f-0b5e-4a58-881a-47ba1e20cd5f.png",
+      "originalSha256": "4259d7958e3c26781d75a5d503759effbd3dfc0577ff473766d656ed5b6628fb",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b7a9673d25bd1ed73b56cd0622c4997916e47ee9106ed893e89d69a5d3760c4f",
+      "bytes": 240887,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7588-cover",
+      "target": {
+        "kind": "item",
+        "id": 7588,
+        "typeId": 20,
+        "name": "Винтовочный (умный)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of long slender RIFLE cartridges with tapered pointed silhouettes in a molded storage tray, complete finished exteriors, no internal or loading details. Distinctive ivory-and-teal external casing accents and a tiny opaque sensor-like patch, no circuitry, tracking display or real-world mechanism.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7588-cover-v1.png",
+      "final": "final/ammo-7588-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c8034cb0-53a6-4f18-80c5-0affb2b157e2.png",
+      "originalSha256": "bb0e9bccb5c20a10e82ab4b59e0d31771f05cb21def212f809edc49e10ca6494",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d9185e94d0c41b9d158bef6fe4ccaee4b9338959a07c50aacc87bb8f9592e80f",
+      "bytes": 289675,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "batch": 101,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-101",
+  "sourceAudit": "Live own dictionary slots empty in dict-values-live-before.json. Value identity is(typeId,id), section fallback not counted. Structured names/codes and previously read Core categories guide original narrative scenes. Icons unchanged.",
+  "assets": [
+    {
+      "key": "dict-29-352-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 352,
+        "typeId": 29,
+        "name": "Голова"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A neutral manufactured human fitting mannequin from chest upward, HEAD softly highlighted by cool diagnostic light while torso stays muted. Cyberpunk fitting clinic, complete face/head, no anatomy cutaway or UI.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-29-352-cover-v1.png",
+      "final": "final/dict-29-352-cover.webp"
+    },
+    {
+      "key": "dict-29-356-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 356,
+        "typeId": 29,
+        "name": "Левая нога"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A front-facing neutral manufactured standing human mannequin on a clinic stand, its ANATOMICAL LEFT LEG (on viewer RIGHT) highlighted teal from hip to foot, other regions muted. No labels or diagram arrows, whole mannequin fits wide scene.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-29-356-cover-v1.png",
+      "final": "final/dict-29-356-cover.webp"
+    },
+    {
+      "key": "dict-29-354-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 354,
+        "typeId": 29,
+        "name": "Левая рука"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A front-facing neutral manufactured human mannequin on a clinic stand, its ANATOMICAL LEFT ARM (viewer RIGHT) softly illuminated teal from shoulder to fingertips, other regions muted. Entire arm and five-finger hand visible.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-29-354-cover-v1.png",
+      "final": "final/dict-29-354-cover.webp"
+    },
+    {
+      "key": "dict-29-357-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 357,
+        "typeId": 29,
+        "name": "Правая нога"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A front-facing neutral manufactured standing human mannequin on a clinic stand, its ANATOMICAL RIGHT LEG (viewer LEFT) highlighted amber from hip to foot, other regions muted. No labels or diagram arrows, whole mannequin fits wide scene.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-29-357-cover-v1.png",
+      "final": "final/dict-29-357-cover.webp"
+    },
+    {
+      "key": "dict-29-355-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 355,
+        "typeId": 29,
+        "name": "Правая рука"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A front-facing neutral manufactured human mannequin on a clinic stand, its ANATOMICAL RIGHT ARM (viewer LEFT) softly illuminated amber from shoulder to fingertips, other regions muted. Entire arm and five-finger hand visible.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-29-355-cover-v1.png",
+      "final": "final/dict-29-355-cover.webp"
+    },
+    {
+      "key": "dict-29-353-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 353,
+        "typeId": 29,
+        "name": "Тело"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A neutral manufactured human fitting mannequin with TORSO softly illuminated teal, head and limbs lower contrast, detailed chest shell and abdominal plate seams. Cyberpunk fitting clinic, no cutaway or labels.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-29-353-cover-v1.png",
+      "final": "final/dict-29-353-cover.webp"
+    }
+  ]
+}

@@ -16,14 +16,36 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "baseItemId": 8068,
       "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-82/final/weapon-8068-cover.jpg",
       "prompt": "Edit the supplied finished fictional game illustration into a HIGH-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Refine material finish: precise clean exterior seams, premium grip/fabric/composite or metal appropriate to this item, controlled polished highlights, careful craftsmanship and subtle restrained decorative accents. Keep it practical and recognizable; no gold fantasy ornament or new capabilities. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8069-cover-v1.png",
-      "final": "final/weapon-8069-cover.jpg"
+      "final": "final/weapon-8069-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f585bf7c-8968-4a68-8b39-23e693a22738.png",
+      "originalSha256": "a5f077b90e600e501e88b4461a27e3d352f3a9cf1f17ba8049210b79cc467e5b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "c5dfe4487be3e16963a218a88243c6dbbfd57d42c6f3027a70a49feea4a88b6e",
+      "bytes": 301469,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final quality pairs inspected against base: same silhouette and parts, distinct premium finish/budget wear, complete framing and mature cel shading. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50198,
+        "objectKey": "system-item-media/v1/items/8069/cover/c5dfe4487be3e16963a218a88243c6dbbfd57d42c6f3027a70a49feea4a88b6e.jpg",
+        "fileSize": 301469
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8069/cover/c5dfe4487be3e16963a218a88243c6dbbfd57d42c6f3027a70a49feea4a88b6e.jpg"
     },
     {
       "key": "weapon-8070-cover",
@@ -35,14 +57,36 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "baseItemId": 8068,
       "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-82/final/weapon-8068-cover.jpg",
       "prompt": "Edit the supplied finished fictional game illustration into a LOW-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Change only external workmanship and condition: budget materials appropriate to the item, slightly uneven surface finish, modest cosmetic dents/scuffs, worn grip and mismatched replacement exterior panel finish where applicable. Keep it whole and functional, not a wreck; no additional sharp protrusions, missing structural components or visible internal mechanism. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8070-cover-v1.png",
-      "final": "final/weapon-8070-cover.jpg"
+      "final": "final/weapon-8070-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4f62e87d-2bda-4b48-b240-d17424d17bbb.png",
+      "originalSha256": "7f2fd09baa4e164bdb97c9a5147226a57e7b709c468d996e8ddcfad92a034552",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "4e330623dc6d3170918799b5579f7bb6bbb3c66e2d4c02ff704d6bddb0a9b2a6",
+      "bytes": 275057,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final quality pairs inspected against base: same silhouette and parts, distinct premium finish/budget wear, complete framing and mature cel shading. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50199,
+        "objectKey": "system-item-media/v1/items/8070/cover/4e330623dc6d3170918799b5579f7bb6bbb3c66e2d4c02ff704d6bddb0a9b2a6.jpg",
+        "fileSize": 275057
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8070/cover/4e330623dc6d3170918799b5579f7bb6bbb3c66e2d4c02ff704d6bddb0a9b2a6.jpg"
     },
     {
       "key": "weapon-8072-cover",
@@ -54,14 +98,36 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "baseItemId": 8071,
       "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-83/final/weapon-8071-cover.jpg",
       "prompt": "Edit the supplied finished fictional game illustration into a HIGH-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Refine material finish: precise clean exterior seams, premium grip/fabric/composite or metal appropriate to this item, controlled polished highlights, careful craftsmanship and subtle restrained decorative accents. Keep it practical and recognizable; no gold fantasy ornament or new capabilities. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8072-cover-v1.png",
-      "final": "final/weapon-8072-cover.jpg"
+      "final": "final/weapon-8072-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5100be8a-b06e-4aa7-b463-9e48135be338.png",
+      "originalSha256": "906a0149d90bc1913ff5cc8885f4e16f2e5a99d189ce01bdcc68cced0473a62b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "1b2931af68e3724e2bb01f469fdf14b1124cac5c58ad9b633ba4127ef8e66d3b",
+      "bytes": 305213,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final quality pairs inspected against base: same silhouette and parts, distinct premium finish/budget wear, complete framing and mature cel shading. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50200,
+        "objectKey": "system-item-media/v1/items/8072/cover/1b2931af68e3724e2bb01f469fdf14b1124cac5c58ad9b633ba4127ef8e66d3b.jpg",
+        "fileSize": 305213
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8072/cover/1b2931af68e3724e2bb01f469fdf14b1124cac5c58ad9b633ba4127ef8e66d3b.jpg"
     },
     {
       "key": "weapon-8073-cover",
@@ -73,14 +139,36 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "baseItemId": 8071,
       "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-83/final/weapon-8071-cover.jpg",
       "prompt": "Edit the supplied finished fictional game illustration into a LOW-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Change only external workmanship and condition: budget materials appropriate to the item, slightly uneven surface finish, modest cosmetic dents/scuffs, worn grip and mismatched replacement exterior panel finish where applicable. Keep it whole and functional, not a wreck; no additional sharp protrusions, missing structural components or visible internal mechanism. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8073-cover-v1.png",
-      "final": "final/weapon-8073-cover.jpg"
+      "final": "final/weapon-8073-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c29e5b5e-a5fe-43fe-a20c-165268689f09.png",
+      "originalSha256": "fda3fd9fae285ec035849c08022ae9220a6cc5d7cd3ab9f684d22e24ce7391f8",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "fb8db45f546c1651d9d7b0c85de589ce4394cae7b50de876d7710a1786ffb084",
+      "bytes": 306027,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final quality pairs inspected against base: same silhouette and parts, distinct premium finish/budget wear, complete framing and mature cel shading. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50201,
+        "objectKey": "system-item-media/v1/items/8073/cover/fb8db45f546c1651d9d7b0c85de589ce4394cae7b50de876d7710a1786ffb084.jpg",
+        "fileSize": 306027
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8073/cover/fb8db45f546c1651d9d7b0c85de589ce4394cae7b50de876d7710a1786ffb084.jpg"
     },
     {
       "key": "weapon-8075-cover",
@@ -92,14 +180,36 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "baseItemId": 8074,
       "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-83/final/weapon-8074-cover.jpg",
       "prompt": "Edit the supplied finished fictional game illustration into a HIGH-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Refine material finish: precise clean exterior seams, premium grip/fabric/composite or metal appropriate to this item, controlled polished highlights, careful craftsmanship and subtle restrained decorative accents. Keep it practical and recognizable; no gold fantasy ornament or new capabilities. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8075-cover-v1.png",
-      "final": "final/weapon-8075-cover.jpg"
+      "final": "final/weapon-8075-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c35bb0d5-b8e3-4f22-8702-406a42ba3208.png",
+      "originalSha256": "1482ba6794d6984c8a3e300ce6e48cfd69b2f0ea3dc4ac60cee0a597690fb8a8",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "82bdc4864087dccdc9d6be9f070d0a5f19adb6268483332247501a2ba6364a92",
+      "bytes": 227370,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final quality pairs inspected against base: same silhouette and parts, distinct premium finish/budget wear, complete framing and mature cel shading. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50202,
+        "objectKey": "system-item-media/v1/items/8075/cover/82bdc4864087dccdc9d6be9f070d0a5f19adb6268483332247501a2ba6364a92.jpg",
+        "fileSize": 227370
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8075/cover/82bdc4864087dccdc9d6be9f070d0a5f19adb6268483332247501a2ba6364a92.jpg"
     },
     {
       "key": "weapon-8076-cover",
@@ -111,14 +221,36 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "baseItemId": 8074,
       "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-83/final/weapon-8074-cover.jpg",
       "prompt": "Edit the supplied finished fictional game illustration into a LOW-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Change only external workmanship and condition: budget materials appropriate to the item, slightly uneven surface finish, modest cosmetic dents/scuffs, worn grip and mismatched replacement exterior panel finish where applicable. Keep it whole and functional, not a wreck; no additional sharp protrusions, missing structural components or visible internal mechanism. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8076-cover-v1.png",
-      "final": "final/weapon-8076-cover.jpg"
+      "final": "final/weapon-8076-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ea762cac-4a99-4c51-adc7-f5884cb0722e.png",
+      "originalSha256": "0cbba49455293700bc6b6cee36aad9726dfa02a7a6117bb266c360087db95229",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "86f9d05212f0f5f321302d8163f60ce3fc1eea2ffe3a76ffb4349b3fcd606eaf",
+      "bytes": 224205,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final quality pairs inspected against base: same silhouette and parts, distinct premium finish/budget wear, complete framing and mature cel shading. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50203,
+        "objectKey": "system-item-media/v1/items/8076/cover/86f9d05212f0f5f321302d8163f60ce3fc1eea2ffe3a76ffb4349b3fcd606eaf.jpg",
+        "fileSize": 224205
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8076/cover/86f9d05212f0f5f321302d8163f60ce3fc1eea2ffe3a76ffb4349b3fcd606eaf.jpg"
     },
     {
       "key": "weapon-8078-cover",
@@ -130,14 +262,36 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "baseItemId": 8077,
       "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-83/final/weapon-8077-cover.jpg",
       "prompt": "Edit the supplied finished fictional game illustration into a HIGH-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Refine material finish: precise clean exterior seams, premium grip/fabric/composite or metal appropriate to this item, controlled polished highlights, careful craftsmanship and subtle restrained decorative accents. Keep it practical and recognizable; no gold fantasy ornament or new capabilities. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8078-cover-v1.png",
-      "final": "final/weapon-8078-cover.jpg"
+      "final": "final/weapon-8078-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a1009dbb-786d-4714-8f68-df619f482c5f.png",
+      "originalSha256": "d8640dcdd549346541efd2c46deb76066865d93dcec20a07e3382170b0da7ea6",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "6251d97ff6273310a0a97303731222d67aa6191e000e4ce437f16d3ce388e016",
+      "bytes": 234216,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final quality pairs inspected against base: same silhouette and parts, distinct premium finish/budget wear, complete framing and mature cel shading. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50204,
+        "objectKey": "system-item-media/v1/items/8078/cover/6251d97ff6273310a0a97303731222d67aa6191e000e4ce437f16d3ce388e016.jpg",
+        "fileSize": 234216
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8078/cover/6251d97ff6273310a0a97303731222d67aa6191e000e4ce437f16d3ce388e016.jpg"
     },
     {
       "key": "weapon-8079-cover",
@@ -149,14 +303,47 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "baseItemId": 8077,
       "referencePath": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-83/final/weapon-8077-cover.jpg",
       "prompt": "Edit the supplied finished fictional game illustration into a LOW-QUALITY version of the SAME item. Reference role: edit target, preserve exact fundamental object identity, type, silhouette, proportions, component count, setting and composition. Preserve the mature detailed cel-shaded rendering, thin varied ink and broad painted planes, opaque 3:2 landscape, safe framing. Change only external workmanship and condition: budget materials appropriate to the item, slightly uneven surface finish, modest cosmetic dents/scuffs, worn grip and mismatched replacement exterior panel finish where applicable. Keep it whole and functional, not a wreck; no additional sharp protrusions, missing structural components or visible internal mechanism. No text, numbers, logo, labels, UI, diagrams, dimensions, ammunition, firing, target, blood or instructions. Do not add accessories or humans.",
       "width": 1536,
       "height": 1024,
       "original": "originals/weapon-8079-cover-v1.png",
-      "final": "final/weapon-8079-cover.jpg"
+      "final": "final/weapon-8079-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d073c299-5d0a-423f-bed3-3de23b3a3cd3.png",
+      "originalSha256": "23e38bb156a41b5072bc967e7da3a1020b7c4d6fc292e5590b9c89cc69246371",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "5a0bf79a8f60ac5515612377a3e479369b1c571f517970053af102ab4d24ff3e",
+      "bytes": 265203,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final quality pairs inspected against base: same silhouette and parts, distinct premium finish/budget wear, complete framing and mature cel shading. No text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50205,
+        "objectKey": "system-item-media/v1/items/8079/cover/5a0bf79a8f60ac5515612377a3e479369b1c571f517970053af102ab4d24ff3e.jpg",
+        "fileSize": 265203
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8079/cover/5a0bf79a8f60ac5515612377a3e479369b1c571f517970053af102ab4d24ff3e.jpg"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T22:20:20.633Z",
+    "scenarios": 24,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-90\\live-qa.json"
+  }
 }

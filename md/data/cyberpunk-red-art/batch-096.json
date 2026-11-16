@@ -1,0 +1,280 @@
+{
+  "batch": 96,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-96",
+  "sourceAudit": "Live own slots empty. Core344–347 types/compatibility checked. Original fictional exterior/packaging, no claim of canonical real-world color code. Toxic/sedative variants represented by closed opaque packaging only. Icons unchanged.",
+  "assets": [
+    {
+      "key": "ammo-7589-cover",
+      "target": {
+        "kind": "item",
+        "id": 7589,
+        "typeId": 20,
+        "name": "Ракета (бронебойная)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. One inert fictional compact ROCKET prop in a long padded transport case, complete smooth closed body, protected tail and capped nose, no exposed motor, payload or internal structure. Dark graphite external finish with a narrow violet identification band; solid finished silhouette, no exposed core or armor demonstration.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7589-cover-v1.png",
+      "final": "final/ammo-7589-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8b04499e-e431-4957-a3f8-b4996f669289.png",
+      "originalSha256": "080b737d6b833e196200a40dc92287281fa3c83699c83659b8782339c96cd652",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "3fbd720be4da4b2f8225d2f3eddd6b8c928e979ccd89e63bd029774e56fce117",
+      "bytes": 265989,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7590-cover",
+      "target": {
+        "kind": "item",
+        "id": 7590,
+        "typeId": 20,
+        "name": "Ракета (умная)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. One inert fictional compact ROCKET prop in a long padded transport case, complete smooth closed body, protected tail and capped nose, no exposed motor, payload or internal structure. Distinctive ivory-and-teal external casing accents and a tiny opaque sensor-like patch, no circuitry, tracking display or real-world mechanism.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7590-cover-v1.png",
+      "final": "final/ammo-7590-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7dcea787-7d10-4b56-8081-d216b2e71ac6.png",
+      "originalSha256": "049e6d581175a9bc0a1e5a3a86d11ee521ea3dd704d74a9468206150c94e5f37",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "40496cf230323bef0b2ddc7060d7f5d79e499527fa17f123655aad1389009b1e",
+      "bytes": 254688,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7591-cover",
+      "target": {
+        "kind": "item",
+        "id": 7591,
+        "typeId": 20,
+        "name": "Дробь (стандартная)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of short broad SHOTGUN SHELLS with polymer cylindrical hulls, metal bases and CLOSED crimped tops in a storage tray; do not show loose shot or opened shell. Plain standard finish, brass and dark metal, small neutral gray packaging accents.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7591-cover-v1.png",
+      "final": "final/ammo-7591-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7f843390-f05c-4952-9a6a-2049abeb8915.png",
+      "originalSha256": "34fe13fc5785ac719980383b8eac7d40c99e81af942896e17ffa138be8778665",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "2fd86296bc22062bac616084d6afa8bcc429252a831b6d15688ed27d683cd840",
+      "bytes": 210484,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7592-cover",
+      "target": {
+        "kind": "item",
+        "id": 7592,
+        "typeId": 20,
+        "name": "Дробь (зажигательная)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of short broad SHOTGUN SHELLS with polymer cylindrical hulls, metal bases and CLOSED crimped tops in a storage tray; do not show loose shot or opened shell. Muted orange external identification band on a closed finished housing, unlit, no flame or exposed contents.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7592-cover-v1.png",
+      "final": "final/ammo-7592-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8752ef85-fbac-4ceb-926b-070e33789363.png",
+      "originalSha256": "670f5874433ded6292bc96b5a32dc4d526b01fede6e4d26236e67d008f377ffe",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "33520b67a210ae4b45707f8b548ade0e2eef0116c4931fbd35981358fbd9009e",
+      "bytes": 244926,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7593-cover",
+      "target": {
+        "kind": "item",
+        "id": 7593,
+        "typeId": 20,
+        "name": "Жакан (бронебойный)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of broad SHOTGUN SLUG cartridges, cylindrical polymer housings with smooth closed top caps and metal bases, in a molded storage tray. No loose projectile or opened hull. Dark graphite external finish with a narrow violet identification band; solid finished silhouette, no exposed core or armor demonstration.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7593-cover-v1.png",
+      "final": "final/ammo-7593-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d6f41a99-b067-4e6f-a0c3-dd3f277ba2c3.png",
+      "originalSha256": "1a945ab0daa3a5f3ca81b1e3b9b853696764d9222e9ba19f14ef62140d159c51",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "8698f774eb09f01682cacb566472f5c234814526946c9b3e68b5b6a25daecef9",
+      "bytes": 205579,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7594-cover",
+      "target": {
+        "kind": "item",
+        "id": 7594,
+        "typeId": 20,
+        "name": "Жакан (стандартный)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of broad SHOTGUN SLUG cartridges, cylindrical polymer housings with smooth closed top caps and metal bases, in a molded storage tray. No loose projectile or opened hull. Plain standard finish, brass and dark metal, small neutral gray packaging accents.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7594-cover-v1.png",
+      "final": "final/ammo-7594-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-af537f39-de9d-48c5-a003-132fd8899a6a.png",
+      "originalSha256": "a7414678bcadde3183c1b8bdd5285007babc260c117d30185aab8c01ffc7fd4d",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "941c93941bc72ba4a48847ad813cc4c0344eea2092b6da687a4227011b7feef5",
+      "bytes": 223506,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7595-cover",
+      "target": {
+        "kind": "item",
+        "id": 7595,
+        "typeId": 20,
+        "name": "Жакан (экспансивный)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of broad SHOTGUN SLUG cartridges, cylindrical polymer housings with smooth closed top caps and metal bases, in a molded storage tray. No loose projectile or opened hull. Muted burgundy external band and broader rounded tip silhouette; no opening, expanding action or exposed structure.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7595-cover-v1.png",
+      "final": "final/ammo-7595-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5b300139-8a6c-4db0-a1e2-21965f7b67b9.png",
+      "originalSha256": "57699d66925b32e55d252881daf5c52dc7fe698e9f5702b39525dc3d8b21d899",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "945e553564d94b0e294c7c2006f545410937f8697b08a044f0297da03092311f",
+      "bytes": 217893,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7596-cover",
+      "target": {
+        "kind": "item",
+        "id": 7596,
+        "typeId": 20,
+        "name": "Жакан (зажигательный)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of broad SHOTGUN SLUG cartridges, cylindrical polymer housings with smooth closed top caps and metal bases, in a molded storage tray. No loose projectile or opened hull. Muted orange external identification band on a closed finished housing, unlit, no flame or exposed contents.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7596-cover-v1.png",
+      "final": "final/ammo-7596-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-fd513905-273b-4f77-b277-a7ecafd6997f.png",
+      "originalSha256": "8aeec71ac515710811e68422794a022dadb1520eed172c3a4b0775bad25538f9",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "020cdee58b1c7175a450e39327ec633e36668397ff189c465aaf6ba50d231f38",
+      "bytes": 214870,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7597-cover",
+      "target": {
+        "kind": "item",
+        "id": 7597,
+        "typeId": 20,
+        "name": "Жакан (резиновый)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of broad SHOTGUN SLUG cartridges, cylindrical polymer housings with smooth closed top caps and metal bases, in a molded storage tray. No loose projectile or opened hull. Clearly matte black RUBBER blunt tip with subtle broad soft-looking curvature, contrasting metal casing where applicable; no impact demonstration.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7597-cover-v1.png",
+      "final": "final/ammo-7597-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-678112a2-5030-47e4-85c5-d5e7735492b3.png",
+      "originalSha256": "c0d37452cf8d43ecd94bca8136ef53938f99249c5cbad48b8384ab245a07d01c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "468b6b2b53016e8e87ead63d3b1612b1abfe29eba157a89b6373411cdd8dff94",
+      "bytes": 214178,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "ammo-7598-cover",
+      "target": {
+        "kind": "item",
+        "id": 7598,
+        "typeId": 20,
+        "name": "Жакан (умный)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of broad SHOTGUN SLUG cartridges, cylindrical polymer housings with smooth closed top caps and metal bases, in a molded storage tray. No loose projectile or opened hull. Distinctive ivory-and-teal external casing accents and a tiny opaque sensor-like patch, no circuitry, tracking display or real-world mechanism.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-7598-cover-v1.png",
+      "final": "final/ammo-7598-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-451f8d7b-bae1-4ea1-8bd8-c0b76baad6ba.png",
+      "originalSha256": "c147d044b54d9f1b043c01adc2c20dbc4132596a50b137f3bc6dfa5644fc4af3",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "41d10111e3046b89cd6303d977f0274b7462283498171373a8bd6494579f34e4",
+      "bytes": 237521,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    }
+  ]
+}
