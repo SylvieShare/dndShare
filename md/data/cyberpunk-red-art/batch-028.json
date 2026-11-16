@@ -1,0 +1,191 @@
+{
+  "batch": 28,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-28",
+  "sourceAudit": "Live own media slots empty. Catalogue descriptions and user-supplied Core pp.357,377–379 checked; Smash is yellow/frothy in a can, housing distinguishes room facilities. Other sealed fictional medicine packaging is original art interpretation, no usage instructions. Icons unchanged.",
+  "assets": [
+    {
+      "key": "life-kibble-cover",
+      "target": {
+        "kind": "item",
+        "id": 8113,
+        "typeId": 31,
+        "name": "Киббл"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A very cheap daily meal in a modest container home: a plain utilitarian bowl of dry brown processed food pellets, a cup of water and a small unmarked bulk food bag. Sparse fold-down table, worn but cared-for surroundings, no person eating, no animal food branding. Restrained warm lamp and cool window, factual ordinary subsistence meal.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/life-kibble-cover-v1.png",
+      "final": "final/life-kibble-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-06db05e7-ab08-4763-8ebe-539a67d744ec.png",
+      "originalSha256": "45502d59e67c4d3b35e87070aaa6a6bc5c1353d37bf11fed92370113a140d548",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d475e6fe5d4ceff4ec1237de7a3a864d90583d89740115ef9d0edb5fa43a9515",
+      "bytes": 275979,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49757,
+        "objectKey": "system-item-media/v1/items/8113/cover/d475e6fe5d4ceff4ec1237de7a3a864d90583d89740115ef9d0edb5fa43a9515.jpg",
+        "fileSize": 275979
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8113/cover/d475e6fe5d4ceff4ec1237de7a3a864d90583d89740115ef9d0edb5fa43a9515.jpg"
+    },
+    {
+      "key": "life-cheap-prepack-cover",
+      "target": {
+        "kind": "item",
+        "id": 8114,
+        "typeId": 31,
+        "name": "Дешёвый полуфабрикат"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49758,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Turn the attached image into an object-focused still life of the cheap packaged meal. REMOVE the entire person, all their hands and the fork with hanging noodles. Restore a natural empty chair and the kitchen background behind them. Keep the opened compartment meal tray with noodles and processed protein, unmarked drinks cup, spoon packet, table, window and city background unchanged. Lay any remaining fork naturally beside the tray. Same mature detailed cel-shaded material rendering and warm light; no people, no faces, no extra limbs, no text, logos, titles or UI. Opaque 3:2, whole meal fully visible.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/life-cheap-prepack-cover-v2.png",
+      "final": "final/life-cheap-prepack-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-be1ce0fc-3e5b-455f-8286-a11d2d840e63.png",
+      "originalSha256": "33ed5e3265bbaa16da0954472ff67ea1e3932913889b33213309d2f96a3f09a7",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "424def443572035d2565a3b300b26708ce96fa36eb7d449fdd4ac8fd4304026f",
+      "bytes": 303158,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Revised final inspected: object-focused packaged meal, no character, clear material detail and coherent 3:2 composition.",
+        "publicBytesVerified": true
+      },
+      "previousRevision": {
+        "reason": "Shift focus from a youthful character to the meal itself",
+        "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A low-cost synthetic convenience meal: a plain opened compartment tray with simple processed noodles and reconstituted protein pieces, basic plastic cutlery and an unmarked drinks cup on a small apartment table. Clearly more appetizing than dry pellets but inexpensive, warm kitchen light, original near-future packaging without labels.",
+        "original": "originals/life-cheap-prepack-cover-v1.png",
+        "final": "final/life-cheap-prepack-cover.jpg",
+        "sha256": "b59398e923ea886ac97e13c4f85ececf1868d47d10faf0f8adcd3ec0cfab19f0",
+        "receipt": {
+          "imageId": 49758,
+          "objectKey": "system-item-media/v1/items/8114/cover/b59398e923ea886ac97e13c4f85ececf1868d47d10faf0f8adcd3ec0cfab19f0.jpg",
+          "fileSize": 327329
+        },
+        "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8114/cover/b59398e923ea886ac97e13c4f85ececf1868d47d10faf0f8adcd3ec0cfab19f0.jpg"
+      },
+      "receipt": {
+        "imageId": 49761,
+        "objectKey": "system-item-media/v1/items/8114/cover/424def443572035d2565a3b300b26708ce96fa36eb7d449fdd4ac8fd4304026f.jpg",
+        "fileSize": 303158
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8114/cover/424def443572035d2565a3b300b26708ce96fa36eb7d449fdd4ac8fd4304026f.jpg"
+    },
+    {
+      "key": "life-good-prepack-cover",
+      "target": {
+        "kind": "item",
+        "id": 8115,
+        "typeId": 31,
+        "name": "Хороший полуфабрикат"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A good-quality synthetic prepared meal plated neatly from a plain reusable container: convincing molded protein slices, colorful reconstituted vegetables and a small sauce portion. Comfortable ordinary dining counter, decent cutlery and soft pleasant light, appetizing but visibly packaged food, no luxury branding or text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/life-good-prepack-cover-v1.png",
+      "final": "final/life-good-prepack-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c4ef1bae-e9d0-409c-a6b5-46edca897ef0.png",
+      "originalSha256": "0101be1f82ecbf67316715893e7ae27ceb1c75f9b5371d180e6bd4ceba13becc",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "78905764f4c6e43a861eaba5560de623063829449b1cc461dd28f2012a426be4",
+      "bytes": 417127,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49759,
+        "objectKey": "system-item-media/v1/items/8115/cover/78905764f4c6e43a861eaba5560de623063829449b1cc461dd28f2012a426be4.jpg",
+        "fileSize": 417127
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8115/cover/78905764f4c6e43a861eaba5560de623063829449b1cc461dd28f2012a426be4.jpg"
+    },
+    {
+      "key": "life-fresh-food-cover",
+      "target": {
+        "kind": "item",
+        "id": 8116,
+        "typeId": 31,
+        "name": "Свежая еда"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A meal made from REAL fresh ingredients: cut vegetables with natural irregular shapes, a freshly cooked fish fillet on a ceramic plate, a small bowl of fruit and a glass of water on an elegant but practical dining table. Fresh produce basket nearby, warm morning light from a high-rise window, no packaging, no labels or people.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/life-fresh-food-cover-v1.png",
+      "final": "final/life-fresh-food-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d889d4c3-6bb7-46b6-9422-c7d5e35a9b77.png",
+      "originalSha256": "6b71ca9977c08634f2b693a1d5f72582f99ef6315a9a077480d5dd3148c79e91",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "830d64e2acdafb49c2152fdb67207af996282a81a97654dde09850b3da689416",
+      "bytes": 450987,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49760,
+        "objectKey": "system-item-media/v1/items/8116/cover/830d64e2acdafb49c2152fdb67207af996282a81a97654dde09850b3da689416.jpg",
+        "fileSize": 450987
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8116/cover/830d64e2acdafb49c2152fdb67207af996282a81a97654dde09850b3da689416.jpg"
+    }
+  ],
+  "liveReview": {
+    "note": "All own cover URLs verified at three widths, no JS errors or horizontal overflow.",
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-28/live-qa.json",
+    "checkedAt": "2026-11-16T16:17:39.701Z",
+    "passed": true,
+    "scenarios": 12,
+    "widths": [
+      390,
+      840,
+      1440
+    ]
+  }
+}

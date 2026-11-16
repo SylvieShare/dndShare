@@ -1,0 +1,373 @@
+{
+  "batch": 30,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-30",
+  "sourceAudit": "All 90 live clothing own media slots empty. Ten fashion directions and nine garment/accessory kinds checked against user-supplied Core p.356. New original designs per record; icons unchanged.",
+  "assets": [
+    {
+      "key": "clothing-7632-cover",
+      "target": {
+        "kind": "item",
+        "id": 7632,
+        "typeId": 23,
+        "name": "Низ (бомжатский прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A complete pair of adult-sized trousers, both legs fully visible, displayed on a neutral waist-down mannequin with simple feet supports. No top or jacket included. Adapt cut and materials to the fashion direction. Fashion direction: Scavenged, repaired anti-fashion: mismatched charcoal, faded olive and brown patches, visibly repaired seams, reused simple hardware. Functional and worn, never a caricature. Backdrop: modest secondhand market stall with soft daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7632-cover-v1.png",
+      "final": "final/clothing-7632-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2b99e508-bcf0-45a1-970c-e117fd3bd986.png",
+      "originalSha256": "9e975053033122ac1fbfee6b9da85a1a3887cecf5d206f7301deea8b51a37291",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "3dd50e375f859dae811943cf6312800921cb55e7a85de2f71f40eb445ac1d9d8",
+      "bytes": 247086,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49771,
+        "objectKey": "system-item-media/v1/items/7632/cover/3dd50e375f859dae811943cf6312800921cb55e7a85de2f71f40eb445ac1d9d8.jpg",
+        "fileSize": 247086
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7632/cover/3dd50e375f859dae811943cf6312800921cb55e7a85de2f71f40eb445ac1d9d8.jpg"
+    },
+    {
+      "key": "clothing-7633-cover",
+      "target": {
+        "kind": "item",
+        "id": 7633,
+        "typeId": 23,
+        "name": "Контактные линзы (бомжатский прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A macro still life of TWO thin soft tinted contact lenses in the two shallow wells of an open small clean lens case, one lens slightly lifted on the lip so its thin flexible transparent edge is obvious. Natural eye-size proportions, not cybernetic eyeballs or goggles. Fashion direction affects iris tint and case finish. No face or eye surgery. Fashion direction: Scavenged, repaired anti-fashion: mismatched charcoal, faded olive and brown patches, visibly repaired seams, reused simple hardware. Functional and worn, never a caricature. Backdrop: modest secondhand market stall with soft daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7633-cover-v1.png",
+      "final": "final/clothing-7633-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f4ebcefd-9910-4482-9ed1-88af2f44eeea.png",
+      "originalSha256": "13f1c443a31745985254cfd74915309efe87cc0bc041b82096e2134b5d0081cd",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "bfa52718e5c6ac7a2f4dada3a556105a6dc972b855569354c7f685553a3ce7b7",
+      "bytes": 314435,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49772,
+        "objectKey": "system-item-media/v1/items/7633/cover/bfa52718e5c6ac7a2f4dada3a556105a6dc972b855569354c7f685553a3ce7b7.jpg",
+        "fileSize": 314435
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7633/cover/bfa52718e5c6ac7a2f4dada3a556105a6dc972b855569354c7f685553a3ce7b7.jpg"
+    },
+    {
+      "key": "clothing-7634-cover",
+      "target": {
+        "kind": "item",
+        "id": 7634,
+        "typeId": 23,
+        "name": "Обувь (бомжатский прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A matching PAIR of complete adult footwear displayed on a low shop plinth at a three-quarter angle, both soles and uppers plausible. Adapt shoe type and materials to the fashion direction; do not show legs or a whole outfit. Fashion direction: Scavenged, repaired anti-fashion: mismatched charcoal, faded olive and brown patches, visibly repaired seams, reused simple hardware. Functional and worn, never a caricature. Backdrop: modest secondhand market stall with soft daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7634-cover-v1.png",
+      "final": "final/clothing-7634-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d0d13fb7-a88e-43bb-afda-e4bcc012f514.png",
+      "originalSha256": "9d300bdd3deedaf480d1244dd140e29f5db38efd96bb0ad1e4a724263bad8801",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "3bd0eb954e2470703e02eb1b770bdf5bc210eb198ee59e45fabd920ca9d34a3b",
+      "bytes": 339710,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49773,
+        "objectKey": "system-item-media/v1/items/7634/cover/3bd0eb954e2470703e02eb1b770bdf5bc210eb198ee59e45fabd920ca9d34a3b.jpg",
+        "fileSize": 339710
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7634/cover/3bd0eb954e2470703e02eb1b770bdf5bc210eb198ee59e45fabd920ca9d34a3b.jpg"
+    },
+    {
+      "key": "clothing-7635-cover",
+      "target": {
+        "kind": "item",
+        "id": 7635,
+        "typeId": 23,
+        "name": "Очки (бомжатский прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of ordinary fashion eyeglasses with CLEAR TRANSPARENT lenses and unfolded temples, displayed on a discreet support over a shop counter. Eyeglass frame follows fashion direction; lenses are not mirrored or opaque. Fashion direction: Scavenged, repaired anti-fashion: mismatched charcoal, faded olive and brown patches, visibly repaired seams, reused simple hardware. Functional and worn, never a caricature. Backdrop: modest secondhand market stall with soft daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7635-cover-v1.png",
+      "final": "final/clothing-7635-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d7da5768-d263-473a-ac49-56f9615c47d3.png",
+      "originalSha256": "a2341ee26f1c866b91d38c748bf41aa522156a2f6febb167b0ddd9d6e3ef9c1a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "91f03ca6f642dff2b9acb8475a3e59e1c943b4d0bbbd6108d9df0186e40de750",
+      "bytes": 284796,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49774,
+        "objectKey": "system-item-media/v1/items/7635/cover/91f03ca6f642dff2b9acb8475a3e59e1c943b4d0bbbd6108d9df0186e40de750.jpg",
+        "fileSize": 284796
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7635/cover/91f03ca6f642dff2b9acb8475a3e59e1c943b4d0bbbd6108d9df0186e40de750.jpg"
+    },
+    {
+      "key": "clothing-7636-cover",
+      "target": {
+        "kind": "item",
+        "id": 7636,
+        "typeId": 23,
+        "name": "Головной убор (бомжатский прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized hat or cap appropriate to the fashion direction, displayed on a plain neutral head form. A real wearable head covering, not a combat helmet. All brim/crown details inside frame. Fashion direction: Scavenged, repaired anti-fashion: mismatched charcoal, faded olive and brown patches, visibly repaired seams, reused simple hardware. Functional and worn, never a caricature. Backdrop: modest secondhand market stall with soft daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7636-cover-v1.png",
+      "final": "final/clothing-7636-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f25b0a32-e3fe-466f-9211-36d8ad0f0225.png",
+      "originalSha256": "3c76ee56a9eb85ae9b4153556074de27ffcb5d814c00f4cb668c0d9c389b780d",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "3ab5adf94db8c43d8c802449acf52c7bb57188803dd637abe1d404cd5fed09c7",
+      "bytes": 306049,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49775,
+        "objectKey": "system-item-media/v1/items/7636/cover/3ab5adf94db8c43d8c802449acf52c7bb57188803dd637abe1d404cd5fed09c7.jpg",
+        "fileSize": 306049
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7636/cover/3ab5adf94db8c43d8c802449acf52c7bb57188803dd637abe1d404cd5fed09c7.jpg"
+    },
+    {
+      "key": "clothing-7637-cover",
+      "target": {
+        "kind": "item",
+        "id": 7637,
+        "typeId": 23,
+        "name": "Верхняя одежда (бомжатский прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized OUTER jacket or coat appropriate to the fashion direction, displayed on a headless torso mannequin or hanger. Both sleeves and hem fully visible. Substantial outerwear distinct from a shirt; no trousers, no armor plates. Fashion direction: Scavenged, repaired anti-fashion: mismatched charcoal, faded olive and brown patches, visibly repaired seams, reused simple hardware. Functional and worn, never a caricature. Backdrop: modest secondhand market stall with soft daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7637-cover-v1.png",
+      "final": "final/clothing-7637-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ff877a02-638d-472e-9b62-ae6c5f22ee60.png",
+      "originalSha256": "449536dae4012152764ba14b4c6ec2bf45cd3162bdd5388c7647db3270fb3673",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "3c0ccf2394d8d7d552519eee6aa061d65d506761fa453883af953f033125cd93",
+      "bytes": 235482,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49776,
+        "objectKey": "system-item-media/v1/items/7637/cover/3c0ccf2394d8d7d552519eee6aa061d65d506761fa453883af953f033125cd93.jpg",
+        "fileSize": 235482
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7637/cover/3c0ccf2394d8d7d552519eee6aa061d65d506761fa453883af953f033125cd93.jpg"
+    },
+    {
+      "key": "clothing-7638-cover",
+      "target": {
+        "kind": "item",
+        "id": 7638,
+        "typeId": 23,
+        "name": "Украшение (бомжатский прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One original wearable piece of jewelry appropriate to the fashion direction: a substantial wrist cuff or pendant on a compact neutral jewelry stand. Believable full-size metal, beads or synthetic inserts; sophisticated material detail. No mystical gem glow, no symbols or letters. Fashion direction: Scavenged, repaired anti-fashion: mismatched charcoal, faded olive and brown patches, visibly repaired seams, reused simple hardware. Functional and worn, never a caricature. Backdrop: modest secondhand market stall with soft daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7638-cover-v1.png",
+      "final": "final/clothing-7638-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-91dcc0f7-fe63-4731-b66a-bb92ebc2003f.png",
+      "originalSha256": "5e30998a7efea4b7ce11c6ff75374b71f36d9ea5799ba859b365b1e66970c5ed",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b584c266d7897c67a4140034b008942814c8fae623b1e21057aac0d2c66d3175",
+      "bytes": 300996,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49777,
+        "objectKey": "system-item-media/v1/items/7638/cover/b584c266d7897c67a4140034b008942814c8fae623b1e21057aac0d2c66d3175.jpg",
+        "fileSize": 300996
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7638/cover/b584c266d7897c67a4140034b008942814c8fae623b1e21057aac0d2c66d3175.jpg"
+    },
+    {
+      "key": "clothing-7639-cover",
+      "target": {
+        "kind": "item",
+        "id": 7639,
+        "typeId": 23,
+        "name": "Зеркальные очки (бомжатский прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of fashion sunglasses with genuinely MIRRORED lenses reflecting broad city-light planes, temples unfolded, on a small display support. Frame and reflected accent palette follow fashion direction; clearly different from ordinary clear-lens eyeglasses. Fashion direction: Scavenged, repaired anti-fashion: mismatched charcoal, faded olive and brown patches, visibly repaired seams, reused simple hardware. Functional and worn, never a caricature. Backdrop: modest secondhand market stall with soft daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7639-cover-v1.png",
+      "final": "final/clothing-7639-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e38d7e94-d5f1-47dd-a7a4-34f18dd72be2.png",
+      "originalSha256": "a2c6af8df9942df075bf815eebc45b7ae5dfbeed0904f3047c49c127483ff13c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "05e73c7dde294514d8bb23448e2f7ee3b6f2fb76774b3bb422cbe502573b3e82",
+      "bytes": 280575,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49778,
+        "objectKey": "system-item-media/v1/items/7639/cover/05e73c7dde294514d8bb23448e2f7ee3b6f2fb76774b3bb422cbe502573b3e82.jpg",
+        "fileSize": 280575
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7639/cover/05e73c7dde294514d8bb23448e2f7ee3b6f2fb76774b3bb422cbe502573b3e82.jpg"
+    },
+    {
+      "key": "clothing-7640-cover",
+      "target": {
+        "kind": "item",
+        "id": 7640,
+        "typeId": 23,
+        "name": "Верх (бомжатский прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized SHIRT or light top appropriate to the fashion direction on a headless torso mannequin. Fine textile construction, both sleeves if present and full hem visible. This is a base-layer top, not a coat or armored jacket; no trousers. Fashion direction: Scavenged, repaired anti-fashion: mismatched charcoal, faded olive and brown patches, visibly repaired seams, reused simple hardware. Functional and worn, never a caricature. Backdrop: modest secondhand market stall with soft daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7640-cover-v1.png",
+      "final": "final/clothing-7640-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2e3de733-996b-466d-92de-d23ed5f736ca.png",
+      "originalSha256": "f4ca8e536fcc50a62f7129fdbd4316001a886b3a593f9a0e5465170614ca3740",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d6b1b454c4d8e0d0bb63111cfcd97f2b723507c7a5ad4059e20e1ef642766048",
+      "bytes": 289724,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49779,
+        "objectKey": "system-item-media/v1/items/7640/cover/d6b1b454c4d8e0d0bb63111cfcd97f2b723507c7a5ad4059e20e1ef642766048.jpg",
+        "fileSize": 289724
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7640/cover/d6b1b454c4d8e0d0bb63111cfcd97f2b723507c7a5ad4059e20e1ef642766048.jpg"
+    }
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-30/live-qa.json",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "passed": true,
+    "note": "All nine own clothing images loaded by actual item ID at three widths, no JS errors or horizontal overflow.",
+    "scenarios": 27,
+    "checkedAt": "2026-11-16T16:44:16.899Z"
+  }
+}

@@ -1,0 +1,373 @@
+{
+  "batch": 35,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-35",
+  "sourceAudit": "All 90 live clothing own media slots empty. Ten fashion directions and nine garment/accessory kinds checked against user-supplied Core p.356. New original designs per record; icons unchanged.",
+  "assets": [
+    {
+      "key": "clothing-7677-cover",
+      "target": {
+        "kind": "item",
+        "id": 7677,
+        "typeId": 23,
+        "name": "Низ (высокая мода)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A complete pair of adult-sized trousers, both legs fully visible, displayed on a neutral waist-down mannequin with simple feet supports. No top or jacket included. Adapt cut and materials to the fashion direction. Fashion direction: Exclusive original designer couture: ivory, graphite and deep emerald, sculptural asymmetry, refined material contrast and unusually precise finish. Elegant adult high fashion, no brand imitation. Backdrop: quiet premium showroom with soft side lighting.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7677-cover-v1.png",
+      "final": "final/clothing-7677-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ac5a24ed-54e7-4531-83ff-9be7d8ea1a46.png",
+      "originalSha256": "f89cd72c5fe6665781347fd5b49e4cf220cda52885599d315b45ebd281e2ccdb",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ad642b2d0705b0b8cab6f933b45f2692fbde8769b28de6dfea286a820065d7c5",
+      "bytes": 213547,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49816,
+        "objectKey": "system-item-media/v1/items/7677/cover/ad642b2d0705b0b8cab6f933b45f2692fbde8769b28de6dfea286a820065d7c5.jpg",
+        "fileSize": 213547
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7677/cover/ad642b2d0705b0b8cab6f933b45f2692fbde8769b28de6dfea286a820065d7c5.jpg"
+    },
+    {
+      "key": "clothing-7678-cover",
+      "target": {
+        "kind": "item",
+        "id": 7678,
+        "typeId": 23,
+        "name": "Контактные линзы (высокая мода)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A macro still life of TWO thin soft tinted contact lenses in the two shallow wells of an open small clean lens case, one lens slightly lifted on the lip so its thin flexible transparent edge is obvious. Natural eye-size proportions, not cybernetic eyeballs or goggles. Fashion direction affects iris tint and case finish. No face or eye surgery. Fashion direction: Exclusive original designer couture: ivory, graphite and deep emerald, sculptural asymmetry, refined material contrast and unusually precise finish. Elegant adult high fashion, no brand imitation. Backdrop: quiet premium showroom with soft side lighting.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7678-cover-v1.png",
+      "final": "final/clothing-7678-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-87b543aa-e66b-4333-a8b9-e3cb7e8243f4.png",
+      "originalSha256": "0e725aeabc430952599dbeda3d4d500441ef51010f17ca8bbcb22130f0aeee95",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "0faee2afe546747cc64db434e82da34f02a1cab7496d85777c8fc78b3c4f78d1",
+      "bytes": 248916,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49817,
+        "objectKey": "system-item-media/v1/items/7678/cover/0faee2afe546747cc64db434e82da34f02a1cab7496d85777c8fc78b3c4f78d1.jpg",
+        "fileSize": 248916
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7678/cover/0faee2afe546747cc64db434e82da34f02a1cab7496d85777c8fc78b3c4f78d1.jpg"
+    },
+    {
+      "key": "clothing-7679-cover",
+      "target": {
+        "kind": "item",
+        "id": 7679,
+        "typeId": 23,
+        "name": "Обувь (высокая мода)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A matching PAIR of complete adult footwear displayed on a low shop plinth at a three-quarter angle, both soles and uppers plausible. Adapt shoe type and materials to the fashion direction; do not show legs or a whole outfit. Fashion direction: Exclusive original designer couture: ivory, graphite and deep emerald, sculptural asymmetry, refined material contrast and unusually precise finish. Elegant adult high fashion, no brand imitation. Backdrop: quiet premium showroom with soft side lighting.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7679-cover-v1.png",
+      "final": "final/clothing-7679-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-80ac3b81-a7e0-47bd-842e-2993edcba245.png",
+      "originalSha256": "6029317e05cae6225240eb326a09d5f177a2667a7a0c4449cbf96d2b7a7dcc11",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f340890a66ea27d725051c6084910c6a9292ec39cd16ad79148c18b434a087e2",
+      "bytes": 231981,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49818,
+        "objectKey": "system-item-media/v1/items/7679/cover/f340890a66ea27d725051c6084910c6a9292ec39cd16ad79148c18b434a087e2.jpg",
+        "fileSize": 231981
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7679/cover/f340890a66ea27d725051c6084910c6a9292ec39cd16ad79148c18b434a087e2.jpg"
+    },
+    {
+      "key": "clothing-7680-cover",
+      "target": {
+        "kind": "item",
+        "id": 7680,
+        "typeId": 23,
+        "name": "Очки (высокая мода)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of ordinary fashion eyeglasses with CLEAR TRANSPARENT lenses and unfolded temples, displayed on a discreet support over a shop counter. Eyeglass frame follows fashion direction; lenses are not mirrored or opaque. Fashion direction: Exclusive original designer couture: ivory, graphite and deep emerald, sculptural asymmetry, refined material contrast and unusually precise finish. Elegant adult high fashion, no brand imitation. Backdrop: quiet premium showroom with soft side lighting.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7680-cover-v1.png",
+      "final": "final/clothing-7680-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-49831ad3-4ecc-4571-9f95-e3787b4eace1.png",
+      "originalSha256": "fc07d701fc59dfc3a31afd598663dd1e722c46fa2c9719e98d37317d952d4959",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "260c5430ee62c0d9645709ac74090f424cd9f82c426ccedf0b9d3fbff6907655",
+      "bytes": 245942,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49819,
+        "objectKey": "system-item-media/v1/items/7680/cover/260c5430ee62c0d9645709ac74090f424cd9f82c426ccedf0b9d3fbff6907655.jpg",
+        "fileSize": 245942
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7680/cover/260c5430ee62c0d9645709ac74090f424cd9f82c426ccedf0b9d3fbff6907655.jpg"
+    },
+    {
+      "key": "clothing-7681-cover",
+      "target": {
+        "kind": "item",
+        "id": 7681,
+        "typeId": 23,
+        "name": "Головной убор (высокая мода)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized hat or cap appropriate to the fashion direction, displayed on a plain neutral head form. A real wearable head covering, not a combat helmet. All brim/crown details inside frame. Fashion direction: Exclusive original designer couture: ivory, graphite and deep emerald, sculptural asymmetry, refined material contrast and unusually precise finish. Elegant adult high fashion, no brand imitation. Backdrop: quiet premium showroom with soft side lighting.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7681-cover-v1.png",
+      "final": "final/clothing-7681-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-04f6a280-da13-473e-8e7a-189b89ee9df0.png",
+      "originalSha256": "be5fdfdfaf35450670df43f587fd3bbd5eb9d7b489ee826ea67dd71d01c603a8",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b09709abb70331f72794425dc9465a188c7404edf69e7a1bf7107256fa340424",
+      "bytes": 228846,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49820,
+        "objectKey": "system-item-media/v1/items/7681/cover/b09709abb70331f72794425dc9465a188c7404edf69e7a1bf7107256fa340424.jpg",
+        "fileSize": 228846
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7681/cover/b09709abb70331f72794425dc9465a188c7404edf69e7a1bf7107256fa340424.jpg"
+    },
+    {
+      "key": "clothing-7682-cover",
+      "target": {
+        "kind": "item",
+        "id": 7682,
+        "typeId": 23,
+        "name": "Верхняя одежда (высокая мода)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized OUTER jacket or coat appropriate to the fashion direction, displayed on a headless torso mannequin or hanger. Both sleeves and hem fully visible. Substantial outerwear distinct from a shirt; no trousers, no armor plates. Fashion direction: Exclusive original designer couture: ivory, graphite and deep emerald, sculptural asymmetry, refined material contrast and unusually precise finish. Elegant adult high fashion, no brand imitation. Backdrop: quiet premium showroom with soft side lighting.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7682-cover-v1.png",
+      "final": "final/clothing-7682-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7a339e65-a4b5-4d9c-8ba3-f73058a51001.png",
+      "originalSha256": "227a1dd5110da376f26989b469d903c6ddf8ca490a8cd4e5541497c0cf74c86b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ae040fb8440f8c54abb96c90d748a63341711f414aeca299e533e41f0e31e9b7",
+      "bytes": 214839,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49821,
+        "objectKey": "system-item-media/v1/items/7682/cover/ae040fb8440f8c54abb96c90d748a63341711f414aeca299e533e41f0e31e9b7.jpg",
+        "fileSize": 214839
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7682/cover/ae040fb8440f8c54abb96c90d748a63341711f414aeca299e533e41f0e31e9b7.jpg"
+    },
+    {
+      "key": "clothing-7683-cover",
+      "target": {
+        "kind": "item",
+        "id": 7683,
+        "typeId": 23,
+        "name": "Украшение (высокая мода)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One original wearable piece of jewelry appropriate to the fashion direction: a substantial wrist cuff or pendant on a compact neutral jewelry stand. Believable full-size metal, beads or synthetic inserts; sophisticated material detail. No mystical gem glow, no symbols or letters. Fashion direction: Exclusive original designer couture: ivory, graphite and deep emerald, sculptural asymmetry, refined material contrast and unusually precise finish. Elegant adult high fashion, no brand imitation. Backdrop: quiet premium showroom with soft side lighting.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7683-cover-v1.png",
+      "final": "final/clothing-7683-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-cfa812b2-080e-4cf0-aff7-55b25362ff25.png",
+      "originalSha256": "91d28552f68ca38d9a22b91860db81555a55feb820dee661c08a40ab91e67ec3",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "67a58b4ca40edb5cc887cac5ca4cac5fecd49366fc8838a41d9989891f096f76",
+      "bytes": 250219,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49822,
+        "objectKey": "system-item-media/v1/items/7683/cover/67a58b4ca40edb5cc887cac5ca4cac5fecd49366fc8838a41d9989891f096f76.jpg",
+        "fileSize": 250219
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7683/cover/67a58b4ca40edb5cc887cac5ca4cac5fecd49366fc8838a41d9989891f096f76.jpg"
+    },
+    {
+      "key": "clothing-7684-cover",
+      "target": {
+        "kind": "item",
+        "id": 7684,
+        "typeId": 23,
+        "name": "Зеркальные очки (высокая мода)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of fashion sunglasses with genuinely MIRRORED lenses reflecting broad city-light planes, temples unfolded, on a small display support. Frame and reflected accent palette follow fashion direction; clearly different from ordinary clear-lens eyeglasses. Fashion direction: Exclusive original designer couture: ivory, graphite and deep emerald, sculptural asymmetry, refined material contrast and unusually precise finish. Elegant adult high fashion, no brand imitation. Backdrop: quiet premium showroom with soft side lighting.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7684-cover-v1.png",
+      "final": "final/clothing-7684-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-edf8c089-6e2b-4c0b-a1ac-555232134b2b.png",
+      "originalSha256": "a7fa16c5a728d41adb75c223adf923ff6d07e9f11920c2a7b9fa0068f7f2312e",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "34439b3488d2fd37a377a20c4ee23298b09f154bc2bc06c87fc790304791b754",
+      "bytes": 221777,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49823,
+        "objectKey": "system-item-media/v1/items/7684/cover/34439b3488d2fd37a377a20c4ee23298b09f154bc2bc06c87fc790304791b754.jpg",
+        "fileSize": 221777
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7684/cover/34439b3488d2fd37a377a20c4ee23298b09f154bc2bc06c87fc790304791b754.jpg"
+    },
+    {
+      "key": "clothing-7685-cover",
+      "target": {
+        "kind": "item",
+        "id": 7685,
+        "typeId": 23,
+        "name": "Верх (высокая мода)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized SHIRT or light top appropriate to the fashion direction on a headless torso mannequin. Fine textile construction, both sleeves if present and full hem visible. This is a base-layer top, not a coat or armored jacket; no trousers. Fashion direction: Exclusive original designer couture: ivory, graphite and deep emerald, sculptural asymmetry, refined material contrast and unusually precise finish. Elegant adult high fashion, no brand imitation. Backdrop: quiet premium showroom with soft side lighting.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7685-cover-v1.png",
+      "final": "final/clothing-7685-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1e552689-6bfb-4838-ac77-06a61aeb15cb.png",
+      "originalSha256": "93cd641c9d270a8e980e496819f185486694ad664af100d006935d915bc9dd8c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d99756aff519a397c952f02a8b1aa3531f17fea792fa4ec686b120708cf2bba2",
+      "bytes": 211797,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49824,
+        "objectKey": "system-item-media/v1/items/7685/cover/d99756aff519a397c952f02a8b1aa3531f17fea792fa4ec686b120708cf2bba2.jpg",
+        "fileSize": 211797
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7685/cover/d99756aff519a397c952f02a8b1aa3531f17fea792fa4ec686b120708cf2bba2.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-35/live-qa.json",
+    "note": "All nine own fashion covers loaded at three widths on actual public item pages without JS errors or horizontal overflow.",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "checkedAt": "2026-11-16T17:06:31.031Z",
+    "scenarios": 27
+  }
+}

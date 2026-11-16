@@ -1271,8 +1271,11 @@
       "id": 7605,
       "name": "Комбинезон «Бодивейт»",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 21,
+      "sha256": "404263a3e417c1eed42030f1e30c67b31b0385842bab07a00149746724337ad8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7605/cover/404263a3e417c1eed42030f1e30c67b31b0385842bab07a00149746724337ad8.jpg"
     },
     {
       "kind": "item",
@@ -1287,8 +1290,11 @@
       "id": 7606,
       "name": "Пулестойкий щит",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 21,
+      "sha256": "cd7426e55c154636e5a4d3dee2b2b24b923952c4585a23ebcf8cb0775bbf9ffe",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7606/cover/cd7426e55c154636e5a4d3dee2b2b24b923952c4585a23ebcf8cb0775bbf9ffe.jpg"
     },
     {
       "kind": "item",
@@ -1303,8 +1309,11 @@
       "id": 7607,
       "name": "Костюм сапёра",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 21,
+      "sha256": "355cf54b79cf6d1c46879f0ceada188e634a8ffb6353fb53af339342ce14bc0a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7607/cover/355cf54b79cf6d1c46879f0ceada188e634a8ffb6353fb53af339342ce14bc0a.jpg"
     },
     {
       "kind": "item",
@@ -1319,8 +1328,11 @@
       "id": 7608,
       "name": "Шлем сапёра",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 22,
+      "sha256": "a13fe52619e3353b9660238290891cff864194a8d2fc15a71d6259b3ee1903cc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7608/cover/a13fe52619e3353b9660238290891cff864194a8d2fc15a71d6259b3ee1903cc.jpg"
     },
     {
       "kind": "item",
@@ -1335,8 +1347,11 @@
       "id": 7609,
       "name": "Тяжёлый бронекостюм",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 21,
+      "sha256": "2d6af96b081a55bb42e2195ca4378b9e3a1fbbeee02868918da8400a2fa2c5a5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7609/cover/2d6af96b081a55bb42e2195ca4378b9e3a1fbbeee02868918da8400a2fa2c5a5.jpg"
     },
     {
       "kind": "item",
@@ -1351,8 +1366,11 @@
       "id": 7610,
       "name": "Тяжёлый бронешлем",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 22,
+      "sha256": "e6f228f783d80041b00ac8d221522a03d25bbdd998be085d71385bd71ff8bb9e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7610/cover/e6f228f783d80041b00ac8d221522a03d25bbdd998be085d71385bd71ff8bb9e.jpg"
     },
     {
       "kind": "item",
@@ -1367,8 +1385,11 @@
       "id": 7611,
       "name": "Кевларовый жилет",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 21,
+      "sha256": "1b952c729078f6ef0fd5fd7b6aec7f23d7861cf7a0521444ab5a0015c8c80735",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7611/cover/1b952c729078f6ef0fd5fd7b6aec7f23d7861cf7a0521444ab5a0015c8c80735.jpg"
     },
     {
       "kind": "item",
@@ -1383,8 +1404,11 @@
       "id": 7612,
       "name": "Кевларовый шлем",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 22,
+      "sha256": "3b6cab5663432c08bf1b37c3d89ff7f6964caf7a0c6dade260553f69a7723aa8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7612/cover/3b6cab5663432c08bf1b37c3d89ff7f6964caf7a0c6dade260553f69a7723aa8.jpg"
     },
     {
       "kind": "item",
@@ -1399,8 +1423,11 @@
       "id": 7613,
       "name": "Кожанка",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 21,
+      "sha256": "8c2386f53b52d707f9293ef097dfcface4e81ed8cce04f16404e7566490172ad",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7613/cover/8c2386f53b52d707f9293ef097dfcface4e81ed8cce04f16404e7566490172ad.jpg"
     },
     {
       "kind": "item",
@@ -1415,8 +1442,11 @@
       "id": 7614,
       "name": "Кожанный шлем",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 22,
+      "sha256": "c62ab7925375bac470c34b2208c64f51200475daedc2667fbd60c51c595687a6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7614/cover/c62ab7925375bac470c34b2208c64f51200475daedc2667fbd60c51c595687a6.jpg"
     },
     {
       "kind": "item",
@@ -1431,8 +1461,11 @@
       "id": 7615,
       "name": "Лёгкий бронекостюм",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 23,
+      "sha256": "e6eb77d978e0bebe4b7cc521086a7483d4cf08024dc56f70addacdf6e193aa12",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7615/cover/e6eb77d978e0bebe4b7cc521086a7483d4cf08024dc56f70addacdf6e193aa12.jpg"
     },
     {
       "kind": "item",
@@ -1447,8 +1480,11 @@
       "id": 7616,
       "name": "Лёгкий бронешлем",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 22,
+      "sha256": "d7244dfb08e9ada50830087413d9a889ab048532b5ab35aaea9bc99418c78b7a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7616/cover/d7244dfb08e9ada50830087413d9a889ab048532b5ab35aaea9bc99418c78b7a.jpg"
     },
     {
       "kind": "item",
@@ -1463,8 +1499,11 @@
       "id": 7617,
       "name": "Средний бронекостюм",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 23,
+      "sha256": "47542f53f03a1a5f1b2e16c138d84e8ddf40bd3bf35f8c637dc3ef4a3703109b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7617/cover/47542f53f03a1a5f1b2e16c138d84e8ddf40bd3bf35f8c637dc3ef4a3703109b.jpg"
     },
     {
       "kind": "item",
@@ -1479,8 +1518,11 @@
       "id": 7618,
       "name": "Средний бронешлем",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 22,
+      "sha256": "178295eb3b4aaa979a3508df2cd0c6ccc1aee6805e925ed978cc883bd34d4dde",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7618/cover/178295eb3b4aaa979a3508df2cd0c6ccc1aee6805e925ed978cc883bd34d4dde.jpg"
     },
     {
       "kind": "item",
@@ -1495,8 +1537,11 @@
       "id": 7619,
       "name": "Металлическая броня",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 23,
+      "sha256": "38e165ee55183af655e47c4b4dd05c9e354958fa5adbb063c837b0e7f38f97c8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7619/cover/38e165ee55183af655e47c4b4dd05c9e354958fa5adbb063c837b0e7f38f97c8.jpg"
     },
     {
       "kind": "item",
@@ -1511,8 +1556,11 @@
       "id": 7620,
       "name": "Металлический шлем",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 23,
+      "sha256": "f9e05fdd6f9debf737bf2bde0e110e19f7a686ecbe4d94868635a228311adbc2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7620/cover/f9e05fdd6f9debf737bf2bde0e110e19f7a686ecbe4d94868635a228311adbc2.jpg"
     },
     {
       "kind": "item",
@@ -1527,8 +1575,11 @@
       "id": 7621,
       "name": "Вплетение в кожу",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 23,
+      "sha256": "e8a83390d0ca348a9958c70da5a8d63e683207d92c7dc21b0d27c90b113cb4ec",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7621/cover/e8a83390d0ca348a9958c70da5a8d63e683207d92c7dc21b0d27c90b113cb4ec.jpg"
     },
     {
       "kind": "item",
@@ -1543,8 +1594,11 @@
       "id": 7622,
       "name": "Подкожная броня",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 23,
+      "sha256": "a84db27ae18922c9d0a38b91b20df0c032706b0725655091ff5005fba55ac792",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7622/cover/a84db27ae18922c9d0a38b91b20df0c032706b0725655091ff5005fba55ac792.jpg"
     },
     {
       "kind": "item",
@@ -1559,8 +1613,11 @@
       "id": 7623,
       "name": "Низ (Азия поп)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 29,
+      "sha256": "e527732503c8956bfb6bbd9989d1d67fbfd99c5220af86ed275b45e1c8c319ff",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7623/cover/e527732503c8956bfb6bbd9989d1d67fbfd99c5220af86ed275b45e1c8c319ff.jpg"
     },
     {
       "kind": "item",
@@ -1575,8 +1632,11 @@
       "id": 7624,
       "name": "Контактные линзы (Азия поп)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 29,
+      "sha256": "9dddfaf614bab9e2578248ed0380d32d78c662dbffdc47d93e235e11714af2c8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7624/cover/9dddfaf614bab9e2578248ed0380d32d78c662dbffdc47d93e235e11714af2c8.jpg"
     },
     {
       "kind": "item",
@@ -1591,8 +1651,11 @@
       "id": 7625,
       "name": "Обувь (Азия поп)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 29,
+      "sha256": "2b3b5a19a296ecadd421c5c8730f73b7a84834e6f6d956275b35ddac03c9f4da",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7625/cover/2b3b5a19a296ecadd421c5c8730f73b7a84834e6f6d956275b35ddac03c9f4da.jpg"
     },
     {
       "kind": "item",
@@ -1607,8 +1670,11 @@
       "id": 7626,
       "name": "Очки (Азия поп)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 29,
+      "sha256": "d9c6911aad1e6533fa9665c33f33a78f9cb5f365aedca0b23bec71f7306754c4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7626/cover/d9c6911aad1e6533fa9665c33f33a78f9cb5f365aedca0b23bec71f7306754c4.jpg"
     },
     {
       "kind": "item",
@@ -1623,8 +1689,11 @@
       "id": 7627,
       "name": "Головной убор (Азия поп)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 29,
+      "sha256": "b2397b5ea8944d2fbf15593acd434e194d0e97b0e73927eeb4526693433b68f5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7627/cover/b2397b5ea8944d2fbf15593acd434e194d0e97b0e73927eeb4526693433b68f5.jpg"
     },
     {
       "kind": "item",
@@ -1639,8 +1708,11 @@
       "id": 7628,
       "name": "Верхняя одежда (Азия поп)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 29,
+      "sha256": "dc18405c50b2a1480fe1d65b2af40a196cad071e6bf82679d060754b30c7c987",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7628/cover/dc18405c50b2a1480fe1d65b2af40a196cad071e6bf82679d060754b30c7c987.jpg"
     },
     {
       "kind": "item",
@@ -1655,8 +1727,11 @@
       "id": 7629,
       "name": "Украшение (Азия поп)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 29,
+      "sha256": "7eada92fe2bebeaf4ed968882b503c20f3b67ddbad3ec1877fee994542f7c6e8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7629/cover/7eada92fe2bebeaf4ed968882b503c20f3b67ddbad3ec1877fee994542f7c6e8.jpg"
     },
     {
       "kind": "item",
@@ -1671,8 +1746,11 @@
       "id": 7630,
       "name": "Зеркальные очки (Азия поп)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 29,
+      "sha256": "ddcc7cbbe90f8f68dd0d95649d4acd42fac0bd85c8a05ce9c4863090e519404d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7630/cover/ddcc7cbbe90f8f68dd0d95649d4acd42fac0bd85c8a05ce9c4863090e519404d.jpg"
     },
     {
       "kind": "item",
@@ -1687,8 +1765,11 @@
       "id": 7631,
       "name": "Верх (Азия поп)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 29,
+      "sha256": "a6122e98b65a23d14ae4119c03776e2682920da4224467bead2ba0fc873e18f1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7631/cover/a6122e98b65a23d14ae4119c03776e2682920da4224467bead2ba0fc873e18f1.jpg"
     },
     {
       "kind": "item",
@@ -1703,8 +1784,11 @@
       "id": 7632,
       "name": "Низ (бомжатский прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 30,
+      "sha256": "3dd50e375f859dae811943cf6312800921cb55e7a85de2f71f40eb445ac1d9d8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7632/cover/3dd50e375f859dae811943cf6312800921cb55e7a85de2f71f40eb445ac1d9d8.jpg"
     },
     {
       "kind": "item",
@@ -1719,8 +1803,11 @@
       "id": 7633,
       "name": "Контактные линзы (бомжатский прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 30,
+      "sha256": "bfa52718e5c6ac7a2f4dada3a556105a6dc972b855569354c7f685553a3ce7b7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7633/cover/bfa52718e5c6ac7a2f4dada3a556105a6dc972b855569354c7f685553a3ce7b7.jpg"
     },
     {
       "kind": "item",
@@ -1735,8 +1822,11 @@
       "id": 7634,
       "name": "Обувь (бомжатский прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 30,
+      "sha256": "3bd0eb954e2470703e02eb1b770bdf5bc210eb198ee59e45fabd920ca9d34a3b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7634/cover/3bd0eb954e2470703e02eb1b770bdf5bc210eb198ee59e45fabd920ca9d34a3b.jpg"
     },
     {
       "kind": "item",
@@ -1751,8 +1841,11 @@
       "id": 7635,
       "name": "Очки (бомжатский прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 30,
+      "sha256": "91f03ca6f642dff2b9acb8475a3e59e1c943b4d0bbbd6108d9df0186e40de750",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7635/cover/91f03ca6f642dff2b9acb8475a3e59e1c943b4d0bbbd6108d9df0186e40de750.jpg"
     },
     {
       "kind": "item",
@@ -1767,8 +1860,11 @@
       "id": 7636,
       "name": "Головной убор (бомжатский прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 30,
+      "sha256": "3ab5adf94db8c43d8c802449acf52c7bb57188803dd637abe1d404cd5fed09c7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7636/cover/3ab5adf94db8c43d8c802449acf52c7bb57188803dd637abe1d404cd5fed09c7.jpg"
     },
     {
       "kind": "item",
@@ -1783,8 +1879,11 @@
       "id": 7637,
       "name": "Верхняя одежда (бомжатский прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 30,
+      "sha256": "3c0ccf2394d8d7d552519eee6aa061d65d506761fa453883af953f033125cd93",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7637/cover/3c0ccf2394d8d7d552519eee6aa061d65d506761fa453883af953f033125cd93.jpg"
     },
     {
       "kind": "item",
@@ -1799,8 +1898,11 @@
       "id": 7638,
       "name": "Украшение (бомжатский прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 30,
+      "sha256": "b584c266d7897c67a4140034b008942814c8fae623b1e21057aac0d2c66d3175",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7638/cover/b584c266d7897c67a4140034b008942814c8fae623b1e21057aac0d2c66d3175.jpg"
     },
     {
       "kind": "item",
@@ -1815,8 +1917,11 @@
       "id": 7639,
       "name": "Зеркальные очки (бомжатский прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 30,
+      "sha256": "05e73c7dde294514d8bb23448e2f7ee3b6f2fb76774b3bb422cbe502573b3e82",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7639/cover/05e73c7dde294514d8bb23448e2f7ee3b6f2fb76774b3bb422cbe502573b3e82.jpg"
     },
     {
       "kind": "item",
@@ -1831,8 +1936,11 @@
       "id": 7640,
       "name": "Верх (бомжатский прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 30,
+      "sha256": "d6b1b454c4d8e0d0bb63111cfcd97f2b723507c7a5ad4059e20e1ef642766048",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7640/cover/d6b1b454c4d8e0d0bb63111cfcd97f2b723507c7a5ad4059e20e1ef642766048.jpg"
     },
     {
       "kind": "item",
@@ -1847,8 +1955,11 @@
       "id": 7641,
       "name": "Низ (бохо)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 31,
+      "sha256": "73769992ee061c01463b7225b467912d25b9058c1469aa611c016d7c6216528d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7641/cover/73769992ee061c01463b7225b467912d25b9058c1469aa611c016d7c6216528d.jpg"
     },
     {
       "kind": "item",
@@ -1863,8 +1974,11 @@
       "id": 7642,
       "name": "Контактные линзы (бохо)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 31,
+      "sha256": "ad152989332714b1954b28b6dbfb8317f03c1b6f142f0f0528a13609975fe8be",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7642/cover/ad152989332714b1954b28b6dbfb8317f03c1b6f142f0f0528a13609975fe8be.jpg"
     },
     {
       "kind": "item",
@@ -1879,8 +1993,11 @@
       "id": 7643,
       "name": "Обувь (бохо)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 31,
+      "sha256": "53bf5c1177505c3048e28b56806be9e1a6be55730c1f3944a20217870c3b07c4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7643/cover/53bf5c1177505c3048e28b56806be9e1a6be55730c1f3944a20217870c3b07c4.jpg"
     },
     {
       "kind": "item",
@@ -1895,8 +2012,11 @@
       "id": 7644,
       "name": "Очки (бохо)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 31,
+      "sha256": "cbe903806bf0fe0b13d20b4bfe0187b5f4ce5d05f0bdfa12a15cbcaa0380fecd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7644/cover/cbe903806bf0fe0b13d20b4bfe0187b5f4ce5d05f0bdfa12a15cbcaa0380fecd.jpg"
     },
     {
       "kind": "item",
@@ -1911,8 +2031,11 @@
       "id": 7645,
       "name": "Головной убор (бохо)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 31,
+      "sha256": "3afc459df995eeaa3bf33e01d3d505a4118003610d0f99bae04cdc9fc2867364",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7645/cover/3afc459df995eeaa3bf33e01d3d505a4118003610d0f99bae04cdc9fc2867364.jpg"
     },
     {
       "kind": "item",
@@ -1927,8 +2050,11 @@
       "id": 7646,
       "name": "Верхняя одежда (бохо)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 31,
+      "sha256": "2d348af2e9520a8f0882cc761c7bae2931f9a53ec547a69afe81b403a2819ec1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7646/cover/2d348af2e9520a8f0882cc761c7bae2931f9a53ec547a69afe81b403a2819ec1.jpg"
     },
     {
       "kind": "item",
@@ -1943,8 +2069,11 @@
       "id": 7647,
       "name": "Украшение (бохо)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 31,
+      "sha256": "0e938a49b8522422f82e80fdd18dd95d3567e4e4486ef461f840b7e5c8e5ecdb",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7647/cover/0e938a49b8522422f82e80fdd18dd95d3567e4e4486ef461f840b7e5c8e5ecdb.jpg"
     },
     {
       "kind": "item",
@@ -1959,8 +2088,11 @@
       "id": 7648,
       "name": "Зеркальные очки (бохо)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 31,
+      "sha256": "09703501d5536bc86545fc2ccd6071d202f78eafd004cff8d3e701086a8ed36e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7648/cover/09703501d5536bc86545fc2ccd6071d202f78eafd004cff8d3e701086a8ed36e.jpg"
     },
     {
       "kind": "item",
@@ -1975,8 +2107,11 @@
       "id": 7649,
       "name": "Верх (бохо)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 31,
+      "sha256": "5d686935ae5ee72b378763d0b3e9d71923661ba1d46e0f56d7df7ab8c24b5bbc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7649/cover/5d686935ae5ee72b378763d0b3e9d71923661ba1d46e0f56d7df7ab8c24b5bbc.jpg"
     },
     {
       "kind": "item",
@@ -1991,8 +2126,11 @@
       "id": 7650,
       "name": "Низ (деловой стиль)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 32,
+      "sha256": "b91a8e6598f3496d75a39c52054583f36ae11796bcf9a155e91052fb1c09d862",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7650/cover/b91a8e6598f3496d75a39c52054583f36ae11796bcf9a155e91052fb1c09d862.jpg"
     },
     {
       "kind": "item",
@@ -2007,8 +2145,11 @@
       "id": 7651,
       "name": "Контактные линзы (деловой стиль)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 32,
+      "sha256": "79372cee7d8343ebbfa6e4c412894362f09fc8bfd31396adb63e5f5791227682",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7651/cover/79372cee7d8343ebbfa6e4c412894362f09fc8bfd31396adb63e5f5791227682.jpg"
     },
     {
       "kind": "item",
@@ -2023,8 +2164,11 @@
       "id": 7652,
       "name": "Обувь (деловой стиль)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 32,
+      "sha256": "f4c9849e6abcc550dd6f9ae02406ea712a460d86f4e73dc250c44ae3829f721c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7652/cover/f4c9849e6abcc550dd6f9ae02406ea712a460d86f4e73dc250c44ae3829f721c.jpg"
     },
     {
       "kind": "item",
@@ -2039,8 +2183,11 @@
       "id": 7653,
       "name": "Очки (деловой стиль)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 32,
+      "sha256": "9a94c24c63413deb2d201e996c019c32489db3c99cfe432175bf3a3e0b1b2250",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7653/cover/9a94c24c63413deb2d201e996c019c32489db3c99cfe432175bf3a3e0b1b2250.jpg"
     },
     {
       "kind": "item",
@@ -2055,8 +2202,11 @@
       "id": 7654,
       "name": "Головной убор (деловой стиль)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 32,
+      "sha256": "64b8615a4210cb394d2ed91d211226353e8df86f55676b6dd60586ab70e24684",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7654/cover/64b8615a4210cb394d2ed91d211226353e8df86f55676b6dd60586ab70e24684.jpg"
     },
     {
       "kind": "item",
@@ -2071,8 +2221,11 @@
       "id": 7655,
       "name": "Верхняя одежда (деловой стиль)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 32,
+      "sha256": "464a50f924a96459565f41ecc335cfb33b167b4a37c1df558c7b446970a8b218",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7655/cover/464a50f924a96459565f41ecc335cfb33b167b4a37c1df558c7b446970a8b218.jpg"
     },
     {
       "kind": "item",
@@ -2087,8 +2240,11 @@
       "id": 7656,
       "name": "Украшение (деловой стиль)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 32,
+      "sha256": "3029ca93f2326c58394ddf2f750b02769d9fa95c33f608a9b3e43f78efefb305",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7656/cover/3029ca93f2326c58394ddf2f750b02769d9fa95c33f608a9b3e43f78efefb305.jpg"
     },
     {
       "kind": "item",
@@ -2103,8 +2259,11 @@
       "id": 7657,
       "name": "Зеркальные очки (деловой стиль)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 32,
+      "sha256": "41422254ad93fffc2463f13d406f2287767b5d42c02609524d7212af4c412655",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7657/cover/41422254ad93fffc2463f13d406f2287767b5d42c02609524d7212af4c412655.jpg"
     },
     {
       "kind": "item",
@@ -2119,8 +2278,11 @@
       "id": 7658,
       "name": "Верх (деловой стиль)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 32,
+      "sha256": "301cf6558dbde3dba261acd01ff91aa2fdd92416d1b00024b9c0d26db54f4217",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7658/cover/301cf6558dbde3dba261acd01ff91aa2fdd92416d1b00024b9c0d26db54f4217.jpg"
     },
     {
       "kind": "item",
@@ -2135,8 +2297,11 @@
       "id": 7659,
       "name": "Низ (одежда банды)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 33,
+      "sha256": "912d02a71781add5a213ead7c339f22ff4fe8a60aa35d2b0306699beb0aa541e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7659/cover/912d02a71781add5a213ead7c339f22ff4fe8a60aa35d2b0306699beb0aa541e.jpg"
     },
     {
       "kind": "item",
@@ -2151,8 +2316,11 @@
       "id": 7660,
       "name": "Контактные линзы (одежда банды)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 33,
+      "sha256": "e7f338e26cccd8a7fa82f034638bfcb60cc1cf0dfa18bd28453bf00da39e12dd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7660/cover/e7f338e26cccd8a7fa82f034638bfcb60cc1cf0dfa18bd28453bf00da39e12dd.jpg"
     },
     {
       "kind": "item",
@@ -2167,8 +2335,11 @@
       "id": 7661,
       "name": "Обувь (одежда банды)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 33,
+      "sha256": "ec50d372bb34b6d2d82bbf3fb01b4bb52a0df4b1a0035085926dc21159641b5e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7661/cover/ec50d372bb34b6d2d82bbf3fb01b4bb52a0df4b1a0035085926dc21159641b5e.jpg"
     },
     {
       "kind": "item",
@@ -2183,8 +2354,11 @@
       "id": 7662,
       "name": "Очки (одежда банды)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 33,
+      "sha256": "bbc8a04cb22562b1c12c075e0e628f816787ebf1f10d903de2de6a98460cb556",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7662/cover/bbc8a04cb22562b1c12c075e0e628f816787ebf1f10d903de2de6a98460cb556.jpg"
     },
     {
       "kind": "item",
@@ -2199,8 +2373,11 @@
       "id": 7663,
       "name": "Головной убор (одежда банды)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 33,
+      "sha256": "1e8dc6b0714cc15c59782509e95e954c27d1191af06ba684c1f0156451112e02",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7663/cover/1e8dc6b0714cc15c59782509e95e954c27d1191af06ba684c1f0156451112e02.jpg"
     },
     {
       "kind": "item",
@@ -2215,8 +2392,11 @@
       "id": 7664,
       "name": "Верхняя одежда (одежда банды)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 33,
+      "sha256": "66f0b183ac18cae340c8cbd796e4f0a5b9f27f3eb5a72927805b11f55fc1e8a3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7664/cover/66f0b183ac18cae340c8cbd796e4f0a5b9f27f3eb5a72927805b11f55fc1e8a3.jpg"
     },
     {
       "kind": "item",
@@ -2231,8 +2411,11 @@
       "id": 7665,
       "name": "Украшение (одежда банды)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 33,
+      "sha256": "f40be9681f5fea0966f39c6f3597115e20a89437cebaac8a4e410f8b8d95cbc3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7665/cover/f40be9681f5fea0966f39c6f3597115e20a89437cebaac8a4e410f8b8d95cbc3.jpg"
     },
     {
       "kind": "item",
@@ -2247,8 +2430,11 @@
       "id": 7666,
       "name": "Зеркальные очки (одежда банды)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 33,
+      "sha256": "4b93f12c76bac0f5b9189ccd188b60057759f1c6462bde64a29484e808ef6977",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7666/cover/4b93f12c76bac0f5b9189ccd188b60057759f1c6462bde64a29484e808ef6977.jpg"
     },
     {
       "kind": "item",
@@ -2263,8 +2449,11 @@
       "id": 7667,
       "name": "Верх (одежда банды)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 33,
+      "sha256": "5eb9ef7c4741ca774f08bfe996613bae07075e15dfff0cf85acfd36e75a6cba3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7667/cover/5eb9ef7c4741ca774f08bfe996613bae07075e15dfff0cf85acfd36e75a6cba3.jpg"
     },
     {
       "kind": "item",
@@ -2279,8 +2468,11 @@
       "id": 7668,
       "name": "Низ (обычный прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 34,
+      "sha256": "f017b9fa743d39fd568b25f1bd0290256429bd6d0962164d0eb7595d9e0b6606",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7668/cover/f017b9fa743d39fd568b25f1bd0290256429bd6d0962164d0eb7595d9e0b6606.jpg"
     },
     {
       "kind": "item",
@@ -2295,8 +2487,11 @@
       "id": 7669,
       "name": "Контактные линзы (обычный прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 34,
+      "sha256": "b4bf4aff066dbfe4490f9a8b761a936caf1223ae695ac6f880adb5b98c8e9e67",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7669/cover/b4bf4aff066dbfe4490f9a8b761a936caf1223ae695ac6f880adb5b98c8e9e67.jpg"
     },
     {
       "kind": "item",
@@ -2311,8 +2506,11 @@
       "id": 7670,
       "name": "Обувь (обычный прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 34,
+      "sha256": "65bdd58a72063c61aca70a78f567c35d9d25df2b42af2ea179d9c90d96093ad5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7670/cover/65bdd58a72063c61aca70a78f567c35d9d25df2b42af2ea179d9c90d96093ad5.jpg"
     },
     {
       "kind": "item",
@@ -2327,8 +2525,11 @@
       "id": 7671,
       "name": "Очки (обычный прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 34,
+      "sha256": "daf719107ec2a1422456b47d8eb6e9455a383e4ddb7e54eea59e9705de461463",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7671/cover/daf719107ec2a1422456b47d8eb6e9455a383e4ddb7e54eea59e9705de461463.jpg"
     },
     {
       "kind": "item",
@@ -2343,8 +2544,11 @@
       "id": 7672,
       "name": "Головной убор (обычный прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 34,
+      "sha256": "c323705ba4cd028bbbe4c71fd98d88d46ae9654d584acd85ad7b232afe6df8f0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7672/cover/c323705ba4cd028bbbe4c71fd98d88d46ae9654d584acd85ad7b232afe6df8f0.jpg"
     },
     {
       "kind": "item",
@@ -2359,8 +2563,11 @@
       "id": 7673,
       "name": "Верхняя одежда (обычный прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 34,
+      "sha256": "c2f84c37fc93dc89b0148a277337b67dead28f85f58eeeb5ce070eca37173b81",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7673/cover/c2f84c37fc93dc89b0148a277337b67dead28f85f58eeeb5ce070eca37173b81.jpg"
     },
     {
       "kind": "item",
@@ -2375,8 +2582,11 @@
       "id": 7674,
       "name": "Украшение (обычный прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 34,
+      "sha256": "cac8447ff19bebd41cd4f3066395598d635d8b892d182e91e8d73fc1a16159b1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7674/cover/cac8447ff19bebd41cd4f3066395598d635d8b892d182e91e8d73fc1a16159b1.jpg"
     },
     {
       "kind": "item",
@@ -2391,8 +2601,11 @@
       "id": 7675,
       "name": "Зеркальные очки (обычный прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 34,
+      "sha256": "c1e35b78352a2d2337722a83d2ac92b69cc42bb8e616bc7f972cdd28a0e6affd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7675/cover/c1e35b78352a2d2337722a83d2ac92b69cc42bb8e616bc7f972cdd28a0e6affd.jpg"
     },
     {
       "kind": "item",
@@ -2407,8 +2620,11 @@
       "id": 7676,
       "name": "Верх (Обычный прикид)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 34,
+      "sha256": "1d7ec6a120a6fe128487e20d43fcc62e7f44e296db5d8c2ac21bd048bdf0baf1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7676/cover/1d7ec6a120a6fe128487e20d43fcc62e7f44e296db5d8c2ac21bd048bdf0baf1.jpg"
     },
     {
       "kind": "item",
@@ -2423,8 +2639,11 @@
       "id": 7677,
       "name": "Низ (высокая мода)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 35,
+      "sha256": "ad642b2d0705b0b8cab6f933b45f2692fbde8769b28de6dfea286a820065d7c5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7677/cover/ad642b2d0705b0b8cab6f933b45f2692fbde8769b28de6dfea286a820065d7c5.jpg"
     },
     {
       "kind": "item",
@@ -2439,8 +2658,11 @@
       "id": 7678,
       "name": "Контактные линзы (высокая мода)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 35,
+      "sha256": "0faee2afe546747cc64db434e82da34f02a1cab7496d85777c8fc78b3c4f78d1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7678/cover/0faee2afe546747cc64db434e82da34f02a1cab7496d85777c8fc78b3c4f78d1.jpg"
     },
     {
       "kind": "item",
@@ -2455,8 +2677,11 @@
       "id": 7679,
       "name": "Обувь (высокая мода)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 35,
+      "sha256": "f340890a66ea27d725051c6084910c6a9292ec39cd16ad79148c18b434a087e2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7679/cover/f340890a66ea27d725051c6084910c6a9292ec39cd16ad79148c18b434a087e2.jpg"
     },
     {
       "kind": "item",
@@ -2471,8 +2696,11 @@
       "id": 7680,
       "name": "Очки (высокая мода)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 35,
+      "sha256": "260c5430ee62c0d9645709ac74090f424cd9f82c426ccedf0b9d3fbff6907655",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7680/cover/260c5430ee62c0d9645709ac74090f424cd9f82c426ccedf0b9d3fbff6907655.jpg"
     },
     {
       "kind": "item",
@@ -2487,8 +2715,11 @@
       "id": 7681,
       "name": "Головной убор (высокая мода)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 35,
+      "sha256": "b09709abb70331f72794425dc9465a188c7404edf69e7a1bf7107256fa340424",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7681/cover/b09709abb70331f72794425dc9465a188c7404edf69e7a1bf7107256fa340424.jpg"
     },
     {
       "kind": "item",
@@ -2503,8 +2734,11 @@
       "id": 7682,
       "name": "Верхняя одежда (высокая мода)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 35,
+      "sha256": "ae040fb8440f8c54abb96c90d748a63341711f414aeca299e533e41f0e31e9b7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7682/cover/ae040fb8440f8c54abb96c90d748a63341711f414aeca299e533e41f0e31e9b7.jpg"
     },
     {
       "kind": "item",
@@ -2519,8 +2753,11 @@
       "id": 7683,
       "name": "Украшение (высокая мода)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 35,
+      "sha256": "67a58b4ca40edb5cc887cac5ca4cac5fecd49366fc8838a41d9989891f096f76",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7683/cover/67a58b4ca40edb5cc887cac5ca4cac5fecd49366fc8838a41d9989891f096f76.jpg"
     },
     {
       "kind": "item",
@@ -2535,8 +2772,11 @@
       "id": 7684,
       "name": "Зеркальные очки (высокая мода)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 35,
+      "sha256": "34439b3488d2fd37a377a20c4ee23298b09f154bc2bc06c87fc790304791b754",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7684/cover/34439b3488d2fd37a377a20c4ee23298b09f154bc2bc06c87fc790304791b754.jpg"
     },
     {
       "kind": "item",
@@ -2551,8 +2791,11 @@
       "id": 7685,
       "name": "Верх (высокая мода)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 35,
+      "sha256": "d99756aff519a397c952f02a8b1aa3531f17fea792fa4ec686b120708cf2bba2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7685/cover/d99756aff519a397c952f02a8b1aa3531f17fea792fa4ec686b120708cf2bba2.jpg"
     },
     {
       "kind": "item",
@@ -2567,8 +2810,11 @@
       "id": 7686,
       "name": "Низ (спортивки)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 36,
+      "sha256": "74e9634fdad17e51d2d08adeafbec6203e665e61a05a85b116bdecdfbd9cef45",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7686/cover/74e9634fdad17e51d2d08adeafbec6203e665e61a05a85b116bdecdfbd9cef45.jpg"
     },
     {
       "kind": "item",
@@ -2583,8 +2829,11 @@
       "id": 7687,
       "name": "Контактные линзы (спортивки)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 36,
+      "sha256": "082a46bf133476eccd6daba7a63ebfc73864671d29d814d2770f5290dd318ad4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7687/cover/082a46bf133476eccd6daba7a63ebfc73864671d29d814d2770f5290dd318ad4.jpg"
     },
     {
       "kind": "item",
@@ -2599,8 +2848,11 @@
       "id": 7688,
       "name": "Обувь (спортивки)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 36,
+      "sha256": "860d2aea485b5c1226be60091793b5fff5929a0ca41027295cc24a3007fd02ee",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7688/cover/860d2aea485b5c1226be60091793b5fff5929a0ca41027295cc24a3007fd02ee.jpg"
     },
     {
       "kind": "item",
@@ -2615,8 +2867,11 @@
       "id": 7689,
       "name": "Очки (спортивки)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 36,
+      "sha256": "f530b7c4d2beb848e436562dcff331f9314ebe4b5c8f22eb0b1360bfdf84999e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7689/cover/f530b7c4d2beb848e436562dcff331f9314ebe4b5c8f22eb0b1360bfdf84999e.jpg"
     },
     {
       "kind": "item",
@@ -2631,8 +2886,11 @@
       "id": 7690,
       "name": "Головной убор (спортивки)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 36,
+      "sha256": "36e2db2063926071867c7fa7e11780b564f0976e385c7748d27848386f22af98",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7690/cover/36e2db2063926071867c7fa7e11780b564f0976e385c7748d27848386f22af98.jpg"
     },
     {
       "kind": "item",
@@ -2647,8 +2905,11 @@
       "id": 7691,
       "name": "Верхняя одежда (спортивки)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 36,
+      "sha256": "49ace3560b0ce7b03d6db07bd0085d9f5f488f0aa5b3dc45f3ff4973909c5cf2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7691/cover/49ace3560b0ce7b03d6db07bd0085d9f5f488f0aa5b3dc45f3ff4973909c5cf2.jpg"
     },
     {
       "kind": "item",
@@ -2663,8 +2924,11 @@
       "id": 7692,
       "name": "Украшение (спортивки)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 36,
+      "sha256": "5a20e1a078df1e8f7c83076f464f909fde8aad04522bc6e210cad2ea2379db54",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7692/cover/5a20e1a078df1e8f7c83076f464f909fde8aad04522bc6e210cad2ea2379db54.jpg"
     },
     {
       "kind": "item",
@@ -2679,8 +2943,11 @@
       "id": 7693,
       "name": "Зеркальные очки (спортивки)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 36,
+      "sha256": "09c1cca855378271282445263e8965a4426269418be3ab2f9e36a06ed1581fce",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7693/cover/09c1cca855378271282445263e8965a4426269418be3ab2f9e36a06ed1581fce.jpg"
     },
     {
       "kind": "item",
@@ -2695,8 +2962,11 @@
       "id": 7694,
       "name": "Верх (спортивки)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 36,
+      "sha256": "fa5dd1609d98a5ccdde03002683ecf6c93f261261e357523f9069430b06041c4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7694/cover/fa5dd1609d98a5ccdde03002683ecf6c93f261261e357523f9069430b06041c4.jpg"
     },
     {
       "kind": "item",
@@ -2711,8 +2981,11 @@
       "id": 7695,
       "name": "Низ (одеяния кочевников)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 37,
+      "sha256": "f144fad80d35061d49a44b86966019478f876786469639bbea7cd7696c76bdca",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7695/cover/f144fad80d35061d49a44b86966019478f876786469639bbea7cd7696c76bdca.jpg"
     },
     {
       "kind": "item",
@@ -2727,8 +3000,11 @@
       "id": 7696,
       "name": "Контактные линзы (одеяния кочевников)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 37,
+      "sha256": "b4a2e8f92cddf9ec467a97aae37ea587f1301fe65a29f3c6c9ad7c8703c550ee",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7696/cover/b4a2e8f92cddf9ec467a97aae37ea587f1301fe65a29f3c6c9ad7c8703c550ee.jpg"
     },
     {
       "kind": "item",
@@ -2743,8 +3019,11 @@
       "id": 7697,
       "name": "Обувь (одеяния кочевников)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 37,
+      "sha256": "5ee33250771c3f02b76d7c1fab36868622ad63baa9cb39ff4093f98934eb3ca4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7697/cover/5ee33250771c3f02b76d7c1fab36868622ad63baa9cb39ff4093f98934eb3ca4.jpg"
     },
     {
       "kind": "item",
@@ -2759,8 +3038,11 @@
       "id": 7698,
       "name": "Очки (одеяния кочевников)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 37,
+      "sha256": "0349391b2f54f598f0900efc09624ce5ebaf1de9d001d20f4065ad609c78eaa9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7698/cover/0349391b2f54f598f0900efc09624ce5ebaf1de9d001d20f4065ad609c78eaa9.jpg"
     },
     {
       "kind": "item",
@@ -2775,8 +3057,11 @@
       "id": 7699,
       "name": "Головной убор (одеяния кочевников)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 37,
+      "sha256": "38401d0ebe158e5cf07e756a60f359ba74ee56b3a53d6b004d3cca89f96062d5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7699/cover/38401d0ebe158e5cf07e756a60f359ba74ee56b3a53d6b004d3cca89f96062d5.jpg"
     },
     {
       "kind": "item",
@@ -2791,8 +3076,11 @@
       "id": 7700,
       "name": "Верхняя одежда (одеяния кочевников)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 37,
+      "sha256": "4e8830a591d597763618a1b2111d847e6022d23ef1622a5b0d1b3f03de6c5846",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7700/cover/4e8830a591d597763618a1b2111d847e6022d23ef1622a5b0d1b3f03de6c5846.jpg"
     },
     {
       "kind": "item",
@@ -2807,8 +3095,11 @@
       "id": 7701,
       "name": "Украшение (одеяния кочевников)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 37,
+      "sha256": "00bbb7c0a3e7aba7adbc095e2819b909a00363f75650902a1d85bdbe3c97baf7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7701/cover/00bbb7c0a3e7aba7adbc095e2819b909a00363f75650902a1d85bdbe3c97baf7.jpg"
     },
     {
       "kind": "item",
@@ -2823,8 +3114,11 @@
       "id": 7702,
       "name": "Зеркальные очки (одеяния кочевников)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 37,
+      "sha256": "7211b16c711d69a2e63e2cbe01717cb9765e3eda00aa08a0d8ac621f274a2658",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7702/cover/7211b16c711d69a2e63e2cbe01717cb9765e3eda00aa08a0d8ac621f274a2658.jpg"
     },
     {
       "kind": "item",
@@ -2839,8 +3133,11 @@
       "id": 7703,
       "name": "Верх (одеяния кочевников)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 37,
+      "sha256": "b6d750a456f1888cd0a1a77e9d1fb07fab5497bcc9003357d043953150d6efa6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7703/cover/b6d750a456f1888cd0a1a77e9d1fb07fab5497bcc9003357d043953150d6efa6.jpg"
     },
     {
       "kind": "item",
@@ -2855,8 +3152,11 @@
       "id": 7704,
       "name": "Низ (городской эпатаж)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 38,
+      "sha256": "5eb38eb28aede15a61cdb75cd249d9cdf1da3ad396967991698399d310eab653",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7704/cover/5eb38eb28aede15a61cdb75cd249d9cdf1da3ad396967991698399d310eab653.jpg"
     },
     {
       "kind": "item",
@@ -2871,8 +3171,11 @@
       "id": 7705,
       "name": "Контактные линзы (городской эпатаж)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 38,
+      "sha256": "088f014ea3e1e9a920c8523feac8383be991f6a3f85b4f3dd12dedaa6bbc4132",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7705/cover/088f014ea3e1e9a920c8523feac8383be991f6a3f85b4f3dd12dedaa6bbc4132.jpg"
     },
     {
       "kind": "item",
@@ -2887,8 +3190,11 @@
       "id": 7706,
       "name": "Обувь (городской эпатаж)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 38,
+      "sha256": "3019790f48ced2e6afb9f1949e19b0f9e09999dd260311bf3fd4238113c4259e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7706/cover/3019790f48ced2e6afb9f1949e19b0f9e09999dd260311bf3fd4238113c4259e.jpg"
     },
     {
       "kind": "item",
@@ -2903,8 +3209,11 @@
       "id": 7707,
       "name": "Очки (городской эпатаж)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 38,
+      "sha256": "a9bc92028ea3388a1e0c36a48b4f152860ac09bf2e935d004306b193c7118cdd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7707/cover/a9bc92028ea3388a1e0c36a48b4f152860ac09bf2e935d004306b193c7118cdd.jpg"
     },
     {
       "kind": "item",
@@ -2919,8 +3228,11 @@
       "id": 7708,
       "name": "Головной убор (городской эпатаж)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 38,
+      "sha256": "5c7b86222eafde97a555d8193a0c3cfe3dfa51010407c5207b8048d7ce645280",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7708/cover/5c7b86222eafde97a555d8193a0c3cfe3dfa51010407c5207b8048d7ce645280.jpg"
     },
     {
       "kind": "item",
@@ -2935,8 +3247,11 @@
       "id": 7709,
       "name": "Верхняя одежда (городской эпатаж)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 38,
+      "sha256": "431428abe6943626a73b5c5e20f27a53b36da3d01d1cc9c29a4100c12e236228",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7709/cover/431428abe6943626a73b5c5e20f27a53b36da3d01d1cc9c29a4100c12e236228.jpg"
     },
     {
       "kind": "item",
@@ -2951,8 +3266,11 @@
       "id": 7710,
       "name": "Украшение (городской эпатаж)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 38,
+      "sha256": "600685f97e7c43c6f701beeb836407591617a916f8855552bee0f3fbc063dade",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7710/cover/600685f97e7c43c6f701beeb836407591617a916f8855552bee0f3fbc063dade.jpg"
     },
     {
       "kind": "item",
@@ -2967,8 +3285,11 @@
       "id": 7711,
       "name": "Зеркальные очки (городской эпатаж)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 38,
+      "sha256": "27855232522f14f48a074c3b24acddfb109a26bdb73da0b0c1cadff9471dfe18",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7711/cover/27855232522f14f48a074c3b24acddfb109a26bdb73da0b0c1cadff9471dfe18.jpg"
     },
     {
       "kind": "item",
@@ -2983,8 +3304,11 @@
       "id": 7712,
       "name": "Верх (городской эпатаж)",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 38,
+      "sha256": "b28129d8d410e115b518bc76d6777d10d4d37726a2ad1bdcb8ec5c2a09131387",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7712/cover/b28129d8d410e115b518bc76d6777d10d4d37726a2ad1bdcb8ec5c2a09131387.jpg"
     },
     {
       "kind": "item",
@@ -5127,8 +5451,11 @@
       "id": 7846,
       "name": "Чёрное кружево",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 24,
+      "sha256": "2baaac7c68fcd918d3cc0e4769435ec2ae48df7ce62844790bb26b0e27dbca27",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7846/cover/2baaac7c68fcd918d3cc0e4769435ec2ae48df7ce62844790bb26b0e27dbca27.jpg"
     },
     {
       "kind": "item",
@@ -5143,8 +5470,11 @@
       "id": 7847,
       "name": "Синее стекло",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 24,
+      "sha256": "1a939af8af982b45f4a2c2ebba80138e334f2eeec5cfa7009871ecfb46368be1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7847/cover/1a939af8af982b45f4a2c2ebba80138e334f2eeec5cfa7009871ecfb46368be1.jpg"
     },
     {
       "kind": "item",
@@ -5159,8 +5489,11 @@
       "id": 7848,
       "name": "Буст",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 24,
+      "sha256": "03dbccd355302d7ed63eb3aaffa1a75812703dfbd7cd1cb4d3388136adda1ec6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7848/cover/03dbccd355302d7ed63eb3aaffa1a75812703dfbd7cd1cb4d3388136adda1ec6.jpg"
     },
     {
       "kind": "item",
@@ -5175,8 +5508,11 @@
       "id": 7849,
       "name": "Смэш",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 24,
+      "sha256": "cae74f0930a5c86724ffc7a8417ecae4fcf299841a323861bc8daaabd1ee69e4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7849/cover/cae74f0930a5c86724ffc7a8417ecae4fcf299841a323861bc8daaabd1ee69e4.jpg"
     },
     {
       "kind": "item",
@@ -5191,8 +5527,11 @@
       "id": 7850,
       "name": "Синткокс",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 24,
+      "sha256": "dfbf769e5e982b46d70f33c5d31857389531b4c4fc38055368d0eec46659d409",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7850/cover/dfbf769e5e982b46d70f33c5d31857389531b4c4fc38055368d0eec46659d409.jpg"
     },
     {
       "kind": "item",
@@ -6103,8 +6442,9 @@
       "id": 7907,
       "name": "Доспехи",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 39
     },
     {
       "kind": "item",
@@ -6119,8 +6459,9 @@
       "id": 7908,
       "name": "Банхаммер",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 39
     },
     {
       "kind": "item",
@@ -6135,8 +6476,9 @@
       "id": 7909,
       "name": "ДекаЛОМ",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 39
     },
     {
       "kind": "item",
@@ -6151,8 +6493,9 @@
       "id": 7910,
       "name": "Стиратель",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 39
     },
     {
       "kind": "item",
@@ -6167,8 +6510,9 @@
       "id": 7911,
       "name": "Фейерверк",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 39
     },
     {
       "kind": "item",
@@ -6183,8 +6527,9 @@
       "id": 7912,
       "name": "Адский снаряд",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 40
     },
     {
       "kind": "item",
@@ -6199,8 +6544,9 @@
       "id": 7913,
       "name": "Нервотрёп",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 40
     },
     {
       "kind": "item",
@@ -6215,8 +6561,9 @@
       "id": 7914,
       "name": "Ядовитое обнуление",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 40
     },
     {
       "kind": "item",
@@ -6231,8 +6578,9 @@
       "id": 7915,
       "name": "Я тебя вижу",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 40
     },
     {
       "kind": "item",
@@ -6247,8 +6595,9 @@
       "id": 7916,
       "name": "Щит",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 40
     },
     {
       "kind": "item",
@@ -6263,8 +6612,9 @@
       "id": 7917,
       "name": "Быстрый Гонзалвес",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 41
     },
     {
       "kind": "item",
@@ -6279,8 +6629,9 @@
       "id": 7918,
       "name": "Суперклей",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 41
     },
     {
       "kind": "item",
@@ -6295,8 +6646,9 @@
       "id": 7919,
       "name": "Меч",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 41
     },
     {
       "kind": "item",
@@ -6311,8 +6663,9 @@
       "id": 7920,
       "name": "Разряд",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 41
     },
     {
       "kind": "item",
@@ -6327,8 +6680,9 @@
       "id": 7921,
       "name": "Червь",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 41
     },
     {
       "kind": "item",
@@ -6343,8 +6697,11 @@
       "id": 7922,
       "name": "Менеджер",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 19,
+      "sha256": "704904d4feefdc012240d86909cc91db4bc88a51b7e54ae6ebb8bb91619ee7f5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7922/cover/704904d4feefdc012240d86909cc91db4bc88a51b7e54ae6ebb8bb91619ee7f5.webp"
     },
     {
       "kind": "item",
@@ -6359,8 +6716,11 @@
       "id": 7923,
       "name": "Фиксер",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 19,
+      "sha256": "cf7e5ed3dfcfbbf8c2361cc4d489a4b712d06ebb968c9cca96e72b40445dfea1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7923/cover/cf7e5ed3dfcfbbf8c2361cc4d489a4b712d06ebb968c9cca96e72b40445dfea1.webp"
     },
     {
       "kind": "item",
@@ -6375,8 +6735,11 @@
       "id": 7924,
       "name": "Законник",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 19,
+      "sha256": "af4f5e9f9d90ce13e96f1621948f498a5d4a2ce5b41f9b014d8543e60e08d482",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7924/cover/af4f5e9f9d90ce13e96f1621948f498a5d4a2ce5b41f9b014d8543e60e08d482.webp"
     },
     {
       "kind": "item",
@@ -6391,8 +6754,11 @@
       "id": 7925,
       "name": "Журналист",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 19,
+      "sha256": "46bb00e5c8e28c3806d7dd8ac18638229d25931fb27b869c21d0991be48d4cbd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7925/cover/46bb00e5c8e28c3806d7dd8ac18638229d25931fb27b869c21d0991be48d4cbd.webp"
     },
     {
       "kind": "item",
@@ -6407,8 +6773,11 @@
       "id": 7926,
       "name": "Медтехник",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 19,
+      "sha256": "a95d45ea978066cf4a3405aeadd57b0a8ab631115b837f912292d00a7a9990e4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7926/cover/a95d45ea978066cf4a3405aeadd57b0a8ab631115b837f912292d00a7a9990e4.webp"
     },
     {
       "kind": "item",
@@ -6423,8 +6792,11 @@
       "id": 7927,
       "name": "Нетраннер",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 20,
+      "sha256": "9cfab554b18bbb1ff3cc380a4f729f3352e98f679f11b1fb9e09a72e36109ae0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7927/cover/9cfab554b18bbb1ff3cc380a4f729f3352e98f679f11b1fb9e09a72e36109ae0.webp"
     },
     {
       "kind": "item",
@@ -6439,8 +6811,11 @@
       "id": 7928,
       "name": "Кочевник",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 20,
+      "sha256": "d2340d3ac849fa3072f70aa744b32cfd07a8dbf2e288032f05f0a4ddd433a4b6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7928/cover/d2340d3ac849fa3072f70aa744b32cfd07a8dbf2e288032f05f0a4ddd433a4b6.webp"
     },
     {
       "kind": "item",
@@ -6455,8 +6830,11 @@
       "id": 7929,
       "name": "Рокербой",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 20,
+      "sha256": "34a2047e75f7615b31eb823bf54d8bd82a49fb48cd0faedfab2b5afcd2ad5154",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7929/cover/34a2047e75f7615b31eb823bf54d8bd82a49fb48cd0faedfab2b5afcd2ad5154.webp"
     },
     {
       "kind": "item",
@@ -6471,8 +6849,11 @@
       "id": 7930,
       "name": "Соло",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 20,
+      "sha256": "4ce248e29fcee6bd427614d1eeef4102431dfe0ab505e098997eb68b87b53fce",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7930/cover/4ce248e29fcee6bd427614d1eeef4102431dfe0ab505e098997eb68b87b53fce.webp"
     },
     {
       "kind": "item",
@@ -6487,8 +6868,11 @@
       "id": 7931,
       "name": "Техник",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 20,
+      "sha256": "11444b16293bbfb4c3b6e2eb3510c5664d6e135555f3f22a713d8d9dc5430089",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7931/cover/11444b16293bbfb4c3b6e2eb3510c5664d6e135555f3f22a713d8d9dc5430089.webp"
     },
     {
       "kind": "item",
@@ -7319,8 +7703,11 @@
       "id": 7983,
       "name": "Аэрозеп",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 17,
+      "sha256": "f8fce7583b3c9054fa19236d8b8325b18b3d0e2ea03570b9eca7f6780be1d3e7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7983/cover/f8fce7583b3c9054fa19236d8b8325b18b3d0e2ea03570b9eca7f6780be1d3e7.jpg"
     },
     {
       "kind": "item",
@@ -7335,8 +7722,11 @@
       "id": 7984,
       "name": "Многоцелевой аэродин AV-4",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 17,
+      "sha256": "ad0d87fe093047f22c03dcd730bdedfa4ce1b4639e3daee974724fa183d99588",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7984/cover/ad0d87fe093047f22c03dcd730bdedfa4ce1b4639e3daee974724fa183d99588.jpg"
     },
     {
       "kind": "item",
@@ -7351,8 +7741,11 @@
       "id": 7985,
       "name": "Супер аэродин AV-9",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 17,
+      "sha256": "923798ac59dde9c076de7fb3c2e20e193c8f817e750e970e04b7aa84fb0308fc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7985/cover/923798ac59dde9c076de7fb3c2e20e193c8f817e750e970e04b7aa84fb0308fc.jpg"
     },
     {
       "kind": "item",
@@ -7367,8 +7760,11 @@
       "id": 7986,
       "name": "Прогулочный катер",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 18,
+      "sha256": "df78cf2a24e77d693af75346e236153015b9e36dcfe1064427a242c822cf4531",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7986/cover/df78cf2a24e77d693af75346e236153015b9e36dcfe1064427a242c822cf4531.jpg"
     },
     {
       "kind": "item",
@@ -7383,8 +7779,11 @@
       "id": 7987,
       "name": "Компактный автомобиль",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 16,
+      "sha256": "aaa43961dc65dbe2db578c73bec6e9f26c2e540ef8c6055efd89b3a4ad636e09",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7987/cover/aaa43961dc65dbe2db578c73bec6e9f26c2e540ef8c6055efd89b3a4ad636e09.jpg"
     },
     {
       "kind": "item",
@@ -7399,8 +7798,11 @@
       "id": 7988,
       "name": "Автожир",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 17,
+      "sha256": "db809ac292607b12aa3a2975254ab9199ce6413727b8464ca285a26b566eed67",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7988/cover/db809ac292607b12aa3a2975254ab9199ce6413727b8464ca285a26b566eed67.jpg"
     },
     {
       "kind": "item",
@@ -7415,8 +7817,11 @@
       "id": 7989,
       "name": "Вертолёт",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 17,
+      "sha256": "253eb071a572964945d022c81fb8fcb02c631ae00e7c82c5422f19d8a9c5d33a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7989/cover/253eb071a572964945d022c81fb8fcb02c631ae00e7c82c5422f19d8a9c5d33a.jpg"
     },
     {
       "kind": "item",
@@ -7431,8 +7836,11 @@
       "id": 7990,
       "name": "Спортивный автомобиль",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 16,
+      "sha256": "ebf7bb38f9b15c37da5804d146845d6e841844cb35dfd97ff4df6174556c25dd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7990/cover/ebf7bb38f9b15c37da5804d146845d6e841844cb35dfd97ff4df6174556c25dd.jpg"
     },
     {
       "kind": "item",
@@ -7447,8 +7855,11 @@
       "id": 7991,
       "name": "Гидроцикл",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 18,
+      "sha256": "ee65f7009801f118c4d906a3896d1f46d3c4276fde90d4437feb20b2f61a2cd4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7991/cover/ee65f7009801f118c4d906a3896d1f46d3c4276fde90d4437feb20b2f61a2cd4.jpg"
     },
     {
       "kind": "item",
@@ -7463,8 +7874,11 @@
       "id": 7992,
       "name": "Дорожный мотоцикл",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 16,
+      "sha256": "c5c4ea8f3179a2377e6b31636ae268f80523b2e5540e6b7abac753966a753b9d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7992/cover/c5c4ea8f3179a2377e6b31636ae268f80523b2e5540e6b7abac753966a753b9d.jpg"
     },
     {
       "kind": "item",
@@ -7479,8 +7893,11 @@
       "id": 7993,
       "name": "Быстроходный катер",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 18,
+      "sha256": "a7632cf06a415db1d1b39ad309466aa472b9de076fa192703333856cad8326e8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7993/cover/a7632cf06a415db1d1b39ad309466aa472b9de076fa192703333856cad8326e8.jpg"
     },
     {
       "kind": "item",
@@ -7495,8 +7912,11 @@
       "id": 7994,
       "name": "Суперкар",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 16,
+      "sha256": "2c1d5f860130823aeb41718dea43a4f7c6981373aa832c51a6fa15028d63ee3b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7994/cover/2c1d5f860130823aeb41718dea43a4f7c6981373aa832c51a6fa15028d63ee3b.jpg"
     },
     {
       "kind": "item",
@@ -7511,8 +7931,11 @@
       "id": 7995,
       "name": "Супербайк",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 16,
+      "sha256": "57fedeee2b21d7bc458acbff5ef9505342bbde679ebe0a523c87157a10e09ca7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7995/cover/57fedeee2b21d7bc458acbff5ef9505342bbde679ebe0a523c87157a10e09ca7.jpg"
     },
     {
       "kind": "item",
@@ -7527,8 +7950,11 @@
       "id": 7996,
       "name": "Яхта",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 18,
+      "sha256": "7a8eb119a405bc777334a1b2e3ad1924a63c0169d963af4e61df7ccb0fc8b5bf",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7996/cover/7a8eb119a405bc777334a1b2e3ad1924a63c0169d963af4e61df7ccb0fc8b5bf.jpg"
     },
     {
       "kind": "item",
@@ -9143,8 +9569,11 @@
       "id": 8097,
       "name": "Антибиотик",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 25,
+      "sha256": "dbe666bee23811078c5388765b264bf7ba85ee1e8f69ab1e9b9737ef947d803f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8097/cover/dbe666bee23811078c5388765b264bf7ba85ee1e8f69ab1e9b9737ef947d803f.jpg"
     },
     {
       "kind": "item",
@@ -9159,8 +9588,11 @@
       "id": 8098,
       "name": "Быстрый детокс",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 25,
+      "sha256": "60fbb85a0bef79441e588b21e119f40926db0a3f5461cc4e2f0b1f4af1268d85",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8098/cover/60fbb85a0bef79441e588b21e119f40926db0a3f5461cc4e2f0b1f4af1268d85.jpg"
     },
     {
       "kind": "item",
@@ -9175,8 +9607,11 @@
       "id": 8099,
       "name": "Спидхил",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 25,
+      "sha256": "9aa943f0ecb77c6198ae9b14119df9c40384d59f64af7d85f41d7c0f64e4cce1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8099/cover/9aa943f0ecb77c6198ae9b14119df9c40384d59f64af7d85f41d7c0f64e4cce1.jpg"
     },
     {
       "kind": "item",
@@ -9191,8 +9626,11 @@
       "id": 8100,
       "name": "Стимулятор",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 25,
+      "sha256": "212309521d04bc8a5fb4a52c002271e68ca67f44435c534fb57b17223adb6bef",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8100/cover/212309521d04bc8a5fb4a52c002271e68ca67f44435c534fb57b17223adb6bef.jpg"
     },
     {
       "kind": "item",
@@ -9207,8 +9645,11 @@
       "id": 8101,
       "name": "Всплеск",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 25,
+      "sha256": "1204fb8e546d35d73e7d70c7dcb940bb6578332ca37400432b5fad00339c4972",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8101/cover/1204fb8e546d35d73e7d70c7dcb940bb6578332ca37400432b5fad00339c4972.jpg"
     },
     {
       "kind": "item",
@@ -9223,8 +9664,11 @@
       "id": 8102,
       "name": "Улица",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 26,
+      "sha256": "edeb37e4b1001b24434776f41dc552df9d9b63e30ebbe30c1349e7d22dd047ad",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8102/cover/edeb37e4b1001b24434776f41dc552df9d9b63e30ebbe30c1349e7d22dd047ad.jpg"
     },
     {
       "kind": "item",
@@ -9239,8 +9683,11 @@
       "id": 8103,
       "name": "Машина на улице",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 26,
+      "sha256": "4eebbd8087085318c719947b6f2c9c814961c7f175036eaf5ee57b1cd549d634",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8103/cover/4eebbd8087085318c719947b6f2c9c814961c7f175036eaf5ee57b1cd549d634.jpg"
     },
     {
       "kind": "item",
@@ -9255,8 +9702,11 @@
       "id": 8104,
       "name": "Кубический отель",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 26,
+      "sha256": "1bbf72e07a9bc684850e9ed23398f30928bc3f8d2a2caf00f8643d06dcf4a2ab",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8104/cover/1bbf72e07a9bc684850e9ed23398f30928bc3f8d2a2caf00f8643d06dcf4a2ab.jpg"
     },
     {
       "kind": "item",
@@ -9271,8 +9721,11 @@
       "id": 8105,
       "name": "Грузовой контейнер",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 26,
+      "sha256": "712f545a0a76742b958fdbad0042bb9d72918ad2e95c834bd45e86a47ae816d9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8105/cover/712f545a0a76742b958fdbad0042bb9d72918ad2e95c834bd45e86a47ae816d9.jpg"
     },
     {
       "kind": "item",
@@ -9287,8 +9740,11 @@
       "id": 8106,
       "name": "Студия",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 26,
+      "sha256": "97893ea4e4ce7f02bb422193ee113585a857a57ac56939572d8b2727e2d43776",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8106/cover/97893ea4e4ce7f02bb422193ee113585a857a57ac56939572d8b2727e2d43776.jpg"
     },
     {
       "kind": "item",
@@ -9303,8 +9759,11 @@
       "id": 8107,
       "name": "Двухкомнатные апартаменты",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 26,
+      "sha256": "6ac5e11c91390c98c10e87add5863ec07430c21d31f38b5e5c9186699575caab",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8107/cover/6ac5e11c91390c98c10e87add5863ec07430c21d31f38b5e5c9186699575caab.jpg"
     },
     {
       "kind": "item",
@@ -9319,8 +9778,11 @@
       "id": 8108,
       "name": "Корпоративный конапт",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 27,
+      "sha256": "aec2745d25cf50936c981b1ff1baf836b98b3ddace0d662af09f6cc451c61050",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8108/cover/aec2745d25cf50936c981b1ff1baf836b98b3ddace0d662af09f6cc451c61050.jpg"
     },
     {
       "kind": "item",
@@ -9335,8 +9797,11 @@
       "id": 8109,
       "name": "Высококлассный конапт",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 27,
+      "sha256": "0fd5149382bea757cdbeb1b26e841d4e8bacbd94589f9f77c851c5c4f4e0d42d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8109/cover/0fd5149382bea757cdbeb1b26e841d4e8bacbd94589f9f77c851c5c4f4e0d42d.jpg"
     },
     {
       "kind": "item",
@@ -9351,8 +9816,11 @@
       "id": 8110,
       "name": "Роскошный пентхаус",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 27,
+      "sha256": "8c48d935cda1b005f11ae33fbfc6a9c1aca1c7faf0ed35c41b768983eb19806a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8110/cover/8c48d935cda1b005f11ae33fbfc6a9c1aca1c7faf0ed35c41b768983eb19806a.jpg"
     },
     {
       "kind": "item",
@@ -9367,8 +9835,11 @@
       "id": 8111,
       "name": "Корпоративный дом",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 27,
+      "sha256": "70b6475180ddd336ed63c032eca8fd48a6d153c2d57570b0b3f2a76c206993d7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8111/cover/70b6475180ddd336ed63c032eca8fd48a6d153c2d57570b0b3f2a76c206993d7.jpg"
     },
     {
       "kind": "item",
@@ -9383,8 +9854,11 @@
       "id": 8112,
       "name": "Корпоративный особняк",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 27,
+      "sha256": "6fd0d8ea62aa089e707edefb1e24a011b83a181aaba52d9e99dfc22ed9bbc3c8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8112/cover/6fd0d8ea62aa089e707edefb1e24a011b83a181aaba52d9e99dfc22ed9bbc3c8.jpg"
     },
     {
       "kind": "item",
@@ -9399,8 +9873,11 @@
       "id": 8113,
       "name": "Киббл",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 28,
+      "sha256": "d475e6fe5d4ceff4ec1237de7a3a864d90583d89740115ef9d0edb5fa43a9515",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8113/cover/d475e6fe5d4ceff4ec1237de7a3a864d90583d89740115ef9d0edb5fa43a9515.jpg"
     },
     {
       "kind": "item",
@@ -9415,8 +9892,11 @@
       "id": 8114,
       "name": "Дешёвый полуфабрикат",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 28,
+      "sha256": "424def443572035d2565a3b300b26708ce96fa36eb7d449fdd4ac8fd4304026f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8114/cover/424def443572035d2565a3b300b26708ce96fa36eb7d449fdd4ac8fd4304026f.jpg"
     },
     {
       "kind": "item",
@@ -9431,8 +9911,11 @@
       "id": 8115,
       "name": "Хороший полуфабрикат",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 28,
+      "sha256": "78905764f4c6e43a861eaba5560de623063829449b1cc461dd28f2012a426be4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8115/cover/78905764f4c6e43a861eaba5560de623063829449b1cc461dd28f2012a426be4.jpg"
     },
     {
       "kind": "item",
@@ -9447,8 +9930,11 @@
       "id": 8116,
       "name": "Свежая еда",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 28,
+      "sha256": "830d64e2acdafb49c2152fdb67207af996282a81a97654dde09850b3da689416",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8116/cover/830d64e2acdafb49c2152fdb67207af996282a81a97654dde09850b3da689416.jpg"
     },
     {
       "kind": "item",
@@ -9463,8 +9949,9 @@
       "id": 8117,
       "name": "Аспид",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 42
     },
     {
       "kind": "item",
@@ -9479,8 +9966,9 @@
       "id": 8118,
       "name": "Великан",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 42
     },
     {
       "kind": "item",
@@ -9495,8 +9983,9 @@
       "id": 8119,
       "name": "Адская гончая",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 42
     },
     {
       "kind": "item",
@@ -9511,8 +10000,9 @@
       "id": 8120,
       "name": "Кракен",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 42
     },
     {
       "kind": "item",
@@ -9527,8 +10017,9 @@
       "id": 8121,
       "name": "Лич",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 42
     },
     {
       "kind": "item",
@@ -9543,8 +10034,9 @@
       "id": 8122,
       "name": "Ворон",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 43
     },
     {
       "kind": "item",
@@ -9559,8 +10051,9 @@
       "id": 8123,
       "name": "Скорпион",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 43
     },
     {
       "kind": "item",
@@ -9575,8 +10068,9 @@
       "id": 8124,
       "name": "Скунс",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 43
     },
     {
       "kind": "item",
@@ -9591,8 +10085,9 @@
       "id": 8125,
       "name": "Висп",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 43
     },
     {
       "kind": "item",
@@ -9607,8 +10102,9 @@
       "id": 8126,
       "name": "Дракон",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 43
     },
     {
       "kind": "item",
@@ -9623,8 +10119,9 @@
       "id": 8127,
       "name": "Убийца",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 44
     },
     {
       "kind": "item",
@@ -9639,8 +10136,9 @@
       "id": 8128,
       "name": "Саблезубый",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 44
     },
     {
       "kind": "item",
@@ -9655,8 +10153,9 @@
       "id": 8129,
       "name": "Бес",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 44
     },
     {
       "kind": "item",
@@ -9671,8 +10170,9 @@
       "id": 8130,
       "name": "Ифрит",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 44
     },
     {
       "kind": "item",
@@ -9687,8 +10187,9 @@
       "id": 8131,
       "name": "Балрон",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "queued",
+      "sourceId": 3,
+      "batch": 44
     },
     {
       "kind": "suggest_type",
@@ -16209,7 +16710,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 74,
+    "publishedSlots": 231,
     "readySlots": 0,
     "totalSlots": 1848
   }

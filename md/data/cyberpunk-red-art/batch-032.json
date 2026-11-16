@@ -1,0 +1,373 @@
+{
+  "batch": 32,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-32",
+  "sourceAudit": "All 90 live clothing own media slots empty. Ten fashion directions and nine garment/accessory kinds checked against user-supplied Core p.356. New original designs per record; icons unchanged.",
+  "assets": [
+    {
+      "key": "clothing-7650-cover",
+      "target": {
+        "kind": "item",
+        "id": 7650,
+        "typeId": 23,
+        "name": "Низ (деловой стиль)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A complete pair of adult-sized trousers, both legs fully visible, displayed on a neutral waist-down mannequin with simple feet supports. No top or jacket included. Adapt cut and materials to the fashion direction. Fashion direction: Authoritative tailored business fashion: charcoal, ivory and muted burgundy, precise clean lines, premium dense fabric, minimal polished metal detail. Backdrop: restrained corporate outfitter with cool architectural light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7650-cover-v1.png",
+      "final": "final/clothing-7650-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3831fc17-df6c-4fab-88f2-bd1c587b2459.png",
+      "originalSha256": "bcfd00c7c2ebbe0e78ab5c9654aa81d291ae0902a2533f4666c79218c736089b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b91a8e6598f3496d75a39c52054583f36ae11796bcf9a155e91052fb1c09d862",
+      "bytes": 162708,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49789,
+        "objectKey": "system-item-media/v1/items/7650/cover/b91a8e6598f3496d75a39c52054583f36ae11796bcf9a155e91052fb1c09d862.jpg",
+        "fileSize": 162708
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7650/cover/b91a8e6598f3496d75a39c52054583f36ae11796bcf9a155e91052fb1c09d862.jpg"
+    },
+    {
+      "key": "clothing-7651-cover",
+      "target": {
+        "kind": "item",
+        "id": 7651,
+        "typeId": 23,
+        "name": "Контактные линзы (деловой стиль)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A macro still life of TWO thin soft tinted contact lenses in the two shallow wells of an open small clean lens case, one lens slightly lifted on the lip so its thin flexible transparent edge is obvious. Natural eye-size proportions, not cybernetic eyeballs or goggles. Fashion direction affects iris tint and case finish. No face or eye surgery. Fashion direction: Authoritative tailored business fashion: charcoal, ivory and muted burgundy, precise clean lines, premium dense fabric, minimal polished metal detail. Backdrop: restrained corporate outfitter with cool architectural light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7651-cover-v1.png",
+      "final": "final/clothing-7651-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5e5d1288-c8f2-4cda-96b5-f9071c6862ba.png",
+      "originalSha256": "56c6b2871de8c4ef2c217d703fb22ceb7057fe63aeac40fa799d6a58d48dd40c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "79372cee7d8343ebbfa6e4c412894362f09fc8bfd31396adb63e5f5791227682",
+      "bytes": 215346,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49790,
+        "objectKey": "system-item-media/v1/items/7651/cover/79372cee7d8343ebbfa6e4c412894362f09fc8bfd31396adb63e5f5791227682.jpg",
+        "fileSize": 215346
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7651/cover/79372cee7d8343ebbfa6e4c412894362f09fc8bfd31396adb63e5f5791227682.jpg"
+    },
+    {
+      "key": "clothing-7652-cover",
+      "target": {
+        "kind": "item",
+        "id": 7652,
+        "typeId": 23,
+        "name": "Обувь (деловой стиль)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A matching PAIR of complete adult footwear displayed on a low shop plinth at a three-quarter angle, both soles and uppers plausible. Adapt shoe type and materials to the fashion direction; do not show legs or a whole outfit. Fashion direction: Authoritative tailored business fashion: charcoal, ivory and muted burgundy, precise clean lines, premium dense fabric, minimal polished metal detail. Backdrop: restrained corporate outfitter with cool architectural light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7652-cover-v1.png",
+      "final": "final/clothing-7652-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f07d5fed-36ae-4402-a19f-dbe4dcd6b4d3.png",
+      "originalSha256": "4812f7e20806637236b5a68647c5270b6938313834eda94a208b8788db799dcc",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f4c9849e6abcc550dd6f9ae02406ea712a460d86f4e73dc250c44ae3829f721c",
+      "bytes": 225889,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49791,
+        "objectKey": "system-item-media/v1/items/7652/cover/f4c9849e6abcc550dd6f9ae02406ea712a460d86f4e73dc250c44ae3829f721c.jpg",
+        "fileSize": 225889
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7652/cover/f4c9849e6abcc550dd6f9ae02406ea712a460d86f4e73dc250c44ae3829f721c.jpg"
+    },
+    {
+      "key": "clothing-7653-cover",
+      "target": {
+        "kind": "item",
+        "id": 7653,
+        "typeId": 23,
+        "name": "Очки (деловой стиль)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of ordinary fashion eyeglasses with CLEAR TRANSPARENT lenses and unfolded temples, displayed on a discreet support over a shop counter. Eyeglass frame follows fashion direction; lenses are not mirrored or opaque. Fashion direction: Authoritative tailored business fashion: charcoal, ivory and muted burgundy, precise clean lines, premium dense fabric, minimal polished metal detail. Backdrop: restrained corporate outfitter with cool architectural light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7653-cover-v1.png",
+      "final": "final/clothing-7653-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5531ec2a-df56-436b-95fa-37c8e4e4665d.png",
+      "originalSha256": "062fc5e2292e7a850824cb1f21deab421fbc4b5b22356149ee6c990f34b6300b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "9a94c24c63413deb2d201e996c019c32489db3c99cfe432175bf3a3e0b1b2250",
+      "bytes": 216177,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49792,
+        "objectKey": "system-item-media/v1/items/7653/cover/9a94c24c63413deb2d201e996c019c32489db3c99cfe432175bf3a3e0b1b2250.jpg",
+        "fileSize": 216177
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7653/cover/9a94c24c63413deb2d201e996c019c32489db3c99cfe432175bf3a3e0b1b2250.jpg"
+    },
+    {
+      "key": "clothing-7654-cover",
+      "target": {
+        "kind": "item",
+        "id": 7654,
+        "typeId": 23,
+        "name": "Головной убор (деловой стиль)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized hat or cap appropriate to the fashion direction, displayed on a plain neutral head form. A real wearable head covering, not a combat helmet. All brim/crown details inside frame. Fashion direction: Authoritative tailored business fashion: charcoal, ivory and muted burgundy, precise clean lines, premium dense fabric, minimal polished metal detail. Backdrop: restrained corporate outfitter with cool architectural light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7654-cover-v1.png",
+      "final": "final/clothing-7654-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-51b26b3a-6211-4c20-9d00-54213d080d46.png",
+      "originalSha256": "5ac011ebb000b3533ddeccc0e186d2eec6547b3228ec80fb9e5f89735b15142c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "64b8615a4210cb394d2ed91d211226353e8df86f55676b6dd60586ab70e24684",
+      "bytes": 218648,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49793,
+        "objectKey": "system-item-media/v1/items/7654/cover/64b8615a4210cb394d2ed91d211226353e8df86f55676b6dd60586ab70e24684.jpg",
+        "fileSize": 218648
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7654/cover/64b8615a4210cb394d2ed91d211226353e8df86f55676b6dd60586ab70e24684.jpg"
+    },
+    {
+      "key": "clothing-7655-cover",
+      "target": {
+        "kind": "item",
+        "id": 7655,
+        "typeId": 23,
+        "name": "Верхняя одежда (деловой стиль)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized OUTER jacket or coat appropriate to the fashion direction, displayed on a headless torso mannequin or hanger. Both sleeves and hem fully visible. Substantial outerwear distinct from a shirt; no trousers, no armor plates. Fashion direction: Authoritative tailored business fashion: charcoal, ivory and muted burgundy, precise clean lines, premium dense fabric, minimal polished metal detail. Backdrop: restrained corporate outfitter with cool architectural light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7655-cover-v1.png",
+      "final": "final/clothing-7655-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-46c2e79a-8dd6-46da-bbaf-8a2705f8198e.png",
+      "originalSha256": "62ff9b4419d29c135bc4891de89ca1ca446ba8c568b62ef32c04ebbfd0d2ad30",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "464a50f924a96459565f41ecc335cfb33b167b4a37c1df558c7b446970a8b218",
+      "bytes": 175215,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49794,
+        "objectKey": "system-item-media/v1/items/7655/cover/464a50f924a96459565f41ecc335cfb33b167b4a37c1df558c7b446970a8b218.jpg",
+        "fileSize": 175215
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7655/cover/464a50f924a96459565f41ecc335cfb33b167b4a37c1df558c7b446970a8b218.jpg"
+    },
+    {
+      "key": "clothing-7656-cover",
+      "target": {
+        "kind": "item",
+        "id": 7656,
+        "typeId": 23,
+        "name": "Украшение (деловой стиль)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One original wearable piece of jewelry appropriate to the fashion direction: a substantial wrist cuff or pendant on a compact neutral jewelry stand. Believable full-size metal, beads or synthetic inserts; sophisticated material detail. No mystical gem glow, no symbols or letters. Fashion direction: Authoritative tailored business fashion: charcoal, ivory and muted burgundy, precise clean lines, premium dense fabric, minimal polished metal detail. Backdrop: restrained corporate outfitter with cool architectural light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7656-cover-v1.png",
+      "final": "final/clothing-7656-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d7d62dcb-3662-4e12-b0bc-ff0a3c69456d.png",
+      "originalSha256": "3eb94cfa3c22aec59e42f14578047a27757d662e452a15322740df58490674ed",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "3029ca93f2326c58394ddf2f750b02769d9fa95c33f608a9b3e43f78efefb305",
+      "bytes": 210722,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49795,
+        "objectKey": "system-item-media/v1/items/7656/cover/3029ca93f2326c58394ddf2f750b02769d9fa95c33f608a9b3e43f78efefb305.jpg",
+        "fileSize": 210722
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7656/cover/3029ca93f2326c58394ddf2f750b02769d9fa95c33f608a9b3e43f78efefb305.jpg"
+    },
+    {
+      "key": "clothing-7657-cover",
+      "target": {
+        "kind": "item",
+        "id": 7657,
+        "typeId": 23,
+        "name": "Зеркальные очки (деловой стиль)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of fashion sunglasses with genuinely MIRRORED lenses reflecting broad city-light planes, temples unfolded, on a small display support. Frame and reflected accent palette follow fashion direction; clearly different from ordinary clear-lens eyeglasses. Fashion direction: Authoritative tailored business fashion: charcoal, ivory and muted burgundy, precise clean lines, premium dense fabric, minimal polished metal detail. Backdrop: restrained corporate outfitter with cool architectural light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7657-cover-v1.png",
+      "final": "final/clothing-7657-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6c6e4718-b015-4c16-bcb5-c786a27f432c.png",
+      "originalSha256": "3ae6548941a7711fe5913073f8748584553c6ff0de9a55ef2d4131006e1f163c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "41422254ad93fffc2463f13d406f2287767b5d42c02609524d7212af4c412655",
+      "bytes": 203435,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49796,
+        "objectKey": "system-item-media/v1/items/7657/cover/41422254ad93fffc2463f13d406f2287767b5d42c02609524d7212af4c412655.jpg",
+        "fileSize": 203435
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7657/cover/41422254ad93fffc2463f13d406f2287767b5d42c02609524d7212af4c412655.jpg"
+    },
+    {
+      "key": "clothing-7658-cover",
+      "target": {
+        "kind": "item",
+        "id": 7658,
+        "typeId": 23,
+        "name": "Верх (деловой стиль)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized SHIRT or light top appropriate to the fashion direction on a headless torso mannequin. Fine textile construction, both sleeves if present and full hem visible. This is a base-layer top, not a coat or armored jacket; no trousers. Fashion direction: Authoritative tailored business fashion: charcoal, ivory and muted burgundy, precise clean lines, premium dense fabric, minimal polished metal detail. Backdrop: restrained corporate outfitter with cool architectural light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7658-cover-v1.png",
+      "final": "final/clothing-7658-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ba52f249-dd46-4643-9bd6-12e5c6ad316e.png",
+      "originalSha256": "2de36ede31be5d19369f3c80f794726ae23fdd54bff4abb7e63d33a67c5f31ab",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "301cf6558dbde3dba261acd01ff91aa2fdd92416d1b00024b9c0d26db54f4217",
+      "bytes": 208294,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49797,
+        "objectKey": "system-item-media/v1/items/7658/cover/301cf6558dbde3dba261acd01ff91aa2fdd92416d1b00024b9c0d26db54f4217.jpg",
+        "fileSize": 208294
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7658/cover/301cf6558dbde3dba261acd01ff91aa2fdd92416d1b00024b9c0d26db54f4217.jpg"
+    }
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-32/live-qa.json",
+    "checkedAt": "2026-11-16T16:48:14.932Z",
+    "note": "Each own clothing cover loaded on real item at three widths, no page errors or horizontal overflow.",
+    "passed": true,
+    "scenarios": 27,
+    "widths": [
+      390,
+      840,
+      1440
+    ]
+  }
+}

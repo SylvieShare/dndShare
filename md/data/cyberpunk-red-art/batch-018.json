@@ -1,0 +1,214 @@
+{
+  "batch": 18,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-18",
+  "sourceAudit": "Live item records 7983–7996 own media slots empty. Vehicle construction and capacities checked against user-supplied Core text pp.190–191, including cargo dirigible, VTOL aerodynes and cabin-based boats. Original covers; icons untouched.",
+  "assets": [
+    {
+      "key": "vehicle-cruiser-cover",
+      "target": {
+        "kind": "item",
+        "id": 7986,
+        "typeId": 36,
+        "name": "Прогулочный катер"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Edit the attached illustration. REMOVE EVERY LETTER, NUMBER, WORD, LOGO, BRAND SYMBOL, TITLE, CAPTION AND GRAPHIC BANNER FROM THE ENTIRE IMAGE. This must become an image-only scene with absolutely NO typography. Remove the large top header and all bottom ribbons completely, restoring natural continuous sky/building/water scenery behind them. Remove all lettering and logos from the vehicle body, wheels, license plates, signs, towers, docks, containers and distant advertising; replace them with plain matching material or abstract unmarked light panels. Leave license plates blank. Preserve the exact vehicle design, number of wheels/seats/rotors, proportions, entire vehicle silhouette, camera view, light, palette, scene and mature detailed cel-shaded rendering. Do not crop or shrink the vehicle, do not add new text anywhere, and do not add a replacement header. Opaque 3:2 finished illustration with scene extending to all four edges.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/vehicle-cruiser-cover-v2.png",
+      "final": "final/vehicle-cruiser-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-292901e7-7b8c-484c-a953-d92e82a5bfa3.png",
+      "originalSha256": "d978dfdc7b00c4618841e917de1677d61c925f9436882425375b4efed8cd0a2a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "df78cf2a24e77d693af75346e236153015b9e36dcfe1064427a242c822cf4531",
+      "bytes": 400334,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/vehicle-cruiser-cover.jpg",
+        "reason": "Embedded titles, logos and labels despite initial prompt; never published",
+        "original": "originals/vehicle-cruiser-cover-v1.png",
+        "sha256": "64f28d933163374f964c471b5768ae455a14935f251d4caca78a22b024c1a0f0",
+        "originalSha256": "ae16975e73c724330910187a3e5d3bf516fa65db68c6682aa15940c406c59346",
+        "prompt": "Use case: stylized-concept. Original Cyberpunk RED 2045 vehicle catalogue cover, opaque 3:2 landscape. Mature premium detailed cel-shaded concept illustration: realistic full-scale engineered vehicle proportions, fine variable ink linework, large crisp painted light/shadow planes, secondary reflected light, convincing rubber/glass/metal/polymer materials. Restrained localized wear, functional joints, seams and fittings; detailed hero vehicle, softer lower-contrast urban background. Whole vehicle visible with generous safe margin, coherent perspective and grounded contact/water shadows. No cartoon toy shapes, heavy icon outline, photo, glossy 3D render, uniform gritty noise, readable text, license plate letters, logos, branding, watermark or UI. No weapons attached, no violence. A modest luxury cabin cruiser with at least two private below-deck cabins suggested by two pairs of portholes, a covered wheelhouse and practical upper deck. Cream hull with muted burgundy stripe, conventional engine vessel, moored at a working city marina. Entire boat visible three-quarter bow angle, calm water reflections and warm morning light, believable hull proportions.",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0e3be422-4bd4-4831-95c5-3992941aa52d.png"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Initial versions rejected for typography/logos. Built-in image edits removed text and restored scene. Final exports inspected: whole vehicle, correct category and major construction, clean crop, no visible branding or captions; icons unchanged.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49714,
+        "objectKey": "system-item-media/v1/items/7986/cover/df78cf2a24e77d693af75346e236153015b9e36dcfe1064427a242c822cf4531.jpg",
+        "fileSize": 400334
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7986/cover/df78cf2a24e77d693af75346e236153015b9e36dcfe1064427a242c822cf4531.jpg"
+    },
+    {
+      "key": "vehicle-jetski-cover",
+      "target": {
+        "kind": "item",
+        "id": 7991,
+        "typeId": 36,
+        "name": "Гидроцикл"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Edit the attached illustration. REMOVE EVERY LETTER, NUMBER, WORD, LOGO, BRAND SYMBOL, TITLE, CAPTION AND GRAPHIC BANNER FROM THE ENTIRE IMAGE. This must become an image-only scene with absolutely NO typography. Remove the large top header and all bottom ribbons completely, restoring natural continuous sky/building/water scenery behind them. Remove all lettering and logos from the vehicle body, wheels, license plates, signs, towers, docks, containers and distant advertising; replace them with plain matching material or abstract unmarked light panels. Leave license plates blank. Preserve the exact vehicle design, number of wheels/seats/rotors, proportions, entire vehicle silhouette, camera view, light, palette, scene and mature detailed cel-shaded rendering. Do not crop or shrink the vehicle, do not add new text anywhere, and do not add a replacement header. Opaque 3:2 finished illustration with scene extending to all four edges.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/vehicle-jetski-cover-v2.png",
+      "final": "final/vehicle-jetski-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0755d550-f3e5-45d2-9dc0-cb322d9ea381.png",
+      "originalSha256": "c63438a2992726c94fb8ef3660c237990a433dd83c8b17a1e53aa23ef576ffbe",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ee65f7009801f118c4d906a3896d1f46d3c4276fde90d4437feb20b2f61a2cd4",
+      "bytes": 396788,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/vehicle-jetski-cover.jpg",
+        "reason": "Embedded titles, logos and labels despite initial prompt; never published",
+        "original": "originals/vehicle-jetski-cover-v1.png",
+        "sha256": "b6ff275a7a0be10fb7e3b43e167f142c63d036f40e8c5bc3cb448667dbe9f6f8",
+        "originalSha256": "d8e28006aec509a5b0f7f7831fa43772e06754e37a789b4b2cce4bf300b576f3",
+        "prompt": "Use case: stylized-concept. Original Cyberpunk RED 2045 vehicle catalogue cover, opaque 3:2 landscape. Mature premium detailed cel-shaded concept illustration: realistic full-scale engineered vehicle proportions, fine variable ink linework, large crisp painted light/shadow planes, secondary reflected light, convincing rubber/glass/metal/polymer materials. Restrained localized wear, functional joints, seams and fittings; detailed hero vehicle, softer lower-contrast urban background. Whole vehicle visible with generous safe margin, coherent perspective and grounded contact/water shadows. No cartoon toy shapes, heavy icon outline, photo, glossy 3D render, uniform gritty noise, readable text, license plate letters, logos, branding, watermark or UI. No weapons attached, no violence. A two-person personal watercraft with two tandem saddle positions, handlebars and compact jet-propelled hull, muted teal with cream deck and graphite seat. Floating motionless beside a worn marina dock, entire vehicle clearly framed at three-quarter angle. Detailed rubber grips, seat seams, hull and water reflections, urban harbor depth, soft daylight.",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-653dffdf-79e6-4dab-bd90-35ea0d9e8224.png"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Initial versions rejected for typography/logos. Built-in image edits removed text and restored scene. Final exports inspected: whole vehicle, correct category and major construction, clean crop, no visible branding or captions; icons unchanged.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49715,
+        "objectKey": "system-item-media/v1/items/7991/cover/ee65f7009801f118c4d906a3896d1f46d3c4276fde90d4437feb20b2f61a2cd4.jpg",
+        "fileSize": 396788
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7991/cover/ee65f7009801f118c4d906a3896d1f46d3c4276fde90d4437feb20b2f61a2cd4.jpg"
+    },
+    {
+      "key": "vehicle-speedboat-cover",
+      "target": {
+        "kind": "item",
+        "id": 7993,
+        "typeId": 36,
+        "name": "Быстроходный катер"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Edit the attached illustration. REMOVE EVERY LETTER, NUMBER, WORD, LOGO, BRAND SYMBOL, TITLE, CAPTION AND GRAPHIC BANNER FROM THE ENTIRE IMAGE. This must become an image-only scene with absolutely NO typography. Remove the large top header and all bottom ribbons completely, restoring natural continuous sky/building/water scenery behind them. Remove all lettering and logos from the vehicle body, wheels, license plates, signs, towers, docks, containers and distant advertising; replace them with plain matching material or abstract unmarked light panels. Leave license plates blank. Preserve the exact vehicle design, number of wheels/seats/rotors, proportions, entire vehicle silhouette, camera view, light, palette, scene and mature detailed cel-shaded rendering. Do not crop or shrink the vehicle, do not add new text anywhere, and do not add a replacement header. Opaque 3:2 finished illustration with scene extending to all four edges.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/vehicle-speedboat-cover-v2.png",
+      "final": "final/vehicle-speedboat-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-76437992-40b3-49e6-a0d9-84952989c1c5.png",
+      "originalSha256": "52b26308d942ae4fe364805bc0204a5d2b1bac5c2434a85150129c5aca8bdf4a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "a7632cf06a415db1d1b39ad309466aa472b9de076fa192703333856cad8326e8",
+      "bytes": 430529,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/vehicle-speedboat-cover.jpg",
+        "reason": "Embedded titles, logos and labels despite initial prompt; never published",
+        "original": "originals/vehicle-speedboat-cover-v1.png",
+        "sha256": "9006d56d972def89380a7cc5ee688ea3b3b4b4968e2bfb6dadf28ad2df000c9b",
+        "originalSha256": "0b012ae49fc91eacc5721312901efae455da3688022b5162361020b8d9f604ce",
+        "prompt": "Use case: stylized-concept. Original Cyberpunk RED 2045 vehicle catalogue cover, opaque 3:2 landscape. Mature premium detailed cel-shaded concept illustration: realistic full-scale engineered vehicle proportions, fine variable ink linework, large crisp painted light/shadow planes, secondary reflected light, convincing rubber/glass/metal/polymer materials. Restrained localized wear, functional joints, seams and fittings; detailed hero vehicle, softer lower-contrast urban background. Whole vehicle visible with generous safe margin, coherent perspective and grounded contact/water shadows. No cartoon toy shapes, heavy icon outline, photo, glossy 3D render, uniform gritty noise, readable text, license plate letters, logos, branding, watermark or UI. No weapons attached, no violence. A four-seat speedboat with an open cockpit showing four individual seats in two rows, low angled windshield and streamlined deep-red hull, conventional engine propulsion. Cruising slowly in a city harbor with a modest wake, not a racing action stunt. Full boat visible in three-quarter bow perspective, detailed hull fittings and wet material highlights, clear cool daylight.",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-140cca1f-929a-42b0-b3f8-5e228ba3092a.png"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Initial versions rejected for typography/logos. Built-in image edits removed text and restored scene. Final exports inspected: whole vehicle, correct category and major construction, clean crop, no visible branding or captions; icons unchanged.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49716,
+        "objectKey": "system-item-media/v1/items/7993/cover/a7632cf06a415db1d1b39ad309466aa472b9de076fa192703333856cad8326e8.jpg",
+        "fileSize": 430529
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7993/cover/a7632cf06a415db1d1b39ad309466aa472b9de076fa192703333856cad8326e8.jpg"
+    },
+    {
+      "key": "vehicle-yacht-cover",
+      "target": {
+        "kind": "item",
+        "id": 7996,
+        "typeId": 36,
+        "name": "Яхта"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Edit the attached illustration. REMOVE EVERY LETTER, NUMBER, WORD, LOGO, BRAND SYMBOL, TITLE, CAPTION AND GRAPHIC BANNER FROM THE ENTIRE IMAGE. This must become an image-only scene with absolutely NO typography. Remove the large top header and all bottom ribbons completely, restoring natural continuous sky/building/water scenery behind them. Remove all lettering and logos from the vehicle body, wheels, license plates, signs, towers, docks, containers and distant advertising; replace them with plain matching material or abstract unmarked light panels. Leave license plates blank. Preserve the exact vehicle design, number of wheels/seats/rotors, proportions, entire vehicle silhouette, camera view, light, palette, scene and mature detailed cel-shaded rendering. Do not crop or shrink the vehicle, do not add new text anywhere, and do not add a replacement header. Opaque 3:2 finished illustration with scene extending to all four edges.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/vehicle-yacht-cover-v2.png",
+      "final": "final/vehicle-yacht-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-53a644e4-cf0f-4b74-8e75-912df0e0f4db.png",
+      "originalSha256": "a93445731d45900bccdd07c5961e3779b57e209d41241fbea888a5b17deeee36",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "7a8eb119a405bc777334a1b2e3ad1924a63c0169d963af4e61df7ccb0fc8b5bf",
+      "bytes": 410201,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/vehicle-yacht-cover.jpg",
+        "reason": "Embedded titles, logos and labels despite initial prompt; never published",
+        "original": "originals/vehicle-yacht-cover-v1.png",
+        "sha256": "dfbea84182dd18ea4dfe5c8fd6a47ed6184d106f4861274d8c6850e9cd5f8c62",
+        "originalSha256": "09d09410b70a899228eca0df70ef8b06561f403c77a95606afe4a27eee226cd6",
+        "prompt": "Use case: stylized-concept. Original Cyberpunk RED 2045 vehicle catalogue cover, opaque 3:2 landscape. Mature premium detailed cel-shaded concept illustration: realistic full-scale engineered vehicle proportions, fine variable ink linework, large crisp painted light/shadow planes, secondary reflected light, convincing rubber/glass/metal/polymer materials. Restrained localized wear, functional joints, seams and fittings; detailed hero vehicle, softer lower-contrast urban background. Whole vehicle visible with generous safe margin, coherent perspective and grounded contact/water shadows. No cartoon toy shapes, heavy icon outline, photo, glossy 3D render, uniform gritty noise, readable text, license plate letters, logos, branding, watermark or UI. No weapons attached, no violence. A substantial luxury motor yacht with at least four private cabins below deck suggested by multiple coherent rows of portholes, spacious lounge deck, upper helm and guardrails. Cream and graphite hull with restrained teal trim, no sailing masts. Entire yacht moored beside a cyberpunk harbor berth at sunset, broad three-quarter side view with realistic scale and calm reflected light. Detailed fittings and understated high-end finish.",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-12e7a05b-b466-492c-a796-b911558b6cf7.png"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Initial versions rejected for typography/logos. Built-in image edits removed text and restored scene. Final exports inspected: whole vehicle, correct category and major construction, clean crop, no visible branding or captions; icons unchanged.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49717,
+        "objectKey": "system-item-media/v1/items/7996/cover/7a8eb119a405bc777334a1b2e3ad1924a63c0169d963af4e61df7ccb0fc8b5bf.jpg",
+        "fileSize": 410201
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7996/cover/7a8eb119a405bc777334a1b2e3ad1924a63c0169d963af4e61df7ccb0fc8b5bf.jpg"
+    }
+  ],
+  "liveReview": {
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-18/live-qa.json",
+    "scenarios": 12,
+    "passed": true,
+    "checkedAt": "2026-11-16T15:40:31.952Z",
+    "note": "Each real item opened using its own ID; expected own cover loaded, no page errors or horizontal overflow."
+  }
+}

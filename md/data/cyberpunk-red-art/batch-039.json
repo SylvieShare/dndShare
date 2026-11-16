@@ -1,0 +1,95 @@
+{
+  "batch": 39,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-39",
+  "sourceAudit": "Live own covers empty. Software avatar appearances checked against supplied Core pp.206–207,212,368–370. Depict NET visualizations, not real supernatural creatures; original icon slots untouched.",
+  "assets": [
+    {
+      "key": "net-armor-cover",
+      "target": {
+        "kind": "item",
+        "id": 7907,
+        "typeId": 33,
+        "name": "Доспехи"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A mature adult netrunner avatar in a practical graphite jacket is surrounded by a TRANSPARENT GOLDEN ARMOR projection following their torso and limbs. Fine geometric gold plates hover just above the avatar silhouette, clearly a defensive program rather than physical medieval plate. Calm three-quarter protective stance on a dark data platform, gold glow localized and face/hands readable.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-armor-cover-v1.png",
+      "final": "final/net-armor-cover.webp"
+    },
+    {
+      "key": "net-banhammer-cover",
+      "target": {
+        "kind": "item",
+        "id": 7908,
+        "typeId": 33,
+        "name": "Банхаммер"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A mature adult netrunner avatar holds a huge WHITE LUMINOUS HAMMER made of segmented data-light diagonally across the wide frame. The hammer emits controlled white plasma-like wisps, no strike or victim. Practical cyberpunk clothing and plausible two-hand grip, dark blue geometric NET chamber, whole hammer head/handle visible.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-banhammer-cover-v1.png",
+      "final": "final/net-banhammer-cover.webp"
+    },
+    {
+      "key": "net-deckkrash-cover",
+      "target": {
+        "kind": "item",
+        "id": 7909,
+        "typeId": 33,
+        "name": "ДекаЛОМ"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A stylized RED SOFTWARE CAPSULE shaped like a cartoon dynamite stick with a short luminous digital fuse, hovering in a NET pathway where a connection line breaks into harmless square light fragments behind it. Clearly an abstract virtual program token, no physical explosive detail, assembly, real person or explosion. Mature graphic rendering of a deliberately stylized software avatar, restrained red/white light.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-deckkrash-cover-v1.png",
+      "final": "final/net-deckkrash-cover.webp"
+    },
+    {
+      "key": "net-eraser-cover",
+      "target": {
+        "kind": "item",
+        "id": 7910,
+        "typeId": 33,
+        "name": "Стиратель"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A PINK luminous sphere program releases a trail of tiny transparent iridescent SOAP-BUBBLE shapes that dissolve a netrunner avatar's footprints into the virtual floor. Clearly digital cloaking, not a physical cleaning product. Sophisticated light refraction and geometric NET depth, quiet pink and slate palette, no text.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-eraser-cover-v1.png",
+      "final": "final/net-eraser-cover.webp"
+    },
+    {
+      "key": "net-flak-cover",
+      "target": {
+        "kind": "item",
+        "id": 7911,
+        "typeId": 33,
+        "name": "Фейерверк"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A cloud of bright MULTICOLORED LIGHT POINTS and geometric luminous arcs circles a mature adult netrunner avatar, forming a distracting protective field. No fireworks rockets, guns or real explosion. Carefully controlled colored highlights on graphite clothing, readable adult face and hands, dark virtual architecture and broad cel shadows.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-flak-cover-v1.png",
+      "final": "final/net-flak-cover.webp"
+    }
+  ]
+}

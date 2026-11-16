@@ -1,0 +1,274 @@
+{
+  "batch": 22,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-22",
+  "sourceAudit": "Live armor item media slots empty. Protective materials and distinguishing construction checked in user-supplied Core p.97, item facts and descriptions. Armor torso/head entries kept distinct; transparent polycarbonate shield; synthetic samples for concealed implants. No icon changes.",
+  "assets": [
+    {
+      "key": "helmet-flak-cover",
+      "target": {
+        "kind": "item",
+        "id": 7608,
+        "typeId": 21,
+        "name": "Шлем сапёра"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Make the olive protective helmet the sole hero object. Remove the entire protective body suit and trousers lying to the LEFT of the helmet, restore a clean padded bench surface in that area. Reframe the existing helmet slightly nearer the center while preserving its exact design, clear visor, thick neck protection, material, scale and mature detailed cel shading. Keep the workshop context subdued. No additional garments, no text, labels, logos or banners, full helmet comfortably inside opaque 3:2 frame.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/helmet-flak-cover-v2.png",
+      "final": "final/helmet-flak-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-457265fc-18c3-4143-9bbc-f623a6b1f345.png",
+      "originalSha256": "d047d4d5ce1004b904cf3b71aa6325ffd550b3a8d622a18550fc0d30e3aee831",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "a13fe52619e3353b9660238290891cff864194a8d2fc15a71d6259b3ee1903cc",
+      "bytes": 216279,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "reason": "Floating helmet or distracting extra full suit",
+        "sha256": "a4ea2a1da3af95c1dc9ec25e968703a1def6410e819d7d3ce29528ac8e5a5fdc",
+        "prompt": "Use case: stylized-concept. IMAGE-ONLY scene for an app, no cover design or typography. Original mature detailed illustration in a dystopian retrofuturist city circa 2045, same refined cel-shaded art direction: thin varied ink lines, large angular painted shadow planes, reflected light, believable full-size materials and engineering. Detailed main protective garment/object with quieter atmospheric background, professional equipment rather than a toy. Opaque 3:2 landscape, entire object comfortably in frame. ABSOLUTELY NO text, letters, numbers, logos, labels, signage, title, header, banner, watermark, badges or UI anywhere; no photorealism or glossy 3D, no heavy icon outline. No weapons, blood, exposed tissue, injury or instructions. One bulky olive-green blast-protective helmet with a thick clear curved face shield, robust padded neck guard and stout hinges, matched to a bomb-resistant padded suit. Resting on a padded equipment bench, complete helmet visible. Fine protective construction, no explosives, no wearer, plain unmarked surfaces, neutral clinical utility lighting.",
+        "original": "originals/helmet-flak-cover-v1.png",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-313cf6c3-d409-4884-af5a-495c612d0d6c.png",
+        "final": "final/helmet-flak-cover.jpg",
+        "originalSha256": "ea7396e8f4fedf3d5b667cb63e3a431c8a84ce6f8e5d8b86162760bdade05847"
+      },
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final helmet exports inspected. Distinct materials and coverage tiers; two images corrected to show a physical support and the helmet alone. No titles/logos, complete silhouettes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49730,
+        "objectKey": "system-item-media/v1/items/7608/cover/a13fe52619e3353b9660238290891cff864194a8d2fc15a71d6259b3ee1903cc.jpg",
+        "fileSize": 216279
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7608/cover/a13fe52619e3353b9660238290891cff864194a8d2fc15a71d6259b3ee1903cc.jpg"
+    },
+    {
+      "key": "helmet-heavy-cover",
+      "target": {
+        "kind": "item",
+        "id": 7610,
+        "typeId": 21,
+        "name": "Тяжёлый бронешлем"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY scene for an app, no cover design or typography. Original mature detailed illustration in a dystopian retrofuturist city circa 2045, same refined cel-shaded art direction: thin varied ink lines, large angular painted shadow planes, reflected light, believable full-size materials and engineering. Detailed main protective garment/object with quieter atmospheric background, professional equipment rather than a toy. Opaque 3:2 landscape, entire object comfortably in frame. ABSOLUTELY NO text, letters, numbers, logos, labels, signage, title, header, banner, watermark, badges or UI anywhere; no photorealism or glossy 3D, no heavy icon outline. No weapons, blood, exposed tissue, injury or instructions. One heavy graphite helmet with layered woven/polymer protective shell, substantial cheek protection and a small muted rust accent, thick lining visible at its opening, simple clear visor. On a plain stand in an armorer workroom. Dense fabric/composite protection rather than a metal medieval helmet, believable weight, no wearer or insignia.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/helmet-heavy-cover-v1.png",
+      "final": "final/helmet-heavy-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2208d643-9edc-49fd-87dd-beeaf2815142.png",
+      "originalSha256": "0125d87c5330e1fdb1e28b17436dab2c07780c1bb8b73057f4085e3d7fa4437d",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "e6f228f783d80041b00ac8d221522a03d25bbdd998be085d71385bd71ff8bb9e",
+      "bytes": 316737,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final helmet exports inspected. Distinct materials and coverage tiers; two images corrected to show a physical support and the helmet alone. No titles/logos, complete silhouettes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49731,
+        "objectKey": "system-item-media/v1/items/7610/cover/e6f228f783d80041b00ac8d221522a03d25bbdd998be085d71385bd71ff8bb9e.jpg",
+        "fileSize": 316737
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7610/cover/e6f228f783d80041b00ac8d221522a03d25bbdd998be085d71385bd71ff8bb9e.jpg"
+    },
+    {
+      "key": "helmet-kevlar-cover",
+      "target": {
+        "kind": "item",
+        "id": 7612,
+        "typeId": 21,
+        "name": "Кевларовый шлем"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Correct only the physical support of the helmet in this illustration. Add a simple narrow matte graphite display support rising from a stable base ON the countertop into the helmet interior, so the helmet is visibly supported and not floating. Keep the entire helmet design, navy aramid material, strap, view, lighting, background and mature cel-shaded style unchanged. No text, labels, logos or extra objects. Opaque 3:2.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/helmet-kevlar-cover-v2.png",
+      "final": "final/helmet-kevlar-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0c1e3e1b-082f-47b8-b9cd-9946cb282e30.png",
+      "originalSha256": "f6271d7b7ec794d2dd4005df4639d7c33588195e663a17b7981cbd35d5d3902c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "3b6cab5663432c08bf1b37c3d89ff7f6964caf7a0c6dade260553f69a7723aa8",
+      "bytes": 300003,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "reason": "Floating helmet or distracting extra full suit",
+        "sha256": "ea5dde4d579184a997529fc804a08bc9ef62faac0906c4bbe39cc6150db7db43",
+        "prompt": "Use case: stylized-concept. IMAGE-ONLY scene for an app, no cover design or typography. Original mature detailed illustration in a dystopian retrofuturist city circa 2045, same refined cel-shaded art direction: thin varied ink lines, large angular painted shadow planes, reflected light, believable full-size materials and engineering. Detailed main protective garment/object with quieter atmospheric background, professional equipment rather than a toy. Opaque 3:2 landscape, entire object comfortably in frame. ABSOLUTELY NO text, letters, numbers, logos, labels, signage, title, header, banner, watermark, badges or UI anywhere; no photorealism or glossy 3D, no heavy icon outline. No weapons, blood, exposed tissue, injury or instructions. One lightweight dark navy aramid helmet with compact open-face shell, chin strap, restrained fabric surface and visible comfortable inner lining. No rigid face armor or visor, simple practical city protective headgear. On a shop counter beside folded plain cloth, soft daylight, full silhouette visible.",
+        "original": "originals/helmet-kevlar-cover-v1.png",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ff89902e-655c-4d4a-b904-af087e74dc41.png",
+        "final": "final/helmet-kevlar-cover.jpg",
+        "originalSha256": "7f515445140c581693db4a82676587095544fb03f79c3880a609efe845cf8292"
+      },
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final helmet exports inspected. Distinct materials and coverage tiers; two images corrected to show a physical support and the helmet alone. No titles/logos, complete silhouettes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49732,
+        "objectKey": "system-item-media/v1/items/7612/cover/3b6cab5663432c08bf1b37c3d89ff7f6964caf7a0c6dade260553f69a7723aa8.jpg",
+        "fileSize": 300003
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7612/cover/3b6cab5663432c08bf1b37c3d89ff7f6964caf7a0c6dade260553f69a7723aa8.jpg"
+    },
+    {
+      "key": "helmet-leather-cover",
+      "target": {
+        "kind": "item",
+        "id": 7614,
+        "typeId": 21,
+        "name": "Кожанный шлем"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY scene for an app, no cover design or typography. Original mature detailed illustration in a dystopian retrofuturist city circa 2045, same refined cel-shaded art direction: thin varied ink lines, large angular painted shadow planes, reflected light, believable full-size materials and engineering. Detailed main protective garment/object with quieter atmospheric background, professional equipment rather than a toy. Opaque 3:2 landscape, entire object comfortably in frame. ABSOLUTELY NO text, letters, numbers, logos, labels, signage, title, header, banner, watermark, badges or UI anywhere; no photorealism or glossy 3D, no heavy icon outline. No weapons, blood, exposed tissue, injury or instructions. One fitted thick oxblood leather protective cap with padded crown, ear coverage, graphite chin buckle and carefully stitched seams. Lightweight leather head protection, no metal plates, no fantasy helmet horns and no face visor. Resting on a plain display head form at a motorcycle gear stall, warm lamp and soft city depth, full headgear visible.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/helmet-leather-cover-v1.png",
+      "final": "final/helmet-leather-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0afc6b72-357f-4cf5-8472-166b554775e3.png",
+      "originalSha256": "fb49412ddd8789f8613bb63630a50a1d91a1134fe2858052a7b208255af725e0",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "c62ab7925375bac470c34b2208c64f51200475daedc2667fbd60c51c595687a6",
+      "bytes": 305880,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final helmet exports inspected. Distinct materials and coverage tiers; two images corrected to show a physical support and the helmet alone. No titles/logos, complete silhouettes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49733,
+        "objectKey": "system-item-media/v1/items/7614/cover/c62ab7925375bac470c34b2208c64f51200475daedc2667fbd60c51c595687a6.jpg",
+        "fileSize": 305880
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7614/cover/c62ab7925375bac470c34b2208c64f51200475daedc2667fbd60c51c595687a6.jpg"
+    },
+    {
+      "key": "helmet-light-cover",
+      "target": {
+        "kind": "item",
+        "id": 7616,
+        "typeId": 21,
+        "name": "Лёгкий бронешлем"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY scene for an app, no cover design or typography. Original mature detailed illustration in a dystopian retrofuturist city circa 2045, same refined cel-shaded art direction: thin varied ink lines, large angular painted shadow planes, reflected light, believable full-size materials and engineering. Detailed main protective garment/object with quieter atmospheric background, professional equipment rather than a toy. Opaque 3:2 landscape, entire object comfortably in frame. ABSOLUTELY NO text, letters, numbers, logos, labels, signage, title, header, banner, watermark, badges or UI anywhere; no photorealism or glossy 3D, no heavy icon outline. No weapons, blood, exposed tissue, injury or instructions. One compact slate-blue light protective helmet combining woven aramid and thin polymer mesh, smooth low-profile shell, slim cheek sections and a simple chin strap. Moderate coverage, much slimmer than bulky heavy armor helmets. On an outfitter display stand, no wearer, fine restrained seam/lining detail, diffuse daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/helmet-light-cover-v1.png",
+      "final": "final/helmet-light-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-afce9693-a6d3-4880-854a-329a382794ba.png",
+      "originalSha256": "4103df859933845a52f3914fa33d66398572684633cfac50e6b3ce19e2ca4749",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d7244dfb08e9ada50830087413d9a889ab048532b5ab35aaea9bc99418c78b7a",
+      "bytes": 292270,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final helmet exports inspected. Distinct materials and coverage tiers; two images corrected to show a physical support and the helmet alone. No titles/logos, complete silhouettes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49734,
+        "objectKey": "system-item-media/v1/items/7616/cover/d7244dfb08e9ada50830087413d9a889ab048532b5ab35aaea9bc99418c78b7a.jpg",
+        "fileSize": 292270
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7616/cover/d7244dfb08e9ada50830087413d9a889ab048532b5ab35aaea9bc99418c78b7a.jpg"
+    },
+    {
+      "key": "helmet-medium-cover",
+      "target": {
+        "kind": "item",
+        "id": 7618,
+        "typeId": 21,
+        "name": "Средний бронешлем"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY scene for an app, no cover design or typography. Original mature detailed illustration in a dystopian retrofuturist city circa 2045, same refined cel-shaded art direction: thin varied ink lines, large angular painted shadow planes, reflected light, believable full-size materials and engineering. Detailed main protective garment/object with quieter atmospheric background, professional equipment rather than a toy. Opaque 3:2 landscape, entire object comfortably in frame. ABSOLUTELY NO text, letters, numbers, logos, labels, signage, title, header, banner, watermark, badges or UI anywhere; no photorealism or glossy 3D, no heavy icon outline. No weapons, blood, exposed tissue, injury or instructions. One medium protective helmet in muted olive and ivory, a visibly thicker polymer-coated aramid shell with layered cheek protection and a short clear visor. Balanced bulk between light cap and heavy helmet, simple working chin harness. On a repair stand in a city outfitter, full object, warm directed light and cool backdrop.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/helmet-medium-cover-v1.png",
+      "final": "final/helmet-medium-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3646ecbc-b401-4dcf-aa79-31f7f3779336.png",
+      "originalSha256": "633ad1a8943a5553a68683c34e6ce529da8933447e18778000f838ca8d636a5f",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "178295eb3b4aaa979a3508df2cd0c6ccc1aee6805e925ed978cc883bd34d4dde",
+      "bytes": 254998,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final helmet exports inspected. Distinct materials and coverage tiers; two images corrected to show a physical support and the helmet alone. No titles/logos, complete silhouettes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49735,
+        "objectKey": "system-item-media/v1/items/7618/cover/178295eb3b4aaa979a3508df2cd0c6ccc1aee6805e925ed978cc883bd34d4dde.jpg",
+        "fileSize": 254998
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7618/cover/178295eb3b4aaa979a3508df2cd0c6ccc1aee6805e925ed978cc883bd34d4dde.jpg"
+    }
+  ],
+  "liveReview": {
+    "note": "Every own item cover verified against its actual production URL at three widths, no JS errors or horizontal overflow.",
+    "passed": true,
+    "scenarios": 18,
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-22/live-qa.json",
+    "checkedAt": "2026-11-16T15:53:07.24Z",
+    "widths": [
+      390,
+      840,
+      1440
+    ]
+  }
+}

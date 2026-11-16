@@ -1,0 +1,373 @@
+{
+  "batch": 37,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-37",
+  "sourceAudit": "All 90 live clothing own media slots empty. Ten fashion directions and nine garment/accessory kinds checked against user-supplied Core p.356. New original designs per record; icons unchanged.",
+  "assets": [
+    {
+      "key": "clothing-7695-cover",
+      "target": {
+        "kind": "item",
+        "id": 7695,
+        "typeId": 23,
+        "name": "Низ (одеяния кочевников)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A complete pair of adult-sized trousers, both legs fully visible, displayed on a neutral waist-down mannequin with simple feet supports. No top or jacket included. Adapt cut and materials to the fashion direction. Fashion direction: Rugged nomad road fashion: weathered oxblood and ochre leather, dark denim, strong stitching, practical buckles and subtle geometric beadwork. Western road-wear influence without ethnicity-specific sacred motifs. Backdrop: a practical convoy service outfitter.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7695-cover-v1.png",
+      "final": "final/clothing-7695-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-55478463-7527-4345-8954-c347e7cb4a3f.png",
+      "originalSha256": "b5307dbd1b910b34e7fd0173b2468e40c6d63c0bb0302178dca529ad8fb02d25",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f144fad80d35061d49a44b86966019478f876786469639bbea7cd7696c76bdca",
+      "bytes": 274478,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49825,
+        "objectKey": "system-item-media/v1/items/7695/cover/f144fad80d35061d49a44b86966019478f876786469639bbea7cd7696c76bdca.jpg",
+        "fileSize": 274478
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7695/cover/f144fad80d35061d49a44b86966019478f876786469639bbea7cd7696c76bdca.jpg"
+    },
+    {
+      "key": "clothing-7696-cover",
+      "target": {
+        "kind": "item",
+        "id": 7696,
+        "typeId": 23,
+        "name": "Контактные линзы (одеяния кочевников)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A macro still life of TWO thin soft tinted contact lenses in the two shallow wells of an open small clean lens case, one lens slightly lifted on the lip so its thin flexible transparent edge is obvious. Natural eye-size proportions, not cybernetic eyeballs or goggles. Fashion direction affects iris tint and case finish. No face or eye surgery. Fashion direction: Rugged nomad road fashion: weathered oxblood and ochre leather, dark denim, strong stitching, practical buckles and subtle geometric beadwork. Western road-wear influence without ethnicity-specific sacred motifs. Backdrop: a practical convoy service outfitter.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7696-cover-v1.png",
+      "final": "final/clothing-7696-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7d890b7b-80e0-47a9-bd0c-44351c1885b3.png",
+      "originalSha256": "309e000e716d78717ed9c4ca5b752dadfa3d474f6d713464ac74884ae340d90c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b4a2e8f92cddf9ec467a97aae37ea587f1301fe65a29f3c6c9ad7c8703c550ee",
+      "bytes": 325578,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49826,
+        "objectKey": "system-item-media/v1/items/7696/cover/b4a2e8f92cddf9ec467a97aae37ea587f1301fe65a29f3c6c9ad7c8703c550ee.jpg",
+        "fileSize": 325578
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7696/cover/b4a2e8f92cddf9ec467a97aae37ea587f1301fe65a29f3c6c9ad7c8703c550ee.jpg"
+    },
+    {
+      "key": "clothing-7697-cover",
+      "target": {
+        "kind": "item",
+        "id": 7697,
+        "typeId": 23,
+        "name": "Обувь (одеяния кочевников)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A matching PAIR of complete adult footwear displayed on a low shop plinth at a three-quarter angle, both soles and uppers plausible. Adapt shoe type and materials to the fashion direction; do not show legs or a whole outfit. Fashion direction: Rugged nomad road fashion: weathered oxblood and ochre leather, dark denim, strong stitching, practical buckles and subtle geometric beadwork. Western road-wear influence without ethnicity-specific sacred motifs. Backdrop: a practical convoy service outfitter.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7697-cover-v1.png",
+      "final": "final/clothing-7697-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-cfc86e55-dc8f-4578-a205-5cef160f658c.png",
+      "originalSha256": "08b7ee33669d9e3595149a4ac83e417ba1fe3eea9f32e43afa236ebf13e70997",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "5ee33250771c3f02b76d7c1fab36868622ad63baa9cb39ff4093f98934eb3ca4",
+      "bytes": 305204,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49827,
+        "objectKey": "system-item-media/v1/items/7697/cover/5ee33250771c3f02b76d7c1fab36868622ad63baa9cb39ff4093f98934eb3ca4.jpg",
+        "fileSize": 305204
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7697/cover/5ee33250771c3f02b76d7c1fab36868622ad63baa9cb39ff4093f98934eb3ca4.jpg"
+    },
+    {
+      "key": "clothing-7698-cover",
+      "target": {
+        "kind": "item",
+        "id": 7698,
+        "typeId": 23,
+        "name": "Очки (одеяния кочевников)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of ordinary fashion eyeglasses with CLEAR TRANSPARENT lenses and unfolded temples, displayed on a discreet support over a shop counter. Eyeglass frame follows fashion direction; lenses are not mirrored or opaque. Fashion direction: Rugged nomad road fashion: weathered oxblood and ochre leather, dark denim, strong stitching, practical buckles and subtle geometric beadwork. Western road-wear influence without ethnicity-specific sacred motifs. Backdrop: a practical convoy service outfitter.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7698-cover-v1.png",
+      "final": "final/clothing-7698-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f75ebd5c-6fdb-48a1-ba39-af6ba3bae74a.png",
+      "originalSha256": "06c331208ba41ab54a83cdc9ef508445c1f55d1ed31bb2889833c27066bee56a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "0349391b2f54f598f0900efc09624ce5ebaf1de9d001d20f4065ad609c78eaa9",
+      "bytes": 346656,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49828,
+        "objectKey": "system-item-media/v1/items/7698/cover/0349391b2f54f598f0900efc09624ce5ebaf1de9d001d20f4065ad609c78eaa9.jpg",
+        "fileSize": 346656
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7698/cover/0349391b2f54f598f0900efc09624ce5ebaf1de9d001d20f4065ad609c78eaa9.jpg"
+    },
+    {
+      "key": "clothing-7699-cover",
+      "target": {
+        "kind": "item",
+        "id": 7699,
+        "typeId": 23,
+        "name": "Головной убор (одеяния кочевников)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized hat or cap appropriate to the fashion direction, displayed on a plain neutral head form. A real wearable head covering, not a combat helmet. All brim/crown details inside frame. Fashion direction: Rugged nomad road fashion: weathered oxblood and ochre leather, dark denim, strong stitching, practical buckles and subtle geometric beadwork. Western road-wear influence without ethnicity-specific sacred motifs. Backdrop: a practical convoy service outfitter.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7699-cover-v1.png",
+      "final": "final/clothing-7699-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-15a53764-28f6-4b54-9e1a-6056c65255d0.png",
+      "originalSha256": "5304de1540b413d626769addf3fce164222d07f6e7f923568d5415c7546604f6",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "38401d0ebe158e5cf07e756a60f359ba74ee56b3a53d6b004d3cca89f96062d5",
+      "bytes": 294300,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49829,
+        "objectKey": "system-item-media/v1/items/7699/cover/38401d0ebe158e5cf07e756a60f359ba74ee56b3a53d6b004d3cca89f96062d5.jpg",
+        "fileSize": 294300
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7699/cover/38401d0ebe158e5cf07e756a60f359ba74ee56b3a53d6b004d3cca89f96062d5.jpg"
+    },
+    {
+      "key": "clothing-7700-cover",
+      "target": {
+        "kind": "item",
+        "id": 7700,
+        "typeId": 23,
+        "name": "Верхняя одежда (одеяния кочевников)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized OUTER jacket or coat appropriate to the fashion direction, displayed on a headless torso mannequin or hanger. Both sleeves and hem fully visible. Substantial outerwear distinct from a shirt; no trousers, no armor plates. Fashion direction: Rugged nomad road fashion: weathered oxblood and ochre leather, dark denim, strong stitching, practical buckles and subtle geometric beadwork. Western road-wear influence without ethnicity-specific sacred motifs. Backdrop: a practical convoy service outfitter.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7700-cover-v1.png",
+      "final": "final/clothing-7700-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-727abe11-7ac7-4eba-a51c-f923558d8594.png",
+      "originalSha256": "59aa54cb74288f6e84dee2ae27bebd33ccd86c6b08a1d4019c57ea71215d6787",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "4e8830a591d597763618a1b2111d847e6022d23ef1622a5b0d1b3f03de6c5846",
+      "bytes": 311647,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49830,
+        "objectKey": "system-item-media/v1/items/7700/cover/4e8830a591d597763618a1b2111d847e6022d23ef1622a5b0d1b3f03de6c5846.jpg",
+        "fileSize": 311647
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7700/cover/4e8830a591d597763618a1b2111d847e6022d23ef1622a5b0d1b3f03de6c5846.jpg"
+    },
+    {
+      "key": "clothing-7701-cover",
+      "target": {
+        "kind": "item",
+        "id": 7701,
+        "typeId": 23,
+        "name": "Украшение (одеяния кочевников)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One original wearable piece of jewelry appropriate to the fashion direction: a substantial wrist cuff or pendant on a compact neutral jewelry stand. Believable full-size metal, beads or synthetic inserts; sophisticated material detail. No mystical gem glow, no symbols or letters. Fashion direction: Rugged nomad road fashion: weathered oxblood and ochre leather, dark denim, strong stitching, practical buckles and subtle geometric beadwork. Western road-wear influence without ethnicity-specific sacred motifs. Backdrop: a practical convoy service outfitter.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7701-cover-v1.png",
+      "final": "final/clothing-7701-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0e5bc956-61d5-49df-bb93-16bb5db2d5d9.png",
+      "originalSha256": "1330b98663140c3f8dfdf5dc4d788f527aaca3021bc2dd7143c9b85f87f07b41",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "00bbb7c0a3e7aba7adbc095e2819b909a00363f75650902a1d85bdbe3c97baf7",
+      "bytes": 347426,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49831,
+        "objectKey": "system-item-media/v1/items/7701/cover/00bbb7c0a3e7aba7adbc095e2819b909a00363f75650902a1d85bdbe3c97baf7.jpg",
+        "fileSize": 347426
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7701/cover/00bbb7c0a3e7aba7adbc095e2819b909a00363f75650902a1d85bdbe3c97baf7.jpg"
+    },
+    {
+      "key": "clothing-7702-cover",
+      "target": {
+        "kind": "item",
+        "id": 7702,
+        "typeId": 23,
+        "name": "Зеркальные очки (одеяния кочевников)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of fashion sunglasses with genuinely MIRRORED lenses reflecting broad city-light planes, temples unfolded, on a small display support. Frame and reflected accent palette follow fashion direction; clearly different from ordinary clear-lens eyeglasses. Fashion direction: Rugged nomad road fashion: weathered oxblood and ochre leather, dark denim, strong stitching, practical buckles and subtle geometric beadwork. Western road-wear influence without ethnicity-specific sacred motifs. Backdrop: a practical convoy service outfitter.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7702-cover-v1.png",
+      "final": "final/clothing-7702-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-629ab371-3b57-4939-bfc8-84b65b594d61.png",
+      "originalSha256": "995f3ba24c992d7830536a62fd5352735ace330f364c134a3dfe7ab0c1a61d57",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "7211b16c711d69a2e63e2cbe01717cb9765e3eda00aa08a0d8ac621f274a2658",
+      "bytes": 315461,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49832,
+        "objectKey": "system-item-media/v1/items/7702/cover/7211b16c711d69a2e63e2cbe01717cb9765e3eda00aa08a0d8ac621f274a2658.jpg",
+        "fileSize": 315461
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7702/cover/7211b16c711d69a2e63e2cbe01717cb9765e3eda00aa08a0d8ac621f274a2658.jpg"
+    },
+    {
+      "key": "clothing-7703-cover",
+      "target": {
+        "kind": "item",
+        "id": 7703,
+        "typeId": 23,
+        "name": "Верх (одеяния кочевников)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized SHIRT or light top appropriate to the fashion direction on a headless torso mannequin. Fine textile construction, both sleeves if present and full hem visible. This is a base-layer top, not a coat or armored jacket; no trousers. Fashion direction: Rugged nomad road fashion: weathered oxblood and ochre leather, dark denim, strong stitching, practical buckles and subtle geometric beadwork. Western road-wear influence without ethnicity-specific sacred motifs. Backdrop: a practical convoy service outfitter.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7703-cover-v1.png",
+      "final": "final/clothing-7703-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4fbf79a7-451a-43c6-ae9c-92a81d67d703.png",
+      "originalSha256": "60803cc51bc64ed8916d812b9b07604cf56ce32f2826edec45f50ff7ce65ebe6",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b6d750a456f1888cd0a1a77e9d1fb07fab5497bcc9003357d043953150d6efa6",
+      "bytes": 287059,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49833,
+        "objectKey": "system-item-media/v1/items/7703/cover/b6d750a456f1888cd0a1a77e9d1fb07fab5497bcc9003357d043953150d6efa6.jpg",
+        "fileSize": 287059
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7703/cover/b6d750a456f1888cd0a1a77e9d1fb07fab5497bcc9003357d043953150d6efa6.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-37/live-qa.json",
+    "note": "All nine own fashion covers loaded at three widths on actual public item pages without JS errors or horizontal overflow.",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "checkedAt": "2026-11-16T17:08:05.291Z",
+    "scenarios": 27
+  }
+}

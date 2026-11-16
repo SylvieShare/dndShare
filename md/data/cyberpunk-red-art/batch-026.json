@@ -1,0 +1,256 @@
+{
+  "batch": 26,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-26",
+  "sourceAudit": "Live own media slots empty. Catalogue descriptions and user-supplied Core pp.357,377–379 checked; Smash is yellow/frothy in a can, housing distinguishes room facilities. Other sealed fictional medicine packaging is original art interpretation, no usage instructions. Icons unchanged.",
+  "assets": [
+    {
+      "key": "home-street-cover",
+      "target": {
+        "kind": "item",
+        "id": 8102,
+        "typeId": 30,
+        "name": "Улица"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A precarious sleeping spot under a city overpass: a rolled bed mat partly laid out beneath a patched weather tarp, one battered backpack and a folded blanket, concrete pillars and wet pavement, distant traffic glow. No person shown, no secure walls, plumbing or household appliances. Dignified factual scene of insecure street shelter, cool dawn, subtle amber streetlight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/home-street-cover-v1.png",
+      "final": "final/home-street-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6cfddb8f-1cab-44a2-9c6a-1f40be69bb4a.png",
+      "originalSha256": "a2903a9d2c2a76fe6bf49994eef2c43b3e6635a702b78ba4fc266a377b06a076",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "edeb37e4b1001b24434776f41dc552df9d9b63e30ebbe30c1349e7d22dd047ad",
+      "bytes": 357461,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49746,
+        "objectKey": "system-item-media/v1/items/8102/cover/edeb37e4b1001b24434776f41dc552df9d9b63e30ebbe30c1349e7d22dd047ad.jpg",
+        "fileSize": 357461
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8102/cover/edeb37e4b1001b24434776f41dc552df9d9b63e30ebbe30c1349e7d22dd047ad.jpg"
+    },
+    {
+      "key": "home-car-cover",
+      "target": {
+        "kind": "item",
+        "id": 8103,
+        "typeId": 30,
+        "name": "Машина на улице"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. View through the open side door of an old compact van parked at a rough city fringe: intact closed windows, rear seats folded into a simple sleeping space with a thin mattress and blanket, a backpack and small battery lamp. No kitchen or plumbing. Clear distinction between living in an ordinary car and a fitted camper, no visible license lettering or logos, cool morning.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/home-car-cover-v1.png",
+      "final": "final/home-car-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9277f439-18f5-461d-a994-fdab13dcbeb9.png",
+      "originalSha256": "00fdbaba6d07c2cdc4f27ccd74a25749777eb658ac5351dc512386d6a9154aaa",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "4eebbd8087085318c719947b6f2c9c814961c7f175036eaf5ee57b1cd549d634",
+      "bytes": 319612,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49747,
+        "objectKey": "system-item-media/v1/items/8103/cover/4eebbd8087085318c719947b6f2c9c814961c7f175036eaf5ee57b1cd549d634.jpg",
+        "fileSize": 319612
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8103/cover/4eebbd8087085318c719947b6f2c9c814961c7f175036eaf5ee57b1cd549d634.jpg"
+    },
+    {
+      "key": "home-cube-cover",
+      "target": {
+        "kind": "item",
+        "id": 8104,
+        "typeId": 30,
+        "name": "Кубический отель"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A very small WINDOWLESS capsule hotel room viewed from its doorway, barely wider than an adult armspan. A single fold-down bed occupies most of the narrow space, a tiny folding desk and chair stow flush into the wall, small blank wall screen, secure door latch and one backpack storage recess. No private bathroom or kitchenette. Functional cramped 2045 design, neutral cool overhead light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/home-cube-cover-v1.png",
+      "final": "final/home-cube-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-fe9e07c9-e163-42d1-a43d-5c6a4d26a918.png",
+      "originalSha256": "4e100c32b30220618bfbd8aeb7f9c1d3f29f40d31fd5f536482420688a83e669",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "1bbf72e07a9bc684850e9ed23398f30928bc3f8d2a2caf00f8643d06dcf4a2ab",
+      "bytes": 202484,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49748,
+        "objectKey": "system-item-media/v1/items/8104/cover/1bbf72e07a9bc684850e9ed23398f30928bc3f8d2a2caf00f8643d06dcf4a2ab.jpg",
+        "fileSize": 202484
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8104/cover/1bbf72e07a9bc684850e9ed23398f30928bc3f8d2a2caf00f8643d06dcf4a2ab.jpg"
+    },
+    {
+      "key": "home-container-cover",
+      "target": {
+        "kind": "item",
+        "id": 8105,
+        "typeId": 30,
+        "name": "Грузовой контейнер"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. An inhabited converted cargo container: corrugated metal walls, one comfortable narrow bed, table, small refrigerator, microwave and compact sink, shelves for personal belongings and a sturdy door lock. No private shower or toilet. View through partially open door toward stacked neighboring containers, practical warm interior light and cool outdoor dusk, coherent narrow room layout.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/home-container-cover-v1.png",
+      "final": "final/home-container-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-94be7cdc-7e43-41f2-b131-f07993367c55.png",
+      "originalSha256": "ecc9fdb4f968d64883a27dacb953e539b6a2c17d442a761bb307d3bfd7fcc6bb",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "712f545a0a76742b958fdbad0042bb9d72918ad2e95c834bd45e86a47ae816d9",
+      "bytes": 416739,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49749,
+        "objectKey": "system-item-media/v1/items/8105/cover/712f545a0a76742b958fdbad0042bb9d72918ad2e95c834bd45e86a47ae816d9.jpg",
+        "fileSize": 416739
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8105/cover/712f545a0a76742b958fdbad0042bb9d72918ad2e95c834bd45e86a47ae816d9.jpg"
+    },
+    {
+      "key": "home-studio-cover",
+      "target": {
+        "kind": "item",
+        "id": 8106,
+        "typeId": 30,
+        "name": "Студия"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A small independent city studio apartment with a bed nook, compact kitchen with stove/oven/microwave/full refrigerator, tiny personalized living area and a doorway hinting at its own private bathroom. Everything modest but maintained, private personal space rather than a capsule. Daylit window with elevated roads beyond, warm neutral fabric and muted teal accents, no text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/home-studio-cover-v1.png",
+      "final": "final/home-studio-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3b3a03ec-c085-4ec7-ad1e-e248589ef07e.png",
+      "originalSha256": "8534f94f5128ff6d6b4e72e1bf9692d94765df28d87e52477343f487c2d28514",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "97893ea4e4ce7f02bb422193ee113585a857a57ac56939572d8b2727e2d43776",
+      "bytes": 416757,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49750,
+        "objectKey": "system-item-media/v1/items/8106/cover/97893ea4e4ce7f02bb422193ee113585a857a57ac56939572d8b2727e2d43776.jpg",
+        "fileSize": 416757
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8106/cover/97893ea4e4ce7f02bb422193ee113585a857a57ac56939572d8b2727e2d43776.jpg"
+    },
+    {
+      "key": "home-two-bedroom-cover",
+      "target": {
+        "kind": "item",
+        "id": 8107,
+        "typeId": 30,
+        "name": "Двухкомнатные апартаменты"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A comfortable city apartment living area with a proper sofa, full kitchen and dining corner, two clearly separate bedroom doorways in the rear and an enclosed laundry cabinet. Room for two independent adults, coherent human-scale apartment plan, modest personal objects and good daylight. No people or floorplan graphics, original understated 2045 interior.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/home-two-bedroom-cover-v1.png",
+      "final": "final/home-two-bedroom-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-33a34dd7-8745-4cc8-bd73-6e237199b861.png",
+      "originalSha256": "e176ee88f52461c26a3e4603c1697d3bb4615bd032ddb929e8868575fc82d3d2",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "6ac5e11c91390c98c10e87add5863ec07430c21d31f38b5e5c9186699575caab",
+      "bytes": 373354,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49751,
+        "objectKey": "system-item-media/v1/items/8107/cover/6ac5e11c91390c98c10e87add5863ec07430c21d31f38b5e5c9186699575caab.jpg",
+        "fileSize": 373354
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8107/cover/6ac5e11c91390c98c10e87add5863ec07430c21d31f38b5e5c9186699575caab.jpg"
+    }
+  ],
+  "liveReview": {
+    "note": "All own cover URLs verified at three widths, no JS errors or horizontal overflow.",
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-26/live-qa.json",
+    "checkedAt": "2026-11-16T16:15:28.857Z",
+    "passed": true,
+    "scenarios": 18,
+    "widths": [
+      390,
+      840,
+      1440
+    ]
+  }
+}

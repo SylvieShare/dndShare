@@ -1,0 +1,217 @@
+{
+  "batch": 20,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-20",
+  "sourceAudit": "Live ten role records have empty own media slots. Role descriptions and referenced core pages inspected; distinct professional narrative scenes, original icons unchanged.",
+  "assets": [
+    {
+      "key": "role-netrunner-cover",
+      "target": {
+        "kind": "item",
+        "id": 7927,
+        "typeId": 34,
+        "name": "Нетраннер"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Original mature Cyberpunk RED 2045 role illustration, wide opaque 5:2 panorama. Premium detailed drawn cel shading: fine variable ink edges, broad crisp shadow planes with secondary reflected light, convincing materials and functional near-future technology. Natural mature adult anatomy, distinctive lived-in face, realistic hands and gestures. Detailed focal role action, softer lower-contrast city depth, balanced palette with readable faces. Entire face, working hands and key equipment comfortably inside frame. No photorealism, glossy 3D, toy shapes, exaggerated anatomy, heavy icon outline, text, signage, logos, watermark or UI overlay. No graphic injury, no firing weapons. A mature androgynous adult netrunner in their thirties, pale skin, cropped dark hair with a narrow violet streak and an angular graphite coat, works at a compact portable cyberdeck near a secured network junction. One hand rests on physical controls, the other connects an interface lead to their temple port, anatomically plausible. A subtle abstract network reflected in glasses, soft blue industrial background with violet accent, no readable code.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/role-netrunner-cover-v1.png",
+      "final": "final/role-netrunner-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b75e0f24-aff3-478a-9e19-5118fec063a0.png",
+      "originalSha256": "c5fffa7ed0b1103cef1530198c61dbc3981ea1822d54de4a35c209c33810b145",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "9cfab554b18bbb1ff3cc380a4f729f3352e98f679f11b1fb9e09a72e36109ae0",
+      "bytes": 182064,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final role panoramas inspected. Distinct mature characters and professional actions match role descriptions, plausible hands and props, no titles/logos or critical crops.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49699,
+        "objectKey": "system-item-media/v1/items/7927/cover/9cfab554b18bbb1ff3cc380a4f729f3352e98f679f11b1fb9e09a72e36109ae0.webp",
+        "fileSize": 182064
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7927/cover/9cfab554b18bbb1ff3cc380a4f729f3352e98f679f11b1fb9e09a72e36109ae0.webp"
+    },
+    {
+      "key": "role-nomad-cover",
+      "target": {
+        "kind": "item",
+        "id": 7928,
+        "typeId": 34,
+        "name": "Кочевник"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Original mature Cyberpunk RED 2045 role illustration, wide opaque 5:2 panorama. Premium detailed drawn cel shading: fine variable ink edges, broad crisp shadow planes with secondary reflected light, convincing materials and functional near-future technology. Natural mature adult anatomy, distinctive lived-in face, realistic hands and gestures. Detailed focal role action, softer lower-contrast city depth, balanced palette with readable faces. Entire face, working hands and key equipment comfortably inside frame. No photorealism, glossy 3D, toy shapes, exaggerated anatomy, heavy icon outline, text, signage, logos, watermark or UI overlay. No graphic injury, no firing weapons. A mature woman nomad driver in her forties, sun-weathered tan skin, long dark braid and a patched ochre driving jacket, stands by a rugged family convoy truck while checking a handheld vehicle diagnostic tool. Another adult family member loads supplies in the distance. Her expression practical and assured, highway service camp near the city outskirts, broad clear afternoon light, dust kept subtle.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/role-nomad-cover-v1.png",
+      "final": "final/role-nomad-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ccd805c2-7256-4125-aae9-f451ee63d66e.png",
+      "originalSha256": "666cb27da9bbcc76bead1d6204d1c19aed5e1454269810955a610ad5f506c22e",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "d2340d3ac849fa3072f70aa744b32cfd07a8dbf2e288032f05f0a4ddd433a4b6",
+      "bytes": 326946,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final role panoramas inspected. Distinct mature characters and professional actions match role descriptions, plausible hands and props, no titles/logos or critical crops.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49700,
+        "objectKey": "system-item-media/v1/items/7928/cover/d2340d3ac849fa3072f70aa744b32cfd07a8dbf2e288032f05f0a4ddd433a4b6.webp",
+        "fileSize": 326946
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7928/cover/d2340d3ac849fa3072f70aa744b32cfd07a8dbf2e288032f05f0a4ddd433a4b6.webp"
+    },
+    {
+      "key": "role-rockerboy-cover",
+      "target": {
+        "kind": "item",
+        "id": 7929,
+        "typeId": 34,
+        "name": "Рокербой"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Original mature Cyberpunk RED 2045 role illustration, wide opaque 5:2 panorama. Premium detailed drawn cel shading: fine variable ink edges, broad crisp shadow planes with secondary reflected light, convincing materials and functional near-future technology. Natural mature adult anatomy, distinctive lived-in face, realistic hands and gestures. Detailed focal role action, softer lower-contrast city depth, balanced palette with readable faces. Entire face, working hands and key equipment comfortably inside frame. No photorealism, glossy 3D, toy shapes, exaggerated anatomy, heavy icon outline, text, signage, logos, watermark or UI overlay. No graphic injury, no firing weapons. A charismatic adult male rocker in his mid-thirties, dark brown skin, short silver-dyed curls, a red sleeveless stage jacket and an original angular electric guitar, reaches toward a small engaged audience with an open hand while holding a microphone near his mouth. Natural singing posture, visible adult crowd faces in softer background, improvised urban club, warm stage light and restrained cyan backlight. No slogans or logos.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/role-rockerboy-cover-v1.png",
+      "final": "final/role-rockerboy-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8aa53a87-64e6-496b-bc18-21036b1c98a8.png",
+      "originalSha256": "c73fd7676039a0ed0c37eb078cef64bd73adda42362b15a47aa3c25c8620e2fa",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "34a2047e75f7615b31eb823bf54d8bd82a49fb48cd0faedfab2b5afcd2ad5154",
+      "bytes": 214130,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final role panoramas inspected. Distinct mature characters and professional actions match role descriptions, plausible hands and props, no titles/logos or critical crops.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49701,
+        "objectKey": "system-item-media/v1/items/7929/cover/34a2047e75f7615b31eb823bf54d8bd82a49fb48cd0faedfab2b5afcd2ad5154.webp",
+        "fileSize": 214130
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7929/cover/34a2047e75f7615b31eb823bf54d8bd82a49fb48cd0faedfab2b5afcd2ad5154.webp"
+    },
+    {
+      "key": "role-solo-cover",
+      "target": {
+        "kind": "item",
+        "id": 7930,
+        "typeId": 34,
+        "name": "Соло"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Original mature Cyberpunk RED 2045 role illustration, wide opaque 5:2 panorama. Premium detailed drawn cel shading: fine variable ink edges, broad crisp shadow planes with secondary reflected light, convincing materials and functional near-future technology. Natural mature adult anatomy, distinctive lived-in face, realistic hands and gestures. Detailed focal role action, softer lower-contrast city depth, balanced palette with readable faces. Entire face, working hands and key equipment comfortably inside frame. No photorealism, glossy 3D, toy shapes, exaggerated anatomy, heavy icon outline, text, signage, logos, watermark or UI overlay. No graphic injury, no firing weapons. A compact muscular woman solo in her forties, light olive skin, very short dark hair and an old healed eyebrow scar, scans a quiet industrial street from behind concrete cover. Practical graphite armor, a restrained orange shoulder strip, hands calmly adjusting a glove and touching a comms earpiece; professional situational awareness, no firing or aggression. Clear dawn sidelight, no visible enemy or injuries.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/role-solo-cover-v1.png",
+      "final": "final/role-solo-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9c33b556-c11a-4078-834d-1590faac3a0b.png",
+      "originalSha256": "e58fa171eb24da3ed00bf631073573cb490ea45b24be23cb0553dc20f1195b93",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "4ce248e29fcee6bd427614d1eeef4102431dfe0ab505e098997eb68b87b53fce",
+      "bytes": 268636,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final role panoramas inspected. Distinct mature characters and professional actions match role descriptions, plausible hands and props, no titles/logos or critical crops.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49702,
+        "objectKey": "system-item-media/v1/items/7930/cover/4ce248e29fcee6bd427614d1eeef4102431dfe0ab505e098997eb68b87b53fce.webp",
+        "fileSize": 268636
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7930/cover/4ce248e29fcee6bd427614d1eeef4102431dfe0ab505e098997eb68b87b53fce.webp"
+    },
+    {
+      "key": "role-tech-cover",
+      "target": {
+        "kind": "item",
+        "id": 7931,
+        "typeId": 34,
+        "name": "Техник"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Original mature Cyberpunk RED 2045 role illustration, wide opaque 5:2 panorama. Premium detailed drawn cel shading: fine variable ink edges, broad crisp shadow planes with secondary reflected light, convincing materials and functional near-future technology. Natural mature adult anatomy, distinctive lived-in face, realistic hands and gestures. Detailed focal role action, softer lower-contrast city depth, balanced palette with readable faces. Entire face, working hands and key equipment comfortably inside frame. No photorealism, glossy 3D, toy shapes, exaggerated anatomy, heavy icon outline, text, signage, logos, watermark or UI overlay. No graphic injury, no firing weapons. A cheerful but focused older Black technician with a bald head, gray beard and a teal shop apron over a cream work shirt repairs a small household power regulator held in a bench vise. One hand uses a precision tool, the other steadies the casing. Detailed plausible mechanical parts, organized practical workshop, bright skylight and warm bench lamp; no dangerous apparatus or text.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/role-tech-cover-v1.png",
+      "final": "final/role-tech-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-31828402-b013-4017-8359-6cec63c7bb1d.png",
+      "originalSha256": "88a37518298ce57d9cec6b5b807a7f8ca90f2b7493b104d3e30b1736e7732e30",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "11444b16293bbfb4c3b6e2eb3510c5664d6e135555f3f22a713d8d9dc5430089",
+      "bytes": 298522,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final role panoramas inspected. Distinct mature characters and professional actions match role descriptions, plausible hands and props, no titles/logos or critical crops.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49703,
+        "objectKey": "system-item-media/v1/items/7931/cover/11444b16293bbfb4c3b6e2eb3510c5664d6e135555f3f22a713d8d9dc5430089.webp",
+        "fileSize": 298522
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7931/cover/11444b16293bbfb4c3b6e2eb3510c5664d6e135555f3f22a713d8d9dc5430089.webp"
+    }
+  ],
+  "liveReview": {
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-20/live-qa.json",
+    "scenarios": 15,
+    "passed": true,
+    "checkedAt": "2026-11-16T15:29:24.886Z",
+    "note": "Each real item opened using its own ID; expected own cover loaded, no page errors or horizontal overflow."
+  }
+}

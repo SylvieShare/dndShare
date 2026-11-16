@@ -1,0 +1,373 @@
+{
+  "batch": 33,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-33",
+  "sourceAudit": "All 90 live clothing own media slots empty. Ten fashion directions and nine garment/accessory kinds checked against user-supplied Core p.356. New original designs per record; icons unchanged.",
+  "assets": [
+    {
+      "key": "clothing-7659-cover",
+      "target": {
+        "kind": "item",
+        "id": 7659,
+        "typeId": 23,
+        "name": "Низ (одежда банды)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A complete pair of adult-sized trousers, both legs fully visible, displayed on a neutral waist-down mannequin with simple feet supports. No top or jacket included. Adapt cut and materials to the fashion direction. Fashion direction: Rebellious fictional street-crew colors: black and deep red with abstract angled color blocks, robust practical streetwear, limited chrome hardware. No real or fictional gang emblems, weapons, slogans or symbols. Backdrop: urban clothing workroom, warm light and cool city depth.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7659-cover-v1.png",
+      "final": "final/clothing-7659-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-89ab4498-f92b-49ee-9875-abb9a53cc62d.png",
+      "originalSha256": "d7332181dae0a85a75bb8f8764cc9124a783f3166ff0d6a27498dbe019551c16",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "912d02a71781add5a213ead7c339f22ff4fe8a60aa35d2b0306699beb0aa541e",
+      "bytes": 248741,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49798,
+        "objectKey": "system-item-media/v1/items/7659/cover/912d02a71781add5a213ead7c339f22ff4fe8a60aa35d2b0306699beb0aa541e.jpg",
+        "fileSize": 248741
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7659/cover/912d02a71781add5a213ead7c339f22ff4fe8a60aa35d2b0306699beb0aa541e.jpg"
+    },
+    {
+      "key": "clothing-7660-cover",
+      "target": {
+        "kind": "item",
+        "id": 7660,
+        "typeId": 23,
+        "name": "Контактные линзы (одежда банды)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A macro still life of TWO thin soft tinted contact lenses in the two shallow wells of an open small clean lens case, one lens slightly lifted on the lip so its thin flexible transparent edge is obvious. Natural eye-size proportions, not cybernetic eyeballs or goggles. Fashion direction affects iris tint and case finish. No face or eye surgery. Fashion direction: Rebellious fictional street-crew colors: black and deep red with abstract angled color blocks, robust practical streetwear, limited chrome hardware. No real or fictional gang emblems, weapons, slogans or symbols. Backdrop: urban clothing workroom, warm light and cool city depth.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7660-cover-v1.png",
+      "final": "final/clothing-7660-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-bd01a8f7-173e-42e3-b695-7bf971315f87.png",
+      "originalSha256": "36fcfbaaf52c138e45efe817d21165b3e0ddb1bbb0a085d9b2a84500d97b8a59",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "e7f338e26cccd8a7fa82f034638bfcb60cc1cf0dfa18bd28453bf00da39e12dd",
+      "bytes": 255408,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49799,
+        "objectKey": "system-item-media/v1/items/7660/cover/e7f338e26cccd8a7fa82f034638bfcb60cc1cf0dfa18bd28453bf00da39e12dd.jpg",
+        "fileSize": 255408
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7660/cover/e7f338e26cccd8a7fa82f034638bfcb60cc1cf0dfa18bd28453bf00da39e12dd.jpg"
+    },
+    {
+      "key": "clothing-7661-cover",
+      "target": {
+        "kind": "item",
+        "id": 7661,
+        "typeId": 23,
+        "name": "Обувь (одежда банды)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A matching PAIR of complete adult footwear displayed on a low shop plinth at a three-quarter angle, both soles and uppers plausible. Adapt shoe type and materials to the fashion direction; do not show legs or a whole outfit. Fashion direction: Rebellious fictional street-crew colors: black and deep red with abstract angled color blocks, robust practical streetwear, limited chrome hardware. No real or fictional gang emblems, weapons, slogans or symbols. Backdrop: urban clothing workroom, warm light and cool city depth.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7661-cover-v1.png",
+      "final": "final/clothing-7661-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f429a6c0-0664-44a0-90e2-9b016880c237.png",
+      "originalSha256": "fef4d1d393aa791ea920548957d5722ab8c89e2a78644683b8003febe28bbfba",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ec50d372bb34b6d2d82bbf3fb01b4bb52a0df4b1a0035085926dc21159641b5e",
+      "bytes": 304686,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49800,
+        "objectKey": "system-item-media/v1/items/7661/cover/ec50d372bb34b6d2d82bbf3fb01b4bb52a0df4b1a0035085926dc21159641b5e.jpg",
+        "fileSize": 304686
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7661/cover/ec50d372bb34b6d2d82bbf3fb01b4bb52a0df4b1a0035085926dc21159641b5e.jpg"
+    },
+    {
+      "key": "clothing-7662-cover",
+      "target": {
+        "kind": "item",
+        "id": 7662,
+        "typeId": 23,
+        "name": "Очки (одежда банды)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of ordinary fashion eyeglasses with CLEAR TRANSPARENT lenses and unfolded temples, displayed on a discreet support over a shop counter. Eyeglass frame follows fashion direction; lenses are not mirrored or opaque. Fashion direction: Rebellious fictional street-crew colors: black and deep red with abstract angled color blocks, robust practical streetwear, limited chrome hardware. No real or fictional gang emblems, weapons, slogans or symbols. Backdrop: urban clothing workroom, warm light and cool city depth.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7662-cover-v1.png",
+      "final": "final/clothing-7662-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-567c3f88-11b0-4d33-b80a-8b398d5e3f86.png",
+      "originalSha256": "71c09725811fe7231b4a899fa65b0361f2694ea8d1aae78a4d34d5c42698f1c4",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "bbc8a04cb22562b1c12c075e0e628f816787ebf1f10d903de2de6a98460cb556",
+      "bytes": 264630,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49801,
+        "objectKey": "system-item-media/v1/items/7662/cover/bbc8a04cb22562b1c12c075e0e628f816787ebf1f10d903de2de6a98460cb556.jpg",
+        "fileSize": 264630
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7662/cover/bbc8a04cb22562b1c12c075e0e628f816787ebf1f10d903de2de6a98460cb556.jpg"
+    },
+    {
+      "key": "clothing-7663-cover",
+      "target": {
+        "kind": "item",
+        "id": 7663,
+        "typeId": 23,
+        "name": "Головной убор (одежда банды)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized hat or cap appropriate to the fashion direction, displayed on a plain neutral head form. A real wearable head covering, not a combat helmet. All brim/crown details inside frame. Fashion direction: Rebellious fictional street-crew colors: black and deep red with abstract angled color blocks, robust practical streetwear, limited chrome hardware. No real or fictional gang emblems, weapons, slogans or symbols. Backdrop: urban clothing workroom, warm light and cool city depth.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7663-cover-v1.png",
+      "final": "final/clothing-7663-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d98b4a5e-eca0-4ab1-8d87-0098797d83c8.png",
+      "originalSha256": "e17214604ead5d8ec2c73e76bb62b9423b51a2ea62d1b3fd35f922ff70d7167a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "1e8dc6b0714cc15c59782509e95e954c27d1191af06ba684c1f0156451112e02",
+      "bytes": 243447,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49802,
+        "objectKey": "system-item-media/v1/items/7663/cover/1e8dc6b0714cc15c59782509e95e954c27d1191af06ba684c1f0156451112e02.jpg",
+        "fileSize": 243447
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7663/cover/1e8dc6b0714cc15c59782509e95e954c27d1191af06ba684c1f0156451112e02.jpg"
+    },
+    {
+      "key": "clothing-7664-cover",
+      "target": {
+        "kind": "item",
+        "id": 7664,
+        "typeId": 23,
+        "name": "Верхняя одежда (одежда банды)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized OUTER jacket or coat appropriate to the fashion direction, displayed on a headless torso mannequin or hanger. Both sleeves and hem fully visible. Substantial outerwear distinct from a shirt; no trousers, no armor plates. Fashion direction: Rebellious fictional street-crew colors: black and deep red with abstract angled color blocks, robust practical streetwear, limited chrome hardware. No real or fictional gang emblems, weapons, slogans or symbols. Backdrop: urban clothing workroom, warm light and cool city depth.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7664-cover-v1.png",
+      "final": "final/clothing-7664-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7d5f2338-ca84-4a12-b5d7-08831684c701.png",
+      "originalSha256": "22a43f29d13021594b14f2d889c379f2999ec646e55f1bb7bab87f7af3e16890",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "66f0b183ac18cae340c8cbd796e4f0a5b9f27f3eb5a72927805b11f55fc1e8a3",
+      "bytes": 243693,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49803,
+        "objectKey": "system-item-media/v1/items/7664/cover/66f0b183ac18cae340c8cbd796e4f0a5b9f27f3eb5a72927805b11f55fc1e8a3.jpg",
+        "fileSize": 243693
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7664/cover/66f0b183ac18cae340c8cbd796e4f0a5b9f27f3eb5a72927805b11f55fc1e8a3.jpg"
+    },
+    {
+      "key": "clothing-7665-cover",
+      "target": {
+        "kind": "item",
+        "id": 7665,
+        "typeId": 23,
+        "name": "Украшение (одежда банды)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One original wearable piece of jewelry appropriate to the fashion direction: a substantial wrist cuff or pendant on a compact neutral jewelry stand. Believable full-size metal, beads or synthetic inserts; sophisticated material detail. No mystical gem glow, no symbols or letters. Fashion direction: Rebellious fictional street-crew colors: black and deep red with abstract angled color blocks, robust practical streetwear, limited chrome hardware. No real or fictional gang emblems, weapons, slogans or symbols. Backdrop: urban clothing workroom, warm light and cool city depth.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7665-cover-v1.png",
+      "final": "final/clothing-7665-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-85273de8-4b6c-4bc7-9a32-5d6f4ac5c3bb.png",
+      "originalSha256": "3db5a13c25e8a42cd3082824db3e52d81ba49e73e8136cf7af4d5ebf29787cba",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f40be9681f5fea0966f39c6f3597115e20a89437cebaac8a4e410f8b8d95cbc3",
+      "bytes": 275292,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49804,
+        "objectKey": "system-item-media/v1/items/7665/cover/f40be9681f5fea0966f39c6f3597115e20a89437cebaac8a4e410f8b8d95cbc3.jpg",
+        "fileSize": 275292
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7665/cover/f40be9681f5fea0966f39c6f3597115e20a89437cebaac8a4e410f8b8d95cbc3.jpg"
+    },
+    {
+      "key": "clothing-7666-cover",
+      "target": {
+        "kind": "item",
+        "id": 7666,
+        "typeId": 23,
+        "name": "Зеркальные очки (одежда банды)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of fashion sunglasses with genuinely MIRRORED lenses reflecting broad city-light planes, temples unfolded, on a small display support. Frame and reflected accent palette follow fashion direction; clearly different from ordinary clear-lens eyeglasses. Fashion direction: Rebellious fictional street-crew colors: black and deep red with abstract angled color blocks, robust practical streetwear, limited chrome hardware. No real or fictional gang emblems, weapons, slogans or symbols. Backdrop: urban clothing workroom, warm light and cool city depth.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7666-cover-v1.png",
+      "final": "final/clothing-7666-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-bd6b5bcf-be69-4609-a4a6-ce1cfea0d812.png",
+      "originalSha256": "bb7aa1038d7162b69ce78a760624ae5a32a1431045c30d1de3182e4e5218b6a2",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "4b93f12c76bac0f5b9189ccd188b60057759f1c6462bde64a29484e808ef6977",
+      "bytes": 264509,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49805,
+        "objectKey": "system-item-media/v1/items/7666/cover/4b93f12c76bac0f5b9189ccd188b60057759f1c6462bde64a29484e808ef6977.jpg",
+        "fileSize": 264509
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7666/cover/4b93f12c76bac0f5b9189ccd188b60057759f1c6462bde64a29484e808ef6977.jpg"
+    },
+    {
+      "key": "clothing-7667-cover",
+      "target": {
+        "kind": "item",
+        "id": 7667,
+        "typeId": 23,
+        "name": "Верх (одежда банды)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized SHIRT or light top appropriate to the fashion direction on a headless torso mannequin. Fine textile construction, both sleeves if present and full hem visible. This is a base-layer top, not a coat or armored jacket; no trousers. Fashion direction: Rebellious fictional street-crew colors: black and deep red with abstract angled color blocks, robust practical streetwear, limited chrome hardware. No real or fictional gang emblems, weapons, slogans or symbols. Backdrop: urban clothing workroom, warm light and cool city depth.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7667-cover-v1.png",
+      "final": "final/clothing-7667-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-86da49bc-6980-4bbf-8f35-6b5a68a1ee9d.png",
+      "originalSha256": "3a7dd356cdc17218df9209cae760345d4173ccc327e8b2b1eaa4c6f1040b6cf9",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "5eb9ef7c4741ca774f08bfe996613bae07075e15dfff0cf85acfd36e75a6cba3",
+      "bytes": 225312,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49806,
+        "objectKey": "system-item-media/v1/items/7667/cover/5eb9ef7c4741ca774f08bfe996613bae07075e15dfff0cf85acfd36e75a6cba3.jpg",
+        "fileSize": 225312
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7667/cover/5eb9ef7c4741ca774f08bfe996613bae07075e15dfff0cf85acfd36e75a6cba3.jpg"
+    }
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-33/live-qa.json",
+    "checkedAt": "2026-11-16T16:49:55.683Z",
+    "note": "Each own clothing cover loaded on real item at three widths, no page errors or horizontal overflow.",
+    "passed": true,
+    "scenarios": 27,
+    "widths": [
+      390,
+      840,
+      1440
+    ]
+  }
+}

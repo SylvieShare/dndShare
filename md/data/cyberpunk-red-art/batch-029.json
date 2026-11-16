@@ -1,0 +1,373 @@
+{
+  "batch": 29,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-29",
+  "sourceAudit": "All 90 live clothing own media slots empty. Ten fashion directions and nine garment/accessory kinds checked against user-supplied Core p.356. New original designs per record; icons unchanged.",
+  "assets": [
+    {
+      "key": "clothing-7623-cover",
+      "target": {
+        "kind": "item",
+        "id": 7623,
+        "typeId": 23,
+        "name": "Низ (Азия поп)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A complete pair of adult-sized trousers, both legs fully visible, displayed on a neutral waist-down mannequin with simple feet supports. No top or jacket included. Adapt cut and materials to the fashion direction. Fashion direction: Bright adult pop-inspired fashion: coral pink, cyan and violet accents; playful asymmetrical geometric panels, crisp synthetic fabrics and bold futuristic silhouette. Adult street style, no childish motifs. Backdrop: lively clean city boutique with subdued cyan/pink reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7623-cover-v1.png",
+      "final": "final/clothing-7623-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-21509e6d-4fa4-4d97-aed4-97cb729b450a.png",
+      "originalSha256": "b64e76015d8914afc3966a57611732eec566cc8ebcf38fe7cffb9c299aabf18e",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "e527732503c8956bfb6bbd9989d1d67fbfd99c5220af86ed275b45e1c8c319ff",
+      "bytes": 248322,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49762,
+        "objectKey": "system-item-media/v1/items/7623/cover/e527732503c8956bfb6bbd9989d1d67fbfd99c5220af86ed275b45e1c8c319ff.jpg",
+        "fileSize": 248322
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7623/cover/e527732503c8956bfb6bbd9989d1d67fbfd99c5220af86ed275b45e1c8c319ff.jpg"
+    },
+    {
+      "key": "clothing-7624-cover",
+      "target": {
+        "kind": "item",
+        "id": 7624,
+        "typeId": 23,
+        "name": "Контактные линзы (Азия поп)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A macro still life of TWO thin soft tinted contact lenses in the two shallow wells of an open small clean lens case, one lens slightly lifted on the lip so its thin flexible transparent edge is obvious. Natural eye-size proportions, not cybernetic eyeballs or goggles. Fashion direction affects iris tint and case finish. No face or eye surgery. Fashion direction: Bright adult pop-inspired fashion: coral pink, cyan and violet accents; playful asymmetrical geometric panels, crisp synthetic fabrics and bold futuristic silhouette. Adult street style, no childish motifs. Backdrop: lively clean city boutique with subdued cyan/pink reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7624-cover-v1.png",
+      "final": "final/clothing-7624-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-69b03d24-fedc-44a8-bc53-339a65fdf510.png",
+      "originalSha256": "0a80f9f169f65c84c6c630ae8eb73eb123cdef78bbcaac2e7962f469d46e6ede",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "9dddfaf614bab9e2578248ed0380d32d78c662dbffdc47d93e235e11714af2c8",
+      "bytes": 251235,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49763,
+        "objectKey": "system-item-media/v1/items/7624/cover/9dddfaf614bab9e2578248ed0380d32d78c662dbffdc47d93e235e11714af2c8.jpg",
+        "fileSize": 251235
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7624/cover/9dddfaf614bab9e2578248ed0380d32d78c662dbffdc47d93e235e11714af2c8.jpg"
+    },
+    {
+      "key": "clothing-7625-cover",
+      "target": {
+        "kind": "item",
+        "id": 7625,
+        "typeId": 23,
+        "name": "Обувь (Азия поп)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A matching PAIR of complete adult footwear displayed on a low shop plinth at a three-quarter angle, both soles and uppers plausible. Adapt shoe type and materials to the fashion direction; do not show legs or a whole outfit. Fashion direction: Bright adult pop-inspired fashion: coral pink, cyan and violet accents; playful asymmetrical geometric panels, crisp synthetic fabrics and bold futuristic silhouette. Adult street style, no childish motifs. Backdrop: lively clean city boutique with subdued cyan/pink reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7625-cover-v1.png",
+      "final": "final/clothing-7625-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-390ecba5-05a1-4968-bdf4-0a2072b2f4d5.png",
+      "originalSha256": "a5c3c1903002476be7c128c58251c3cbc1d592a14911b1ee967e2e79cbfc19cc",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "2b3b5a19a296ecadd421c5c8730f73b7a84834e6f6d956275b35ddac03c9f4da",
+      "bytes": 286266,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49764,
+        "objectKey": "system-item-media/v1/items/7625/cover/2b3b5a19a296ecadd421c5c8730f73b7a84834e6f6d956275b35ddac03c9f4da.jpg",
+        "fileSize": 286266
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7625/cover/2b3b5a19a296ecadd421c5c8730f73b7a84834e6f6d956275b35ddac03c9f4da.jpg"
+    },
+    {
+      "key": "clothing-7626-cover",
+      "target": {
+        "kind": "item",
+        "id": 7626,
+        "typeId": 23,
+        "name": "Очки (Азия поп)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of ordinary fashion eyeglasses with CLEAR TRANSPARENT lenses and unfolded temples, displayed on a discreet support over a shop counter. Eyeglass frame follows fashion direction; lenses are not mirrored or opaque. Fashion direction: Bright adult pop-inspired fashion: coral pink, cyan and violet accents; playful asymmetrical geometric panels, crisp synthetic fabrics and bold futuristic silhouette. Adult street style, no childish motifs. Backdrop: lively clean city boutique with subdued cyan/pink reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7626-cover-v1.png",
+      "final": "final/clothing-7626-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-dc33a069-64a5-4fe5-82a1-7a81329fc109.png",
+      "originalSha256": "dfd7b70001a0d8c52d411e6b35f06cf67452f58560aa24a241207f6f9f8f71f9",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d9c6911aad1e6533fa9665c33f33a78f9cb5f365aedca0b23bec71f7306754c4",
+      "bytes": 268710,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49765,
+        "objectKey": "system-item-media/v1/items/7626/cover/d9c6911aad1e6533fa9665c33f33a78f9cb5f365aedca0b23bec71f7306754c4.jpg",
+        "fileSize": 268710
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7626/cover/d9c6911aad1e6533fa9665c33f33a78f9cb5f365aedca0b23bec71f7306754c4.jpg"
+    },
+    {
+      "key": "clothing-7627-cover",
+      "target": {
+        "kind": "item",
+        "id": 7627,
+        "typeId": 23,
+        "name": "Головной убор (Азия поп)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized hat or cap appropriate to the fashion direction, displayed on a plain neutral head form. A real wearable head covering, not a combat helmet. All brim/crown details inside frame. Fashion direction: Bright adult pop-inspired fashion: coral pink, cyan and violet accents; playful asymmetrical geometric panels, crisp synthetic fabrics and bold futuristic silhouette. Adult street style, no childish motifs. Backdrop: lively clean city boutique with subdued cyan/pink reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7627-cover-v1.png",
+      "final": "final/clothing-7627-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6926d597-6af5-4f5e-ae6c-23dc86065a5d.png",
+      "originalSha256": "49f5d6ae21fc9a6f83a817180db6b1bcf17cf3ad53d776ba07f32d043efddb5c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b2397b5ea8944d2fbf15593acd434e194d0e97b0e73927eeb4526693433b68f5",
+      "bytes": 247015,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49766,
+        "objectKey": "system-item-media/v1/items/7627/cover/b2397b5ea8944d2fbf15593acd434e194d0e97b0e73927eeb4526693433b68f5.jpg",
+        "fileSize": 247015
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7627/cover/b2397b5ea8944d2fbf15593acd434e194d0e97b0e73927eeb4526693433b68f5.jpg"
+    },
+    {
+      "key": "clothing-7628-cover",
+      "target": {
+        "kind": "item",
+        "id": 7628,
+        "typeId": 23,
+        "name": "Верхняя одежда (Азия поп)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized OUTER jacket or coat appropriate to the fashion direction, displayed on a headless torso mannequin or hanger. Both sleeves and hem fully visible. Substantial outerwear distinct from a shirt; no trousers, no armor plates. Fashion direction: Bright adult pop-inspired fashion: coral pink, cyan and violet accents; playful asymmetrical geometric panels, crisp synthetic fabrics and bold futuristic silhouette. Adult street style, no childish motifs. Backdrop: lively clean city boutique with subdued cyan/pink reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7628-cover-v1.png",
+      "final": "final/clothing-7628-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-38fc57a0-d4b9-4003-9f13-b914f22eda53.png",
+      "originalSha256": "c594cda65708bda56db1747143867965e77d87479323971074ae91aa06f75fd4",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "dc18405c50b2a1480fe1d65b2af40a196cad071e6bf82679d060754b30c7c987",
+      "bytes": 270714,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49767,
+        "objectKey": "system-item-media/v1/items/7628/cover/dc18405c50b2a1480fe1d65b2af40a196cad071e6bf82679d060754b30c7c987.jpg",
+        "fileSize": 270714
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7628/cover/dc18405c50b2a1480fe1d65b2af40a196cad071e6bf82679d060754b30c7c987.jpg"
+    },
+    {
+      "key": "clothing-7629-cover",
+      "target": {
+        "kind": "item",
+        "id": 7629,
+        "typeId": 23,
+        "name": "Украшение (Азия поп)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One original wearable piece of jewelry appropriate to the fashion direction: a substantial wrist cuff or pendant on a compact neutral jewelry stand. Believable full-size metal, beads or synthetic inserts; sophisticated material detail. No mystical gem glow, no symbols or letters. Fashion direction: Bright adult pop-inspired fashion: coral pink, cyan and violet accents; playful asymmetrical geometric panels, crisp synthetic fabrics and bold futuristic silhouette. Adult street style, no childish motifs. Backdrop: lively clean city boutique with subdued cyan/pink reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7629-cover-v1.png",
+      "final": "final/clothing-7629-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3a510434-de7d-48a5-ba24-ffd7a8ce8667.png",
+      "originalSha256": "83910252e0418b2b40294cd9f62b36fa48b603689d1c5615f9b324a607123650",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "7eada92fe2bebeaf4ed968882b503c20f3b67ddbad3ec1877fee994542f7c6e8",
+      "bytes": 304802,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49768,
+        "objectKey": "system-item-media/v1/items/7629/cover/7eada92fe2bebeaf4ed968882b503c20f3b67ddbad3ec1877fee994542f7c6e8.jpg",
+        "fileSize": 304802
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7629/cover/7eada92fe2bebeaf4ed968882b503c20f3b67ddbad3ec1877fee994542f7c6e8.jpg"
+    },
+    {
+      "key": "clothing-7630-cover",
+      "target": {
+        "kind": "item",
+        "id": 7630,
+        "typeId": 23,
+        "name": "Зеркальные очки (Азия поп)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of fashion sunglasses with genuinely MIRRORED lenses reflecting broad city-light planes, temples unfolded, on a small display support. Frame and reflected accent palette follow fashion direction; clearly different from ordinary clear-lens eyeglasses. Fashion direction: Bright adult pop-inspired fashion: coral pink, cyan and violet accents; playful asymmetrical geometric panels, crisp synthetic fabrics and bold futuristic silhouette. Adult street style, no childish motifs. Backdrop: lively clean city boutique with subdued cyan/pink reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7630-cover-v1.png",
+      "final": "final/clothing-7630-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-82443735-aa7f-4a9a-8b94-c2b01a7c3707.png",
+      "originalSha256": "8b8aecefe94ee11a152fe6f7cfdf9843e9535312751e27c1b445875939cf6f2f",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ddcc7cbbe90f8f68dd0d95649d4acd42fac0bd85c8a05ce9c4863090e519404d",
+      "bytes": 236194,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49769,
+        "objectKey": "system-item-media/v1/items/7630/cover/ddcc7cbbe90f8f68dd0d95649d4acd42fac0bd85c8a05ce9c4863090e519404d.jpg",
+        "fileSize": 236194
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7630/cover/ddcc7cbbe90f8f68dd0d95649d4acd42fac0bd85c8a05ce9c4863090e519404d.jpg"
+    },
+    {
+      "key": "clothing-7631-cover",
+      "target": {
+        "kind": "item",
+        "id": 7631,
+        "typeId": 23,
+        "name": "Верх (Азия поп)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized SHIRT or light top appropriate to the fashion direction on a headless torso mannequin. Fine textile construction, both sleeves if present and full hem visible. This is a base-layer top, not a coat or armored jacket; no trousers. Fashion direction: Bright adult pop-inspired fashion: coral pink, cyan and violet accents; playful asymmetrical geometric panels, crisp synthetic fabrics and bold futuristic silhouette. Adult street style, no childish motifs. Backdrop: lively clean city boutique with subdued cyan/pink reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7631-cover-v1.png",
+      "final": "final/clothing-7631-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f4407888-9fac-4307-9b90-72860893e0d5.png",
+      "originalSha256": "1c183a8201d35b8f8bc448b2755a20f61f7ee96e8a59e401af994fe3104ddb71",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "a6122e98b65a23d14ae4119c03776e2682920da4224467bead2ba0fc873e18f1",
+      "bytes": 251751,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49770,
+        "objectKey": "system-item-media/v1/items/7631/cover/a6122e98b65a23d14ae4119c03776e2682920da4224467bead2ba0fc873e18f1.jpg",
+        "fileSize": 251751
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7631/cover/a6122e98b65a23d14ae4119c03776e2682920da4224467bead2ba0fc873e18f1.jpg"
+    }
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-29/live-qa.json",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "passed": true,
+    "note": "All nine own clothing images loaded by actual item ID at three widths, no JS errors or horizontal overflow.",
+    "scenarios": 27,
+    "checkedAt": "2026-11-16T16:42:38.835Z"
+  }
+}

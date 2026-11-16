@@ -1,0 +1,382 @@
+{
+  "batch": 36,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-36",
+  "sourceAudit": "All 90 live clothing own media slots empty. Ten fashion directions and nine garment/accessory kinds checked against user-supplied Core p.356. New original designs per record; icons unchanged.",
+  "assets": [
+    {
+      "key": "clothing-7686-cover",
+      "target": {
+        "kind": "item",
+        "id": 7686,
+        "typeId": 23,
+        "name": "Низ (спортивки)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A complete pair of adult-sized trousers, both legs fully visible, displayed on a neutral waist-down mannequin with simple feet supports. No top or jacket included. Adapt cut and materials to the fashion direction. Fashion direction: Comfortable athletic leisurewear: graphite, blue and small lime accents, flexible breathable technical fabric, streamlined functional panels and light hardware. Backdrop: an urban sports outfitter in clear daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7686-cover-v1.png",
+      "final": "final/clothing-7686-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7f1c6fcf-99b7-4f61-87c8-42f2c0649f97.png",
+      "originalSha256": "988bdf0d1654da40db1bad90ee2dc666092791c918b42333258119a0d1eb1cb8",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "74e9634fdad17e51d2d08adeafbec6203e665e61a05a85b116bdecdfbd9cef45",
+      "bytes": 252868,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All athletic apparel/accessory exports inspected. Small brand-like background marks removed from contact-lens scene with imagegen. Complete items, differentiated clear/mirrored lenses, fine material detail, no text.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49843,
+        "objectKey": "system-item-media/v1/items/7686/cover/74e9634fdad17e51d2d08adeafbec6203e665e61a05a85b116bdecdfbd9cef45.jpg",
+        "fileSize": 252868
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7686/cover/74e9634fdad17e51d2d08adeafbec6203e665e61a05a85b116bdecdfbd9cef45.jpg"
+    },
+    {
+      "key": "clothing-7687-cover",
+      "target": {
+        "kind": "item",
+        "id": 7687,
+        "typeId": 23,
+        "name": "Контактные линзы (спортивки)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Remove ONLY the small lime-colored logo-like marks from the hoodie chest and shorts on the mannequin in the UPPER RIGHT BACKGROUND. Replace those tiny marks with plain matching unmarked fabric. Keep the foreground contact lens case, both lenses, colored trim, all other objects, perspective, light and detailed cel-shaded rendering exactly unchanged. No text, logos or new symbols anywhere. Opaque 3:2.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7687-cover-v2.png",
+      "final": "final/clothing-7687-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-53e7ce95-4653-4cc2-a9fc-f04876a550f2.png",
+      "originalSha256": "a60c1152e38839ccdf9a4741e3db688f648e4e1ed88e7a403c1562be80776112",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "082a46bf133476eccd6daba7a63ebfc73864671d29d814d2770f5290dd318ad4",
+      "bytes": 258747,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-318f6b90-311c-40b4-b320-3a6b940720c4.png",
+        "reason": "Small brand-like marks on background mannequin",
+        "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A macro still life of TWO thin soft tinted contact lenses in the two shallow wells of an open small clean lens case, one lens slightly lifted on the lip so its thin flexible transparent edge is obvious. Natural eye-size proportions, not cybernetic eyeballs or goggles. Fashion direction affects iris tint and case finish. No face or eye surgery. Fashion direction: Comfortable athletic leisurewear: graphite, blue and small lime accents, flexible breathable technical fabric, streamlined functional panels and light hardware. Backdrop: an urban sports outfitter in clear daylight.",
+        "originalSha256": "7d340ed01bc5127e04af347aecb150f02a8e4134d04bd79e8c76f3236c1fc452",
+        "final": "final/clothing-7687-cover.jpg",
+        "sha256": "0b9e9c1145663f72af05d40af7560c9762109d1b60e46fef5f1322ac8b73288c",
+        "original": "originals/clothing-7687-cover-v1.png"
+      },
+      "visualReview": {
+        "note": "All athletic apparel/accessory exports inspected. Small brand-like background marks removed from contact-lens scene with imagegen. Complete items, differentiated clear/mirrored lenses, fine material detail, no text.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49844,
+        "objectKey": "system-item-media/v1/items/7687/cover/082a46bf133476eccd6daba7a63ebfc73864671d29d814d2770f5290dd318ad4.jpg",
+        "fileSize": 258747
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7687/cover/082a46bf133476eccd6daba7a63ebfc73864671d29d814d2770f5290dd318ad4.jpg"
+    },
+    {
+      "key": "clothing-7688-cover",
+      "target": {
+        "kind": "item",
+        "id": 7688,
+        "typeId": 23,
+        "name": "Обувь (спортивки)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A matching PAIR of complete adult footwear displayed on a low shop plinth at a three-quarter angle, both soles and uppers plausible. Adapt shoe type and materials to the fashion direction; do not show legs or a whole outfit. Fashion direction: Comfortable athletic leisurewear: graphite, blue and small lime accents, flexible breathable technical fabric, streamlined functional panels and light hardware. Backdrop: an urban sports outfitter in clear daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7688-cover-v1.png",
+      "final": "final/clothing-7688-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4bc62e9a-5780-45f6-b7ec-c3d38525efa5.png",
+      "originalSha256": "4c8cbfed176b5ec6b91060b25f6c7633cb2f41a9798456fc3b9f6305f2a07da9",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "860d2aea485b5c1226be60091793b5fff5929a0ca41027295cc24a3007fd02ee",
+      "bytes": 325060,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All athletic apparel/accessory exports inspected. Small brand-like background marks removed from contact-lens scene with imagegen. Complete items, differentiated clear/mirrored lenses, fine material detail, no text.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49845,
+        "objectKey": "system-item-media/v1/items/7688/cover/860d2aea485b5c1226be60091793b5fff5929a0ca41027295cc24a3007fd02ee.jpg",
+        "fileSize": 325060
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7688/cover/860d2aea485b5c1226be60091793b5fff5929a0ca41027295cc24a3007fd02ee.jpg"
+    },
+    {
+      "key": "clothing-7689-cover",
+      "target": {
+        "kind": "item",
+        "id": 7689,
+        "typeId": 23,
+        "name": "Очки (спортивки)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of ordinary fashion eyeglasses with CLEAR TRANSPARENT lenses and unfolded temples, displayed on a discreet support over a shop counter. Eyeglass frame follows fashion direction; lenses are not mirrored or opaque. Fashion direction: Comfortable athletic leisurewear: graphite, blue and small lime accents, flexible breathable technical fabric, streamlined functional panels and light hardware. Backdrop: an urban sports outfitter in clear daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7689-cover-v1.png",
+      "final": "final/clothing-7689-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-950d1a6b-dbe8-4571-99ff-37fd891a0aff.png",
+      "originalSha256": "79dbc212621a46e60eb4d74ba426d214efb022b06af2e9b4c292cbb3203abd3c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f530b7c4d2beb848e436562dcff331f9314ebe4b5c8f22eb0b1360bfdf84999e",
+      "bytes": 259864,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All athletic apparel/accessory exports inspected. Small brand-like background marks removed from contact-lens scene with imagegen. Complete items, differentiated clear/mirrored lenses, fine material detail, no text.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49846,
+        "objectKey": "system-item-media/v1/items/7689/cover/f530b7c4d2beb848e436562dcff331f9314ebe4b5c8f22eb0b1360bfdf84999e.jpg",
+        "fileSize": 259864
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7689/cover/f530b7c4d2beb848e436562dcff331f9314ebe4b5c8f22eb0b1360bfdf84999e.jpg"
+    },
+    {
+      "key": "clothing-7690-cover",
+      "target": {
+        "kind": "item",
+        "id": 7690,
+        "typeId": 23,
+        "name": "Головной убор (спортивки)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized hat or cap appropriate to the fashion direction, displayed on a plain neutral head form. A real wearable head covering, not a combat helmet. All brim/crown details inside frame. Fashion direction: Comfortable athletic leisurewear: graphite, blue and small lime accents, flexible breathable technical fabric, streamlined functional panels and light hardware. Backdrop: an urban sports outfitter in clear daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7690-cover-v1.png",
+      "final": "final/clothing-7690-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-191d0ab4-562f-4c4f-8b33-3bb35fc0178b.png",
+      "originalSha256": "149429c072b3cbe3b7582e9ba9fd7c3e7ce52233da076ff9f6669e25f35f001a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "36e2db2063926071867c7fa7e11780b564f0976e385c7748d27848386f22af98",
+      "bytes": 238756,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All athletic apparel/accessory exports inspected. Small brand-like background marks removed from contact-lens scene with imagegen. Complete items, differentiated clear/mirrored lenses, fine material detail, no text.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49847,
+        "objectKey": "system-item-media/v1/items/7690/cover/36e2db2063926071867c7fa7e11780b564f0976e385c7748d27848386f22af98.jpg",
+        "fileSize": 238756
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7690/cover/36e2db2063926071867c7fa7e11780b564f0976e385c7748d27848386f22af98.jpg"
+    },
+    {
+      "key": "clothing-7691-cover",
+      "target": {
+        "kind": "item",
+        "id": 7691,
+        "typeId": 23,
+        "name": "Верхняя одежда (спортивки)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized OUTER jacket or coat appropriate to the fashion direction, displayed on a headless torso mannequin or hanger. Both sleeves and hem fully visible. Substantial outerwear distinct from a shirt; no trousers, no armor plates. Fashion direction: Comfortable athletic leisurewear: graphite, blue and small lime accents, flexible breathable technical fabric, streamlined functional panels and light hardware. Backdrop: an urban sports outfitter in clear daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7691-cover-v1.png",
+      "final": "final/clothing-7691-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-675179aa-5cca-4178-9c65-ee6ee736a813.png",
+      "originalSha256": "b486d6946fe84a499e7a0a6c2f0c27c731ce206fe3c73116f598e397035a5fe1",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "49ace3560b0ce7b03d6db07bd0085d9f5f488f0aa5b3dc45f3ff4973909c5cf2",
+      "bytes": 264040,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All athletic apparel/accessory exports inspected. Small brand-like background marks removed from contact-lens scene with imagegen. Complete items, differentiated clear/mirrored lenses, fine material detail, no text.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49848,
+        "objectKey": "system-item-media/v1/items/7691/cover/49ace3560b0ce7b03d6db07bd0085d9f5f488f0aa5b3dc45f3ff4973909c5cf2.jpg",
+        "fileSize": 264040
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7691/cover/49ace3560b0ce7b03d6db07bd0085d9f5f488f0aa5b3dc45f3ff4973909c5cf2.jpg"
+    },
+    {
+      "key": "clothing-7692-cover",
+      "target": {
+        "kind": "item",
+        "id": 7692,
+        "typeId": 23,
+        "name": "Украшение (спортивки)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One original wearable piece of jewelry appropriate to the fashion direction: a substantial wrist cuff or pendant on a compact neutral jewelry stand. Believable full-size metal, beads or synthetic inserts; sophisticated material detail. No mystical gem glow, no symbols or letters. Fashion direction: Comfortable athletic leisurewear: graphite, blue and small lime accents, flexible breathable technical fabric, streamlined functional panels and light hardware. Backdrop: an urban sports outfitter in clear daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7692-cover-v1.png",
+      "final": "final/clothing-7692-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e90571b2-e64b-4611-9057-9bb6006d0f95.png",
+      "originalSha256": "36759585cb3cbf63e7183c0543ac5a9064ac942b76af4c2f2473396fe9f25441",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "5a20e1a078df1e8f7c83076f464f909fde8aad04522bc6e210cad2ea2379db54",
+      "bytes": 328201,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All athletic apparel/accessory exports inspected. Small brand-like background marks removed from contact-lens scene with imagegen. Complete items, differentiated clear/mirrored lenses, fine material detail, no text.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49849,
+        "objectKey": "system-item-media/v1/items/7692/cover/5a20e1a078df1e8f7c83076f464f909fde8aad04522bc6e210cad2ea2379db54.jpg",
+        "fileSize": 328201
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7692/cover/5a20e1a078df1e8f7c83076f464f909fde8aad04522bc6e210cad2ea2379db54.jpg"
+    },
+    {
+      "key": "clothing-7693-cover",
+      "target": {
+        "kind": "item",
+        "id": 7693,
+        "typeId": 23,
+        "name": "Зеркальные очки (спортивки)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of fashion sunglasses with genuinely MIRRORED lenses reflecting broad city-light planes, temples unfolded, on a small display support. Frame and reflected accent palette follow fashion direction; clearly different from ordinary clear-lens eyeglasses. Fashion direction: Comfortable athletic leisurewear: graphite, blue and small lime accents, flexible breathable technical fabric, streamlined functional panels and light hardware. Backdrop: an urban sports outfitter in clear daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7693-cover-v1.png",
+      "final": "final/clothing-7693-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-56a39a94-72af-43f1-ba4f-1fed826286bd.png",
+      "originalSha256": "1f9451f03e0299fc1874b2e6c116482b72cd94727d825a3a148e61b84ef40454",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "09c1cca855378271282445263e8965a4426269418be3ab2f9e36a06ed1581fce",
+      "bytes": 230613,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All athletic apparel/accessory exports inspected. Small brand-like background marks removed from contact-lens scene with imagegen. Complete items, differentiated clear/mirrored lenses, fine material detail, no text.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49850,
+        "objectKey": "system-item-media/v1/items/7693/cover/09c1cca855378271282445263e8965a4426269418be3ab2f9e36a06ed1581fce.jpg",
+        "fileSize": 230613
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7693/cover/09c1cca855378271282445263e8965a4426269418be3ab2f9e36a06ed1581fce.jpg"
+    },
+    {
+      "key": "clothing-7694-cover",
+      "target": {
+        "kind": "item",
+        "id": 7694,
+        "typeId": 23,
+        "name": "Верх (спортивки)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized SHIRT or light top appropriate to the fashion direction on a headless torso mannequin. Fine textile construction, both sleeves if present and full hem visible. This is a base-layer top, not a coat or armored jacket; no trousers. Fashion direction: Comfortable athletic leisurewear: graphite, blue and small lime accents, flexible breathable technical fabric, streamlined functional panels and light hardware. Backdrop: an urban sports outfitter in clear daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7694-cover-v1.png",
+      "final": "final/clothing-7694-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-09726cbd-a6ba-4d96-9ea6-bc3d2a78f975.png",
+      "originalSha256": "35c75aa61d6a6150400e9bdf00ee18f14a8a2e736ee262bff777fe8866f4af77",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "fa5dd1609d98a5ccdde03002683ecf6c93f261261e357523f9069430b06041c4",
+      "bytes": 266846,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All athletic apparel/accessory exports inspected. Small brand-like background marks removed from contact-lens scene with imagegen. Complete items, differentiated clear/mirrored lenses, fine material detail, no text.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49851,
+        "objectKey": "system-item-media/v1/items/7694/cover/fa5dd1609d98a5ccdde03002683ecf6c93f261261e357523f9069430b06041c4.jpg",
+        "fileSize": 266846
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7694/cover/fa5dd1609d98a5ccdde03002683ecf6c93f261261e357523f9069430b06041c4.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-36/live-qa.json",
+    "note": "All nine own fashion covers loaded at three widths on actual public item pages without JS errors or horizontal overflow.",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "checkedAt": "2026-11-16T17:22:03.319Z",
+    "scenarios": 27
+  }
+}

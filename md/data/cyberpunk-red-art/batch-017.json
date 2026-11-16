@@ -1,0 +1,262 @@
+{
+  "batch": 17,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-17",
+  "sourceAudit": "Live item records 7983–7996 own media slots empty. Vehicle construction and capacities checked against user-supplied Core text pp.190–191, including cargo dirigible, VTOL aerodynes and cabin-based boats. Original covers; icons untouched.",
+  "assets": [
+    {
+      "key": "vehicle-aerozep-cover",
+      "target": {
+        "kind": "item",
+        "id": 7983,
+        "typeId": 36,
+        "name": "Аэрозеп"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Edit the attached illustration. REMOVE EVERY LETTER, NUMBER, WORD, LOGO, BRAND SYMBOL, TITLE, CAPTION AND GRAPHIC BANNER FROM THE ENTIRE IMAGE. This must become an image-only scene with absolutely NO typography. Remove the large top header and all bottom ribbons completely, restoring natural continuous sky/building/water scenery behind them. Remove all lettering and logos from the vehicle body, wheels, license plates, signs, towers, docks, containers and distant advertising; replace them with plain matching material or abstract unmarked light panels. Leave license plates blank. Preserve the exact vehicle design, number of wheels/seats/rotors, proportions, entire vehicle silhouette, camera view, light, palette, scene and mature detailed cel-shaded rendering. Do not crop or shrink the vehicle, do not add new text anywhere, and do not add a replacement header. Opaque 3:2 finished illustration with scene extending to all four edges.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/vehicle-aerozep-cover-v2.png",
+      "final": "final/vehicle-aerozep-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9d95581e-fe89-4624-9db7-996da1e04a3c.png",
+      "originalSha256": "621f724c2a200578e90a253bb8f5ff365029f8c231682755057e35f73d3d4489",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f8fce7583b3c9054fa19236d8b8325b18b3d0e2ea03570b9eca7f6780be1d3e7",
+      "bytes": 388563,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/vehicle-aerozep-cover.jpg",
+        "reason": "Embedded titles, logos and labels despite initial prompt; never published",
+        "original": "originals/vehicle-aerozep-cover-v1.png",
+        "sha256": "00e87fd103c2c2c8d2b162eb5728ad7f4b050ce76834184b64c693a5c7478e5a",
+        "originalSha256": "e21dd95750a2743051474073a0a0dfb4f844ba23ba535eefd32f83d52d7240e7",
+        "prompt": "Use case: stylized-concept. Original Cyberpunk RED 2045 vehicle catalogue cover, opaque 3:2 landscape. Mature premium detailed cel-shaded concept illustration: realistic full-scale engineered vehicle proportions, fine variable ink linework, large crisp painted light/shadow planes, secondary reflected light, convincing rubber/glass/metal/polymer materials. Restrained localized wear, functional joints, seams and fittings; detailed hero vehicle, softer lower-contrast urban background. Whole vehicle visible with generous safe margin, coherent perspective and grounded contact/water shadows. No cartoon toy shapes, heavy icon outline, photo, glossy 3D render, uniform gritty noise, readable text, license plate letters, logos, branding, watermark or UI. No weapons attached, no violence. A modern cargo DIRIGIBLE airship, a long pale gray buoyant envelope with dark reinforcement seams and modest teal bands, several external propulsion pods, a substantial passenger gondola containing separate cabins and a suspended modular cargo section. Not a helicopter or airplane. Entire airship including envelope, gondola and tail fins visible in wide side three-quarter view, docking above a harbor freight mast in the cyberpunk city, small cranes provide scale, clear atmospheric late afternoon.",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4106c094-e44c-4bac-9308-c25dcc8fbb55.png"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Initial versions rejected for typography/logos. Built-in image edits removed text and restored scene. Final exports inspected: whole vehicle, correct category and major construction, clean crop, no visible branding or captions; icons unchanged.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49709,
+        "objectKey": "system-item-media/v1/items/7983/cover/f8fce7583b3c9054fa19236d8b8325b18b3d0e2ea03570b9eca7f6780be1d3e7.jpg",
+        "fileSize": 388563
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7983/cover/f8fce7583b3c9054fa19236d8b8325b18b3d0e2ea03570b9eca7f6780be1d3e7.jpg"
+    },
+    {
+      "key": "vehicle-av4-cover",
+      "target": {
+        "kind": "item",
+        "id": 7984,
+        "typeId": 36,
+        "name": "Многоцелевой аэродин AV-4"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Edit the attached illustration. REMOVE EVERY LETTER, NUMBER, WORD, LOGO, BRAND SYMBOL, TITLE, CAPTION AND GRAPHIC BANNER FROM THE ENTIRE IMAGE. This must become an image-only scene with absolutely NO typography. Remove the large top header and all bottom ribbons completely, restoring natural continuous sky/building/water scenery behind them. Remove all lettering and logos from the vehicle body, wheels, license plates, signs, towers, docks, containers and distant advertising; replace them with plain matching material or abstract unmarked light panels. Leave license plates blank. Preserve the exact vehicle design, number of wheels/seats/rotors, proportions, entire vehicle silhouette, camera view, light, palette, scene and mature detailed cel-shaded rendering. Do not crop or shrink the vehicle, do not add new text anywhere, and do not add a replacement header. Opaque 3:2 finished illustration with scene extending to all four edges.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/vehicle-av4-cover-v2.png",
+      "final": "final/vehicle-av4-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-30681e63-fb4b-4ad3-b655-4758875d865e.png",
+      "originalSha256": "526723d90fbc77f4abb78f480b02f6db7a5081ea9e3e7d542ee0bd5ee24ff78c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ad0d87fe093047f22c03dcd730bdedfa4ce1b4639e3daee974724fa183d99588",
+      "bytes": 341747,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/vehicle-av4-cover.jpg",
+        "reason": "Embedded titles, logos and labels despite initial prompt; never published",
+        "original": "originals/vehicle-av4-cover-v1.png",
+        "sha256": "7d2643e0d4be295fe6de84e46ba4e87bdd3648eea98e5efa99621687ad916f48",
+        "originalSha256": "ee6e9b40c0a79ebf96c61632497d17891011cba688b7c4718c11a00a8ccdf828",
+        "prompt": "Use case: stylized-concept. Original Cyberpunk RED 2045 vehicle catalogue cover, opaque 3:2 landscape. Mature premium detailed cel-shaded concept illustration: realistic full-scale engineered vehicle proportions, fine variable ink linework, large crisp painted light/shadow planes, secondary reflected light, convincing rubber/glass/metal/polymer materials. Restrained localized wear, functional joints, seams and fittings; detailed hero vehicle, softer lower-contrast urban background. Whole vehicle visible with generous safe margin, coherent perspective and grounded contact/water shadows. No cartoon toy shapes, heavy icon outline, photo, glossy 3D render, uniform gritty noise, readable text, license plate letters, logos, branding, watermark or UI. No weapons attached, no violence. A utilitarian six-seat AV-4 aerodyne: original car/van-like enclosed flying body with ducted jet vertical-thrust engines, broad practical cabin with cockpit and passenger compartment, sliding side door closed, reinforced landing skids. No large helicopter rotor or airplane wings. Ivory gray and muted orange panels, hovering just above a rooftop landing bay with all lift pods visible, low three-quarter view, subtle downwash and city depth.",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0c48d0ac-8130-41c7-986b-b0d3258c9473.png"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Initial versions rejected for typography/logos. Built-in image edits removed text and restored scene. Final exports inspected: whole vehicle, correct category and major construction, clean crop, no visible branding or captions; icons unchanged.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49710,
+        "objectKey": "system-item-media/v1/items/7984/cover/ad0d87fe093047f22c03dcd730bdedfa4ce1b4639e3daee974724fa183d99588.jpg",
+        "fileSize": 341747
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7984/cover/ad0d87fe093047f22c03dcd730bdedfa4ce1b4639e3daee974724fa183d99588.jpg"
+    },
+    {
+      "key": "vehicle-av9-cover",
+      "target": {
+        "kind": "item",
+        "id": 7985,
+        "typeId": 36,
+        "name": "Супер аэродин AV-9"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Edit the attached illustration. REMOVE EVERY LETTER, NUMBER, WORD, LOGO, BRAND SYMBOL, TITLE, CAPTION AND GRAPHIC BANNER FROM THE ENTIRE IMAGE. This must become an image-only scene with absolutely NO typography. Remove the large top header and all bottom ribbons completely, restoring natural continuous sky/building/water scenery behind them. Remove all lettering and logos from the vehicle body, wheels, license plates, signs, towers, docks, containers and distant advertising; replace them with plain matching material or abstract unmarked light panels. Leave license plates blank. Preserve the exact vehicle design, number of wheels/seats/rotors, proportions, entire vehicle silhouette, camera view, light, palette, scene and mature detailed cel-shaded rendering. Do not crop or shrink the vehicle, do not add new text anywhere, and do not add a replacement header. Opaque 3:2 finished illustration with scene extending to all four edges.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/vehicle-av9-cover-v2.png",
+      "final": "final/vehicle-av9-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d52965fa-7018-497a-95b6-0cdc12e374a7.png",
+      "originalSha256": "5a3ba10c82e0aba75f577ff6c4f0905503890f8a8d9da9caa8fc0796c33f21e4",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "923798ac59dde9c076de7fb3c2e20e193c8f817e750e970e04b7aa84fb0308fc",
+      "bytes": 370479,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/vehicle-av9-cover.jpg",
+        "reason": "Embedded titles, logos and labels despite initial prompt; never published",
+        "original": "originals/vehicle-av9-cover-v1.png",
+        "sha256": "cdab8cd8a4845bfcbfcbfc6d965591eec3a30613e73b9c0b3cdbac3440a982b0",
+        "originalSha256": "fb97a9f2bae939bfd32de72b18f107978eb5dba7b786a59d91c8dd10ebbfa145",
+        "prompt": "Use case: stylized-concept. Original Cyberpunk RED 2045 vehicle catalogue cover, opaque 3:2 landscape. Mature premium detailed cel-shaded concept illustration: realistic full-scale engineered vehicle proportions, fine variable ink linework, large crisp painted light/shadow planes, secondary reflected light, convincing rubber/glass/metal/polymer materials. Restrained localized wear, functional joints, seams and fittings; detailed hero vehicle, softer lower-contrast urban background. Whole vehicle visible with generous safe margin, coherent perspective and grounded contact/water shadows. No cartoon toy shapes, heavy icon outline, photo, glossy 3D render, uniform gritty noise, readable text, license plate letters, logos, branding, watermark or UI. No weapons attached, no violence. An exotic two-seat AV-9 sports aerodyne, sleek compact car-like flying fuselage with two-person cockpit, efficient ducted jet vertical-thrust engines and retractable landing gear. No large rotor or airplane wings. Graphite and cobalt body with narrow warm lights, landed on a high rooftop pad at blue hour, entire aircraft in three-quarter view, elegant credible engineering.",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-06ba2d67-23f4-4447-af0d-8ef53379526d.png"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Initial versions rejected for typography/logos. Built-in image edits removed text and restored scene. Final exports inspected: whole vehicle, correct category and major construction, clean crop, no visible branding or captions; icons unchanged.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49711,
+        "objectKey": "system-item-media/v1/items/7985/cover/923798ac59dde9c076de7fb3c2e20e193c8f817e750e970e04b7aa84fb0308fc.jpg",
+        "fileSize": 370479
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7985/cover/923798ac59dde9c076de7fb3c2e20e193c8f817e750e970e04b7aa84fb0308fc.jpg"
+    },
+    {
+      "key": "vehicle-gyrocopter-cover",
+      "target": {
+        "kind": "item",
+        "id": 7988,
+        "typeId": 36,
+        "name": "Автожир"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Edit the attached illustration. REMOVE EVERY LETTER, NUMBER, WORD, LOGO, BRAND SYMBOL, TITLE, CAPTION AND GRAPHIC BANNER FROM THE ENTIRE IMAGE. This must become an image-only scene with absolutely NO typography. Remove the large top header and all bottom ribbons completely, restoring natural continuous sky/building/water scenery behind them. Remove all lettering and logos from the vehicle body, wheels, license plates, signs, towers, docks, containers and distant advertising; replace them with plain matching material or abstract unmarked light panels. Leave license plates blank. Preserve the exact vehicle design, number of wheels/seats/rotors, proportions, entire vehicle silhouette, camera view, light, palette, scene and mature detailed cel-shaded rendering. Do not crop or shrink the vehicle, do not add new text anywhere, and do not add a replacement header. Opaque 3:2 finished illustration with scene extending to all four edges.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/vehicle-gyrocopter-cover-v2.png",
+      "final": "final/vehicle-gyrocopter-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7dbcbd1b-66d7-483d-a702-37dde5a434b0.png",
+      "originalSha256": "c34b63bb01a885210b078d66e6b0de6a7bf8982331b4a574f3943f3ef4705e52",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "db809ac292607b12aa3a2975254ab9199ce6413727b8464ca285a26b566eed67",
+      "bytes": 334382,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/vehicle-gyrocopter-cover.jpg",
+        "reason": "Embedded titles, logos and labels despite initial prompt; never published",
+        "original": "originals/vehicle-gyrocopter-cover-v1.png",
+        "sha256": "163f7b0c714f3f7a2daea59239bea0e65d7bc18d6302fe3ee8a140e2a5edbf21",
+        "originalSha256": "5fc3ac65b6f39e9a0a68ff301d0c42ced2a66bbccc7336e97c57ba020038b0ee",
+        "prompt": "Use case: stylized-concept. Original Cyberpunk RED 2045 vehicle catalogue cover, opaque 3:2 landscape. Mature premium detailed cel-shaded concept illustration: realistic full-scale engineered vehicle proportions, fine variable ink linework, large crisp painted light/shadow planes, secondary reflected light, convincing rubber/glass/metal/polymer materials. Restrained localized wear, functional joints, seams and fittings; detailed hero vehicle, softer lower-contrast urban background. Whole vehicle visible with generous safe margin, coherent perspective and grounded contact/water shadows. No cartoon toy shapes, heavy icon outline, photo, glossy 3D render, uniform gritty noise, readable text, license plate letters, logos, branding, watermark or UI. No weapons attached, no violence. A small two-seat gyrocopter rotorcraft with tandem enclosed cockpit, a single long unpowered overhead rotor on a mast and a separate rear pusher propeller, slender tail boom and three-wheel landing gear. Pale cream frame with teal panels, parked on a small rooftop hangar apron, bright hazy morning. Entire overhead rotor and tail inside frame, readable different rotor and propeller, no additional blades or jet pods.",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a104eff4-d601-4fc2-ac3c-3457ffcd00f1.png"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Initial versions rejected for typography/logos. Built-in image edits removed text and restored scene. Final exports inspected: whole vehicle, correct category and major construction, clean crop, no visible branding or captions; icons unchanged.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49712,
+        "objectKey": "system-item-media/v1/items/7988/cover/db809ac292607b12aa3a2975254ab9199ce6413727b8464ca285a26b566eed67.jpg",
+        "fileSize": 334382
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7988/cover/db809ac292607b12aa3a2975254ab9199ce6413727b8464ca285a26b566eed67.jpg"
+    },
+    {
+      "key": "vehicle-helicopter-cover",
+      "target": {
+        "kind": "item",
+        "id": 7989,
+        "typeId": 36,
+        "name": "Вертолёт"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Edit the attached illustration. REMOVE EVERY LETTER, NUMBER, WORD, LOGO, BRAND SYMBOL, TITLE, CAPTION AND GRAPHIC BANNER FROM THE ENTIRE IMAGE. This must become an image-only scene with absolutely NO typography. Remove the large top header and all bottom ribbons completely, restoring natural continuous sky/building/water scenery behind them. Remove all lettering and logos from the vehicle body, wheels, license plates, signs, towers, docks, containers and distant advertising; replace them with plain matching material or abstract unmarked light panels. Leave license plates blank. Preserve the exact vehicle design, number of wheels/seats/rotors, proportions, entire vehicle silhouette, camera view, light, palette, scene and mature detailed cel-shaded rendering. Do not crop or shrink the vehicle, do not add new text anywhere, and do not add a replacement header. Opaque 3:2 finished illustration with scene extending to all four edges.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/vehicle-helicopter-cover-v2.png",
+      "final": "final/vehicle-helicopter-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e8d27971-4fdf-4e29-88c5-594c583a9316.png",
+      "originalSha256": "c13815377c6fc2f852790d04b362a18195d07745c788fb84744189022ec191db",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "253eb071a572964945d022c81fb8fcb02c631ae00e7c82c5422f19d8a9c5d33a",
+      "bytes": 357900,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/vehicle-helicopter-cover.jpg",
+        "reason": "Embedded titles, logos and labels despite initial prompt; never published",
+        "original": "originals/vehicle-helicopter-cover-v1.png",
+        "sha256": "f9369a10ed3ef73400795abc5ad804fb805aedd147254d06bdbfb72203fd4285",
+        "originalSha256": "32c9b090d6f9136ce6df4b21f1b40f0b3fa7a43257b9b1c51bc5b6e458e8dd36",
+        "prompt": "Use case: stylized-concept. Original Cyberpunk RED 2045 vehicle catalogue cover, opaque 3:2 landscape. Mature premium detailed cel-shaded concept illustration: realistic full-scale engineered vehicle proportions, fine variable ink linework, large crisp painted light/shadow planes, secondary reflected light, convincing rubber/glass/metal/polymer materials. Restrained localized wear, functional joints, seams and fittings; detailed hero vehicle, softer lower-contrast urban background. Whole vehicle visible with generous safe margin, coherent perspective and grounded contact/water shadows. No cartoon toy shapes, heavy icon outline, photo, glossy 3D render, uniform gritty noise, readable text, license plate letters, logos, branding, watermark or UI. No weapons attached, no violence. A full-size four-seat conventional helicopter with enclosed cabin, a main rotor overhead and tail rotor at the end of a long tail boom, two landing skids, muted red and graphite body. Parked on an urban utility helipad at dawn, entire main rotor disk, tail and skids within safe frame. Plausible four-seat cabin visible through windows, no weapons, futuristic but recognizable rotary aircraft.",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1ac487ac-37ad-4c3f-96ca-2d566c00e66d.png"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Initial versions rejected for typography/logos. Built-in image edits removed text and restored scene. Final exports inspected: whole vehicle, correct category and major construction, clean crop, no visible branding or captions; icons unchanged.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49713,
+        "objectKey": "system-item-media/v1/items/7989/cover/253eb071a572964945d022c81fb8fcb02c631ae00e7c82c5422f19d8a9c5d33a.jpg",
+        "fileSize": 357900
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7989/cover/253eb071a572964945d022c81fb8fcb02c631ae00e7c82c5422f19d8a9c5d33a.jpg"
+    }
+  ],
+  "liveReview": {
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-17/live-qa.json",
+    "scenarios": 15,
+    "passed": true,
+    "checkedAt": "2026-11-16T15:39:54.2Z",
+    "note": "Each real item opened using its own ID; expected own cover loaded, no page errors or horizontal overflow."
+  }
+}

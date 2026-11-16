@@ -1,0 +1,256 @@
+{
+  "batch": 21,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-21",
+  "sourceAudit": "Live armor item media slots empty. Protective materials and distinguishing construction checked in user-supplied Core p.97, item facts and descriptions. Armor torso/head entries kept distinct; transparent polycarbonate shield; synthetic samples for concealed implants. No icon changes.",
+  "assets": [
+    {
+      "key": "armor-bodyweight-cover",
+      "target": {
+        "kind": "item",
+        "id": 7605,
+        "typeId": 21,
+        "name": "Комбинезон «Бодивейт»"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY scene for an app, no cover design or typography. Original mature detailed illustration in a dystopian retrofuturist city circa 2045, same refined cel-shaded art direction: thin varied ink lines, large angular painted shadow planes, reflected light, believable full-size materials and engineering. Detailed main protective garment/object with quieter atmospheric background, professional equipment rather than a toy. Opaque 3:2 landscape, entire object comfortably in frame. ABSOLUTELY NO text, letters, numbers, logos, labels, signage, title, header, banner, watermark, badges or UI anywhere; no photorealism or glossy 3D, no heavy icon outline. No weapons, blood, exposed tissue, injury or instructions. A fitted charcoal full-body netrunner suit with flexible shock-absorbing gel panels at shoulders, chest, elbows and knees, subtle violet seams, an integrated fitted hood/head protection, a practical cyberdeck carrying attachment and interface ports at the hip. Displayed upright on a neutral adult-proportioned mannequin in a compact specialist outfitter, full suit from hood to boots visible; no skin-tight sexual emphasis. Fine fabric construction and functional padding.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/armor-bodyweight-cover-v1.png",
+      "final": "final/armor-bodyweight-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-29a6016d-452e-4c72-bc05-107863846de0.png",
+      "originalSha256": "5a0e4c2379e5de5a27ad528ae3e6d9792425a30f3e74864feba78863d8bc8bf2",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "404263a3e417c1eed42030f1e30c67b31b0385842bab07a00149746724337ad8",
+      "bytes": 293096,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports inspected. Armor materials and weight tiers distinguishable, body/head separation preserved, shield truly transparent, concealed implants shown on synthetic models without gore, no text/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49718,
+        "objectKey": "system-item-media/v1/items/7605/cover/404263a3e417c1eed42030f1e30c67b31b0385842bab07a00149746724337ad8.jpg",
+        "fileSize": 293096
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7605/cover/404263a3e417c1eed42030f1e30c67b31b0385842bab07a00149746724337ad8.jpg"
+    },
+    {
+      "key": "armor-shield-cover",
+      "target": {
+        "kind": "item",
+        "id": 7606,
+        "typeId": 21,
+        "name": "Пулестойкий щит"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY scene for an app, no cover design or typography. Original mature detailed illustration in a dystopian retrofuturist city circa 2045, same refined cel-shaded art direction: thin varied ink lines, large angular painted shadow planes, reflected light, believable full-size materials and engineering. Detailed main protective garment/object with quieter atmospheric background, professional equipment rather than a toy. Opaque 3:2 landscape, entire object comfortably in frame. ABSOLUTELY NO text, letters, numbers, logos, labels, signage, title, header, banner, watermark, badges or UI anywhere; no photorealism or glossy 3D, no heavy icon outline. No weapons, blood, exposed tissue, injury or instructions. A clear transparent polycarbonate ballistic shield, tall rectangular form with rounded corners and only a restrained graphite edge rail, visible rear forearm strap and handle through the transparent panel. Standing upright in a practical storage rack. It must read as a transparent protective shield, not solid metal, not medieval, no emblem. Carefully painted refraction and broad reflections, worn equipment room, soft cool window light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/armor-shield-cover-v1.png",
+      "final": "final/armor-shield-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2a373cf5-2cd7-4138-a96c-4eb62403397e.png",
+      "originalSha256": "07f7b5d4b5b058dd4722c7c0cfc90154327de8d4e0fbbe29c93cad4834cd955d",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "cd7426e55c154636e5a4d3dee2b2b24b923952c4585a23ebcf8cb0775bbf9ffe",
+      "bytes": 252417,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports inspected. Armor materials and weight tiers distinguishable, body/head separation preserved, shield truly transparent, concealed implants shown on synthetic models without gore, no text/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49719,
+        "objectKey": "system-item-media/v1/items/7606/cover/cd7426e55c154636e5a4d3dee2b2b24b923952c4585a23ebcf8cb0775bbf9ffe.jpg",
+        "fileSize": 252417
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7606/cover/cd7426e55c154636e5a4d3dee2b2b24b923952c4585a23ebcf8cb0775bbf9ffe.jpg"
+    },
+    {
+      "key": "armor-flak-cover",
+      "target": {
+        "kind": "item",
+        "id": 7607,
+        "typeId": 21,
+        "name": "Костюм сапёра"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY scene for an app, no cover design or typography. Original mature detailed illustration in a dystopian retrofuturist city circa 2045, same refined cel-shaded art direction: thin varied ink lines, large angular painted shadow planes, reflected light, believable full-size materials and engineering. Detailed main protective garment/object with quieter atmospheric background, professional equipment rather than a toy. Opaque 3:2 landscape, entire object comfortably in frame. ABSOLUTELY NO text, letters, numbers, logos, labels, signage, title, header, banner, watermark, badges or UI anywhere; no photorealism or glossy 3D, no heavy icon outline. No weapons, blood, exposed tissue, injury or instructions. A bulky olive-green bomb-resistant protective vest and matching reinforced trousers on an adult-proportioned headless mannequin, thick layered padding, high protective collar, articulated fabric joint sections and broad secure straps. No helmet in this body-armor image. Heavy practical 2045 protective clothing in an equipment locker area, neutral lighting reveals construction, no explosives or tools for bomb handling.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/armor-flak-cover-v1.png",
+      "final": "final/armor-flak-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-032acc59-397d-4b37-b574-16c5354c2216.png",
+      "originalSha256": "8009d086cd5fe0a4bdeeccf8a6334e43294833344f1c85df5034c2cd0c679570",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "355cf54b79cf6d1c46879f0ceada188e634a8ffb6353fb53af339342ce14bc0a",
+      "bytes": 305812,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports inspected. Armor materials and weight tiers distinguishable, body/head separation preserved, shield truly transparent, concealed implants shown on synthetic models without gore, no text/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49720,
+        "objectKey": "system-item-media/v1/items/7607/cover/355cf54b79cf6d1c46879f0ceada188e634a8ffb6353fb53af339342ce14bc0a.jpg",
+        "fileSize": 305812
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7607/cover/355cf54b79cf6d1c46879f0ceada188e634a8ffb6353fb53af339342ce14bc0a.jpg"
+    },
+    {
+      "key": "armor-heavy-cover",
+      "target": {
+        "kind": "item",
+        "id": 7609,
+        "typeId": 21,
+        "name": "Тяжёлый бронекостюм"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY scene for an app, no cover design or typography. Original mature detailed illustration in a dystopian retrofuturist city circa 2045, same refined cel-shaded art direction: thin varied ink lines, large angular painted shadow planes, reflected light, believable full-size materials and engineering. Detailed main protective garment/object with quieter atmospheric background, professional equipment rather than a toy. Opaque 3:2 landscape, entire object comfortably in frame. ABSOLUTELY NO text, letters, numbers, logos, labels, signage, title, header, banner, watermark, badges or UI anywhere; no photorealism or glossy 3D, no heavy icon outline. No weapons, blood, exposed tissue, injury or instructions. A very thick graphite protective jacket and trousers of densely woven aramid fabric with multiple polymer-mesh layers, large structural reinforced panels, padded shoulders and flexible ribbed joint sections, muted rust accent. Headless adult mannequin, no helmet. Heavy substantial fabric armor, not rigid medieval plate or powered exoskeleton. Armorer workshop with warm sidelighting and cool backdrop.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/armor-heavy-cover-v1.png",
+      "final": "final/armor-heavy-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0062cd36-8335-4448-bb09-93986125719f.png",
+      "originalSha256": "9d15688dfc254f4f32f7c4fe55737d225b0e44977c1dbd07d6d9d0cf3e45de17",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "2d6af96b081a55bb42e2195ca4378b9e3a1fbbeee02868918da8400a2fa2c5a5",
+      "bytes": 363966,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports inspected. Armor materials and weight tiers distinguishable, body/head separation preserved, shield truly transparent, concealed implants shown on synthetic models without gore, no text/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49721,
+        "objectKey": "system-item-media/v1/items/7609/cover/2d6af96b081a55bb42e2195ca4378b9e3a1fbbeee02868918da8400a2fa2c5a5.jpg",
+        "fileSize": 363966
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7609/cover/2d6af96b081a55bb42e2195ca4378b9e3a1fbbeee02868918da8400a2fa2c5a5.jpg"
+    },
+    {
+      "key": "armor-kevlar-cover",
+      "target": {
+        "kind": "item",
+        "id": 7611,
+        "typeId": 21,
+        "name": "Кевларовый жилет"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY scene for an app, no cover design or typography. Original mature detailed illustration in a dystopian retrofuturist city circa 2045, same refined cel-shaded art direction: thin varied ink lines, large angular painted shadow planes, reflected light, believable full-size materials and engineering. Detailed main protective garment/object with quieter atmospheric background, professional equipment rather than a toy. Opaque 3:2 landscape, entire object comfortably in frame. ABSOLUTELY NO text, letters, numbers, logos, labels, signage, title, header, banner, watermark, badges or UI anywhere; no photorealism or glossy 3D, no heavy icon outline. No weapons, blood, exposed tissue, injury or instructions. A discreet dark navy aramid protective vest, relatively thin and flexible, tailored simple front panels, subtle closure and adjustable side straps. On a headless torso form on a clothing repair counter, woven fabric visible through restrained detail. No rigid armor plates or military insignia, ordinary civilian wearable protection. Soft neutral daylight and warm shop accents.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/armor-kevlar-cover-v1.png",
+      "final": "final/armor-kevlar-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2afafbfa-44c1-48cd-acc1-18a4db5ea077.png",
+      "originalSha256": "021efdd120bd28c58c1a4bbcde88a6cc26d5b79241bfd39b509e68b9719cd144",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "1b952c729078f6ef0fd5fd7b6aec7f23d7861cf7a0521444ab5a0015c8c80735",
+      "bytes": 340495,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports inspected. Armor materials and weight tiers distinguishable, body/head separation preserved, shield truly transparent, concealed implants shown on synthetic models without gore, no text/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49722,
+        "objectKey": "system-item-media/v1/items/7611/cover/1b952c729078f6ef0fd5fd7b6aec7f23d7861cf7a0521444ab5a0015c8c80735.jpg",
+        "fileSize": 340495
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7611/cover/1b952c729078f6ef0fd5fd7b6aec7f23d7861cf7a0521444ab5a0015c8c80735.jpg"
+    },
+    {
+      "key": "armor-leather-cover",
+      "target": {
+        "kind": "item",
+        "id": 7613,
+        "typeId": 21,
+        "name": "Кожанка"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY scene for an app, no cover design or typography. Original mature detailed illustration in a dystopian retrofuturist city circa 2045, same refined cel-shaded art direction: thin varied ink lines, large angular painted shadow planes, reflected light, believable full-size materials and engineering. Detailed main protective garment/object with quieter atmospheric background, professional equipment rather than a toy. Opaque 3:2 landscape, entire object comfortably in frame. ABSOLUTELY NO text, letters, numbers, logos, labels, signage, title, header, banner, watermark, badges or UI anywhere; no photorealism or glossy 3D, no heavy icon outline. No weapons, blood, exposed tissue, injury or instructions. A worn oxblood motorcycle leather jacket with practical thick leather, simple graphite lapels, functional zipper and modest elbow reinforcement. Hanging fully visible in an urban nomad gear shop, no armor plates. Rich restrained leather creases and stitching, warm light against cool city window. Original plain jacket, no patches, words or logos.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/armor-leather-cover-v1.png",
+      "final": "final/armor-leather-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-28b88268-565b-4d05-be60-1b6f96b397bf.png",
+      "originalSha256": "bc94334fe11611aa24e691b685ffdc1a843ea78c37dc0fa0ed7419ec143757a4",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "8c2386f53b52d707f9293ef097dfcface4e81ed8cce04f16404e7566490172ad",
+      "bytes": 329857,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports inspected. Armor materials and weight tiers distinguishable, body/head separation preserved, shield truly transparent, concealed implants shown on synthetic models without gore, no text/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49723,
+        "objectKey": "system-item-media/v1/items/7613/cover/8c2386f53b52d707f9293ef097dfcface4e81ed8cce04f16404e7566490172ad.jpg",
+        "fileSize": 329857
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7613/cover/8c2386f53b52d707f9293ef097dfcface4e81ed8cce04f16404e7566490172ad.jpg"
+    }
+  ],
+  "liveReview": {
+    "note": "Every own item cover verified against its actual production URL at three widths, no JS errors or horizontal overflow.",
+    "passed": true,
+    "scenarios": 18,
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-21/live-qa.json",
+    "checkedAt": "2026-11-16T15:52:07.819Z",
+    "widths": [
+      390,
+      840,
+      1440
+    ]
+  }
+}

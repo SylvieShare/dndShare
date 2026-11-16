@@ -1,0 +1,373 @@
+{
+  "batch": 38,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-38",
+  "sourceAudit": "All 90 live clothing own media slots empty. Ten fashion directions and nine garment/accessory kinds checked against user-supplied Core p.356. New original designs per record; icons unchanged.",
+  "assets": [
+    {
+      "key": "clothing-7704-cover",
+      "target": {
+        "kind": "item",
+        "id": 7704,
+        "typeId": 23,
+        "name": "Низ (городской эпатаж)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A complete pair of adult-sized trousers, both legs fully visible, displayed on a neutral waist-down mannequin with simple feet supports. No top or jacket included. Adapt cut and materials to the fashion direction. Fashion direction: Flashy high-tech adult street fashion: reflective graphite, electric teal and small hot-pink accents, angular cuts and integrated narrow light piping, sophisticated technical construction. Backdrop: city night boutique, restrained luminous reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7704-cover-v1.png",
+      "final": "final/clothing-7704-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0b33450c-697c-42dd-a1ce-25c74242910c.png",
+      "originalSha256": "8037322e1eaafa42e50abab2712541ed9fdd60156e83807dee2b0dea32577076",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "5eb38eb28aede15a61cdb75cd249d9cdf1da3ad396967991698399d310eab653",
+      "bytes": 196569,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49834,
+        "objectKey": "system-item-media/v1/items/7704/cover/5eb38eb28aede15a61cdb75cd249d9cdf1da3ad396967991698399d310eab653.jpg",
+        "fileSize": 196569
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7704/cover/5eb38eb28aede15a61cdb75cd249d9cdf1da3ad396967991698399d310eab653.jpg"
+    },
+    {
+      "key": "clothing-7705-cover",
+      "target": {
+        "kind": "item",
+        "id": 7705,
+        "typeId": 23,
+        "name": "Контактные линзы (городской эпатаж)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A macro still life of TWO thin soft tinted contact lenses in the two shallow wells of an open small clean lens case, one lens slightly lifted on the lip so its thin flexible transparent edge is obvious. Natural eye-size proportions, not cybernetic eyeballs or goggles. Fashion direction affects iris tint and case finish. No face or eye surgery. Fashion direction: Flashy high-tech adult street fashion: reflective graphite, electric teal and small hot-pink accents, angular cuts and integrated narrow light piping, sophisticated technical construction. Backdrop: city night boutique, restrained luminous reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7705-cover-v1.png",
+      "final": "final/clothing-7705-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-eaad752e-726b-460b-9643-34b5854dd1b0.png",
+      "originalSha256": "70a05a6dbddd0c96994b1e80c16de7d774ef51be7d957cb7fd6f87e3e5f936de",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "088f014ea3e1e9a920c8523feac8383be991f6a3f85b4f3dd12dedaa6bbc4132",
+      "bytes": 248025,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49835,
+        "objectKey": "system-item-media/v1/items/7705/cover/088f014ea3e1e9a920c8523feac8383be991f6a3f85b4f3dd12dedaa6bbc4132.jpg",
+        "fileSize": 248025
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7705/cover/088f014ea3e1e9a920c8523feac8383be991f6a3f85b4f3dd12dedaa6bbc4132.jpg"
+    },
+    {
+      "key": "clothing-7706-cover",
+      "target": {
+        "kind": "item",
+        "id": 7706,
+        "typeId": 23,
+        "name": "Обувь (городской эпатаж)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A matching PAIR of complete adult footwear displayed on a low shop plinth at a three-quarter angle, both soles and uppers plausible. Adapt shoe type and materials to the fashion direction; do not show legs or a whole outfit. Fashion direction: Flashy high-tech adult street fashion: reflective graphite, electric teal and small hot-pink accents, angular cuts and integrated narrow light piping, sophisticated technical construction. Backdrop: city night boutique, restrained luminous reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7706-cover-v1.png",
+      "final": "final/clothing-7706-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b66d9f77-b72f-46b2-9593-bd55ab0659ed.png",
+      "originalSha256": "afdb878a766b7322b17a8e3ce727d617100b8836979ec2ec74c7f43b72ba9068",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "3019790f48ced2e6afb9f1949e19b0f9e09999dd260311bf3fd4238113c4259e",
+      "bytes": 263964,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49836,
+        "objectKey": "system-item-media/v1/items/7706/cover/3019790f48ced2e6afb9f1949e19b0f9e09999dd260311bf3fd4238113c4259e.jpg",
+        "fileSize": 263964
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7706/cover/3019790f48ced2e6afb9f1949e19b0f9e09999dd260311bf3fd4238113c4259e.jpg"
+    },
+    {
+      "key": "clothing-7707-cover",
+      "target": {
+        "kind": "item",
+        "id": 7707,
+        "typeId": 23,
+        "name": "Очки (городской эпатаж)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of ordinary fashion eyeglasses with CLEAR TRANSPARENT lenses and unfolded temples, displayed on a discreet support over a shop counter. Eyeglass frame follows fashion direction; lenses are not mirrored or opaque. Fashion direction: Flashy high-tech adult street fashion: reflective graphite, electric teal and small hot-pink accents, angular cuts and integrated narrow light piping, sophisticated technical construction. Backdrop: city night boutique, restrained luminous reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7707-cover-v1.png",
+      "final": "final/clothing-7707-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2f7b5a0f-6a61-435c-b17a-c3684cfc0a96.png",
+      "originalSha256": "481e08a6dacbf10b8a5f635513d15934ef28e5a560fb1944a2cbfcf4934fcda4",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "a9bc92028ea3388a1e0c36a48b4f152860ac09bf2e935d004306b193c7118cdd",
+      "bytes": 215596,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49837,
+        "objectKey": "system-item-media/v1/items/7707/cover/a9bc92028ea3388a1e0c36a48b4f152860ac09bf2e935d004306b193c7118cdd.jpg",
+        "fileSize": 215596
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7707/cover/a9bc92028ea3388a1e0c36a48b4f152860ac09bf2e935d004306b193c7118cdd.jpg"
+    },
+    {
+      "key": "clothing-7708-cover",
+      "target": {
+        "kind": "item",
+        "id": 7708,
+        "typeId": 23,
+        "name": "Головной убор (городской эпатаж)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized hat or cap appropriate to the fashion direction, displayed on a plain neutral head form. A real wearable head covering, not a combat helmet. All brim/crown details inside frame. Fashion direction: Flashy high-tech adult street fashion: reflective graphite, electric teal and small hot-pink accents, angular cuts and integrated narrow light piping, sophisticated technical construction. Backdrop: city night boutique, restrained luminous reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7708-cover-v1.png",
+      "final": "final/clothing-7708-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-85d7ec9a-9460-4e30-9037-969dd94001d4.png",
+      "originalSha256": "47e043626ad2937a547dc6fb9181c93fa48bf9f3181a2991294cb784dc257721",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "5c7b86222eafde97a555d8193a0c3cfe3dfa51010407c5207b8048d7ce645280",
+      "bytes": 212934,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49838,
+        "objectKey": "system-item-media/v1/items/7708/cover/5c7b86222eafde97a555d8193a0c3cfe3dfa51010407c5207b8048d7ce645280.jpg",
+        "fileSize": 212934
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7708/cover/5c7b86222eafde97a555d8193a0c3cfe3dfa51010407c5207b8048d7ce645280.jpg"
+    },
+    {
+      "key": "clothing-7709-cover",
+      "target": {
+        "kind": "item",
+        "id": 7709,
+        "typeId": 23,
+        "name": "Верхняя одежда (городской эпатаж)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized OUTER jacket or coat appropriate to the fashion direction, displayed on a headless torso mannequin or hanger. Both sleeves and hem fully visible. Substantial outerwear distinct from a shirt; no trousers, no armor plates. Fashion direction: Flashy high-tech adult street fashion: reflective graphite, electric teal and small hot-pink accents, angular cuts and integrated narrow light piping, sophisticated technical construction. Backdrop: city night boutique, restrained luminous reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7709-cover-v1.png",
+      "final": "final/clothing-7709-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ccf191ce-8d71-44be-8e4d-15a4cfe5ec3d.png",
+      "originalSha256": "e1f5f073cff0ceff0f90210e4855d726ea7cedc03f2aa89334f0fb52d3b0fa0a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "431428abe6943626a73b5c5e20f27a53b36da3d01d1cc9c29a4100c12e236228",
+      "bytes": 242852,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49839,
+        "objectKey": "system-item-media/v1/items/7709/cover/431428abe6943626a73b5c5e20f27a53b36da3d01d1cc9c29a4100c12e236228.jpg",
+        "fileSize": 242852
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7709/cover/431428abe6943626a73b5c5e20f27a53b36da3d01d1cc9c29a4100c12e236228.jpg"
+    },
+    {
+      "key": "clothing-7710-cover",
+      "target": {
+        "kind": "item",
+        "id": 7710,
+        "typeId": 23,
+        "name": "Украшение (городской эпатаж)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One original wearable piece of jewelry appropriate to the fashion direction: a substantial wrist cuff or pendant on a compact neutral jewelry stand. Believable full-size metal, beads or synthetic inserts; sophisticated material detail. No mystical gem glow, no symbols or letters. Fashion direction: Flashy high-tech adult street fashion: reflective graphite, electric teal and small hot-pink accents, angular cuts and integrated narrow light piping, sophisticated technical construction. Backdrop: city night boutique, restrained luminous reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7710-cover-v1.png",
+      "final": "final/clothing-7710-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ea6d009e-f3f0-4edd-b003-5b18018ec55d.png",
+      "originalSha256": "4e274b6b4a37e9c3723c5327bb85005019a909f3acaea20cdf3f43897fa08c8f",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "600685f97e7c43c6f701beeb836407591617a916f8855552bee0f3fbc063dade",
+      "bytes": 272213,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49840,
+        "objectKey": "system-item-media/v1/items/7710/cover/600685f97e7c43c6f701beeb836407591617a916f8855552bee0f3fbc063dade.jpg",
+        "fileSize": 272213
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7710/cover/600685f97e7c43c6f701beeb836407591617a916f8855552bee0f3fbc063dade.jpg"
+    },
+    {
+      "key": "clothing-7711-cover",
+      "target": {
+        "kind": "item",
+        "id": 7711,
+        "typeId": 23,
+        "name": "Зеркальные очки (городской эпатаж)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of fashion sunglasses with genuinely MIRRORED lenses reflecting broad city-light planes, temples unfolded, on a small display support. Frame and reflected accent palette follow fashion direction; clearly different from ordinary clear-lens eyeglasses. Fashion direction: Flashy high-tech adult street fashion: reflective graphite, electric teal and small hot-pink accents, angular cuts and integrated narrow light piping, sophisticated technical construction. Backdrop: city night boutique, restrained luminous reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7711-cover-v1.png",
+      "final": "final/clothing-7711-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9685af18-4008-4268-97be-4c2e1ec7700d.png",
+      "originalSha256": "07f85214012ca40e0f751a3d9584edffb1e5234d20dd3fe7e685b7a351e2809a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "27855232522f14f48a074c3b24acddfb109a26bdb73da0b0c1cadff9471dfe18",
+      "bytes": 224107,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49841,
+        "objectKey": "system-item-media/v1/items/7711/cover/27855232522f14f48a074c3b24acddfb109a26bdb73da0b0c1cadff9471dfe18.jpg",
+        "fileSize": 224107
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7711/cover/27855232522f14f48a074c3b24acddfb109a26bdb73da0b0c1cadff9471dfe18.jpg"
+    },
+    {
+      "key": "clothing-7712-cover",
+      "target": {
+        "kind": "item",
+        "id": 7712,
+        "typeId": 23,
+        "name": "Верх (городской эпатаж)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized SHIRT or light top appropriate to the fashion direction on a headless torso mannequin. Fine textile construction, both sleeves if present and full hem visible. This is a base-layer top, not a coat or armored jacket; no trousers. Fashion direction: Flashy high-tech adult street fashion: reflective graphite, electric teal and small hot-pink accents, angular cuts and integrated narrow light piping, sophisticated technical construction. Backdrop: city night boutique, restrained luminous reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7712-cover-v1.png",
+      "final": "final/clothing-7712-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e063f45f-adef-4bfa-812f-d35dcbbf4f06.png",
+      "originalSha256": "a6971e43502b47107f2903ee9736961a0a984e5d58496228fe3b22fde73a2048",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b28129d8d410e115b518bc76d6777d10d4d37726a2ad1bdcb8ec5c2a09131387",
+      "bytes": 218714,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every final garment/accessory inspected: distinct couture, nomad leather and urban technical directions; complete objects, clear/mirrored lens difference, physical display support, no labels/logos.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49842,
+        "objectKey": "system-item-media/v1/items/7712/cover/b28129d8d410e115b518bc76d6777d10d4d37726a2ad1bdcb8ec5c2a09131387.jpg",
+        "fileSize": 218714
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7712/cover/b28129d8d410e115b518bc76d6777d10d4d37726a2ad1bdcb8ec5c2a09131387.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-38/live-qa.json",
+    "note": "All nine own fashion covers loaded at three widths on actual public item pages without JS errors or horizontal overflow.",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "checkedAt": "2026-11-16T17:09:38.588Z",
+    "scenarios": 27
+  }
+}

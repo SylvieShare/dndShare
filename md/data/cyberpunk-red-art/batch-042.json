@@ -1,0 +1,95 @@
+{
+  "batch": 42,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-42",
+  "sourceAudit": "Live own covers empty. Software avatar appearances checked against supplied Core pp.206–207,212,368–370. Depict NET visualizations, not real supernatural creatures; original icon slots untouched.",
+  "assets": [
+    {
+      "key": "ice-asp-cover",
+      "target": {
+        "kind": "item",
+        "id": 8117,
+        "typeId": 22,
+        "name": "Аспид"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A GOLDEN EGYPTIAN-COBRA-shaped software construct with a broad flared hood rises from a polygon data platform, emitting a controlled thin NEON GREEN beam into empty cyberspace. Its scales are precise golden segmented plates, no hieroglyphs, no ancient temple or actual snake, fine mature digital creature design.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/ice-asp-cover-v1.png",
+      "final": "final/ice-asp-cover.webp"
+    },
+    {
+      "key": "ice-giant-cover",
+      "target": {
+        "kind": "item",
+        "id": 8118,
+        "typeId": 22,
+        "name": "Великан"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A gigantic PAIR OF LEGS AND HEAVY BOOTS manifests as a virtual defensive program, towering over a small distant adult netrunner avatar used only for scale. Upper legs fade into a vertical data seam, not organic severed limbs; no torso needed. Boots remain clear of the tiny avatar, no crushing or injury. Monumental geometric NET corridor, slate armor-like surfaces and cool white edge light.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/ice-giant-cover-v1.png",
+      "final": "final/ice-giant-cover.webp"
+    },
+    {
+      "key": "ice-hellhound-cover",
+      "target": {
+        "kind": "item",
+        "id": 8119,
+        "typeId": 22,
+        "name": "Адская гончая"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A huge BLACK METALLIC WOLF software construct with WHITE BLAZING EYES stands watch in a NET passage. Controlled orange-white flame-like data waves travel along its armored mechanical body; it is not an animal being burned. Four plausible articulated legs, complete tail and silhouette, menacing calm stance, no victim or gore.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/ice-hellhound-cover-v1.png",
+      "final": "final/ice-hellhound-cover.webp"
+    },
+    {
+      "key": "ice-kraken-cover",
+      "target": {
+        "kind": "item",
+        "id": 8120,
+        "typeId": 22,
+        "name": "Кракен"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. Multiple ORANGE TENTACLES emerge from the walls of a virtual corridor, their suction discs coated with glossy RED SYNTHETIC DATA GEL. Clearly software geometry with luminous grid edges, no organic wounds or blood. They form an enclosing barrier around empty space, not a person. Mature detailed artificial creature rendering, clean readable loops and depth.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/ice-kraken-cover-v1.png",
+      "final": "final/ice-kraken-cover.webp"
+    },
+    {
+      "key": "ice-liche-cover",
+      "target": {
+        "kind": "item",
+        "id": 8121,
+        "typeId": 22,
+        "name": "Лич"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A METALLIC SKELETON software avatar wrapped in a BLACK ROBE stands in a geometric NET chamber. Its two metal hands wear several rings sparking with small blue electrical arcs. No flesh, gore, corpse or medieval necromancy; precise artificial joint construction and subtle digital seams make its software nature clear. Whole upper-body action and hands inside frame.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/ice-liche-cover-v1.png",
+      "final": "final/ice-liche-cover.webp"
+    }
+  ]
+}

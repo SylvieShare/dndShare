@@ -1,0 +1,217 @@
+{
+  "batch": 25,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-25",
+  "sourceAudit": "Live own media slots empty. Catalogue descriptions and user-supplied Core pp.357,377–379 checked; Smash is yellow/frothy in a can, housing distinguishes room facilities. Other sealed fictional medicine packaging is original art interpretation, no usage instructions. Icons unchanged.",
+  "assets": [
+    {
+      "key": "med-antibiotic-cover",
+      "target": {
+        "kind": "item",
+        "id": 8097,
+        "typeId": 32,
+        "name": "Антибиотик"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A professional clinic still life: one sealed amber-glass antibiotic ampoule held upright in a cream and teal cushioned medical tray, beside a capped sterile applicator and folded gauze. Original unmarked fictional packaging, no dosage text or actual administration. Clean surfaces, realistic glass/seal construction, soft clinical daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/med-antibiotic-cover-v1.png",
+      "final": "final/med-antibiotic-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6616d1c9-4d82-43d6-9f6d-68fa154a3a29.png",
+      "originalSha256": "1fb7aa4f0479e368104434eefe923a68cee60d1bc29f2256df25e4b2ee7e78b2",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "dbe666bee23811078c5388765b264bf7ba85ee1e8f69ab1e9b9737ef947d803f",
+      "bytes": 240384,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49741,
+        "objectKey": "system-item-media/v1/items/8097/cover/dbe666bee23811078c5388765b264bf7ba85ee1e8f69ab1e9b9737ef947d803f.jpg",
+        "fileSize": 240384
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8097/cover/dbe666bee23811078c5388765b264bf7ba85ee1e8f69ab1e9b9737ef947d803f.jpg"
+    },
+    {
+      "key": "med-detox-cover",
+      "target": {
+        "kind": "item",
+        "id": 8098,
+        "typeId": 32,
+        "name": "Быстрый детокс"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A professional clinic still life: a clear sealed fluid cartridge with a turquoise stopper fitted beside a charcoal medical injector pen whose cap is securely on. A small white sterile cloth underneath, tidy worn clinic counter in depth. Distinct detox-kit design, no text, needle touching skin, administration or instructions.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/med-detox-cover-v1.png",
+      "final": "final/med-detox-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4e7fb981-e5c8-4a35-97ea-8e8fcf87b04b.png",
+      "originalSha256": "93bc225cc74a2c499afde0c8ebc7a4c324e8a0e3b08a65e9e02414bfebd8adbb",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "60fbb85a0bef79441e588b21e119f40926db0a3f5461cc4e2f0b1f4af1268d85",
+      "bytes": 243947,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49742,
+        "objectKey": "system-item-media/v1/items/8098/cover/60fbb85a0bef79441e588b21e119f40926db0a3f5461cc4e2f0b1f4af1268d85.jpg",
+        "fileSize": 243947
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8098/cover/60fbb85a0bef79441e588b21e119f40926db0a3f5461cc4e2f0b1f4af1268d85.jpg"
+    },
+    {
+      "key": "med-speedheal-cover",
+      "target": {
+        "kind": "item",
+        "id": 8099,
+        "typeId": 32,
+        "name": "Спидхил"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A professional clinic still life: a compact emerald-accented sealed medical cartridge in a protective ivory capsule, the cap open beside it to reveal the sealed cartridge still intact. Fine rubber seals and metal latch, gauze package nearby, bright clean examination bench with soft city-window reflections. No person or dosage directions.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/med-speedheal-cover-v1.png",
+      "final": "final/med-speedheal-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-679a6f48-2ec2-4645-ad7f-5ab3b42275ec.png",
+      "originalSha256": "a7f3dc9453e9529f9c6ee7169a1032a2ff114948f93797fee8b627f4bd834a55",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "9aa943f0ecb77c6198ae9b14119df9c40384d59f64af7d85f41d7c0f64e4cce1",
+      "bytes": 280225,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49743,
+        "objectKey": "system-item-media/v1/items/8099/cover/9aa943f0ecb77c6198ae9b14119df9c40384d59f64af7d85f41d7c0f64e4cce1.jpg",
+        "fileSize": 280225
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8099/cover/9aa943f0ecb77c6198ae9b14119df9c40384d59f64af7d85f41d7c0f64e4cce1.jpg"
+    },
+    {
+      "key": "med-stim-cover",
+      "target": {
+        "kind": "item",
+        "id": 8100,
+        "typeId": 32,
+        "name": "Стимулятор"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A professional clinic still life: a capped amber-accented medical autoinjector in a narrow graphite molded case, secured cap and simple safety clip clearly visible. Entire object on a clean padded counter, no exposed needle, no person, no administration. Amber worklight and cool teal clinic background, original unmarked design.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/med-stim-cover-v1.png",
+      "final": "final/med-stim-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-139d15f9-673a-4a35-95bf-cbbe12759c7f.png",
+      "originalSha256": "f0255cd4df96dabee3b54a8ff1c1ab24cb9e1865a7b1df48963ba70c67c3f415",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "212309521d04bc8a5fb4a52c002271e68ca67f44435c534fb57b17223adb6bef",
+      "bytes": 259010,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49744,
+        "objectKey": "system-item-media/v1/items/8100/cover/212309521d04bc8a5fb4a52c002271e68ca67f44435c534fb57b17223adb6bef.jpg",
+        "fileSize": 259010
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8100/cover/212309521d04bc8a5fb4a52c002271e68ca67f44435c534fb57b17223adb6bef.jpg"
+    },
+    {
+      "key": "med-surge-cover",
+      "target": {
+        "kind": "item",
+        "id": 8101,
+        "typeId": 32,
+        "name": "Всплеск"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A professional clinic still life: a small sealed pale-blue fluid ampoule with a deep-blue cap, stored in a compact temperature-controlled silver carrier with a simple nonverbal blue status light. Closed sterile supply pouch beside it. Calm pre-dawn clinic, muted navy and cream materials, no dosage information or consumption.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/med-surge-cover-v1.png",
+      "final": "final/med-surge-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-01274ea1-f501-449a-8c15-9c74146b755f.png",
+      "originalSha256": "61f0b40de85389e90170d237c7e2cc5a1d8cf40c90e9edd83ad5fa23bbc7f52c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "1204fb8e546d35d73e7d70c7dcb940bb6578332ca37400432b5fad00339c4972",
+      "bytes": 264798,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49745,
+        "objectKey": "system-item-media/v1/items/8101/cover/1204fb8e546d35d73e7d70c7dcb940bb6578332ca37400432b5fad00339c4972.jpg",
+        "fileSize": 264798
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8101/cover/1204fb8e546d35d73e7d70c7dcb940bb6578332ca37400432b5fad00339c4972.jpg"
+    }
+  ],
+  "liveReview": {
+    "note": "All own cover URLs verified at three widths, no JS errors or horizontal overflow.",
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-25/live-qa.json",
+    "checkedAt": "2026-11-16T16:14:32.305Z",
+    "passed": true,
+    "scenarios": 15,
+    "widths": [
+      390,
+      840,
+      1440
+    ]
+  }
+}

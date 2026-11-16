@@ -1,0 +1,95 @@
+{
+  "batch": 40,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-40",
+  "sourceAudit": "Live own covers empty. Software avatar appearances checked against supplied Core pp.206–207,212,368–370. Depict NET visualizations, not real supernatural creatures; original icon slots untouched.",
+  "assets": [
+    {
+      "key": "net-hellbolt-cover",
+      "target": {
+        "kind": "item",
+        "id": 7912,
+        "typeId": 33,
+        "name": "Адский снаряд"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A mature adult digital netrunner avatar extends one hand, releasing a compact fiery ORANGE ENERGY BOLT shaped like an arrow into empty virtual space. It is software data-light, no bow or physical weapon, no target or injury. Plausible hand anatomy, restrained fire ribbons and dark cool NET platform, dynamic but full safe framing.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-hellbolt-cover-v1.png",
+      "final": "final/net-hellbolt-cover.webp"
+    },
+    {
+      "key": "net-brainfreeze-cover",
+      "target": {
+        "kind": "item",
+        "id": 7913,
+        "typeId": 33,
+        "name": "Нервотрёп"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A small CHROME SPHERE program hovers just above an adult netrunner avatar's open gloved palm, crackling with fine blue-white electrical data arcs. Polished segmented metal-like reflections rendered in cel planes, cold blue network backdrop, no human distress, injury or literal brain imagery.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-brainfreeze-cover-v1.png",
+      "final": "final/net-brainfreeze-cover.webp"
+    },
+    {
+      "key": "net-poison-flatline-cover",
+      "target": {
+        "kind": "item",
+        "id": 7914,
+        "typeId": 33,
+        "name": "Ядовитое обнуление"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A mature netrunner avatar points one finger toward a disconnected empty software socket; a thin NEON GREEN DATA RAY runs from the fingertip to a simple fading geometric program node. No physical poison, real anatomy damage or weapon. Green highlights, dark virtual circuit architecture, controlled precise composition.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-poison-flatline-cover-v1.png",
+      "final": "final/net-poison-flatline-cover.webp"
+    },
+    {
+      "key": "net-see-ya-cover",
+      "target": {
+        "kind": "item",
+        "id": 7915,
+        "typeId": 33,
+        "name": "Я тебя вижу"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A large elegant SILVER MAGNIFYING GLASS software avatar floats and rotates in front of a branching virtual corridor. Through its lens a previously hidden passage glows clearly cyan. Entire lens and handle visible, finely engineered silver frame and transparent light, no labels, no actual map instructions.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-see-ya-cover-v1.png",
+      "final": "final/net-see-ya-cover.webp"
+    },
+    {
+      "key": "net-shield-cover",
+      "target": {
+        "kind": "item",
+        "id": 7916,
+        "typeId": 33,
+        "name": "Щит"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A SHIMMERING SILVER ENERGY BARRIER surrounds a mature adult netrunner avatar standing calmly on a dark data platform. The protective curved shell is transparent enough to read the avatar's practical clothes and composed face, bright silver edges catch incoming harmless abstract square particles. Digital software field, not a physical shield or medieval spell.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-shield-cover-v1.png",
+      "final": "final/net-shield-cover.webp"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "batch": 43,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-43",
+  "sourceAudit": "Live own covers empty. Software avatar appearances checked against supplied Core pp.206–207,212,368–370. Depict NET visualizations, not real supernatural creatures; original icon slots untouched.",
+  "assets": [
+    {
+      "key": "ice-raven-cover",
+      "target": {
+        "kind": "item",
+        "id": 8122,
+        "typeId": 22,
+        "name": "Ворон"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A RAVEN-shaped robotic software avatar in segmented futuristic metal armor grips a GLOWING WHITE SPEAR across the panorama. Black mechanical feathers, fine joint construction and white data-light weapon, whole bird and spear safely framed. Perched on a virtual platform, no attack or victim, no medieval armor emblems.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/ice-raven-cover-v1.png",
+      "final": "final/ice-raven-cover.webp"
+    },
+    {
+      "key": "ice-scorpion-cover",
+      "target": {
+        "kind": "item",
+        "id": 8123,
+        "typeId": 22,
+        "name": "Скорпион"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A SMALL BLACK SCORPION software construct on a dark reflective NET tile, detailed articulated legs, two pincers and a curved segmented tail, all limbs physically coherent. Its tiny scale is conveyed by surrounding huge data architecture; subtle white electrical hiss-like wisps, no victim or organic venom depiction.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/ice-scorpion-cover-v1.png",
+      "final": "final/ice-scorpion-cover.webp"
+    },
+    {
+      "key": "ice-skunk-cover",
+      "target": {
+        "kind": "item",
+        "id": 8124,
+        "typeId": 22,
+        "name": "Скунс"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. An intentionally STYLIZED BLACK-AND-WHITE SKUNK software avatar stands on its hind legs, watching a distant adult netrunner silhouette very intently. Retain the source's cartoon-avatar concept but render it with sophisticated mature cel shading, restrained eyes and detailed digital fur-like planes rather than cute baby proportions. Full bushy tail, clearly virtual grid environment, no smell cloud or toilet humor.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/ice-skunk-cover-v1.png",
+      "final": "final/ice-skunk-cover.webp"
+    },
+    {
+      "key": "ice-wisp-cover",
+      "target": {
+        "kind": "item",
+        "id": 8125,
+        "typeId": 22,
+        "name": "Висп"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A GLOWING ORB software avatar with ONE SMALL EYE floats in a deep NET corridor, faint blue-white electrical arcs crackle around its surface. The eye is a clean artificial sensor, no organic eyeball horror. Precise light falloff, broad painted reflections and small geometric facets, mature restrained cyberspace mood.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/ice-wisp-cover-v1.png",
+      "final": "final/ice-wisp-cover.webp"
+    },
+    {
+      "key": "ice-dragon-cover",
+      "target": {
+        "kind": "item",
+        "id": 8126,
+        "typeId": 22,
+        "name": "Дракон"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A ROBOTIC DRAGON software avatar with GOLDEN SEGMENTED SCALES is surrounded by controlled blue electrical data discharges. Four clearly articulated legs, two mechanical wings folded partly back and a long tail, complete silhouette across the wide frame. It stands on a polygon platform, no medieval castle, fire breath, real animal or victim.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/ice-dragon-cover-v1.png",
+      "final": "final/ice-dragon-cover.webp"
+    }
+  ]
+}

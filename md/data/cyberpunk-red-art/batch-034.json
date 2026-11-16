@@ -1,0 +1,373 @@
+{
+  "batch": 34,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-34",
+  "sourceAudit": "All 90 live clothing own media slots empty. Ten fashion directions and nine garment/accessory kinds checked against user-supplied Core p.356. New original designs per record; icons unchanged.",
+  "assets": [
+    {
+      "key": "clothing-7668-cover",
+      "target": {
+        "kind": "item",
+        "id": 7668,
+        "typeId": 23,
+        "name": "Низ (обычный прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A complete pair of adult-sized trousers, both legs fully visible, displayed on a neutral waist-down mannequin with simple feet supports. No top or jacket included. Adapt cut and materials to the fashion direction. Fashion direction: Standard colorful modular everyday fashion: slate blue, pale gray and muted mint panels, practical interchangeable parts and clean simple construction. Backdrop: ordinary city clothing store in daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7668-cover-v1.png",
+      "final": "final/clothing-7668-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f658d551-0d51-45da-b450-cd8b2a2d1f60.png",
+      "originalSha256": "1d2e119f50d7abadc07e761a00ac11a19ad9b391ff4ee01c4df5c5557a35dc02",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f017b9fa743d39fd568b25f1bd0290256429bd6d0962164d0eb7595d9e0b6606",
+      "bytes": 252286,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49807,
+        "objectKey": "system-item-media/v1/items/7668/cover/f017b9fa743d39fd568b25f1bd0290256429bd6d0962164d0eb7595d9e0b6606.jpg",
+        "fileSize": 252286
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7668/cover/f017b9fa743d39fd568b25f1bd0290256429bd6d0962164d0eb7595d9e0b6606.jpg"
+    },
+    {
+      "key": "clothing-7669-cover",
+      "target": {
+        "kind": "item",
+        "id": 7669,
+        "typeId": 23,
+        "name": "Контактные линзы (обычный прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A macro still life of TWO thin soft tinted contact lenses in the two shallow wells of an open small clean lens case, one lens slightly lifted on the lip so its thin flexible transparent edge is obvious. Natural eye-size proportions, not cybernetic eyeballs or goggles. Fashion direction affects iris tint and case finish. No face or eye surgery. Fashion direction: Standard colorful modular everyday fashion: slate blue, pale gray and muted mint panels, practical interchangeable parts and clean simple construction. Backdrop: ordinary city clothing store in daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7669-cover-v1.png",
+      "final": "final/clothing-7669-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4d0dc823-9dec-4aba-91b8-efba6149377e.png",
+      "originalSha256": "d11850cfa506d436845d968e23a70a2d0907fd38f3204b95f3344ab7a1ea0d97",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b4bf4aff066dbfe4490f9a8b761a936caf1223ae695ac6f880adb5b98c8e9e67",
+      "bytes": 200490,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49808,
+        "objectKey": "system-item-media/v1/items/7669/cover/b4bf4aff066dbfe4490f9a8b761a936caf1223ae695ac6f880adb5b98c8e9e67.jpg",
+        "fileSize": 200490
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7669/cover/b4bf4aff066dbfe4490f9a8b761a936caf1223ae695ac6f880adb5b98c8e9e67.jpg"
+    },
+    {
+      "key": "clothing-7670-cover",
+      "target": {
+        "kind": "item",
+        "id": 7670,
+        "typeId": 23,
+        "name": "Обувь (обычный прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A matching PAIR of complete adult footwear displayed on a low shop plinth at a three-quarter angle, both soles and uppers plausible. Adapt shoe type and materials to the fashion direction; do not show legs or a whole outfit. Fashion direction: Standard colorful modular everyday fashion: slate blue, pale gray and muted mint panels, practical interchangeable parts and clean simple construction. Backdrop: ordinary city clothing store in daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7670-cover-v1.png",
+      "final": "final/clothing-7670-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b2a38678-fc19-4e47-bc2e-6818bce3b9c3.png",
+      "originalSha256": "80417816f756d4a186dc2f71b3a89613d7739daebbdbd7562ccc14174eb9978a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "65bdd58a72063c61aca70a78f567c35d9d25df2b42af2ea179d9c90d96093ad5",
+      "bytes": 263557,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49809,
+        "objectKey": "system-item-media/v1/items/7670/cover/65bdd58a72063c61aca70a78f567c35d9d25df2b42af2ea179d9c90d96093ad5.jpg",
+        "fileSize": 263557
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7670/cover/65bdd58a72063c61aca70a78f567c35d9d25df2b42af2ea179d9c90d96093ad5.jpg"
+    },
+    {
+      "key": "clothing-7671-cover",
+      "target": {
+        "kind": "item",
+        "id": 7671,
+        "typeId": 23,
+        "name": "Очки (обычный прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of ordinary fashion eyeglasses with CLEAR TRANSPARENT lenses and unfolded temples, displayed on a discreet support over a shop counter. Eyeglass frame follows fashion direction; lenses are not mirrored or opaque. Fashion direction: Standard colorful modular everyday fashion: slate blue, pale gray and muted mint panels, practical interchangeable parts and clean simple construction. Backdrop: ordinary city clothing store in daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7671-cover-v1.png",
+      "final": "final/clothing-7671-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8b21b7d1-7bdb-4e21-b9ba-9a6686096a20.png",
+      "originalSha256": "8d2eae8e6d233cae75f1d526e4edbc602e30f3999f722cca250e72bf2b339789",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "daf719107ec2a1422456b47d8eb6e9455a383e4ddb7e54eea59e9705de461463",
+      "bytes": 201468,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49810,
+        "objectKey": "system-item-media/v1/items/7671/cover/daf719107ec2a1422456b47d8eb6e9455a383e4ddb7e54eea59e9705de461463.jpg",
+        "fileSize": 201468
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7671/cover/daf719107ec2a1422456b47d8eb6e9455a383e4ddb7e54eea59e9705de461463.jpg"
+    },
+    {
+      "key": "clothing-7672-cover",
+      "target": {
+        "kind": "item",
+        "id": 7672,
+        "typeId": 23,
+        "name": "Головной убор (обычный прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized hat or cap appropriate to the fashion direction, displayed on a plain neutral head form. A real wearable head covering, not a combat helmet. All brim/crown details inside frame. Fashion direction: Standard colorful modular everyday fashion: slate blue, pale gray and muted mint panels, practical interchangeable parts and clean simple construction. Backdrop: ordinary city clothing store in daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7672-cover-v1.png",
+      "final": "final/clothing-7672-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6d183903-d572-47e2-a59e-c9ca177b8adf.png",
+      "originalSha256": "b11c648d268ca96667ec10a7e4e9cd4fe47dbc125ff1fa56bb7a85d1347910a5",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "c323705ba4cd028bbbe4c71fd98d88d46ae9654d584acd85ad7b232afe6df8f0",
+      "bytes": 209525,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49811,
+        "objectKey": "system-item-media/v1/items/7672/cover/c323705ba4cd028bbbe4c71fd98d88d46ae9654d584acd85ad7b232afe6df8f0.jpg",
+        "fileSize": 209525
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7672/cover/c323705ba4cd028bbbe4c71fd98d88d46ae9654d584acd85ad7b232afe6df8f0.jpg"
+    },
+    {
+      "key": "clothing-7673-cover",
+      "target": {
+        "kind": "item",
+        "id": 7673,
+        "typeId": 23,
+        "name": "Верхняя одежда (обычный прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized OUTER jacket or coat appropriate to the fashion direction, displayed on a headless torso mannequin or hanger. Both sleeves and hem fully visible. Substantial outerwear distinct from a shirt; no trousers, no armor plates. Fashion direction: Standard colorful modular everyday fashion: slate blue, pale gray and muted mint panels, practical interchangeable parts and clean simple construction. Backdrop: ordinary city clothing store in daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7673-cover-v1.png",
+      "final": "final/clothing-7673-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0f4af5ad-4c8e-41c3-a837-f6474e867ddf.png",
+      "originalSha256": "a96e4d7cac2ee1b00ea5f678833e14d1d993f0ca82464a19242453b6a2342090",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "c2f84c37fc93dc89b0148a277337b67dead28f85f58eeeb5ce070eca37173b81",
+      "bytes": 230570,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49812,
+        "objectKey": "system-item-media/v1/items/7673/cover/c2f84c37fc93dc89b0148a277337b67dead28f85f58eeeb5ce070eca37173b81.jpg",
+        "fileSize": 230570
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7673/cover/c2f84c37fc93dc89b0148a277337b67dead28f85f58eeeb5ce070eca37173b81.jpg"
+    },
+    {
+      "key": "clothing-7674-cover",
+      "target": {
+        "kind": "item",
+        "id": 7674,
+        "typeId": 23,
+        "name": "Украшение (обычный прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One original wearable piece of jewelry appropriate to the fashion direction: a substantial wrist cuff or pendant on a compact neutral jewelry stand. Believable full-size metal, beads or synthetic inserts; sophisticated material detail. No mystical gem glow, no symbols or letters. Fashion direction: Standard colorful modular everyday fashion: slate blue, pale gray and muted mint panels, practical interchangeable parts and clean simple construction. Backdrop: ordinary city clothing store in daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7674-cover-v1.png",
+      "final": "final/clothing-7674-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-58687e6e-d4bb-4402-b673-cc6a72c2b575.png",
+      "originalSha256": "0513476f292f777ee057a00ac13f3610e97307737873fbb854a07456ab962c82",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "cac8447ff19bebd41cd4f3066395598d635d8b892d182e91e8d73fc1a16159b1",
+      "bytes": 262559,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49813,
+        "objectKey": "system-item-media/v1/items/7674/cover/cac8447ff19bebd41cd4f3066395598d635d8b892d182e91e8d73fc1a16159b1.jpg",
+        "fileSize": 262559
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7674/cover/cac8447ff19bebd41cd4f3066395598d635d8b892d182e91e8d73fc1a16159b1.jpg"
+    },
+    {
+      "key": "clothing-7675-cover",
+      "target": {
+        "kind": "item",
+        "id": 7675,
+        "typeId": 23,
+        "name": "Зеркальные очки (обычный прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of fashion sunglasses with genuinely MIRRORED lenses reflecting broad city-light planes, temples unfolded, on a small display support. Frame and reflected accent palette follow fashion direction; clearly different from ordinary clear-lens eyeglasses. Fashion direction: Standard colorful modular everyday fashion: slate blue, pale gray and muted mint panels, practical interchangeable parts and clean simple construction. Backdrop: ordinary city clothing store in daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7675-cover-v1.png",
+      "final": "final/clothing-7675-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d5d27a05-7bf6-40c6-956c-372ae2f8bb77.png",
+      "originalSha256": "174b3e0afdfceda33aed53a9a419024886b9939de011e885b2010d1b9a674be2",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "c1e35b78352a2d2337722a83d2ac92b69cc42bb8e616bc7f972cdd28a0e6affd",
+      "bytes": 231716,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49814,
+        "objectKey": "system-item-media/v1/items/7675/cover/c1e35b78352a2d2337722a83d2ac92b69cc42bb8e616bc7f972cdd28a0e6affd.jpg",
+        "fileSize": 231716
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7675/cover/c1e35b78352a2d2337722a83d2ac92b69cc42bb8e616bc7f972cdd28a0e6affd.jpg"
+    },
+    {
+      "key": "clothing-7676-cover",
+      "target": {
+        "kind": "item",
+        "id": 7676,
+        "typeId": 23,
+        "name": "Верх (Обычный прикид)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized SHIRT or light top appropriate to the fashion direction on a headless torso mannequin. Fine textile construction, both sleeves if present and full hem visible. This is a base-layer top, not a coat or armored jacket; no trousers. Fashion direction: Standard colorful modular everyday fashion: slate blue, pale gray and muted mint panels, practical interchangeable parts and clean simple construction. Backdrop: ordinary city clothing store in daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7676-cover-v1.png",
+      "final": "final/clothing-7676-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7941c244-04e6-4333-ba07-d3039c4df3c5.png",
+      "originalSha256": "261607831d1ec3a03550e007261c1a629f2a8d497abdfc3852149e7a6d68c6b8",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "1d7ec6a120a6fe128487e20d43fcc62e7f44e296db5d8c2ac21bd048bdf0baf1",
+      "bytes": 228777,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All nine exported garments/accessories reviewed: business, fictional crew-color and modular casual direction; complete silhouettes, supported displays, clear/mirrored lenses distinct, no logos/text.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49815,
+        "objectKey": "system-item-media/v1/items/7676/cover/1d7ec6a120a6fe128487e20d43fcc62e7f44e296db5d8c2ac21bd048bdf0baf1.jpg",
+        "fileSize": 228777
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7676/cover/1d7ec6a120a6fe128487e20d43fcc62e7f44e296db5d8c2ac21bd048bdf0baf1.jpg"
+    }
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-34/live-qa.json",
+    "checkedAt": "2026-11-16T16:51:29.034Z",
+    "note": "Each own clothing cover loaded on real item at three widths, no page errors or horizontal overflow.",
+    "passed": true,
+    "scenarios": 27,
+    "widths": [
+      390,
+      840,
+      1440
+    ]
+  }
+}

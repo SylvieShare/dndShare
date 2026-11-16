@@ -1,0 +1,217 @@
+{
+  "batch": 24,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-24",
+  "sourceAudit": "Live own media slots empty. Catalogue descriptions and user-supplied Core pp.357,377–379 checked; Smash is yellow/frothy in a can, housing distinguishes room facilities. Other sealed fictional medicine packaging is original art interpretation, no usage instructions. Icons unchanged.",
+  "assets": [
+    {
+      "key": "drug-black-lace-cover",
+      "target": {
+        "kind": "item",
+        "id": 7846,
+        "typeId": 28,
+        "name": "Чёрное кружево"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A fictional street-substance still life: two small sealed smoked-black glass ampoules in a narrow graphite foam-lined case with a muted violet latch. One ampoule reflects a subtle lace-like shadow from a metal grille, a visual metaphor only. Unbranded utilitarian packaging on an alley stall counter, sober dim lighting, no people, consumption, syringes, instructions or chemistry.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/drug-black-lace-cover-v1.png",
+      "final": "final/drug-black-lace-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ab3b6c02-fe5c-45a4-8786-c8044fedc8ca.png",
+      "originalSha256": "99be3266fe1ebb1b7ba4e608f86cbd3af9ba3e5079864650abfc1e7785226706",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "2baaac7c68fcd918d3cc0e4769435ec2ae48df7ce62844790bb26b0e27dbca27",
+      "bytes": 250519,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49736,
+        "objectKey": "system-item-media/v1/items/7846/cover/2baaac7c68fcd918d3cc0e4769435ec2ae48df7ce62844790bb26b0e27dbca27.jpg",
+        "fileSize": 250519
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7846/cover/2baaac7c68fcd918d3cc0e4769435ec2ae48df7ce62844790bb26b0e27dbca27.jpg"
+    },
+    {
+      "key": "drug-blue-glass-cover",
+      "target": {
+        "kind": "item",
+        "id": 7847,
+        "typeId": 28,
+        "name": "Синее стекло"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A fictional street-substance still life: one sealed cobalt-blue translucent vial holding a few blue glasslike granules, beside a closed graphite transport capsule. Cold blue reflections on the counter and muted amber street light in a blurred background. Original fictional packaging, no people, consumption, manufacturing apparatus or instructions.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/drug-blue-glass-cover-v1.png",
+      "final": "final/drug-blue-glass-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-38d74d6d-163a-4cfa-9290-7e2af906e4e9.png",
+      "originalSha256": "17d0603d3f786d2582a721db939c5720c7af726dd35e6e5bbcff323e069ec146",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "1a939af8af982b45f4a2c2ebba80138e334f2eeec5cfa7009871ecfb46368be1",
+      "bytes": 206725,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49737,
+        "objectKey": "system-item-media/v1/items/7847/cover/1a939af8af982b45f4a2c2ebba80138e334f2eeec5cfa7009871ecfb46368be1.jpg",
+        "fileSize": 206725
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7847/cover/1a939af8af982b45f4a2c2ebba80138e334f2eeec5cfa7009871ecfb46368be1.jpg"
+    },
+    {
+      "key": "drug-boost-cover",
+      "target": {
+        "kind": "item",
+        "id": 7848,
+        "typeId": 28,
+        "name": "Буст"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A fictional cognitive-enhancer product still life: a compact brushed-metal tin opened to reveal two plain ivory capsules in an amber molded insert. Blank lid, tiny mechanical latch, utilitarian discreet packaging on a night-market counter. Restrained copper and slate palette, no people, consumption, instructions, equations or real medicine branding.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/drug-boost-cover-v1.png",
+      "final": "final/drug-boost-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2db2c4f1-673e-456b-bb70-a75f50d2418a.png",
+      "originalSha256": "9785dd07d46f4bfffc8e26adbb9a5ced74aad2569227b2bd9586b7d41eb5f5a0",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "03dbccd355302d7ed63eb3aaffa1a75812703dfbd7cd1cb4d3388136adda1ec6",
+      "bytes": 284750,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49738,
+        "objectKey": "system-item-media/v1/items/7848/cover/03dbccd355302d7ed63eb3aaffa1a75812703dfbd7cd1cb4d3388136adda1ec6.jpg",
+        "fileSize": 284750
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7848/cover/03dbccd355302d7ed63eb3aaffa1a75812703dfbd7cd1cb4d3388136adda1ec6.jpg"
+    },
+    {
+      "key": "drug-smash-cover",
+      "target": {
+        "kind": "item",
+        "id": 7849,
+        "typeId": 28,
+        "name": "Смэш"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. One completely plain dull aluminum beverage can with an open pull tab and a small visible crown of YELLOW FOAM at its mouth, a trace of yellow foamy liquid beside it on a worn bar counter. This fictional drink is yellow and frothy; no branded can graphics. Sober cyberpunk bar background, no people drinking or party celebration, detailed metal and foam rendered as painted planes.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/drug-smash-cover-v1.png",
+      "final": "final/drug-smash-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7c449e06-90d6-4e9a-8d41-eba34c280c8b.png",
+      "originalSha256": "9bf0fe9d43ff26116a98efcf2447bfdfc11c16acb2128c0a4242e309c003fe9f",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "cae74f0930a5c86724ffc7a8417ecae4fcf299841a323861bc8daaabd1ee69e4",
+      "bytes": 342130,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49739,
+        "objectKey": "system-item-media/v1/items/7849/cover/cae74f0930a5c86724ffc7a8417ecae4fcf299841a323861bc8daaabd1ee69e4.jpg",
+        "fileSize": 342130
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7849/cover/cae74f0930a5c86724ffc7a8417ecae4fcf299841a323861bc8daaabd1ee69e4.jpg"
+    },
+    {
+      "key": "drug-synthcoke-cover",
+      "target": {
+        "kind": "item",
+        "id": 7850,
+        "typeId": 28,
+        "name": "Синткокс"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A fictional street-substance still life: a small sealed frosted-white sample vial and a plain silver tamper-evident cap nestled in a CLOSED transparent protective sleeve, no loose powder. Neutral utilitarian counter scene, cool slate palette and one muted red reflection. No people, consumption, preparation equipment, instructions or promotional imagery.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/drug-synthcoke-cover-v1.png",
+      "final": "final/drug-synthcoke-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e4a3fea2-e1b2-4e38-9362-39606767cb04.png",
+      "originalSha256": "e6426666e6fc01195187702b71d3054367293a5152e09d6a91bbf046acc212cb",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "dfbf769e5e982b46d70f33c5d31857389531b4c4fc38055368d0eec46659d409",
+      "bytes": 234686,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49740,
+        "objectKey": "system-item-media/v1/items/7850/cover/dfbf769e5e982b46d70f33c5d31857389531b4c4fc38055368d0eec46659d409.jpg",
+        "fileSize": 234686
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7850/cover/dfbf769e5e982b46d70f33c5d31857389531b4c4fc38055368d0eec46659d409.jpg"
+    }
+  ],
+  "liveReview": {
+    "note": "All own cover URLs verified at three widths, no JS errors or horizontal overflow.",
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-24/live-qa.json",
+    "checkedAt": "2026-11-16T16:13:44.51Z",
+    "passed": true,
+    "scenarios": 15,
+    "widths": [
+      390,
+      840,
+      1440
+    ]
+  }
+}

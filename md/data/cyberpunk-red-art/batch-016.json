@@ -1,0 +1,262 @@
+{
+  "batch": 16,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-16",
+  "sourceAudit": "Live item records 7983–7996 own media slots empty. Vehicle construction and capacities checked against user-supplied Core text pp.190–191, including cargo dirigible, VTOL aerodynes and cabin-based boats. Original covers; icons untouched.",
+  "assets": [
+    {
+      "key": "vehicle-compact-cover",
+      "target": {
+        "kind": "item",
+        "id": 7987,
+        "typeId": 36,
+        "name": "Компактный автомобиль"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Edit the attached illustration. REMOVE EVERY LETTER, NUMBER, WORD, LOGO, BRAND SYMBOL, TITLE, CAPTION AND GRAPHIC BANNER FROM THE ENTIRE IMAGE. This must become an image-only scene with absolutely NO typography. Remove the large top header and all bottom ribbons completely, restoring natural continuous sky/building/water scenery behind them. Remove all lettering and logos from the vehicle body, wheels, license plates, signs, towers, docks, containers and distant advertising; replace them with plain matching material or abstract unmarked light panels. Leave license plates blank. Preserve the exact vehicle design, number of wheels/seats/rotors, proportions, entire vehicle silhouette, camera view, light, palette, scene and mature detailed cel-shaded rendering. Do not crop or shrink the vehicle, do not add new text anywhere, and do not add a replacement header. Opaque 3:2 finished illustration with scene extending to all four edges.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/vehicle-compact-cover-v2.png",
+      "final": "final/vehicle-compact-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8f8064b2-32b1-4b6d-9445-1243af585fb4.png",
+      "originalSha256": "aa9f04688af2789fbc957898c571b1f3a23dcb2c2cee9db89f1a10694d825208",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "aaa43961dc65dbe2db578c73bec6e9f26c2e540ef8c6055efd89b3a4ad636e09",
+      "bytes": 385404,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/vehicle-compact-cover.jpg",
+        "reason": "Embedded titles, logos and labels despite initial prompt; never published",
+        "original": "originals/vehicle-compact-cover-v1.png",
+        "sha256": "1fd82373d43a5ea386b4f14300bddfae414727f2e3d903b70b11c7dfa86db5f6",
+        "originalSha256": "c2e9179e9ab4d48b9fefbcf76859d57606ba8ded967ea87c05de0e8e093768d7",
+        "prompt": "Use case: stylized-concept. Original Cyberpunk RED 2045 vehicle catalogue cover, opaque 3:2 landscape. Mature premium detailed cel-shaded concept illustration: realistic full-scale engineered vehicle proportions, fine variable ink linework, large crisp painted light/shadow planes, secondary reflected light, convincing rubber/glass/metal/polymer materials. Restrained localized wear, functional joints, seams and fittings; detailed hero vehicle, softer lower-contrast urban background. Whole vehicle visible with generous safe margin, coherent perspective and grounded contact/water shadows. No cartoon toy shapes, heavy icon outline, photo, glossy 3D render, uniform gritty noise, readable text, license plate letters, logos, branding, watermark or UI. No weapons attached, no violence. A practical four-seat compact hatchback powered by a conventional near-future engine, muted teal body, cream roof and dark wheel arches. Two visible side doors on the near side, plausible windows showing front and rear seating. Parked at a modest city repair shop after rain, front three-quarter view, warm garage lamp and cool twilight. Different original design from the category coupe, detailed headlights and ordinary tires.",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e7c1996d-6078-444c-ac09-96dbc038e4a9.png"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Initial versions rejected for typography/logos. Built-in image edits removed text and restored scene. Final exports inspected: whole vehicle, correct category and major construction, clean crop, no visible branding or captions; icons unchanged.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49704,
+        "objectKey": "system-item-media/v1/items/7987/cover/aaa43961dc65dbe2db578c73bec6e9f26c2e540ef8c6055efd89b3a4ad636e09.jpg",
+        "fileSize": 385404
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7987/cover/aaa43961dc65dbe2db578c73bec6e9f26c2e540ef8c6055efd89b3a4ad636e09.jpg"
+    },
+    {
+      "key": "vehicle-sports-cover",
+      "target": {
+        "kind": "item",
+        "id": 7990,
+        "typeId": 36,
+        "name": "Спортивный автомобиль"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Edit the attached illustration. REMOVE EVERY LETTER, NUMBER, WORD, LOGO, BRAND SYMBOL, TITLE, CAPTION AND GRAPHIC BANNER FROM THE ENTIRE IMAGE. This must become an image-only scene with absolutely NO typography. Remove the large top header and all bottom ribbons completely, restoring natural continuous sky/building/water scenery behind them. Remove all lettering and logos from the vehicle body, wheels, license plates, signs, towers, docks, containers and distant advertising; replace them with plain matching material or abstract unmarked light panels. Leave license plates blank. Preserve the exact vehicle design, number of wheels/seats/rotors, proportions, entire vehicle silhouette, camera view, light, palette, scene and mature detailed cel-shaded rendering. Do not crop or shrink the vehicle, do not add new text anywhere, and do not add a replacement header. Opaque 3:2 finished illustration with scene extending to all four edges.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/vehicle-sports-cover-v2.png",
+      "final": "final/vehicle-sports-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-28e543a6-d23d-438b-9035-dfa1f8ce2b66.png",
+      "originalSha256": "c96b6bf0e173af03032a092b188863cc3ea38b4bd4c868ab06f338fe4458718d",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ebf7bb38f9b15c37da5804d146845d6e841844cb35dfd97ff4df6174556c25dd",
+      "bytes": 351716,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/vehicle-sports-cover.jpg",
+        "reason": "Embedded titles, logos and labels despite initial prompt; never published",
+        "original": "originals/vehicle-sports-cover-v1.png",
+        "sha256": "54e3df13b7466682c2df76ff276959a67f1b9900a5ac43bdef1be679f30c9b6c",
+        "originalSha256": "75676b4175a76999454b35d39157130e5765dad83caf917b9e80460e06d1a44e",
+        "prompt": "Use case: stylized-concept. Original Cyberpunk RED 2045 vehicle catalogue cover, opaque 3:2 landscape. Mature premium detailed cel-shaded concept illustration: realistic full-scale engineered vehicle proportions, fine variable ink linework, large crisp painted light/shadow planes, secondary reflected light, convincing rubber/glass/metal/polymer materials. Restrained localized wear, functional joints, seams and fittings; detailed hero vehicle, softer lower-contrast urban background. Whole vehicle visible with generous safe margin, coherent perspective and grounded contact/water shadows. No cartoon toy shapes, heavy icon outline, photo, glossy 3D render, uniform gritty noise, readable text, license plate letters, logos, branding, watermark or UI. No weapons attached, no violence. A four-seat high-performance sports coupe with two front seats and rear bench discernible through windows, deep burgundy panels and satin silver trim, low aerodynamic body without absurd racing wings. Parked at a clean elevated city parking bay at morning, front three-quarter view, mechanically plausible wheels/brakes and a conventional engine. Mature understated luxury.",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-57bfed29-fe29-4883-8a85-e2d0c0908569.png"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Initial versions rejected for typography/logos. Built-in image edits removed text and restored scene. Final exports inspected: whole vehicle, correct category and major construction, clean crop, no visible branding or captions; icons unchanged.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49705,
+        "objectKey": "system-item-media/v1/items/7990/cover/ebf7bb38f9b15c37da5804d146845d6e841844cb35dfd97ff4df6174556c25dd.jpg",
+        "fileSize": 351716
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7990/cover/ebf7bb38f9b15c37da5804d146845d6e841844cb35dfd97ff4df6174556c25dd.jpg"
+    },
+    {
+      "key": "vehicle-supercar-cover",
+      "target": {
+        "kind": "item",
+        "id": 7994,
+        "typeId": 36,
+        "name": "Суперкар"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Edit the attached illustration. REMOVE EVERY LETTER, NUMBER, WORD, LOGO, BRAND SYMBOL, TITLE, CAPTION AND GRAPHIC BANNER FROM THE ENTIRE IMAGE. This must become an image-only scene with absolutely NO typography. Remove the large top header and all bottom ribbons completely, restoring natural continuous sky/building/water scenery behind them. Remove all lettering and logos from the vehicle body, wheels, license plates, signs, towers, docks, containers and distant advertising; replace them with plain matching material or abstract unmarked light panels. Leave license plates blank. Preserve the exact vehicle design, number of wheels/seats/rotors, proportions, entire vehicle silhouette, camera view, light, palette, scene and mature detailed cel-shaded rendering. Do not crop or shrink the vehicle, do not add new text anywhere, and do not add a replacement header. Opaque 3:2 finished illustration with scene extending to all four edges.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/vehicle-supercar-cover-v2.png",
+      "final": "final/vehicle-supercar-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-56142965-7efb-48f8-96af-6d2c02adfc5b.png",
+      "originalSha256": "442a097cbf514aad3d24bed269d955f3fd9f3c39a602ed7dc8e86881e9dbfc67",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "2c1d5f860130823aeb41718dea43a4f7c6981373aa832c51a6fa15028d63ee3b",
+      "bytes": 379438,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/vehicle-supercar-cover.jpg",
+        "reason": "Embedded titles, logos and labels despite initial prompt; never published",
+        "original": "originals/vehicle-supercar-cover-v1.png",
+        "sha256": "1f78f6e73bc1f997e1cee4cde790066dc399a1591e1cbcfcb2dd30941179bb62",
+        "originalSha256": "80048173e42bb01e8a080f8689fc0b05c0f26f873baf6245471ea4d5cdf69cc9",
+        "prompt": "Use case: stylized-concept. Original Cyberpunk RED 2045 vehicle catalogue cover, opaque 3:2 landscape. Mature premium detailed cel-shaded concept illustration: realistic full-scale engineered vehicle proportions, fine variable ink linework, large crisp painted light/shadow planes, secondary reflected light, convincing rubber/glass/metal/polymer materials. Restrained localized wear, functional joints, seams and fittings; detailed hero vehicle, softer lower-contrast urban background. Whole vehicle visible with generous safe margin, coherent perspective and grounded contact/water shadows. No cartoon toy shapes, heavy icon outline, photo, glossy 3D render, uniform gritty noise, readable text, license plate letters, logos, branding, watermark or UI. No weapons attached, no violence. An exotic two-seat supercar with a low wedge-shaped graphite and ivory body, restrained amber accents, wide performance tires, sculpted side intakes and a two-seat cabin. Parked on a corporate tower access forecourt, low three-quarter front perspective, warm sunset edges and cool architectural shade. Original credible 2045 design, no marque.",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2beebcfc-e1ee-49f6-bc83-c8ac58d23996.png"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Initial versions rejected for typography/logos. Built-in image edits removed text and restored scene. Final exports inspected: whole vehicle, correct category and major construction, clean crop, no visible branding or captions; icons unchanged.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49706,
+        "objectKey": "system-item-media/v1/items/7994/cover/2c1d5f860130823aeb41718dea43a4f7c6981373aa832c51a6fa15028d63ee3b.jpg",
+        "fileSize": 379438
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7994/cover/2c1d5f860130823aeb41718dea43a4f7c6981373aa832c51a6fa15028d63ee3b.jpg"
+    },
+    {
+      "key": "vehicle-roadbike-cover",
+      "target": {
+        "kind": "item",
+        "id": 7992,
+        "typeId": 36,
+        "name": "Дорожный мотоцикл"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Edit the attached illustration. REMOVE EVERY LETTER, NUMBER, WORD, LOGO, BRAND SYMBOL, TITLE, CAPTION AND GRAPHIC BANNER FROM THE ENTIRE IMAGE. This must become an image-only scene with absolutely NO typography. Remove the large top header and all bottom ribbons completely, restoring natural continuous sky/building/water scenery behind them. Remove all lettering and logos from the vehicle body, wheels, license plates, signs, towers, docks, containers and distant advertising; replace them with plain matching material or abstract unmarked light panels. Leave license plates blank. Preserve the exact vehicle design, number of wheels/seats/rotors, proportions, entire vehicle silhouette, camera view, light, palette, scene and mature detailed cel-shaded rendering. Do not crop or shrink the vehicle, do not add new text anywhere, and do not add a replacement header. Opaque 3:2 finished illustration with scene extending to all four edges.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/vehicle-roadbike-cover-v2.png",
+      "final": "final/vehicle-roadbike-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8c5314ac-6f97-4490-8e50-558cf28b39ea.png",
+      "originalSha256": "44f441df50cc23458201b0c791ebf9323ebb16bce287c0cfec71242b4bfa7452",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "c5c4ea8f3179a2377e6b31636ae268f80523b2e5540e6b7abac753966a753b9d",
+      "bytes": 375297,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/vehicle-roadbike-cover.jpg",
+        "reason": "Embedded titles, logos and labels despite initial prompt; never published",
+        "original": "originals/vehicle-roadbike-cover-v1.png",
+        "sha256": "ca10410404236457b7586f0291107fcefe042b42e2657c11023e5db0c4276df6",
+        "originalSha256": "8872e32577e005c1831e56004fc7381202c4b15244d9a504629eb569cd8142ac",
+        "prompt": "Use case: stylized-concept. Original Cyberpunk RED 2045 vehicle catalogue cover, opaque 3:2 landscape. Mature premium detailed cel-shaded concept illustration: realistic full-scale engineered vehicle proportions, fine variable ink linework, large crisp painted light/shadow planes, secondary reflected light, convincing rubber/glass/metal/polymer materials. Restrained localized wear, functional joints, seams and fittings; detailed hero vehicle, softer lower-contrast urban background. Whole vehicle visible with generous safe margin, coherent perspective and grounded contact/water shadows. No cartoon toy shapes, heavy icon outline, photo, glossy 3D render, uniform gritty noise, readable text, license plate letters, logos, branding, watermark or UI. No weapons attached, no violence. A practical two-person road motorcycle with charcoal frame, muted ochre fuel tank, two connected saddle sections, conventional engine, exactly two tires, visible front fork, disc brakes and rear suspension. Parked on a kickstand at a roadside nomad service stop, three-quarter side angle, overcast daylight and weathered urban outskirts. Entire wheels and handlebars visible.",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0d055041-fe52-4968-96f6-13e9a5f09147.png"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Initial versions rejected for typography/logos. Built-in image edits removed text and restored scene. Final exports inspected: whole vehicle, correct category and major construction, clean crop, no visible branding or captions; icons unchanged.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49707,
+        "objectKey": "system-item-media/v1/items/7992/cover/c5c4ea8f3179a2377e6b31636ae268f80523b2e5540e6b7abac753966a753b9d.jpg",
+        "fileSize": 375297
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7992/cover/c5c4ea8f3179a2377e6b31636ae268f80523b2e5540e6b7abac753966a753b9d.jpg"
+    },
+    {
+      "key": "vehicle-superbike-cover",
+      "target": {
+        "kind": "item",
+        "id": 7995,
+        "typeId": 36,
+        "name": "Супербайк"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Edit the attached illustration. REMOVE EVERY LETTER, NUMBER, WORD, LOGO, BRAND SYMBOL, TITLE, CAPTION AND GRAPHIC BANNER FROM THE ENTIRE IMAGE. This must become an image-only scene with absolutely NO typography. Remove the large top header and all bottom ribbons completely, restoring natural continuous sky/building/water scenery behind them. Remove all lettering and logos from the vehicle body, wheels, license plates, signs, towers, docks, containers and distant advertising; replace them with plain matching material or abstract unmarked light panels. Leave license plates blank. Preserve the exact vehicle design, number of wheels/seats/rotors, proportions, entire vehicle silhouette, camera view, light, palette, scene and mature detailed cel-shaded rendering. Do not crop or shrink the vehicle, do not add new text anywhere, and do not add a replacement header. Opaque 3:2 finished illustration with scene extending to all four edges.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/vehicle-superbike-cover-v2.png",
+      "final": "final/vehicle-superbike-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f69a096a-ccc0-49e2-922a-984ce8588a7d.png",
+      "originalSha256": "2b39efdd134b3f817513fb5e5e230d05c032cb15ba2da8e8b1ea38225859a710",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "57fedeee2b21d7bc458acbff5ef9505342bbde679ebe0a523c87157a10e09ca7",
+      "bytes": 368768,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/vehicle-superbike-cover.jpg",
+        "reason": "Embedded titles, logos and labels despite initial prompt; never published",
+        "original": "originals/vehicle-superbike-cover-v1.png",
+        "sha256": "5668005f658f53129e8efcdbecb3c20eccebb95b688e63b31c460a1fba1a13de",
+        "originalSha256": "f1d7083769798db4abba62b33b78968de5fbe66ca4a7513e59b30752d5233f3e",
+        "prompt": "Use case: stylized-concept. Original Cyberpunk RED 2045 vehicle catalogue cover, opaque 3:2 landscape. Mature premium detailed cel-shaded concept illustration: realistic full-scale engineered vehicle proportions, fine variable ink linework, large crisp painted light/shadow planes, secondary reflected light, convincing rubber/glass/metal/polymer materials. Restrained localized wear, functional joints, seams and fittings; detailed hero vehicle, softer lower-contrast urban background. Whole vehicle visible with generous safe margin, coherent perspective and grounded contact/water shadows. No cartoon toy shapes, heavy icon outline, photo, glossy 3D render, uniform gritty noise, readable text, license plate letters, logos, branding, watermark or UI. No weapons attached, no violence. An exotic high-speed two-person superbike with a compact ivory and dark violet aerodynamic fairing, clearly two seating positions, exactly two performance tires, precision fork/brakes, plausible conventional engine. Parked at an industrial race-service garage, dynamic low three-quarter view while stationary, cool directional light and restrained scarlet reflected accent. Complete bike.",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-be05ad79-f568-4bba-a86b-5ae7b3f52c29.png"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Initial versions rejected for typography/logos. Built-in image edits removed text and restored scene. Final exports inspected: whole vehicle, correct category and major construction, clean crop, no visible branding or captions; icons unchanged.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49708,
+        "objectKey": "system-item-media/v1/items/7995/cover/57fedeee2b21d7bc458acbff5ef9505342bbde679ebe0a523c87157a10e09ca7.jpg",
+        "fileSize": 368768
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7995/cover/57fedeee2b21d7bc458acbff5ef9505342bbde679ebe0a523c87157a10e09ca7.jpg"
+    }
+  ],
+  "liveReview": {
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-16/live-qa.json",
+    "scenarios": 15,
+    "passed": true,
+    "checkedAt": "2026-11-16T15:39:01.179Z",
+    "note": "Each real item opened using its own ID; expected own cover loaded, no page errors or horizontal overflow."
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "batch": 41,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-41",
+  "sourceAudit": "Live own covers empty. Software avatar appearances checked against supplied Core pp.206–207,212,368–370. Depict NET visualizations, not real supernatural creatures; original icon slots untouched.",
+  "assets": [
+    {
+      "key": "net-speedy-cover",
+      "target": {
+        "kind": "item",
+        "id": 7917,
+        "typeId": 33,
+        "name": "Быстрый Гонзалвес"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A mature adult netrunner avatar runs through a virtual corridor, leaving a RISING COLUMN OF DUST-LIKE DATA PARTICLES behind them. The cloud is composed of warm pale fragments, clearly artificial NET visualization, no cartoon mouse. Natural running anatomy, full major limbs, graphite clothes with amber accents, broad diagonal flow across panorama.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-speedy-cover-v1.png",
+      "final": "final/net-speedy-cover.webp"
+    },
+    {
+      "key": "net-superglue-cover",
+      "target": {
+        "kind": "item",
+        "id": 7918,
+        "typeId": 33,
+        "name": "Суперклей"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A web of thick STICKY RED DIGITAL GEL strands extends from an adult netrunner avatar's gloved hand across an empty virtual doorway, temporarily sealing the passage. The gel is visibly a software projection with polygon edges and faint grid reflections, no blood or organic tissue, no trapped person. Clear wide composition, red against cool slate.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-superglue-cover-v1.png",
+      "final": "final/net-superglue-cover.webp"
+    },
+    {
+      "key": "net-sword-cover",
+      "target": {
+        "kind": "item",
+        "id": 7919,
+        "typeId": 33,
+        "name": "Меч"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A mature adult netrunner avatar holds a GLOWING ENERGY KATANA horizontally across the wide scene in a balanced ready posture, no strike or target. The blade is pale blue-white data light with precise geometric segments, the handle simple graphite tech. Full sword visible, plausible hand grip, dark network courtyard, no historical samurai setting.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-sword-cover-v1.png",
+      "final": "final/net-sword-cover.webp"
+    },
+    {
+      "key": "net-zap-cover",
+      "target": {
+        "kind": "item",
+        "id": 7920,
+        "typeId": 33,
+        "name": "Разряд"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A shimmering NEON DOUBLE HELIX of blue-violet energy flows from a mature adult netrunner avatar's extended fingertip into empty virtual space. Fine paired luminous ribbons and broad controlled highlights, clearly a program effect not real electricity tutorial, no victim. Readable finger anatomy, dark polygon architecture, no written code.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-zap-cover-v1.png",
+      "final": "final/net-zap-cover.webp"
+    },
+    {
+      "key": "net-worm-cover",
+      "target": {
+        "kind": "item",
+        "id": 7921,
+        "typeId": 33,
+        "name": "Червь"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A GOLDEN MECHANICAL WORM with NEON GREEN EYES curls beside a closed geometric data gate, one segment entering a small virtual opening. Detailed articulated rings, credible mechanical joints, warm gold plates and green light, complete worm silhouette in a dark NET corridor. No organic parasites or real intrusion instructions.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/net-worm-cover-v1.png",
+      "final": "final/net-worm-cover.webp"
+    }
+  ]
+}

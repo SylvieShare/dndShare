@@ -1,0 +1,217 @@
+{
+  "batch": 27,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-27",
+  "sourceAudit": "Live own media slots empty. Catalogue descriptions and user-supplied Core pp.357,377–379 checked; Smash is yellow/frothy in a can, housing distinguishes room facilities. Other sealed fictional medicine packaging is original art interpretation, no usage instructions. Icons unchanged.",
+  "assets": [
+    {
+      "key": "home-corp-conapt-cover",
+      "target": {
+        "kind": "item",
+        "id": 8108,
+        "typeId": 30,
+        "name": "Корпоративный конапт"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A comfortable corporate-provided apartment: broad living room, dining area, full kitchen and a small balcony visible through glass, two bedroom entrances farther back. A discreet visible ceiling surveillance camera in the living area suggests corporate oversight without logos. Clean cream and graphite furnishings, city tower view and soft controlled light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/home-corp-conapt-cover-v1.png",
+      "final": "final/home-corp-conapt-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-db72898a-c9f8-493d-a6e5-ced3d32240c5.png",
+      "originalSha256": "5415225eee856c302d323ea6b3f8451a5da9b88875bf02429951686f7cd3291d",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "aec2745d25cf50936c981b1ff1baf836b98b3ddace0d662af09f6cc451c61050",
+      "bytes": 293068,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49752,
+        "objectKey": "system-item-media/v1/items/8108/cover/aec2745d25cf50936c981b1ff1baf836b98b3ddace0d662af09f6cc451c61050.jpg",
+        "fileSize": 293068
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8108/cover/aec2745d25cf50936c981b1ff1baf836b98b3ddace0d662af09f6cc451c61050.jpg"
+    },
+    {
+      "key": "home-upscale-conapt-cover",
+      "target": {
+        "kind": "item",
+        "id": 8109,
+        "typeId": 30,
+        "name": "Высококлассный конапт"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. A spacious high-end TWO-LEVEL apartment with a visible staircase to a private upper suite, lower living and dining areas, a second lounge nook, generous balcony with city view. Understated luxury materials, warm wood/composite, cream fabric, slate metal and large windows. Distinct from a single-room studio, no people or text, clear architectural perspective.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/home-upscale-conapt-cover-v1.png",
+      "final": "final/home-upscale-conapt-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-431dc301-f443-49d2-b554-3c7014519bbc.png",
+      "originalSha256": "f76e52030482e605c56c589de28dd294d03ac8de6a650e3fc000e084fec16e1c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "0fd5149382bea757cdbeb1b26e841d4e8bacbd94589f9f77c851c5c4f4e0d42d",
+      "bytes": 414961,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49753,
+        "objectKey": "system-item-media/v1/items/8109/cover/0fd5149382bea757cdbeb1b26e841d4e8bacbd94589f9f77c851c5c4f4e0d42d.jpg",
+        "fileSize": 414961
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8109/cover/0fd5149382bea757cdbeb1b26e841d4e8bacbd94589f9f77c851c5c4f4e0d42d.jpg"
+    },
+    {
+      "key": "home-penthouse-cover",
+      "target": {
+        "kind": "item",
+        "id": 8110,
+        "typeId": 30,
+        "name": "Роскошный пентхаус"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. An expansive luxury penthouse at the top of a megacity tower: double-height panoramic windows, broad carefully arranged lounge, private terrace with a small planted area, refined kitchen beyond, spacious quiet atmosphere. Warm sunset across cream furniture and dark stone surfaces, city far below. Original elegant 2045 architecture, not a fantasy palace, no signage or people.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/home-penthouse-cover-v1.png",
+      "final": "final/home-penthouse-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9e0b88de-566f-4660-9738-3570b22fa25a.png",
+      "originalSha256": "4e6fa271720b251b2352a607432008b5ce5128b646a6811f243e9d7720d16fa8",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "8c48d935cda1b005f11ae33fbfc6a9c1aca1c7faf0ed35c41b768983eb19806a",
+      "bytes": 377043,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49754,
+        "objectKey": "system-item-media/v1/items/8110/cover/8c48d935cda1b005f11ae33fbfc6a9c1aca1c7faf0ed35c41b768983eb19806a.jpg",
+        "fileSize": 377043
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8110/cover/8c48d935cda1b005f11ae33fbfc6a9c1aca1c7faf0ed35c41b768983eb19806a.jpg"
+    },
+    {
+      "key": "home-corp-house-cover",
+      "target": {
+        "kind": "item",
+        "id": 8111,
+        "typeId": 30,
+        "name": "Корпоративный дом"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. Exterior three-quarter view of a well-kept detached corporate suburban house in a controlled planned neighborhood on the city outskirts, compact garden, enclosed garage, two floors, a discreet security camera at the gate. Clean practical near-future architecture, similar houses softly visible farther away, bright morning light. No company marks, street names or house numbers.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/home-corp-house-cover-v1.png",
+      "final": "final/home-corp-house-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e725ba9c-5135-42c3-bd28-d289319bc832.png",
+      "originalSha256": "6ff0937aa73caea0c6a373d8a264ec0350c9f9b6f5093ce2fa1a403252e80c7b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "70b6475180ddd336ed63c032eca8fd48a6d153c2d57570b0b3f2a76c206993d7",
+      "bytes": 445579,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49755,
+        "objectKey": "system-item-media/v1/items/8111/cover/70b6475180ddd336ed63c032eca8fd48a6d153c2d57570b0b3f2a76c206993d7.jpg",
+        "fileSize": 445579
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8111/cover/70b6475180ddd336ed63c032eca8fd48a6d153c2d57570b0b3f2a76c206993d7.jpg"
+    },
+    {
+      "key": "home-corp-mansion-cover",
+      "target": {
+        "kind": "item",
+        "id": 8112,
+        "typeId": 30,
+        "name": "Корпоративный особняк"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app, not a book layout or advertisement. Mature detailed cel-shaded art in a dystopian retrofuturist city circa 2045: fine varied ink lines, broad angular painted shadow planes, subtle reflected light, convincing material construction and selective detail, quieter atmospheric background. Opaque 3:2 landscape, main subject fully visible and safely framed. Absolutely no text, labels, numbers, logos, symbols, titles, banners, watermark or UI anywhere. No photorealism, glossy 3D, toy-like shapes, excessive uniform dirt or grain. Exterior of a large corporate suburban mansion behind a secure landscaped entry: generous two-story modern residence, separate garage wing, sheltered terrace and carefully maintained grounds, discreet visible security camera. Distant city skyline beyond the compound. Understated high-cost material detail, late afternoon, no logos, address numbers or people.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/home-corp-mansion-cover-v1.png",
+      "final": "final/home-corp-mansion-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-907d0c22-1be4-4427-b726-367d3c57c36b.png",
+      "originalSha256": "28856c5338661cefcbb74abe8e6884045e1afa1a6e3f41c78164a1e96f61a78d",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "6fd0d8ea62aa089e707edefb1e24a011b83a181aaba52d9e99dfc22ed9bbc3c8",
+      "bytes": 441578,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final exports inspected: distinct sealed fictional supplies, yellow frothy Smash can, correct housing facilities and food tiers, mature material detail and clean framing, no labels/instructions or graphic content. Icons unchanged.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49756,
+        "objectKey": "system-item-media/v1/items/8112/cover/6fd0d8ea62aa089e707edefb1e24a011b83a181aaba52d9e99dfc22ed9bbc3c8.jpg",
+        "fileSize": 441578
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8112/cover/6fd0d8ea62aa089e707edefb1e24a011b83a181aaba52d9e99dfc22ed9bbc3c8.jpg"
+    }
+  ],
+  "liveReview": {
+    "note": "All own cover URLs verified at three widths, no JS errors or horizontal overflow. Initial combined run timed out opening one page; isolated batch rerun passed all 15 scenarios.",
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-27/live-qa.json",
+    "checkedAt": "2026-11-16T16:19:11.477Z",
+    "passed": true,
+    "scenarios": 15,
+    "widths": [
+      390,
+      840,
+      1440
+    ]
+  }
+}

@@ -1,0 +1,373 @@
+{
+  "batch": 31,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-31",
+  "sourceAudit": "All 90 live clothing own media slots empty. Ten fashion directions and nine garment/accessory kinds checked against user-supplied Core p.356. New original designs per record; icons unchanged.",
+  "assets": [
+    {
+      "key": "clothing-7641-cover",
+      "target": {
+        "kind": "item",
+        "id": 7641,
+        "typeId": 23,
+        "name": "Низ (бохо)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A complete pair of adult-sized trousers, both legs fully visible, displayed on a neutral waist-down mannequin with simple feet supports. No top or jacket included. Adapt cut and materials to the fashion direction. Fashion direction: Retro bohemian freestyle: terracotta, muted teal and cream, woven textures, layered organic shapes and small copper details. Practical contemporary city fashion, not medieval or magical. Backdrop: warm independent artisan clothing shop.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7641-cover-v1.png",
+      "final": "final/clothing-7641-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-bef5dcb2-571b-4991-816c-62d3a374fb11.png",
+      "originalSha256": "be37187713f4297834c68958904b0d791a8f7e5867ea989dfc0ae57ab62aadcd",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "73769992ee061c01463b7225b467912d25b9058c1469aa611c016d7c6216528d",
+      "bytes": 311731,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49780,
+        "objectKey": "system-item-media/v1/items/7641/cover/73769992ee061c01463b7225b467912d25b9058c1469aa611c016d7c6216528d.jpg",
+        "fileSize": 311731
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7641/cover/73769992ee061c01463b7225b467912d25b9058c1469aa611c016d7c6216528d.jpg"
+    },
+    {
+      "key": "clothing-7642-cover",
+      "target": {
+        "kind": "item",
+        "id": 7642,
+        "typeId": 23,
+        "name": "Контактные линзы (бохо)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A macro still life of TWO thin soft tinted contact lenses in the two shallow wells of an open small clean lens case, one lens slightly lifted on the lip so its thin flexible transparent edge is obvious. Natural eye-size proportions, not cybernetic eyeballs or goggles. Fashion direction affects iris tint and case finish. No face or eye surgery. Fashion direction: Retro bohemian freestyle: terracotta, muted teal and cream, woven textures, layered organic shapes and small copper details. Practical contemporary city fashion, not medieval or magical. Backdrop: warm independent artisan clothing shop.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7642-cover-v1.png",
+      "final": "final/clothing-7642-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-057c9e8e-6c28-4f42-9558-5de7b93a7d97.png",
+      "originalSha256": "50ec314c72b1587c6867098e81a6eb4d08ba1ff15b90af32332a66487dd682b7",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ad152989332714b1954b28b6dbfb8317f03c1b6f142f0f0528a13609975fe8be",
+      "bytes": 376909,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49781,
+        "objectKey": "system-item-media/v1/items/7642/cover/ad152989332714b1954b28b6dbfb8317f03c1b6f142f0f0528a13609975fe8be.jpg",
+        "fileSize": 376909
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7642/cover/ad152989332714b1954b28b6dbfb8317f03c1b6f142f0f0528a13609975fe8be.jpg"
+    },
+    {
+      "key": "clothing-7643-cover",
+      "target": {
+        "kind": "item",
+        "id": 7643,
+        "typeId": 23,
+        "name": "Обувь (бохо)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. A matching PAIR of complete adult footwear displayed on a low shop plinth at a three-quarter angle, both soles and uppers plausible. Adapt shoe type and materials to the fashion direction; do not show legs or a whole outfit. Fashion direction: Retro bohemian freestyle: terracotta, muted teal and cream, woven textures, layered organic shapes and small copper details. Practical contemporary city fashion, not medieval or magical. Backdrop: warm independent artisan clothing shop.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7643-cover-v1.png",
+      "final": "final/clothing-7643-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f0ff081b-5a6d-43aa-b2f2-199698c0e6b0.png",
+      "originalSha256": "3badfbebbe6999ec08a038f5e38cb6bbe5fe596286a6af9915dff61682dfbee1",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "53bf5c1177505c3048e28b56806be9e1a6be55730c1f3944a20217870c3b07c4",
+      "bytes": 336346,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49782,
+        "objectKey": "system-item-media/v1/items/7643/cover/53bf5c1177505c3048e28b56806be9e1a6be55730c1f3944a20217870c3b07c4.jpg",
+        "fileSize": 336346
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7643/cover/53bf5c1177505c3048e28b56806be9e1a6be55730c1f3944a20217870c3b07c4.jpg"
+    },
+    {
+      "key": "clothing-7644-cover",
+      "target": {
+        "kind": "item",
+        "id": 7644,
+        "typeId": 23,
+        "name": "Очки (бохо)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of ordinary fashion eyeglasses with CLEAR TRANSPARENT lenses and unfolded temples, displayed on a discreet support over a shop counter. Eyeglass frame follows fashion direction; lenses are not mirrored or opaque. Fashion direction: Retro bohemian freestyle: terracotta, muted teal and cream, woven textures, layered organic shapes and small copper details. Practical contemporary city fashion, not medieval or magical. Backdrop: warm independent artisan clothing shop.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7644-cover-v1.png",
+      "final": "final/clothing-7644-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1d5b2c62-6ff0-4291-b07a-9c5ef5a11ae8.png",
+      "originalSha256": "a513a22aae61c2cd069af3f436cd72f21bdcddb866df99bc53c4d16fa75b85fa",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "cbe903806bf0fe0b13d20b4bfe0187b5f4ce5d05f0bdfa12a15cbcaa0380fecd",
+      "bytes": 329222,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49783,
+        "objectKey": "system-item-media/v1/items/7644/cover/cbe903806bf0fe0b13d20b4bfe0187b5f4ce5d05f0bdfa12a15cbcaa0380fecd.jpg",
+        "fileSize": 329222
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7644/cover/cbe903806bf0fe0b13d20b4bfe0187b5f4ce5d05f0bdfa12a15cbcaa0380fecd.jpg"
+    },
+    {
+      "key": "clothing-7645-cover",
+      "target": {
+        "kind": "item",
+        "id": 7645,
+        "typeId": 23,
+        "name": "Головной убор (бохо)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized hat or cap appropriate to the fashion direction, displayed on a plain neutral head form. A real wearable head covering, not a combat helmet. All brim/crown details inside frame. Fashion direction: Retro bohemian freestyle: terracotta, muted teal and cream, woven textures, layered organic shapes and small copper details. Practical contemporary city fashion, not medieval or magical. Backdrop: warm independent artisan clothing shop.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7645-cover-v1.png",
+      "final": "final/clothing-7645-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-12b7205a-4ff1-40d0-99ff-1b2fc32f2d6b.png",
+      "originalSha256": "28b5eacf73ca4c1032af28e3eee631bf3e64b4c77356c3924c8d29e70eb33f85",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "3afc459df995eeaa3bf33e01d3d505a4118003610d0f99bae04cdc9fc2867364",
+      "bytes": 361328,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49784,
+        "objectKey": "system-item-media/v1/items/7645/cover/3afc459df995eeaa3bf33e01d3d505a4118003610d0f99bae04cdc9fc2867364.jpg",
+        "fileSize": 361328
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7645/cover/3afc459df995eeaa3bf33e01d3d505a4118003610d0f99bae04cdc9fc2867364.jpg"
+    },
+    {
+      "key": "clothing-7646-cover",
+      "target": {
+        "kind": "item",
+        "id": 7646,
+        "typeId": 23,
+        "name": "Верхняя одежда (бохо)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized OUTER jacket or coat appropriate to the fashion direction, displayed on a headless torso mannequin or hanger. Both sleeves and hem fully visible. Substantial outerwear distinct from a shirt; no trousers, no armor plates. Fashion direction: Retro bohemian freestyle: terracotta, muted teal and cream, woven textures, layered organic shapes and small copper details. Practical contemporary city fashion, not medieval or magical. Backdrop: warm independent artisan clothing shop.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7646-cover-v1.png",
+      "final": "final/clothing-7646-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b0a7743d-526c-4535-a366-b09055495189.png",
+      "originalSha256": "05d844f81495f5890978da801b14854ca3f5a7cd061dc8b29e094dbb7b5dc807",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "2d348af2e9520a8f0882cc761c7bae2931f9a53ec547a69afe81b403a2819ec1",
+      "bytes": 300379,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49785,
+        "objectKey": "system-item-media/v1/items/7646/cover/2d348af2e9520a8f0882cc761c7bae2931f9a53ec547a69afe81b403a2819ec1.jpg",
+        "fileSize": 300379
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7646/cover/2d348af2e9520a8f0882cc761c7bae2931f9a53ec547a69afe81b403a2819ec1.jpg"
+    },
+    {
+      "key": "clothing-7647-cover",
+      "target": {
+        "kind": "item",
+        "id": 7647,
+        "typeId": 23,
+        "name": "Украшение (бохо)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One original wearable piece of jewelry appropriate to the fashion direction: a substantial wrist cuff or pendant on a compact neutral jewelry stand. Believable full-size metal, beads or synthetic inserts; sophisticated material detail. No mystical gem glow, no symbols or letters. Fashion direction: Retro bohemian freestyle: terracotta, muted teal and cream, woven textures, layered organic shapes and small copper details. Practical contemporary city fashion, not medieval or magical. Backdrop: warm independent artisan clothing shop.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7647-cover-v1.png",
+      "final": "final/clothing-7647-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-10eec61a-32fb-41e1-a570-7a38fa7912ae.png",
+      "originalSha256": "691ea8f6d40f383a97bf59c9179276c04aa1bea3d92cc5b7e35f499b2b354ad4",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "0e938a49b8522422f82e80fdd18dd95d3567e4e4486ef461f840b7e5c8e5ecdb",
+      "bytes": 349725,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49786,
+        "objectKey": "system-item-media/v1/items/7647/cover/0e938a49b8522422f82e80fdd18dd95d3567e4e4486ef461f840b7e5c8e5ecdb.jpg",
+        "fileSize": 349725
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7647/cover/0e938a49b8522422f82e80fdd18dd95d3567e4e4486ef461f840b7e5c8e5ecdb.jpg"
+    },
+    {
+      "key": "clothing-7648-cover",
+      "target": {
+        "kind": "item",
+        "id": 7648,
+        "typeId": 23,
+        "name": "Зеркальные очки (бохо)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete pair of fashion sunglasses with genuinely MIRRORED lenses reflecting broad city-light planes, temples unfolded, on a small display support. Frame and reflected accent palette follow fashion direction; clearly different from ordinary clear-lens eyeglasses. Fashion direction: Retro bohemian freestyle: terracotta, muted teal and cream, woven textures, layered organic shapes and small copper details. Practical contemporary city fashion, not medieval or magical. Backdrop: warm independent artisan clothing shop.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7648-cover-v1.png",
+      "final": "final/clothing-7648-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-fba1da50-5443-45ea-8715-bf13748064b1.png",
+      "originalSha256": "751f5887e12f1042131c416391ee11f58e3b1ab8fe49c30537615278feb9922b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "09703501d5536bc86545fc2ccd6071d202f78eafd004cff8d3e701086a8ed36e",
+      "bytes": 355620,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49787,
+        "objectKey": "system-item-media/v1/items/7648/cover/09703501d5536bc86545fc2ccd6071d202f78eafd004cff8d3e701086a8ed36e.jpg",
+        "fileSize": 355620
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7648/cover/09703501d5536bc86545fc2ccd6071d202f78eafd004cff8d3e701086a8ed36e.jpg"
+    },
+    {
+      "key": "clothing-7649-cover",
+      "target": {
+        "kind": "item",
+        "id": 7649,
+        "typeId": 23,
+        "name": "Верх (бохо)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY fashion item illustration for an app, no page design. Setting: dystopian retrofuturist city circa 2045. Mature detailed drawn CEL SHADING, thin varied ink line, broad painted shadow planes and reflected light, convincing material texture and functional seams, fasteners and folds. Main object sharply described, surrounding shop softer and lower contrast. Opaque 3:2 landscape, complete focal object comfortably framed. No text, letters, numbers, logos, badges, labels, banners, titles, watermark or UI anywhere. No photorealism, glossy 3D, heavy icon outline, fantasy, magic, toy forms, gratuitous wear or visual noise. No human model; use neutral store display props only. One complete adult-sized SHIRT or light top appropriate to the fashion direction on a headless torso mannequin. Fine textile construction, both sleeves if present and full hem visible. This is a base-layer top, not a coat or armored jacket; no trousers. Fashion direction: Retro bohemian freestyle: terracotta, muted teal and cream, woven textures, layered organic shapes and small copper details. Practical contemporary city fashion, not medieval or magical. Backdrop: warm independent artisan clothing shop.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothing-7649-cover-v1.png",
+      "final": "final/clothing-7649-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4d4bbe0d-a1bf-4030-8792-aec4d2b03a88.png",
+      "originalSha256": "e5aed46addf10bb7e6db4b48e4bf9287b1da3f700301b148c53a3be7c6214efb",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "5d686935ae5ee72b378763d0b3e9d71923661ba1d46e0f56d7df7ab8c24b5bbc",
+      "bytes": 322057,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "All nine final fashion covers inspected: style-specific materials, complete garments/accessories, paired footwear/lenses, clear versus mirrored glasses distinguished, no text/logos or people. Icons untouched.",
+        "passed": true,
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49788,
+        "objectKey": "system-item-media/v1/items/7649/cover/5d686935ae5ee72b378763d0b3e9d71923661ba1d46e0f56d7df7ab8c24b5bbc.jpg",
+        "fileSize": 322057
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7649/cover/5d686935ae5ee72b378763d0b3e9d71923661ba1d46e0f56d7df7ab8c24b5bbc.jpg"
+    }
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-31/live-qa.json",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "passed": true,
+    "note": "All nine own clothing images loaded by actual item ID at three widths, no JS errors or horizontal overflow.",
+    "scenarios": 27,
+    "checkedAt": "2026-11-16T16:45:53.124Z"
+  }
+}
