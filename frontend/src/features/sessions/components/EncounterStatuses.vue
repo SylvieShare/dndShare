@@ -1,5 +1,5 @@
 <template>
-  <SessionStatusIcons :items="items" :context="context" @remove="remove" @change-level="changeLevel" @edit-duration="durationUid = $event.id" />
+  <SessionStatusIcons :items="items" :context="context" :detailed="detailed" @remove="remove" @change-level="changeLevel" @edit-duration="durationUid = $event.id" />
   <StatusDurationModal v-if="durationStatus" :key="durationUid" :status="durationStatus" :z-index="9600" @close="durationUid = null" @save="saveDuration" />
 </template>
 <script setup>
@@ -10,7 +10,7 @@ import { useItemReferenceMap } from '@/features/items/composables/useItemReferen
 import { collectCharacterStatuses, removeStatusInstance, setStatusInstanceDuration, setStatusInstanceLevel } from '@/features/character-editor/lib/characterStatuses'
 import { npcApplicationContext } from '../lib/npcApplicationContext'
 import { statusDuration } from '@/shared/lib/statusDuration'
-const props = defineProps({ combatant: { type: Object, required: true }, editable: Boolean })
+const props = defineProps({ combatant: { type: Object, required: true }, editable: Boolean, detailed:Boolean })
 const enc = inject('encounter', null) || inject('applicationEncounter', null)
 const conditions = computed(() => enc.statesValue(props.combatant))
 const values = computed(() => ({ states: props.combatant.effectInstances || [] }))

@@ -88,7 +88,7 @@ export function useEncounterFlow({
       mutate(() => {
         let tb = nextTieBreak(encounter.value.combatants)
         for (const c of encounter.value.combatants) {
-          if (!selectedUids.value.has(c.uid)) continue
+          if (!selectedUids.value.has(c.uid) && c.position !== 'combat') continue
           if (c.position === 'dead') continue
           c.position = 'combat'
           if (c.initiative == null) c.initiative = rollInitiativeFor(c)

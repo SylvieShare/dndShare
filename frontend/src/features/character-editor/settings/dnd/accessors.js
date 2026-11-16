@@ -30,6 +30,7 @@ export const dndAccessors = {
   states: { blockId: 'states', itemTypeId: 15 },
   // Write-back path for player HP (the encounter patches `<hpPath>.current` etc.).
   hpPath: 'values.hp',
+  experiencePath: 'values.lvl.exp',
 
   displayName(data) {
     return String(data?.values?.name || '')

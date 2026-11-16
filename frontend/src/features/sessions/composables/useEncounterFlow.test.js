@@ -23,6 +23,18 @@ function createFlow() {
 }
 
 describe('encounter group movement', () => {
+  it('starts with a prepared scene after selection has been cleared', () => {
+    const { encounter, flow } = createFlow()
+    encounter.value.active = false
+    flow.sendCombatantsTo([encounter.value.combatants[0]],'combat')
+    // Neither combatant needs to remain selected to keep the prepared scene.
+    const start = useEncounterFlow({encounter,getCombatant:uid=>encounter.value.combatants.find(row=>row.uid===uid),mutate:fn=>fn(),
+      inCombat:computed(()=>encounter.value.combatants.filter(row=>row.position==='combat')),turnOrder:computed(()=>[]),selectedUids:ref(new Set()),unselect:()=>{},rollInitiativeFor:()=>12})
+    start.toggleCombat()
+    expect(encounter.value.active).toBe(true)
+    expect(encounter.value.combatants[0]).toMatchObject({position:'combat',initiative:12})
+    expect(encounter.value.combatants[1].position).toBe('reserve')
+  })
   it('rolls one participant before combat and keeps that initiative when combat starts', () => {
     const { encounter, flow } = createFlow()
     encounter.value.active = false

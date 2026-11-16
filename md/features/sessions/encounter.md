@@ -63,8 +63,9 @@ header action is highlighted while results exist and clears them on the next
 click.
 
 Players have no separate encounter reserve section. The persistent workspace sidebar
-keeps the Players panel available in combat. Each player receives a selection checkbox
-beside the name; AC, HP and passive skills use the common character summary tile.
+keeps the Players panel available on every tab. Players and NPC reserves use the
+same explicit selection mode and frame indicators, without sidebar checkboxes;
+AC, HP and passive skills use the common character summary tile.
 A prepared initiative remains a chip beside the name while the player is in reserve.
 Selection and current-turn highlights retain the encounter commands and permissions.
 
@@ -161,6 +162,22 @@ canonicalizes player character identifiers from the current participant list
 and removes duplicate legacy player entries. This prevents combatants from
 remaining outside every current group and persists the repaired state through
 the normal encounter save queue.
+
+### Sidebar selection and prepared scene
+
+`useRosterSelection` scopes selected combatants to its current player/reserve
+list; `SessionSelectionToolbar` shares mode, damage/XP dialogs and move actions.
+Ordinary tile actions are inert during selection; keyboard focus stays on the
+accessible selectable row. Scope changes prune invisible reserve targets.
+Damage calls `useEncounterImpacts` with an explicit snapshot of this list's
+eligible targets, preserving its stable retry key and authoritative server HP.
+D&D experience uses the semantic `experiencePath` and the existing versioned
+character document queue; the batch remembers confirmed targets on retry.
+The amount is added to each character, without automatic level-up.
+The move action is shown in the combat workspace for eligible selected rows,
+even before combat is active. The scene roster remains visible in preparation;
+starting combat includes already prepared rows even if their selection was cleared.
+Drag/drop can also populate the prepared scene without enforcing active-turn rank.
 
 ### Reserve tabs
 
@@ -340,8 +357,9 @@ menu before combat. `rollCombatantInitiative` changes only that creature; combat
 start preserves an already assigned initiative. Existing mass initiative actions
 remain available.
 
-Ctrl + click (Cmd + click on macOS) toggles selection in the participant rail when combat controls are
-available, in encounter rows and in `SessionTargetPicker`. The shared
+Ctrl + click (Cmd + click on macOS) enters selection mode and toggles a sidebar
+player/reserve tile on every session tab. Combat rows and `SessionTargetPicker`
+retain their existing Ctrl/Cmd selection. The shared
 `handleCtrlSelection` consumes the gesture before menus, native checkbox
 activation and drag start, including macOS's Cmd-click and Ctrl-contextmenu events. Locked or
 read-only selection stays unchanged. Ordinary clicks keep their existing behavior.
@@ -371,7 +389,10 @@ Chronicle attack target controls share the roll's row on the right, with chosen 
 the sidebar use `SessionPlayerTile`, which composes the same `CharacterSummaryTile`
 and `SheetHealth` as the character header: portrait, name, shield AC, numeric HP
 with temporary HP, and two passive values for D&D participants viewed by the DM.
-The combat checkbox occupies the name row. Race/class remain in the sheet/menu,
+`SessionRosterTile` owns the shared visual composition of player and NPC-reserve
+summaries: portrait, shield AC, numeric HP, states and selection frames.
+`SessionReserveTile` supplies encounter data and retains creature marker,
+initiative, menus and drag ordering. Race/class remain in the sheet/menu,
 not the card. Long names truncate within the available width; metrics wrap as a group.
 `useParticipantDefenses` owns asynchronous hydration for both this card and the
 compact encounter `ParticipantStats`; ready name and HP stay visible while numeric
@@ -381,7 +402,8 @@ Player summaries have transparent resting surfaces and separators between rows.
 Active character states below the summary use `DndStatusOverviewView(header, stacked, compact)`:
 40px icons, a minimum 48px touch target, name, duration and polarity-colored parchment.
 States form a vertical list inside the scrolling player panel. Character-header
-states keep their existing 56px horizontal presentation; NPC icon-only states remain 32px.
+states keep their existing 56px horizontal presentation. NPC reserves use the
+same detailed 40px vertical states; combat/map NPC icon-only states remain 32px.
 They use the same handbook tooltip and action menu as the sheet: viewing, duration,
 levels, removal and effect-specific mechanics. The menu follows its source during
 panel scrolling and closes when the source leaves that panel's viewport.
@@ -389,12 +411,14 @@ The adapter retains the shared resources, defenses and versioned character-comma
 queue; rejected saves show an error and do not apply unconfirmed data. Status actions
 do not open the participant menu, reorder the card or change combat selection.
 Card height follows content; compact summaries hide their information and states.
-NPC numeric conditions and effect instances retain compact 32px icon menus.
+NPC numeric conditions and effect instances retain shared menus: detailed in
+reserves, compact 32px in combat and maps.
 
 `EncounterInitiativeMenu` remains shared with creature rows. `handleCtrlSelection`
 handles Ctrl/Cmd selection in the player list, encounter rows and target picker;
 macOS Ctrl-contextmenu toggles once. Drag ignores these modifiers and form controls.
-`CompactCheckbox` uses its public size=20 API. The former floating player rail and
+`CompactCheckbox` remains in the combat queue and target picker, using size=20;
+sidebar lists use accessible checkbox roles on their framed selectable rows. The former floating player rail and
 its independent collapsed-state preference are removed; one sidebar owns collapse.
 `ArmorClassChip` and `SessionHpBar` remain the compact AC/HP presentations for
 encounter rows, chronicle result rows and target pickers.

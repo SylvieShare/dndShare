@@ -24,7 +24,7 @@ function core(data){
 
 for(const width of [475,704,1440])test(`reserve sidebar tabs create rename and retain NPCs at ${width}`,async({page},info)=>{
   const {api,nav,sidebar}=await open(page,width),before=core(api.encounter())
-  await expect(nav.getByRole('separator',{name:'Запасы существ',exact:true})).toBeVisible()
+  await expect(nav.getByRole('separator',{name:'Запасы существ',exact:true})).toHaveCount(0)
   await expect(sidebar.getByRole('button',{name:'Удалить вкладку',exact:true})).toHaveCount(0)
   await expect(sidebar.getByRole('button',{name:'Переименовать вкладку',exact:true})).toHaveCount(0)
   const add=nav.getByRole('button',{name:'Добавить вкладку',exact:true})
@@ -122,7 +122,7 @@ for(const width of [390,834,1440])test(`reserves work on every session tab witho
   await expect(panel.getByText('Сова',{exact:true})).toBeVisible()
   await expect.poll(()=>api.encounter().combatants.some(row=>row.override?.name==='Сова'&&row.reserveTabId==='forest')).toBe(true)
   const owl=panel.locator('.enc-row-shell').filter({hasText:'Сова'})
-  await owl.locator('.enc-hp-area').click()
+  await owl.locator('.heading-health').click()
   const hp=page.getByRole('dialog',{name:'Сова · хиты',exact:true})
   await expect(hp).toHaveCount(1)
   await hp.getByRole('spinbutton').first().fill('9')

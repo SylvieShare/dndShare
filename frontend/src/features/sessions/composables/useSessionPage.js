@@ -182,9 +182,6 @@ export function useSessionPage() {
     encounterPlayers.value.length > 0
     && encounterPlayers.value.every(combatant => encounter.isSelected(combatant))
   )
-  const selectedPlayersToCombat = computed(() => encounterPlayers.value.filter(combatant =>
-    encounter.isSelected(combatant) && encounter.willMoveToGroup(combatant, 'combat')
-  ))
 
   function toggleAllEncounterPlayers() {
     const shouldSelect = !allEncounterPlayersSelected.value
@@ -193,9 +190,6 @@ export function useSessionPage() {
     }
   }
 
-  function sendSelectedPlayersToCombat() {
-    encounter.sendCombatantsTo(selectedPlayersToCombat.value, 'combat')
-  }
 
   function isEncounterPlayerSelected(charId) {
     const combatant = encounterPlayer(charId)
@@ -518,7 +512,7 @@ export function useSessionPage() {
     participantSortable, participants, pendingKick, pendingKickName, playersRailMode,
     presentation, primaryView, requestKickParticipant, selectLocation, selectMaterial,
     selectNpc, selectQuest, selectSessionView, selectedLocationId, selectedMaterialId,
-    selectedNpcId, selectedPlayersToCombat, selectedQuestId, sendBlockToCombat, sendSelectedPlayersToCombat,
+    selectedNpcId, selectedQuestId, sendBlockToCombat,
     session, sessionMaterials, sessionSettings, settingsSaving, settingsError, sessionTimers, sessionTutorial,
     sessionUuid, sessionWorld, setEncounterPlayerSelected, setParticipantColor,
     sheetUuid, shortcutLabels, showShortcutHints, startParticipantDrag, syncRunning,

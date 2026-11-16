@@ -10,7 +10,7 @@ export function useEncounterReserveSidebar(encounter, sidebar) {
   function sidebarContextRegister() {
     return sidebar.register('reserves', {
       tabs: () => [
-        ...encounter.reserveTabs.map((tab,index) => ({key:tab.id,label:tab.name,icon:Archive,divider:index===0,dividerLabel:index===0?'Запасы существ':undefined})),
+        ...encounter.reserveTabs.map(tab => ({key:tab.id,label:tab.name,icon:Archive})),
         {key:'add',label:'Добавить вкладку',shortLabel:'Добавить',icon:Plus,action:true,disabled:!encounter.canManageReserves,
           attrs:{style:{borderStyle:'dashed',borderColor:'var(--border-strong)'}}},
       ],

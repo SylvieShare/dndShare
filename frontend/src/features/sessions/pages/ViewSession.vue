@@ -156,41 +156,12 @@
       <SessionWorkspaceSidebar :controller="sidebar">
         <template #reserve-title><EncounterReserveHeader :ui="reserveSidebar" /></template>
         <template #reserve-actions><EncounterReserveHeader :ui="reserveSidebar" actions /></template>
-        <template #panels><EncounterReservePanel :encounter="encounter" :ui="reserveSidebar" /></template>
+        <template #panels><EncounterReservePanel :encounter="encounter" :ui="reserveSidebar" :combat-workspace="playersRailMode === 'combat'" /></template>
         <template #players-actions>
           <SessionPlayersMenu :live-status="liveStatus" :sync-status="syncStatus" :syncing="syncRunning || liveCatchingUp"
             @join="openJoinOwn" @create="openCreate" @copy-code="copyCode" @copy-link="copyLink" />
         </template>
-        <div v-if="playersRailMode === 'combat'" class="col-section-title" role="group" aria-label="Действия с участниками">
-          <button
-            v-if="playersRailMode === 'combat'"
-            type="button"
-            class="players-select-all"
-            :class="{ 'players-select-all--active': allEncounterPlayersSelected }"
-            :disabled="encounterPlayers.length === 0"
-            :title="allEncounterPlayersSelected ? 'Снять выбор со всех игроков' : 'Выбрать всех игроков'"
-            :aria-label="allEncounterPlayersSelected ? 'Снять выбор со всех игроков' : 'Выбрать всех игроков'"
-            aria-keyshortcuts="Shift+P"
-            @click="toggleAllEncounterPlayers"
-          >
-            <ListChecks :size="17" />
-            <kbd v-if="showShortcutHints" class="players-select-all-shortcut">{{ shortcutLabels.panel }}+P</kbd>
-          </button>
-          <button
-            v-if="playersRailMode === 'combat'"
-            type="button"
-            class="players-select-all players-send-to-combat"
-            :disabled="selectedPlayersToCombat.length === 0"
-            title="Переместить выбранных игроков в бой"
-            aria-label="Переместить выбранных игроков в бой"
-            @click="sendSelectedPlayersToCombat"
-          >
-            <LogIn :size="17" />
-            <span v-if="selectedPlayersToCombat.length" class="players-action-count">{{ selectedPlayersToCombat.length }}</span>
-          </button>
-
-
-        </div>
+        <SessionSelectionToolbar :encounter="encounter" :selection="playerSelection" :combat-workspace="playersRailMode === 'combat'" label="Выбор игроков" />
 
         <div v-if="participants.length" class="participants-list" data-sortable-container="participants">
           <SessionParticipantCard
@@ -201,14 +172,14 @@
             :is-dm="isDm"
             :kick-pending="kickingIds.has(p.charId)"
             :color-pending="coloringIds.has(p.charId)"
-            :reorder-enabled="isDm && participants.length > 1 && !participantOrderSaving"
+            :reorder-enabled="isDm && !playerSelection.selecting && participants.length > 1 && !participantOrderSaving"
             :reorder-placeholder="participantSortable.isSource(p)"
             :should-suppress-reorder-click="participantSortable.shouldSuppressClick"
             :combat-mode="playersRailMode === 'combat'"
             :combatant="encounterPlayer(p.charId)"
             :combat-selected="isEncounterPlayerSelected(p.charId)"
             :combat-current="isEncounterPlayerCurrent(p.charId)"
-            :combat-editable="isDm"
+            :combat-editable="isDm" :selection-mode="playerSelection.selecting" @start-selection="playerSelection.selecting = true"
             @view="openParticipant"
             @color="setParticipantColor"
             @kick="requestKickParticipant"
@@ -268,7 +239,6 @@ import { onBeforeRouteLeave, useRoute } from 'vue-router'
 import { ref } from 'vue'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
-import { ListChecks, LogIn } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import CharacterCreateWizardModal from '@/features/character-list/components/CharacterCreateWizardModal.vue'
 import CharacterSheetModal from '@/features/character-editor/components/CharacterSheetModal.vue'
@@ -279,6 +249,8 @@ import SessionChronicleWorkspace from '@/features/sessions/components/SessionChr
 import SessionEditModal from '@/features/sessions/components/SessionEditModal.vue'
 import SessionJoinModal from '@/features/sessions/components/SessionJoinModal.vue'
 import SessionCenterWorkspace from '@/features/sessions/components/SessionCenterWorkspace.vue'
+import SessionSelectionToolbar from '@/features/sessions/components/SessionSelectionToolbar.vue'
+import { useRosterSelection } from '../composables/useRosterSelection'
 import SessionPlayersMenu from '@/features/sessions/components/SessionPlayersMenu.vue'
 import SessionWorkspaceSidebar from '@/features/sessions/components/SessionWorkspaceSidebar.vue'
 import EncounterReserveHeader from '@/features/sessions/components/EncounterReserveHeader.vue'
@@ -301,7 +273,7 @@ const DndHpCalcModal = defineAsyncComponent(() => import('@/features/character-e
 const toolbarHeight = ref(64)
 
 const {
-  allEncounterPlayersSelected, applySessionEdit, chapterGraph, chapterGraphTab, closeCreate,
+  applySessionEdit, chapterGraph, chapterGraphTab, closeCreate,
   colorError, coloringIds, combatWorkspace, combatWorkspaceError, confirmKickParticipant,
   copyCode, copyLink, createChar, createError, createModalRef,
   createOpen, creating, currentChapter, displayedParticipants, editOpen,
@@ -313,14 +285,15 @@ const {
   participantSortable, participants, pendingKick, pendingKickName, playersRailMode,
   presentation, primaryView, requestKickParticipant, selectLocation, selectMaterial,
   selectNpc, selectQuest, selectSessionView, selectedLocationId, selectedMaterialId,
-  selectedNpcId, selectedPlayersToCombat, selectedQuestId, sendBlockToCombat, sendSelectedPlayersToCombat,
+  selectedNpcId, selectedQuestId, sendBlockToCombat,
   session, sessionMaterials, sessionSettings, settingsSaving, settingsError, sessionTimers, sessionTutorial,
   sessionUuid, sessionWorld, setEncounterPlayerSelected, setParticipantColor,
   sheetUuid, shortcutLabels, showShortcutHints, startParticipantDrag, syncRunning,
-  syncStatus, toggleAllEncounterPlayers, tutorialMobile, tutorialRoot,
+  syncStatus, tutorialMobile, tutorialRoot,
   updateSessionSetting, updateWorkspaceContext, workspaceChapter, workspaceClosing, workspaceLevel,
   workspaceMode, workspaceMotionMode, workspaceScene, worldLayer,
 } = useSessionPage()
+const playerSelection = reactive(useRosterSelection(encounter,()=>encounterPlayers.value))
 const sidebar = useSessionSidebar(primaryView)
 const reserveSidebar = reactive(useEncounterReserveSidebar(encounter,sidebar))
 const route = useRoute()

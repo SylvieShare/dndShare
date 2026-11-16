@@ -289,7 +289,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     getKey: c => c.uid,
     canDropAt: ({ item, toGroup, toIndex }) => {
       if (toGroup === 'combat') {
-        if (!encounter.value.active) return false
+        if (!encounter.value.active) return true
         const list = inCombat.value.filter(c => c.uid !== item.uid)
         const before = list[toIndex - 1]
         const after = list[toIndex]
@@ -418,6 +418,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     isSelected:             selection.isSelected,
     toggleSelected:         selection.toggleSelected,
     clearSelection:         selection.clearSelection,
+    unselect:               selection.unselect,
     selectAllInGroup:       selection.selectAllInGroup,
     selectedCountInGroup:   selection.selectedCountInGroup,
     selectedNpcCount:       selection.selectedNpcCount,
@@ -429,6 +430,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     selectedDamageCount:    hp.selectedDamageCount,
     applyDamageToSelected:  hp.applyDamageToSelected,
     applyDamageToCombatant: hp.applyDamageToCombatant,
+    applyDamageToCombatants: impacts.applyCombatDamage,
     displayAc:              hp.displayAc,
     hpPercent:              hp.hpPercent,
     hpTempPercent:          hp.hpTempPercent,

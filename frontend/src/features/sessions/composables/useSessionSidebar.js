@@ -15,7 +15,7 @@ export function useSessionSidebar(activeView) {
   const tabs = computed(() => [
     { key: 'players', label: 'Игроки', icon: Users },
     ...(clients.get('reserves')?.tabs() || []).map(tab => ({ ...tab, key: key(tab.action ? 'reserveActions' : 'reserves', tab.key) })),
-    ...(clients.get(activeView.value)?.tabs() || []).map(tab => ({ ...tab, key: key(activeView.value, tab.key) })),
+    ...(clients.get(activeView.value)?.tabs() || []).map((tab,index) => ({ ...tab, divider: index === 0 || tab.divider, dividerLabel: index === 0 ? 'Инструменты раздела' : tab.dividerLabel, key: key(activeView.value, tab.key) })),
   ])
   function select(scope, tab) { sidebar.value?.openTab(key(scope, tab)) }
   function action(tabKey) {

@@ -42,95 +42,6 @@
 .campaign-graph {--chapter-safe-left:var(--session-content-left,var(--layout-map-rail));--chapter-safe-right:var(--workspace-tools-clearance);width:100%;height:100%}
 .campaign-workspace--combat .campaign-graph {--chapter-safe-left:var(--session-sidebar-width,var(--layout-map-sidebar))}
 
-.col-section-title {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  padding: 0 2px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.players-select-all {
-  transition: opacity 0.18s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.players-select-all {
-  position: relative;
-  min-width: 30px;
-  height: 30px;
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  padding: 0 7px;
-  border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
-  color: color-mix(in srgb, var(--accent) 76%, var(--text-1));
-  cursor: pointer;
-  font: inherit;
-  transition: background 0.12s, border-color 0.12s, color 0.12s, transform 0.1s;
-}
-
-.players-select-all:hover:not(:disabled),
-.players-select-all--active {
-  border-color: color-mix(in srgb, var(--accent) 62%, transparent);
-  background: color-mix(in srgb, var(--accent) 17%, transparent);
-  color: var(--text-1);
-}
-
-.players-select-all:disabled { cursor: default; opacity: 0.45; }
-.players-select-all:active:not(:disabled) { transform: scale(0.92); }
-
-.players-send-to-combat {
-  border-color: color-mix(in srgb, var(--danger) 32%, transparent);
-  background: color-mix(in srgb, var(--danger) 8%, transparent);
-  color: color-mix(in srgb, var(--danger) 78%, var(--text-1));
-}
-
-.players-send-to-combat:hover:not(:disabled) {
-  border-color: color-mix(in srgb, var(--danger) 62%, transparent);
-  background: color-mix(in srgb, var(--danger) 17%, transparent);
-  color: var(--danger);
-}
-
-.players-action-count {
-  min-width: 15px;
-  height: 15px;
-  display: grid;
-  place-items: center;
-  margin-left: 2px;
-  padding: 0 3px;
-  border-radius: 999px;
-  background: color-mix(in srgb, currentColor 14%, transparent);
-  font-size: 8px;
-  font-weight: 850;
-  line-height: 1;
-}
-
-.players-select-all-shortcut {
-  position: absolute;
-  z-index: 3;
-  right: -6px;
-  bottom: -9px;
-  padding: 2px 4px;
-  border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border));
-  border-radius: 4px;
-  background: var(--popover-bg);
-  color: var(--accent-soft);
-  box-shadow: var(--shadow-sm);
-  font: 750 8px/1 var(--font-ui);
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-.campaign-workspace--combat .col-section-title { overflow: visible; }
-
 .participants-list {
   display: flex;
   flex-direction: column;
@@ -150,7 +61,6 @@
 }
 
 
-@media (prefers-reduced-motion:reduce) {.players-select-all{transition:none}}
 .campaign-workspace--map .campaign-graph {--chapter-safe-left:var(--session-map-panel-width)}
 @media (--ui-compact) {.campaign-workspace--combat .campaign-graph {--chapter-safe-left:var(--session-sidebar-rail,var(--layout-map-rail))}}
 

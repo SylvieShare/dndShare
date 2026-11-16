@@ -137,17 +137,16 @@
     </BaseTile>
 
     <div
-      class="enc-content"
-      :class="{ 'enc-content--combat-active': enc.encounter.active || combatTransitionPhase === 'ending' }"
+      class="enc-content enc-content--combat-active"
     >
       <div
-        class="enc-combat-layout"
-        :class="{ 'enc-combat-layout--active': enc.encounter.active || combatTransitionPhase === 'ending', 'enc-combat-layout--preview': hasPreviewSpace }"
+        class="enc-combat-layout enc-combat-layout--active"
+        :class="{ 'enc-combat-layout--preview': enc.encounter.active && hasPreviewSpace }"
       >
         <div class="enc-combat-primary">
           <!-- ── Combat ── -->
           <Transition name="enc-combat-scene">
-            <div v-if="enc.encounter.active" class="enc-combat-scene">
+            <div class="enc-combat-scene">
               <div class="enc-block enc-block--combat">
                 <div class="enc-section-title-row">
                   <div class="enc-section-title-group">
@@ -291,7 +290,7 @@ const combatItems = computed(() => enc.sortable.displayItems('combat'))
 const currentTurnUid = computed(() => enc.currentTurnUid)
 const currentTurnCombatant = computed(() => enc.inCombat.find(combatant => combatant.uid === currentTurnUid.value) ?? null)
 
-const startSelectionCount = computed(() => enc.selectedRerollCount)
+const startSelectionCount = computed(() => enc.inCombat.length + enc.encounter.combatants.filter(row => row.position !== 'combat' && row.position !== 'dead' && enc.isSelected(row)).length)
 const combatMoveCount = computed(() => enc.selectedToMoveTo('combat'))
 const reserveMoveCount = computed(() => enc.selectedToMoveTo('reserve'))
 const deadMoveCount = computed(() => enc.selectedToMoveTo('dead'))

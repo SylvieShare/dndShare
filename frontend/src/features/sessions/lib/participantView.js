@@ -66,3 +66,7 @@ export function pvHpPath(entry) {
   const a = accessorsFor(entry)
   return a?.hpPath || null
 }
+
+export function pvExperiencePath(entry) {
+  return accessorsFor(entry)?.experiencePath || null
+}

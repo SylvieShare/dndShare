@@ -2,22 +2,22 @@
   <div
     class="p-card-menu"
     :class="{ 'p-card-menu--placeholder': reorderPlaceholder }"
+    :role="selectionMode ? 'checkbox' : undefined" :aria-checked="selectionMode ? combatSelected : undefined"
+    :aria-label="selectionMode ? `Выбрать: ${displayName}` : undefined" :tabindex="selectionMode ? 0 : undefined"
+    @keydown.enter.self.prevent="selectByKeyboard" @keydown.space.self.prevent="selectByKeyboard"
     @pointerdown="startReorder"
     @click.capture="suppressReorderClick"
     @contextmenu.capture="suppressReorderClick"
   >
-    <RowActionMenu>
+    <RowActionMenu :trigger-attrs="{ inert: selectionMode || undefined }">
       <template #trigger>
         <SessionPlayerTile
           class="p-card"
           :class="{ 'p-card--combat': combatMode, 'p-card--statuses': hasStatuses, 'p-card--compact': compact, 'p-card--current': combatMode && combatCurrent, 'p-card--reorderable': reorderEnabled }"
           :participant="participant" :name="displayName" :avatar-url="avaUrl" :hp="hp" :health-visible="showHp" :show-stats="isDm && isDnd"
           :color="participant.color" :compact="compact" :current="combatMode && combatCurrent"
-          :controls-visible="combatMode" :has-statuses="hasStatuses"
+          :has-statuses="hasStatuses" :selection-mode="selectionMode" :selected="combatSelected"
         >
-          <template #controls>
-            <CompactCheckbox :size="20" :model-value="combatSelected" :label="`Выбрать: ${displayName}`" :disabled="!combatEditable || !combatant" @update:model-value="$emit('update:combat-selected', $event)" />
-          </template>
           <template #name-suffix>
             <span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span>
           </template>
@@ -86,7 +86,6 @@ import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
 import { hasDndStatusSummary } from '@/features/character-editor/lib/dndStatusSummary'
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { Calculator, HeartPulse, Palette } from '@lucide/vue'
-import { CompactCheckbox } from '@sylvieshare/share-ui'
 import { ColorPresetPicker } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
@@ -115,26 +114,36 @@ const props = defineProps({
   combatSelected: { type: Boolean, default: false },
   combatCurrent: { type: Boolean, default: false },
   combatEditable: { type: Boolean, default: false },
+  selectionMode: Boolean,
 })
-const emit = defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'update:combat-selected'])
+const emit = defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'update:combat-selected', 'start-selection'])
 
 const hasStatuses = computed(() => props.isDm && isDnd.value && hasDndStatusSummary(props.participant.data?.values || {}))
 
 const REORDER_IGNORE = 'button, input, textarea, select, a, [contenteditable="true"], .p-combat-controls'
 
 function startReorder(event) {
-  if (!props.reorderEnabled || event.ctrlKey || event.metaKey) return
+  if (!props.reorderEnabled || props.selectionMode || event.ctrlKey || event.metaKey) return
   if (event.button !== undefined && event.button !== 0) return
   if (event.target.closest(REORDER_IGNORE)) return
   emit('drag-start', event)
 }
 
 function suppressReorderClick(event) {
+  if (props.selectionMode && props.combatEditable && props.combatant) {
+    event.preventDefault();event.stopPropagation()
+    emit('update:combat-selected', !props.combatSelected)
+    return
+  }
   if (event.target.closest('.p-statuses-area')) return
-  if (handleCtrlSelection(event, props.combatMode && props.combatEditable && !!props.combatant, () => emit('update:combat-selected', !props.combatSelected))) return
+  if (handleCtrlSelection(event, props.combatEditable && !!props.combatant, () => {emit('start-selection');emit('update:combat-selected', !props.combatSelected)})) return
   if (!props.shouldSuppressReorderClick?.()) return
   event.preventDefault()
   event.stopPropagation()
+}
+
+function selectByKeyboard() {
+  if (props.selectionMode && props.combatEditable && props.combatant) emit('update:combat-selected', !props.combatSelected)
 }
 
 function viewParticipant(close) {
@@ -183,7 +192,9 @@ const isDead = computed(() => showHp.value && hp.value.current <= 0)
 
 .p-card-menu {
   width: 100%;
+  border-radius: var(--radius-tile);
 }
+.p-card-menu[role="checkbox"]:focus-visible {outline:2px solid var(--accent-soft);outline-offset:2px}
 
 .p-card-menu :deep(.ram-custom-trigger) {
   display: flex;

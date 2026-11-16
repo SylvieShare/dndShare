@@ -5,10 +5,10 @@
       <component :is="actionLabel ? 'button' : 'span'" class="portrait" :type="actionLabel ? 'button' : undefined"
         :aria-label="actionLabel || name" :aria-haspopup="actionLabel ? 'menu' : undefined" :aria-expanded="actionLabel ? expanded : undefined"
         :aria-description="description">
-        <CharacterAvatar :src="iconUrl" :name="name" size="100%" />
+        <slot name="portrait"><CharacterAvatar :src="iconUrl" :name="name" size="100%" /></slot>
       </component>
       <div class="summary-content" :inert="compact" :aria-hidden="compact || undefined">
-        <div class="identity"><strong>{{ name || 'Персонаж' }}</strong><slot name="name-suffix" /></div>
+        <div class="identity"><slot name="name-prefix" /><strong>{{ name || 'Персонаж' }}</strong><slot name="name-suffix" /></div>
         <div class="heading-combat">
           <component v-if="armor != null" :is="armorControl || editArmor ? 'button' : 'span'" class="heading-armor" :type="armorControl || editArmor ? 'button' : undefined" :disabled="armorControl && !editArmor"
             :aria-label="`Класс доспеха ${armor}`" :aria-haspopup="editArmor ? 'dialog' : undefined" @click="metric($event, 'armor', editArmor)">
