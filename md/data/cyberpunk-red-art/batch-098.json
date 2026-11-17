@@ -16,12 +16,44 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. An adult street musician plays a detailed electric GUITAR on a small rooftop stage, full instrument and both hands visible, realistic fingering, repaired amplifier nearby and attentive adults in softer background.",
       "width": 1600,
       "height": 640,
-      "original": "originals/dict-25-331-cover-v1.png",
-      "final": "final/dict-25-331-cover.webp"
+      "original": "originals/dict-25-331-cover-v2.png",
+      "final": "final/dict-25-331-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-537da597-8411-49d6-8379-e2299fd6d7aa.png",
+      "originalSha256": "a8e6321ef50f8726838ae63646b646f62b8d3a9fd6d754f406c0e0d9450887ee",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "9c260513eb93f543fde358aa5b22b9d31c6543ce5fe3c38e780be9e10e73b5ad",
+      "bytes": 281898,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "previousVariants": [
+        {
+          "original": "originals/dict-25-331-cover-v1.png",
+          "sourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-08560097-8cb1-44f4-8db6-8ddc390342fe.png",
+          "originalSha256": "7917d68b3a16213cebda3787d188de848a84fc49df2c86e5f3a18b31e7bf539b",
+          "sha256": "ae98b2e45fda5c05e52e4ae8669752c58b57b85a599d945f2ad0ae4635c987eb",
+          "reason": "Headstock brand-like lettering removed before publication."
+        }
+      ],
+      "revisionPrompt": "Edit the supplied illustration: remove the small dark brand-like lettering from the wooden GUITAR HEADSTOCK at the end of the neck. Replace lettering with plain matching warm wood grain. Preserve every other element, mature faces, hand positions, guitar geometry and strings, lighting, composition and detailed cel-shaded rendering. Keep the wide 5:2 panorama. No added text or logos.",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All five musical panoramas inspected: adult detailed rendering and plausible hands/instruments; violin bow individually checked. Guitar headstock lettering removed in v2 via image_gen and result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50286,
+        "objectKey": "system-item-media/v1/suggests/25/331/cover/9c260513eb93f543fde358aa5b22b9d31c6543ce5fe3c38e780be9e10e73b5ad.webp",
+        "fileSize": 281898
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/25/331/cover/9c260513eb93f543fde358aa5b22b9d31c6543ce5fe3c38e780be9e10e73b5ad.webp"
     },
     {
       "key": "dict-25-333-cover",
@@ -33,12 +65,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. An adult SINGER at a simple microphone in a smoky neon club, natural mouth shape and expressive posture, a few adult listeners beyond, no speech bubbles or visible lyrics.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-25-333-cover-v1.png",
-      "final": "final/dict-25-333-cover.webp"
+      "final": "final/dict-25-333-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-033af542-95bb-444e-a2f6-b3cd3a645cb2.png",
+      "originalSha256": "5f14701e64ef7e1d4ab012c388967e357cc8ee35473def295a02f6e2bfabf2eb",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "17326e93d1e2079c70a8fd56df486d4dee856f1422b7ab3dcda3151eeb29f1f7",
+      "bytes": 228524,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All five musical panoramas inspected: adult detailed rendering and plausible hands/instruments; violin bow individually checked. Guitar headstock lettering removed in v2 via image_gen and result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50287,
+        "objectKey": "system-item-media/v1/suggests/25/333/cover/17326e93d1e2079c70a8fd56df486d4dee856f1422b7ab3dcda3151eeb29f1f7.webp",
+        "fileSize": 228524
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/25/333/cover/17326e93d1e2079c70a8fd56df486d4dee856f1422b7ab3dcda3151eeb29f1f7.webp"
     },
     {
       "key": "dict-25-334-cover",
@@ -50,12 +104,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. An adult VIOLINIST performs in a cyberpunk transit arcade, violin supported under chin and bow held plausibly, entire bow/hands comfortably framed, softer city commuters.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-25-334-cover-v1.png",
-      "final": "final/dict-25-334-cover.webp"
+      "final": "final/dict-25-334-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-64f40a78-af51-44ac-b82a-efc06a3b161e.png",
+      "originalSha256": "852c3aafaf6c438192e6d4a1a81f51e4d43647497f25334b8b0ba3eeb540a3a2",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "07a305c12c27f78630af3256173c5b7500e6463c7e6df8aee51e8828a4bd8dbe",
+      "bytes": 255770,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All five musical panoramas inspected: adult detailed rendering and plausible hands/instruments; violin bow individually checked. Guitar headstock lettering removed in v2 via image_gen and result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50288,
+        "objectKey": "system-item-media/v1/suggests/25/334/cover/07a305c12c27f78630af3256173c5b7500e6463c7e6df8aee51e8828a4bd8dbe.webp",
+        "fileSize": 255770
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/25/334/cover/07a305c12c27f78630af3256173c5b7500e6463c7e6df8aee51e8828a4bd8dbe.webp"
     },
     {
       "key": "dict-25-330-cover",
@@ -67,12 +143,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. An adult DRUMMER at a compact acoustic/electronic hybrid kit in an industrial rehearsal room, two sticks, believable hands, warm cymbal reflections and coiled audio cables.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-25-330-cover-v1.png",
-      "final": "final/dict-25-330-cover.webp"
+      "final": "final/dict-25-330-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0f2e7e75-2378-436b-9fc6-f8152d05a57e.png",
+      "originalSha256": "a6dcf66e5aa4145a54e8721f39d9eeb909b7d276253391958433d88204a03eb3",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "b3a788e4e92209605b8d0784381cbffe22465f44cc81b062424d53de99953b77",
+      "bytes": 268556,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All five musical panoramas inspected: adult detailed rendering and plausible hands/instruments; violin bow individually checked. Guitar headstock lettering removed in v2 via image_gen and result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50289,
+        "objectKey": "system-item-media/v1/suggests/25/330/cover/b3a788e4e92209605b8d0784381cbffe22465f44cc81b062424d53de99953b77.webp",
+        "fileSize": 268556
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/25/330/cover/b3a788e4e92209605b8d0784381cbffe22465f44cc81b062424d53de99953b77.webp"
     },
     {
       "key": "dict-25-332-cover",
@@ -84,12 +182,45 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. An adult pianist seated at a compact electric PIANO in a late-night city lounge, both hands on visible keys, whole keyboard within scene, soft warm lamp and blue window reflections.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-25-332-cover-v1.png",
-      "final": "final/dict-25-332-cover.webp"
+      "final": "final/dict-25-332-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2a1a7d93-e0de-426a-bd81-84ba2a080ad0.png",
+      "originalSha256": "e195f49e004b16fec6a1d8f3533b3343ef72fce58bf2fea30ece9fc9b534aadd",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "5aab597244b6f007c34b42a689bedd698e60d16f2744d5adc666f3da12eb89e9",
+      "bytes": 228106,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All five musical panoramas inspected: adult detailed rendering and plausible hands/instruments; violin bow individually checked. Guitar headstock lettering removed in v2 via image_gen and result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50290,
+        "objectKey": "system-item-media/v1/suggests/25/332/cover/5aab597244b6f007c34b42a689bedd698e60d16f2744d5adc666f3da12eb89e9.webp",
+        "fileSize": 228106
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/25/332/cover/5aab597244b6f007c34b42a689bedd698e60d16f2744d5adc666f3da12eb89e9.webp"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T23:44:31.968Z",
+    "scenarios": 15,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-98\\live-qa.json"
+  }
 }

@@ -1,0 +1,74 @@
+{
+  "batch": 143,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-143",
+  "sourceAudit": "Live 44 section slots audited. All covers already published; 34 icons missing. Existing covers visually inspected for factual identity; existing ten section icons reviewed for compact cel shading. Latest user scope is section icons and defaults; individual record cover batches stopped.",
+  "assets": [
+    {
+      "key": "section-suggest_type-31-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 31,
+        "name": "Узлы NET"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One graphite network cube linked by three thick short cyan branches to three smaller amber node cubes. Solid compact engineered emblem, no floating sparks, code or text.",
+      "original": "originals/section-suggest_type-31-icon-v1.png",
+      "final": "final/section-suggest_type-31-icon.webp",
+      "width": 128,
+      "height": 128
+    },
+    {
+      "key": "section-suggest_type-45-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 45,
+        "name": "Фазы препаратов"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One sealed violet and cream capsule between two broad curved teal and amber cycle arrows. Clear balanced compact silhouette, no pills being taken, chemical formula or dosage.",
+      "original": "originals/section-suggest_type-45-icon-v1.png",
+      "final": "final/section-suggest_type-45-icon.webp",
+      "width": 128,
+      "height": 128
+    },
+    {
+      "key": "section-suggest_type-41-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 41,
+        "name": "Фармацевтические препараты"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One small teal rack holding three capped pearl-gray medicine ampoules with broad amber and burgundy accents. Closed containers, no fluid contents, labels, needles or administration.",
+      "original": "originals/section-suggest_type-41-icon-v1.png",
+      "final": "final/section-suggest_type-41-icon.webp",
+      "width": 128,
+      "height": 128
+    },
+    {
+      "key": "section-suggest_type-46-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 46,
+        "name": "Языки"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One compact graphite communication headset with two overlapping solid speech shapes in teal and amber in the open center. No text, alphabet, flag or punctuation; cyberpunk language communication emblem.",
+      "original": "originals/section-suggest_type-46-icon-v1.png",
+      "final": "final/section-suggest_type-46-icon.webp",
+      "width": 128,
+      "height": 128
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "batch": 141,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-141",
+  "sourceAudit": "Live 44 section slots audited. All covers already published; 34 icons missing. Existing covers visually inspected for factual identity; existing ten section icons reviewed for compact cel shading. Latest user scope is section icons and defaults; individual record cover batches stopped.",
+  "assets": [
+    {
+      "key": "section-suggest_type-44-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 44,
+        "name": "Классы программ"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: Three overlapping dark data cartridges with large distinct geometric insets: cyan shield-shaped insert, amber triangular insert and violet branching circuit insert. No lettering or alphanumeric symbols.",
+      "original": "originals/section-suggest_type-44-icon-v1.png",
+      "final": "final/section-suggest_type-44-icon.webp",
+      "width": 128,
+      "height": 128
+    },
+    {
+      "key": "section-suggest_type-29-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 29,
+        "name": "Локализации"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One complete neutral pale-gray synthetic adult mannequin bust with upper arms, a single teal shoulder joint and burgundy chest panel highlighted. Medical location concept, no cutaway, wounds or exposed tissue.",
+      "original": "originals/section-suggest_type-29-icon-v1.png",
+      "final": "final/section-suggest_type-29-icon.webp",
+      "width": 128,
+      "height": 128
+    },
+    {
+      "key": "section-suggest_type-27-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 27,
+        "name": "Места установки"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One compact futuristic medical examination chair with a short jointed inspection lamp tucked beside it. Cream upholstery, graphite base, teal panel and amber lamp face. No patient or background.",
+      "original": "originals/section-suggest_type-27-icon-v1.png",
+      "final": "final/section-suggest_type-27-icon.webp",
+      "width": 128,
+      "height": 128
+    },
+    {
+      "key": "section-suggest_type-47-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 47,
+        "name": "Местности"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One folded cream city map with broad teal street lines, two small burgundy building silhouettes rising along the rear fold and a single amber location pin. No text or numbers; compact map emblem.",
+      "original": "originals/section-suggest_type-47-icon-v1.png",
+      "final": "final/section-suggest_type-47-icon.webp",
+      "width": 128,
+      "height": 128
+    },
+    {
+      "key": "section-suggest_type-36-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 36,
+        "name": "Методы создания"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One graphite character-planning tablet with a large blank cyan silhouette inset, a cream stylus and a small burgundy ten-sided die without numbers. Compact creation-method emblem, no UI text.",
+      "original": "originals/section-suggest_type-36-icon-v1.png",
+      "final": "final/section-suggest_type-36-icon.webp",
+      "width": 128,
+      "height": 128
+    },
+    {
+      "key": "section-suggest_type-25-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 25,
+        "name": "Музыкальные инструменты"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One complete burgundy electric guitar with cream pickguard, graphite neck and plain unbranded headstock. Chunky simplified strings and three large paired tuning pegs, diagonal full silhouette, no lettering.",
+      "original": "originals/section-suggest_type-25-icon-v1.png",
+      "final": "final/section-suggest_type-25-icon.webp",
+      "width": 128,
+      "height": 128
+    }
+  ]
+}

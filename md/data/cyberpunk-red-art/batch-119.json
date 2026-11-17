@@ -1,0 +1,342 @@
+{
+  "batch": 119,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-119",
+  "sourceAudit": "Live own dictionary slots empty. Structured values and previously reviewed Core categories guide original fictional narrative. Technical/medical concepts represented without operational or treatment instructions, icons unchanged.",
+  "assets": [
+    {
+      "key": "dict-40-494-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 494,
+        "typeId": 40,
+        "name": "Дешёвое"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature street shopper buying a very simple disposable everyday item at a modest curbside stall, reused cardboard and plain packaging, a few unmarked credit chips, no visible prices.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-40-494-cover-v2.png",
+      "final": "final/dict-40-494-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c90ab1c8-c1dd-46dd-bc08-d1632bbf51ec.png",
+      "originalSha256": "127d29e0be4fb6ecba936e9a8581084215c7bb54f5ee03ce9af2542bebb6850e",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "f4df7b54c5831eda35c8de90ebf3fd673f9039df21d73d5f8c91876d138d35de",
+      "bytes": 261556,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "previousVariants": [
+        {
+          "original": "originals/dict-40-494-cover-v1.png",
+          "sourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2b81cbdc-e63f-42cb-a464-2b3268ccbc30.png",
+          "originalSha256": "fbfe614618fd20c8b985c86b74e3ae83236c2450c192ff737946f45b96de8428",
+          "reason": "480reframed2:1source;494extra third buyer arm removed before publication."
+        }
+      ],
+      "revisionPrompt": "Correct anatomy ONLY in this full cyberpunk market panorama. The WOMAN must have exactly TWO arms: one hand grips her bag strap at her waist, the other outstretched hand pays with chips. REMOVE the EXTRA THIRD forearm and hand coming from her waist and supporting the underside of the white cup package. Restore the natural jacket/body/background where that extra arm was. The VENDOR alone holds the cups with his left hand while his right palm receives payment. Preserve people, faces, lighting, objects, 5:2 framing and detailed cel shading. No new text or logos.",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill/price scenes inspected.480v2 full head/hands/panel;494v2 exactly two buyer arms, vendor alone supports cups, individually checked. Price levels conveyed through materials/context, no numeric labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50439,
+        "objectKey": "system-item-media/v1/suggests/40/494/cover/f4df7b54c5831eda35c8de90ebf3fd673f9039df21d73d5f8c91876d138d35de.webp",
+        "fileSize": 261556
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/40/494/cover/f4df7b54c5831eda35c8de90ebf3fd673f9039df21d73d5f8c91876d138d35de.webp"
+    },
+    {
+      "key": "dict-40-498-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 498,
+        "typeId": 40,
+        "name": "Дорогое"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature customer considering a carefully built piece of practical electronics in a specialist shop, sturdy presentation case and knowledgeable adult clerk, no numbers.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-40-498-cover-v1.png",
+      "final": "final/dict-40-498-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-83832a95-c814-4722-9e1e-5ed24cad920c.png",
+      "originalSha256": "cbb3ee7e3f090eae171726668713c9a5c34d41e87677954a052262972ea55417",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "096400d32992d4b25c877bcbd72e04ad4b2971812971d0b308800726be3230ea",
+      "bytes": 308252,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill/price scenes inspected.480v2 full head/hands/panel;494v2 exactly two buyer arms, vendor alone supports cups, individually checked. Price levels conveyed through materials/context, no numeric labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50440,
+        "objectKey": "system-item-media/v1/suggests/40/498/cover/096400d32992d4b25c877bcbd72e04ad4b2971812971d0b308800726be3230ea.webp",
+        "fileSize": 308252
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/40/498/cover/096400d32992d4b25c877bcbd72e04ad4b2971812971d0b308800726be3230ea.webp"
+    },
+    {
+      "key": "dict-40-495-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 495,
+        "typeId": 40,
+        "name": "Обычное"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult buying basic groceries at a neighborhood cyberpunk counter, ordinary practical packaging and modest surroundings, no readable labels or prices.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-40-495-cover-v1.png",
+      "final": "final/dict-40-495-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-61688ee8-2ae5-4080-97c1-47c1ec94ba2a.png",
+      "originalSha256": "3da5be9ca807ae8dabb9393138dcc40e49606d5cbeea241a57dbb3b59c5e2f04",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "140d91ed251a1c79eab104b1989d65c6b0e40a2ea527f98e6fbd296324c27786",
+      "bytes": 275628,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill/price scenes inspected.480v2 full head/hands/panel;494v2 exactly two buyer arms, vendor alone supports cups, individually checked. Price levels conveyed through materials/context, no numeric labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50441,
+        "objectKey": "system-item-media/v1/suggests/40/495/cover/140d91ed251a1c79eab104b1989d65c6b0e40a2ea527f98e6fbd296324c27786.webp",
+        "fileSize": 275628
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/40/495/cover/140d91ed251a1c79eab104b1989d65c6b0e40a2ea527f98e6fbd296324c27786.webp"
+    },
+    {
+      "key": "dict-40-499-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 499,
+        "typeId": 40,
+        "name": "Очень дорогое"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature customer comparing a refined professional-grade mechanical device in a quiet specialist showroom, careful fitting and polished display materials, no branded product or numbers.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-40-499-cover-v1.png",
+      "final": "final/dict-40-499-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-bb8f477e-b660-4c38-b9c1-da1e105ca077.png",
+      "originalSha256": "273b49faeed94dfb288d700f6e1bdd580fe529d03b8b0442ad39e8543780fb34",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "770d1e20868b77d5d6501d7d9f2cfece2df6be082f2a64f1e07f1d7701c566a7",
+      "bytes": 255652,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill/price scenes inspected.480v2 full head/hands/panel;494v2 exactly two buyer arms, vendor alone supports cups, individually checked. Price levels conveyed through materials/context, no numeric labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50442,
+        "objectKey": "system-item-media/v1/suggests/40/499/cover/770d1e20868b77d5d6501d7d9f2cfece2df6be082f2a64f1e07f1d7701c566a7.webp",
+        "fileSize": 255652
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/40/499/cover/770d1e20868b77d5d6501d7d9f2cfece2df6be082f2a64f1e07f1d7701c566a7.webp"
+    },
+    {
+      "key": "dict-40-497-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 497,
+        "typeId": 40,
+        "name": "Премиум"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult choosing a well-made jacket and small durable accessory in a tidy boutique, quality fabric and attentive clerk, practical premium everyday goods, no prices.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-40-497-cover-v1.png",
+      "final": "final/dict-40-497-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-fb410111-cb36-4ed0-8f1a-4fc1efb051a0.png",
+      "originalSha256": "8b2527b3e198eb0a46af24c7c6899db8c72206f87acf67cded133c12f312ec70",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "80623e0b69b49783580831e45ce50253e86e1e19e4d0291d7a4280f28f69bd40",
+      "bytes": 285964,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill/price scenes inspected.480v2 full head/hands/panel;494v2 exactly two buyer arms, vendor alone supports cups, individually checked. Price levels conveyed through materials/context, no numeric labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50443,
+        "objectKey": "system-item-media/v1/suggests/40/497/cover/80623e0b69b49783580831e45ce50253e86e1e19e4d0291d7a4280f28f69bd40.webp",
+        "fileSize": 285964
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/40/497/cover/80623e0b69b49783580831e45ce50253e86e1e19e4d0291d7a4280f28f69bd40.webp"
+    },
+    {
+      "key": "dict-40-500-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 500,
+        "typeId": 40,
+        "name": "Роскошь"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult in an exclusive high-rise showroom considering a sculptural futuristic designer object, luxurious materials and spacious warm light, no logos, titles or price tags.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-40-500-cover-v1.png",
+      "final": "final/dict-40-500-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7236e8a2-6f17-484f-a492-4fa39170c82b.png",
+      "originalSha256": "bcfc79342199091f752f7e8024974d2bc4a6e3314f777b2cfac60b4b26512f0b",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "e0d03ba44efd489d13725f6926fcd8d5a9cb481d845250067511dde6d2e29881",
+      "bytes": 261882,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill/price scenes inspected.480v2 full head/hands/panel;494v2 exactly two buyer arms, vendor alone supports cups, individually checked. Price levels conveyed through materials/context, no numeric labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50444,
+        "objectKey": "system-item-media/v1/suggests/40/500/cover/e0d03ba44efd489d13725f6926fcd8d5a9cb481d845250067511dde6d2e29881.webp",
+        "fileSize": 261882
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/40/500/cover/e0d03ba44efd489d13725f6926fcd8d5a9cb481d845250067511dde6d2e29881.webp"
+    },
+    {
+      "key": "dict-40-501-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 501,
+        "typeId": 40,
+        "name": "Суперроскошь"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature collector in a private penthouse gallery viewing a singular custom-made cybernetic art object in a large elegant display case, exceptional workmanship, no numbers or wealth stereotypes.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-40-501-cover-v1.png",
+      "final": "final/dict-40-501-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4209bf32-867e-4270-bf66-587b15890c0f.png",
+      "originalSha256": "68224f2f6db27a15439f3971ac60946ff3dbb02b4395caf5cc436b258aa89c20",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "f5a5dea25c515c0343026fed17a0052c8aca5093d3502413261a3cde64e2014a",
+      "bytes": 265280,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill/price scenes inspected.480v2 full head/hands/panel;494v2 exactly two buyer arms, vendor alone supports cups, individually checked. Price levels conveyed through materials/context, no numeric labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50445,
+        "objectKey": "system-item-media/v1/suggests/40/501/cover/f5a5dea25c515c0343026fed17a0052c8aca5093d3502413261a3cde64e2014a.webp",
+        "fileSize": 265280
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/40/501/cover/f5a5dea25c515c0343026fed17a0052c8aca5093d3502413261a3cde64e2014a.webp"
+    },
+    {
+      "key": "dict-40-496-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 496,
+        "typeId": 40,
+        "name": "Ценное"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature night-market buyer inspecting a useful well-kept secondhand tool case, ordinary vendor booth, small unmarked payment chips, no labels or price tags.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-40-496-cover-v1.png",
+      "final": "final/dict-40-496-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-813c1552-dbc6-4fe1-a005-fa787d4934f0.png",
+      "originalSha256": "3bcb7eb43935ad431130bf9272e65ae8ed45e21bd0acacc2b707e5783cc01767",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "5dbb57ca4dac03f1a0348368be42c11f8586ac99582bbda96d116c2bbad35975",
+      "bytes": 267820,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill/price scenes inspected.480v2 full head/hands/panel;494v2 exactly two buyer arms, vendor alone supports cups, individually checked. Price levels conveyed through materials/context, no numeric labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50446,
+        "objectKey": "system-item-media/v1/suggests/40/496/cover/5dbb57ca4dac03f1a0348368be42c11f8586ac99582bbda96d116c2bbad35975.webp",
+        "fileSize": 267820
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/40/496/cover/5dbb57ca4dac03f1a0348368be42c11f8586ac99582bbda96d116c2bbad35975.webp"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-17T05:16:17.275Z",
+    "scenarios": 24,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-119\\live-qa.json"
+  }
+}

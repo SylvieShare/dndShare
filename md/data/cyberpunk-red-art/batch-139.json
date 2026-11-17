@@ -1,0 +1,345 @@
+{
+  "batch": 139,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-139",
+  "sourceAudit": "Live 44 section slots audited. All covers already published; 34 icons missing. Existing covers visually inspected for factual identity; existing ten section icons reviewed for compact cel shading. Latest user scope is section icons and defaults; individual record cover batches stopped.",
+  "assets": [
+    {
+      "key": "section-item_type-24-icon",
+      "target": {
+        "kind": "item_type",
+        "typeId": 24,
+        "name": "Травмы тела"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One intact adult forearm and relaxed hand in a broad pale medical splint with two burgundy straps and a teal outer support. Compact diagonal silhouette, no wounds or blood, no other body parts.",
+      "original": "originals/section-item_type-24-icon-v1.png",
+      "final": "final/section-item_type-24-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ae1c23e5-a5d9-4b47-92a3-617cc1d25400.png",
+      "originalSha256": "1ba568aa83abe268d440c6153a15e3199eb2d8acdb6bcd6d051b3d8f0d7566dd",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sha256": "80c97f8ff326b07e1128dcbe59c58b77c7d88ac2723aff0665d6e4635eecb6ce",
+      "bytes": 10482,
+      "mimeType": "image/webp",
+      "exportRecipe": "Alpha bounds above 8/255 (ignore near-invisible generator edge specks), original alpha preserved, Lanczos3 contain in 112 px plus 8 px transparent safe margin, lossless RGBA WebP; no creative edits",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "alphaReview": {
+        "sourceTransparentPixels": 1157470,
+        "sourceOpaquePixels": 1530,
+        "boundsThreshold": 8,
+        "bounds": {
+          "left": 67,
+          "top": 119,
+          "right": 1153,
+          "bottom": 1182
+        }
+      },
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Inspected all six exports at 128/64 px on light/dark backgrounds. Clear compact silhouette, genuine alpha and correct category; no letters, crop damage or halo.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50504,
+        "objectKey": "system-item-media/v1/item-types/24/icon/80c97f8ff326b07e1128dcbe59c58b77c7d88ac2723aff0665d6e4635eecb6ce.webp",
+        "fileSize": 10482
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/24/icon/80c97f8ff326b07e1128dcbe59c58b77c7d88ac2723aff0665d6e4635eecb6ce.webp"
+    },
+    {
+      "key": "section-item_type-32-icon",
+      "target": {
+        "kind": "item_type",
+        "typeId": 32,
+        "name": "Фармацевтика"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One open pearl-gray medical supply case with teal latches holding three large sealed ampoules and a small closed flat sterile packet. No needles, lettering or chemical formulas.",
+      "original": "originals/section-item_type-32-icon-v1.png",
+      "final": "final/section-item_type-32-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0dc8bb67-8b85-4689-898d-c24026ee38ef.png",
+      "originalSha256": "403a1c433b11947d1fce9ffcedaec4b1935bfd64aad9228ba53b809da67207d8",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sha256": "78c6137ec17af112174e22cc4d4d2a38e32ad0102848561d9a57807d685eb71a",
+      "bytes": 17488,
+      "mimeType": "image/webp",
+      "exportRecipe": "Alpha bounds above 8/255 (ignore near-invisible generator edge specks), original alpha preserved, Lanczos3 contain in 112 px plus 8 px transparent safe margin, lossless RGBA WebP; no creative edits",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "alphaReview": {
+        "sourceTransparentPixels": 606312,
+        "sourceOpaquePixels": 2408,
+        "boundsThreshold": 8,
+        "bounds": {
+          "left": 115,
+          "top": 104,
+          "right": 1138,
+          "bottom": 1167
+        }
+      },
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Inspected all six exports at 128/64 px on light/dark backgrounds. Clear compact silhouette, genuine alpha and correct category; no letters, crop damage or halo.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50505,
+        "objectKey": "system-item-media/v1/item-types/32/icon/78c6137ec17af112174e22cc4d4d2a38e32ad0102848561d9a57807d685eb71a.webp",
+        "fileSize": 17488
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/32/icon/78c6137ec17af112174e22cc4d4d2a38e32ad0102848561d9a57807d685eb71a.webp"
+    },
+    {
+      "key": "section-item_type-22-icon",
+      "target": {
+        "kind": "item_type",
+        "typeId": 22,
+        "name": "Чёрный ЛЁД"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One angular black cybernetic hound head with a short neck, broad dark graphite armor facets, two restrained red inset eyes and one pale fang-shaped jaw panel. Clearly a geometric virtual security avatar, no fur or fantasy beast.",
+      "original": "originals/section-item_type-22-icon-v1.png",
+      "final": "final/section-item_type-22-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-74dda80b-453a-43cc-b0c8-5dc2fceec21e.png",
+      "originalSha256": "1f4d46ad915ac4e01b5f7c4f2afd6a6f8fcb832f9fe553e54041732b3d010c20",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sha256": "2888b76b07f07338e87d6fe458ca36fdec94e6fab2054af3bd07143b2e761c9c",
+      "bytes": 11468,
+      "mimeType": "image/webp",
+      "exportRecipe": "Alpha bounds above 8/255 (ignore near-invisible generator edge specks), original alpha preserved, Lanczos3 contain in 112 px plus 8 px transparent safe margin, lossless RGBA WebP; no creative edits",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "alphaReview": {
+        "sourceTransparentPixels": 876767,
+        "sourceOpaquePixels": 1760,
+        "boundsThreshold": 8,
+        "bounds": {
+          "left": 162,
+          "top": 31,
+          "right": 1081,
+          "bottom": 1221
+        }
+      },
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Inspected all six exports at 128/64 px on light/dark backgrounds. Clear compact silhouette, genuine alpha and correct category; no letters, crop damage or halo.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50506,
+        "objectKey": "system-item-media/v1/item-types/22/icon/2888b76b07f07338e87d6fe458ca36fdec94e6fab2054af3bd07143b2e761c9c.webp",
+        "fileSize": 11468
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/22/icon/2888b76b07f07338e87d6fe458ca36fdec94e6fab2054af3bd07143b2e761c9c.webp"
+    },
+    {
+      "key": "section-suggest_type-50-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 50,
+        "name": "NET-действия"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One burgundy gloved hand holding a thick cyan interface plug beside a graphite port with two amber status bars. Compact diagonally arranged interaction emblem, simplified intact five-fingered hand, no real wiring diagram.",
+      "original": "originals/section-suggest_type-50-icon-v1.png",
+      "final": "final/section-suggest_type-50-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-cfb5708e-92f2-4021-a2b1-337785afbbbc.png",
+      "originalSha256": "e0242c54d664ad10e8ba6f175bf05ef07abde45486302021fe0a6038b833926a",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sha256": "5f7e629701359aa6dd1277fe80209bbf2e29f22bd9f3b72e24bba9b2268f6379",
+      "bytes": 12196,
+      "mimeType": "image/webp",
+      "exportRecipe": "Alpha bounds above 8/255 (ignore near-invisible generator edge specks), original alpha preserved, Lanczos3 contain in 112 px plus 8 px transparent safe margin, lossless RGBA WebP; no creative edits",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "alphaReview": {
+        "sourceTransparentPixels": 982275,
+        "sourceOpaquePixels": 1586,
+        "boundsThreshold": 8,
+        "bounds": {
+          "left": 63,
+          "top": 110,
+          "right": 1182,
+          "bottom": 1179
+        }
+      },
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Inspected all six exports at 128/64 px on light/dark backgrounds. Clear compact silhouette, genuine alpha and correct category; no letters, crop damage or halo.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50507,
+        "objectKey": "system-item-media/v1/suggest-types/50/icon/5f7e629701359aa6dd1277fe80209bbf2e29f22bd9f3b72e24bba9b2268f6379.webp",
+        "fileSize": 12196
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/50/icon/5f7e629701359aa6dd1277fe80209bbf2e29f22bd9f3b72e24bba9b2268f6379.webp"
+    },
+    {
+      "key": "section-suggest_type-33-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 33,
+        "name": "Боевые искусства"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One adult clenched fist with broad cream martial arts hand wraps and a small burgundy wrist strap, in strong three-quarter view. Single complete fist, no impact, opponent, blood or magical effects.",
+      "original": "originals/section-suggest_type-33-icon-v1.png",
+      "final": "final/section-suggest_type-33-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-77cf1ab6-8585-47d4-a46a-9e2c683def44.png",
+      "originalSha256": "921506bd5ef489963225890e186ed6c6ffd71855aea5d5eb7c289a4dc2296768",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sha256": "887b7596d2b234fe5c9b31444f9405ad78e8704334374b6cf6b2580341b3d0c1",
+      "bytes": 13828,
+      "mimeType": "image/webp",
+      "exportRecipe": "Alpha bounds above 8/255 (ignore near-invisible generator edge specks), original alpha preserved, Lanczos3 contain in 112 px plus 8 px transparent safe margin, lossless RGBA WebP; no creative edits",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "alphaReview": {
+        "sourceTransparentPixels": 846379,
+        "sourceOpaquePixels": 1036,
+        "boundsThreshold": 8,
+        "bounds": {
+          "left": 183,
+          "top": 56,
+          "right": 1099,
+          "bottom": 1212
+        }
+      },
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Inspected all six exports at 128/64 px on light/dark backgrounds. Clear compact silhouette, genuine alpha and correct category; no letters, crop damage or halo.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50508,
+        "objectKey": "system-item-media/v1/suggest-types/33/icon/887b7596d2b234fe5c9b31444f9405ad78e8704334374b6cf6b2580341b3d0c1.webp",
+        "fileSize": 13828
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/33/icon/887b7596d2b234fe5c9b31444f9405ad78e8704334374b6cf6b2580341b3d0c1.webp"
+    },
+    {
+      "key": "section-suggest_type-48-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 48,
+        "name": "Валюта"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One graphite electronic payment reader beside two short stacks of thick gold and teal credit chips. Blank surfaces with broad geometric insets only; no currency symbol, words or numerals.",
+      "original": "originals/section-suggest_type-48-icon-v1.png",
+      "final": "final/section-suggest_type-48-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ed5abfd4-4446-4067-bbf7-c191fab8608f.png",
+      "originalSha256": "1eff2be9f3cd7280d1907286e49ed8161479c35e8aaa5446824860ec53ece06d",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sha256": "c547a2bc41f4a9da58f43d57bebb14ea5e5df920f37b2bc886641b31c1eef86d",
+      "bytes": 15648,
+      "mimeType": "image/webp",
+      "exportRecipe": "Alpha bounds above 8/255 (ignore near-invisible generator edge specks), original alpha preserved, Lanczos3 contain in 112 px plus 8 px transparent safe margin, lossless RGBA WebP; no creative edits",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "alphaReview": {
+        "sourceTransparentPixels": 727097,
+        "sourceOpaquePixels": 1557,
+        "boundsThreshold": 8,
+        "bounds": {
+          "left": 60,
+          "top": 127,
+          "right": 1190,
+          "bottom": 1177
+        }
+      },
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Inspected all six exports at 128/64 px on light/dark backgrounds. Clear compact silhouette, genuine alpha and correct category; no letters, crop damage or halo.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50509,
+        "objectKey": "system-item-media/v1/suggest-types/48/icon/c547a2bc41f4a9da58f43d57bebb14ea5e5df920f37b2bc886641b31c1eef86d.webp",
+        "fileSize": 15648
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/48/icon/c547a2bc41f4a9da58f43d57bebb14ea5e5df920f37b2bc886641b31c1eef86d.webp"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-17T07:07:51.229Z",
+    "scenarios": 18,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\sections-review\\live-139.json"
+  }
+}

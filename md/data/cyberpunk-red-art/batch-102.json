@@ -16,12 +16,50 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature technician examining a large manufactured full-body borg frame on a workshop stand, extra shoulder sockets and robust mechanical reinforcement visible. Whole synthetic frame and natural adult technician, no real anatomy or surgery.",
       "width": 1600,
       "height": 640,
-      "original": "originals/dict-30-366-cover-v1.png",
-      "final": "final/dict-30-366-cover.webp"
+      "original": "originals/dict-30-366-cover-v3.png",
+      "final": "final/dict-30-366-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ae4a5753-2007-44fd-bfd1-0393d4dae634.png",
+      "originalSha256": "a557727e924f24df8f0974520a3cf637cf077c96288dd75e135c718ea894ce3c",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "1a424e2f3052e03535beba426960e5ec0b174d42f35ec6f424ee47d30e7bd6d0",
+      "bytes": 268548,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "previousVariants": [
+        {
+          "original": "originals/dict-30-366-cover-v1.png",
+          "sourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-dffa11d5-0404-49e4-b735-627e033eeb23.png",
+          "originalSha256": "f627daac9ba286344b63ae4a721c082cc0f9794215ea25eff88ece7f7b9e5170",
+          "reason": "Four extra sockets instead of two."
+        },
+        {
+          "original": "originals/dict-30-366-cover-v2.png",
+          "sourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9b14f6c3-38b2-4644-aca3-1f93b1b2b8f4.png",
+          "originalSha256": "8a2ebc882ad26c6b668c25890c65a44daf98c76324962d56ed747cffcdf48c67",
+          "prompt": "Edit this cyberpunk illustration with one focused anatomical hardware correction: the manufactured borg frame must have EXACTLY TWO additional EMPTY arm sockets, one above each existing shoulder. It already has two attached normal arms. Remove the two INNER circular empty sockets near the collar and replace them with continuous matching armor; retain the two OUTER empty sockets, one each side. Preserve the robot's two attached arms, two legs, head, person, room, camera and mature detailed cel shading. Also make the small white badge on the red tool cabinet plain unlettered metal. No added text or logos. Keep 5:2 panorama.",
+          "reason": "First edit still left four sockets; not published."
+        }
+      ],
+      "revisionPrompt": "Precise edit: DELETE the TWO HIGH circular socket towers immediately beside the robot's head, the pair at EAR HEIGHT. Remove their entire protruding blocks and show the workshop background in their place. Keep ONLY the TWO LOW circular holes at the outer shoulder level, one left and one right. Final robot has TWO black empty circular sockets TOTAL, plus its existing two attached arms. Do not add or move any socket upward. Preserve all other anatomy, technician, lighting and mature cel-shaded wide 5:2 scene. No lettering/logos.",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All nine category panoramas inspected. Borg v3 has exactly two extra empty shoulder sockets plus two attached arms; first failed edit retained. Artificial models and mature adult fittings, no surgery, text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50319,
+        "objectKey": "system-item-media/v1/suggests/30/366/cover/1a424e2f3052e03535beba426960e5ec0b174d42f35ec6f424ee47d30e7bd6d0.webp",
+        "fileSize": 268548
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/30/366/cover/1a424e2f3052e03535beba426960e5ec0b174d42f35ec6f424ee47d30e7bd6d0.webp"
     },
     {
       "key": "dict-30-365-cover",
@@ -33,12 +71,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature clinician displays flexible synthetic skin armor samples and an empty manufactured storage-pocket model on a padded table. External body enhancements theme, no real wound or operation.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-30-365-cover-v1.png",
-      "final": "final/dict-30-365-cover.webp"
+      "final": "final/dict-30-365-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6b4269ef-ed8b-40a4-a7d5-fb19ee6fbfa6.png",
+      "originalSha256": "72c407e2dfa7b1b62ede8222d4e0bc2cc8785e4587a9ec4a6474aa6d25f4996c",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "833a165bd6ba0c300bcd173f0da3a5b56449747e405394de0c1fcbb0a38d06d8",
+      "bytes": 268682,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All nine category panoramas inspected. Borg v3 has exactly two extra empty shoulder sockets plus two attached arms; first failed edit retained. Artificial models and mature adult fittings, no surgery, text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50320,
+        "objectKey": "system-item-media/v1/suggests/30/365/cover/833a165bd6ba0c300bcd173f0da3a5b56449747e405394de0c1fcbb0a38d06d8.webp",
+        "fileSize": 268682
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/30/365/cover/833a165bd6ba0c300bcd173f0da3a5b56449747e405394de0c1fcbb0a38d06d8.webp"
     },
     {
       "key": "dict-30-364-cover",
@@ -50,12 +110,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A sealed manufactured torso training model beside small closed air-reservoir and filtering modules, mature clinician explaining to adult client, internal cyberware theme without exposed organic anatomy.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-30-364-cover-v1.png",
-      "final": "final/dict-30-364-cover.webp"
+      "final": "final/dict-30-364-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0790ba2b-e70b-4fd9-9dce-47a68f8aa02c.png",
+      "originalSha256": "6ed1b679967366d949bfaae4292cd59a71f9d87724746f49208830a8773f12f9",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "3329cb628a697b9f5553c79d53c7c77704d393550932e7ea96568b2d8bff6c0b",
+      "bytes": 240440,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All nine category panoramas inspected. Borg v3 has exactly two extra empty shoulder sockets plus two attached arms; first failed edit retained. Artificial models and mature adult fittings, no surgery, text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50321,
+        "objectKey": "system-item-media/v1/suggests/30/364/cover/3329cb628a697b9f5553c79d53c7c77704d393550932e7ea96568b2d8bff6c0b.webp",
+        "fileSize": 240440
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/30/364/cover/3329cb628a697b9f5553c79d53c7c77704d393550932e7ea96568b2d8bff6c0b.webp"
     },
     {
       "key": "dict-30-361-cover",
@@ -67,12 +149,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature audio technician comparing tiny cyberaudio modules beside a neutral artificial ear/head model, fine acoustic grilles and connectors, no headphones dominating scene.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-30-361-cover-v1.png",
-      "final": "final/dict-30-361-cover.webp"
+      "final": "final/dict-30-361-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5a9d1ccb-047c-4e1f-b4f8-df18f2f6c015.png",
+      "originalSha256": "8949e5b9ce7da612e7dcd7d1475d42670aa7012631d14d249301bdb39bbd112d",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "d97b23d817507cd4a6748573e5116be6c795a272416c7f0bfd00b7d19d781b19",
+      "bytes": 248586,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All nine category panoramas inspected. Borg v3 has exactly two extra empty shoulder sockets plus two attached arms; first failed edit retained. Artificial models and mature adult fittings, no surgery, text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50322,
+        "objectKey": "system-item-media/v1/suggests/30/361/cover/d97b23d817507cd4a6748573e5116be6c795a272416c7f0bfd00b7d19d781b19.webp",
+        "fileSize": 248586
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/30/361/cover/d97b23d817507cd4a6748573e5116be6c795a272416c7f0bfd00b7d19d781b19.webp"
     },
     {
       "key": "dict-30-363-cover",
@@ -84,12 +188,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult tests one complete cybernetic LEG on a fitting platform with rail support, technician observing; hip/knee/ankle joints and foot visible, no open tissue or surgery.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-30-363-cover-v1.png",
-      "final": "final/dict-30-363-cover.webp"
+      "final": "final/dict-30-363-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7468d4ff-7f4c-4fd6-b5b8-25073fb72021.png",
+      "originalSha256": "4bfd2365a4af189bef24c65def00e068eb6a81466a79c8c316d7a92c4655a462",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "06c11f14419bbf3f73bb544d7700f1a4238ad4d559e462bbbca90525426a3ed6",
+      "bytes": 254256,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All nine category panoramas inspected. Borg v3 has exactly two extra empty shoulder sockets plus two attached arms; first failed edit retained. Artificial models and mature adult fittings, no surgery, text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50323,
+        "objectKey": "system-item-media/v1/suggests/30/363/cover/06c11f14419bbf3f73bb544d7700f1a4238ad4d559e462bbbca90525426a3ed6.webp",
+        "fileSize": 254256
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/30/363/cover/06c11f14419bbf3f73bb544d7700f1a4238ad4d559e462bbbca90525426a3ed6.webp"
     },
     {
       "key": "dict-30-360-cover",
@@ -101,12 +227,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature clinician holding a tiny mechanical cybereye beside optical lens modules in a foam tray, warm/cool lens reflections, artificial head model behind, no organic eyeball.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-30-360-cover-v1.png",
-      "final": "final/dict-30-360-cover.webp"
+      "final": "final/dict-30-360-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0d785bff-e3d1-44a6-bb74-d42b9faa18d7.png",
+      "originalSha256": "dca2b180f02b12992d45ef07c357c6bf430c056548343fce5a9b87448c19ca62",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "f2c1d43a5862ce06931cdadcde574cbf27bc97e0e04faf43501d14c6a4718888",
+      "bytes": 273312,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All nine category panoramas inspected. Borg v3 has exactly two extra empty shoulder sockets plus two attached arms; first failed edit retained. Artificial models and mature adult fittings, no surgery, text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50324,
+        "objectKey": "system-item-media/v1/suggests/30/360/cover/f2c1d43a5862ce06931cdadcde574cbf27bc97e0e04faf43501d14c6a4718888.webp",
+        "fileSize": 273312
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/30/360/cover/f2c1d43a5862ce06931cdadcde574cbf27bc97e0e04faf43501d14c6a4718888.webp"
     },
     {
       "key": "dict-30-362-cover",
@@ -118,12 +266,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult flexes a complete mechanical cyberARM during a calm fitting, five fingers, shoulder/elbow/wrist hardware detailed, technician watches, no surgery.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-30-362-cover-v1.png",
-      "final": "final/dict-30-362-cover.webp"
+      "final": "final/dict-30-362-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6a9c5e0c-55f9-406a-b2c4-a0a426133d23.png",
+      "originalSha256": "16a6edeb7ae28e1699ca53d804e4cb340cbf872712775c94259a08ead9b2fbfd",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "440608cd3a0433c100aeb34537c56b38d78f4d3bfa13b05233124eb6a7402653",
+      "bytes": 236710,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All nine category panoramas inspected. Borg v3 has exactly two extra empty shoulder sockets plus two attached arms; first failed edit retained. Artificial models and mature adult fittings, no surgery, text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50325,
+        "objectKey": "system-item-media/v1/suggests/30/362/cover/440608cd3a0433c100aeb34537c56b38d78f4d3bfa13b05233124eb6a7402653.webp",
+        "fileSize": 236710
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/30/362/cover/440608cd3a0433c100aeb34537c56b38d78f4d3bfa13b05233124eb6a7402653.webp"
     },
     {
       "key": "dict-30-359-cover",
@@ -135,12 +305,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A set of small neural chips and closed interface modules displayed beside an intact synthetic head model with neat connector ports, mature technician, no exposed brain or operative imagery.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-30-359-cover-v1.png",
-      "final": "final/dict-30-359-cover.webp"
+      "final": "final/dict-30-359-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-70a47e94-a182-4c5a-a6f5-8029583231b7.png",
+      "originalSha256": "420ef3a2995ffde92152b2f0b91fe8f32e3cfdb4c8ccbd435e7d270d92e98c04",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "c780a9b2be9a59839f832f559b3f1d10faf47a639c2910edd13a7fe34f2e37e8",
+      "bytes": 238336,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All nine category panoramas inspected. Borg v3 has exactly two extra empty shoulder sockets plus two attached arms; first failed edit retained. Artificial models and mature adult fittings, no surgery, text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50326,
+        "objectKey": "system-item-media/v1/suggests/30/359/cover/c780a9b2be9a59839f832f559b3f1d10faf47a639c2910edd13a7fe34f2e37e8.webp",
+        "fileSize": 238336
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/30/359/cover/c780a9b2be9a59839f832f559b3f1d10faf47a639c2910edd13a7fe34f2e37e8.webp"
     },
     {
       "key": "dict-30-358-cover",
@@ -152,12 +344,45 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. An adult with subtle luminous skin threading and colored techhair choosing style samples at a cyberpunk salon mirror, mature face and natural hands, decorative fashionware focus.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-30-358-cover-v1.png",
-      "final": "final/dict-30-358-cover.webp"
+      "final": "final/dict-30-358-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f519f2f5-d3f4-49e0-9449-6b4e46d547e8.png",
+      "originalSha256": "7d5964a62561d7a4bc7cce3b9564f398b22fff22bb5e4bfc94351b673ceaf92c",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "153018c5b14f8f69f148a957ceb37c44cd376245e2c5b77de33a4852b9f16dc5",
+      "bytes": 313536,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All nine category panoramas inspected. Borg v3 has exactly two extra empty shoulder sockets plus two attached arms; first failed edit retained. Artificial models and mature adult fittings, no surgery, text or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50327,
+        "objectKey": "system-item-media/v1/suggests/30/358/cover/153018c5b14f8f69f148a957ceb37c44cd376245e2c5b77de33a4852b9f16dc5.webp",
+        "fileSize": 313536
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/30/358/cover/153018c5b14f8f69f148a957ceb37c44cd376245e2c5b77de33a4852b9f16dc5.webp"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-17T00:45:25.721Z",
+    "scenarios": 27,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-102\\live-qa.json"
+  }
 }

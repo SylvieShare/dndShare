@@ -16,12 +16,43 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature electronics technician checking the closed housing of a door access panel on an authorized workshop test stand, no wires, exploit, bypass or schematic. No weapon operation, assembly steps, technical diagram or readable code.",
       "width": 1600,
       "height": 640,
-      "original": "originals/dict-38-480-cover-v1.png",
-      "final": "final/dict-38-480-cover.webp"
+      "original": "originals/dict-38-480-cover-v2.png",
+      "final": "final/dict-38-480-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a9b7a7fd-75a6-4682-851e-7d5a98a55474.png",
+      "originalSha256": "eaea102836fa8bbcb54086cbbbbb2bd3fcf85a0ff2150ac772d151e520bf7b90",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "1cf2920d83775ee2e1aae0d209a1771daef395ad49363febdd21cb31c30be413",
+      "bytes": 318918,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "previousVariants": [
+        {
+          "original": "originals/dict-38-480-cover-v1.png",
+          "sourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3891b7ca-c12d-4241-843b-f280fd4489a6.png",
+          "originalSha256": "edc972ec2af8ac544468d9edfa5a74a9328cf342da2b6c5382135a21ca1fa07c",
+          "reason": "480reframed2:1source;494extra third buyer arm removed before publication."
+        }
+      ],
+      "revisionPrompt": "Reframe this SAME electronics test-stand scene to a much WIDER5:2 panorama, camera pulled back. Preserve the mature technician, closed access panel, workbench and natural hands. The technician's COMPLETE head/hair and both hands plus the whole panel must fit safely inside the central70percent of image height, with more workshop around them. Keep detailed cel shading, no cropped head, no labels or logos, final1600x640.",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill/price scenes inspected.480v2 full head/hands/panel;494v2 exactly two buyer arms, vendor alone supports cups, individually checked. Price levels conveyed through materials/context, no numeric labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50437,
+        "objectKey": "system-item-media/v1/suggests/38/480/cover/1cf2920d83775ee2e1aae0d209a1771daef395ad49363febdd21cb31c30be413.webp",
+        "fileSize": 318918
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/480/cover/1cf2920d83775ee2e1aae0d209a1771daef395ad49363febdd21cb31c30be413.webp"
     },
     {
       "key": "dict-38-450-cover",
@@ -33,12 +64,45 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Two mature adults from different backgrounds enjoying a patient face-to-face conversation at a cyberpunk community cafe, a blank study notebook and small audio device, no written language. No weapon operation, assembly steps, technical diagram or readable code.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-38-450-cover-v1.png",
-      "final": "final/dict-38-450-cover.webp"
+      "final": "final/dict-38-450-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-393eb474-c5e9-425a-ada8-2b947deca3ef.png",
+      "originalSha256": "46f80e98285f603df9e7034a59104fff05173d722afd1d2e6d13ba348ca7cdb2",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "f24413c2af590f6cbdeb50e93827c41aeaf7c81448a66c7f3d8df4a6c7a2752c",
+      "bytes": 305216,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill/price scenes inspected.480v2 full head/hands/panel;494v2 exactly two buyer arms, vendor alone supports cups, individually checked. Price levels conveyed through materials/context, no numeric labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50438,
+        "objectKey": "system-item-media/v1/suggests/38/450/cover/f24413c2af590f6cbdeb50e93827c41aeaf7c81448a66c7f3d8df4a6c7a2752c.webp",
+        "fileSize": 305216
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/450/cover/f24413c2af590f6cbdeb50e93827c41aeaf7c81448a66c7f3d8df4a6c7a2752c.webp"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-17T05:15:09.540Z",
+    "scenarios": 6,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-118\\live-qa.json"
+  }
 }

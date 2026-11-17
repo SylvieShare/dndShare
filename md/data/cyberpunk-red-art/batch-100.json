@@ -16,12 +16,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A spacious cyberpunk HOSPITAL reception and treatment corridor, professional adult staff, sophisticated enclosed scanning equipment, clean surfaces and urban window light, no operation or injury.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-27-346-cover-v1.png",
-      "final": "final/dict-27-346-cover.webp"
+      "final": "final/dict-27-346-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d6d7e825-64a6-4984-a0f4-76d93f571dad.png",
+      "originalSha256": "2cd092beda6d0ded6f7c9b64c23b79a43d05d1f9245c1d808c74ee3b5ddf8222",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "dda5c39af5d28226f25f9afba50b46e1ff089e2c9373c3d73f1832eaea438f07",
+      "bytes": 254886,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final panoramas inspected: clinics and injury states clear without graphic injury; mannequin head/torso/left/right limbs correctly highlighted from front-facing anatomy. Natural adults and complete focal areas, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50291,
+        "objectKey": "system-item-media/v1/suggests/27/346/cover/dda5c39af5d28226f25f9afba50b46e1ff089e2c9373c3d73f1832eaea438f07.webp",
+        "fileSize": 254886
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/27/346/cover/dda5c39af5d28226f25f9afba50b46e1ff089e2c9373c3d73f1832eaea438f07.webp"
     },
     {
       "key": "dict-27-345-cover",
@@ -33,12 +55,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A modest neighborhood ripperdoc CLINIC consultation room, mature medic greeting a clothed adult client beside a prosthetic display, practical repaired equipment, no surgery.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-27-345-cover-v1.png",
-      "final": "final/dict-27-345-cover.webp"
+      "final": "final/dict-27-345-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c1d2956b-7ee2-4404-942a-5fa9640ef6b3.png",
+      "originalSha256": "aada224f197621dbdf6d0f2732f29571572bb192a65c968044726d50e1ed0ff0",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "c2043fc09dc06f90a5dac48d9667fb542cb7c38d0a465dc86f2cf433845d8d3e",
+      "bytes": 272030,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final panoramas inspected: clinics and injury states clear without graphic injury; mannequin head/torso/left/right limbs correctly highlighted from front-facing anatomy. Natural adults and complete focal areas, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50292,
+        "objectKey": "system-item-media/v1/suggests/27/345/cover/c2043fc09dc06f90a5dac48d9667fb542cb7c38d0a465dc86f2cf433845d8d3e.webp",
+        "fileSize": 272030
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/27/345/cover/c2043fc09dc06f90a5dac48d9667fb542cb7c38d0a465dc86f2cf433845d8d3e.webp"
     },
     {
       "key": "dict-27-344-cover",
@@ -50,12 +94,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A cyberpunk SHOPPING MALL cyberware salon kiosk, mature clerk displaying decorative contacts in a closed case to an adult shopper, polished mall walkway and neon architecture, no text signs.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-27-344-cover-v1.png",
-      "final": "final/dict-27-344-cover.webp"
+      "final": "final/dict-27-344-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1c8ac5e4-d4c6-46e4-a87b-09aa4817c7ed.png",
+      "originalSha256": "4febd49fc238d9d1e5488d075cf86bf8397ddc7d7bb90dce520a0f7fd242044a",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "7d535109e0d4452636e8a3ae1763ca70650115d190bd8aa3ac6f92a830c818cd",
+      "bytes": 292576,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final panoramas inspected: clinics and injury states clear without graphic injury; mannequin head/torso/left/right limbs correctly highlighted from front-facing anatomy. Natural adults and complete focal areas, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50293,
+        "objectKey": "system-item-media/v1/suggests/27/344/cover/7d535109e0d4452636e8a3ae1763ca70650115d190bd8aa3ac6f92a830c818cd.webp",
+        "fileSize": 292576
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/27/344/cover/7d535109e0d4452636e8a3ae1763ca70650115d190bd8aa3ac6f92a830c818cd.webp"
     },
     {
       "key": "dict-28-347-cover",
@@ -67,12 +133,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A healthy mature adult stretches comfortably outside a cyberpunk apartment at morning light, relaxed shoulders and steady stance, no injuries or medical devices.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-28-347-cover-v1.png",
-      "final": "final/dict-28-347-cover.webp"
+      "final": "final/dict-28-347-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d8b872dc-0d1f-4af8-9609-00b3acfd7c97.png",
+      "originalSha256": "f59e897c59e9a51adfae183ecc7a98e7dd94da983809fbe67f03b5f9c117871c",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "ebdd912676cb5dddbea98207b007c25e47cbc65ec3705f419a5d499ca19d90b3",
+      "bytes": 250726,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final panoramas inspected: clinics and injury states clear without graphic injury; mannequin head/torso/left/right limbs correctly highlighted from front-facing anatomy. Natural adults and complete focal areas, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50294,
+        "objectKey": "system-item-media/v1/suggests/28/347/cover/ebdd912676cb5dddbea98207b007c25e47cbc65ec3705f419a5d499ca19d90b3.webp",
+        "fileSize": 250726
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/28/347/cover/ebdd912676cb5dddbea98207b007c25e47cbc65ec3705f419a5d499ca19d90b3.webp"
     },
     {
       "key": "dict-28-348-cover",
@@ -84,12 +172,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult with a small clean forearm dressing sits at a street-clinic bench, otherwise alert and comfortable, medic nearby. Minor injury represented calmly, no blood.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-28-348-cover-v1.png",
-      "final": "final/dict-28-348-cover.webp"
+      "final": "final/dict-28-348-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a4ce1739-0201-47ed-a18a-088a854d0775.png",
+      "originalSha256": "bc9dbd000cdf8eaab845bb57e975d9394d19f8b7d6140e954d4582ca752a2021",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "c8e186101193504ab6f5ccfd63c6c9aef0ce365f5ff6317cd6e7880f28103b8a",
+      "bytes": 248342,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final panoramas inspected: clinics and injury states clear without graphic injury; mannequin head/torso/left/right limbs correctly highlighted from front-facing anatomy. Natural adults and complete focal areas, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50295,
+        "objectKey": "system-item-media/v1/suggests/28/348/cover/c8e186101193504ab6f5ccfd63c6c9aef0ce365f5ff6317cd6e7880f28103b8a.webp",
+        "fileSize": 248342
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/28/348/cover/c8e186101193504ab6f5ccfd63c6c9aef0ce365f5ff6317cd6e7880f28103b8a.webp"
     },
     {
       "key": "dict-28-350-cover",
@@ -101,12 +211,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A seriously ill adult reclining on a futuristic emergency stretcher under a blanket with oxygen mask, focused mature medical team close by, tense but non-graphic care, no open wound or procedure.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-28-350-cover-v1.png",
-      "final": "final/dict-28-350-cover.webp"
+      "final": "final/dict-28-350-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-185088c2-cca6-4f7f-a316-05b173cb8229.png",
+      "originalSha256": "cadfd3fbf3d7c3df902fb9acfb62e37973923ce019eb1dcafc57af402a810e12",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "3ab4cc7d08ea76a2b79b77f691238e2501e13952482a9fa645be65a3060828e7",
+      "bytes": 265228,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final panoramas inspected: clinics and injury states clear without graphic injury; mannequin head/torso/left/right limbs correctly highlighted from front-facing anatomy. Natural adults and complete focal areas, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50296,
+        "objectKey": "system-item-media/v1/suggests/28/350/cover/3ab4cc7d08ea76a2b79b77f691238e2501e13952482a9fa645be65a3060828e7.webp",
+        "fileSize": 265228
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/28/350/cover/3ab4cc7d08ea76a2b79b77f691238e2501e13952482a9fa645be65a3060828e7.webp"
     },
     {
       "key": "dict-28-351-cover",
@@ -118,12 +250,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A quiet cyberpunk memorial scene: an EMPTY chair, a neatly folded worn jacket, an unlit closed personal case and a few flowers under city window light. Somber stillness, no body, gore, ghost or religious symbol required.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-28-351-cover-v1.png",
-      "final": "final/dict-28-351-cover.webp"
+      "final": "final/dict-28-351-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c1698f7b-a794-4ed6-a760-691365bb5a1c.png",
+      "originalSha256": "ea457f05d7b3cfcf933b22089360c96f901d8ae9a7cfa23d30f57c743d44425a",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "20632d9a7731905795036d691b0c35ba1fe9fb855e422cf17250abbe40f86bfc",
+      "bytes": 245138,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final panoramas inspected: clinics and injury states clear without graphic injury; mannequin head/torso/left/right limbs correctly highlighted from front-facing anatomy. Natural adults and complete focal areas, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50297,
+        "objectKey": "system-item-media/v1/suggests/28/351/cover/20632d9a7731905795036d691b0c35ba1fe9fb855e422cf17250abbe40f86bfc.webp",
+        "fileSize": 245138
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/28/351/cover/20632d9a7731905795036d691b0c35ba1fe9fb855e422cf17250abbe40f86bfc.webp"
     },
     {
       "key": "dict-28-349-cover",
@@ -135,12 +289,45 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult resting in a clinic chair with a clean torso support under a loose jacket, guarded tired posture and medic checking a dim scan. Clearly more support than a small dressing, no graphic wound.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-28-349-cover-v1.png",
-      "final": "final/dict-28-349-cover.webp"
+      "final": "final/dict-28-349-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3d6de7d4-3059-4c02-ad8a-49dd5e156aaa.png",
+      "originalSha256": "39fa5c0b766cdbed43db0aa3f3a4d1763ec84cf1e348352fa2f97480ac15e8ce",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "977a2bb0d4a5567a85f1ab94cbba41d0c4a4337febf6683978ce9d0f72842000",
+      "bytes": 196944,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final panoramas inspected: clinics and injury states clear without graphic injury; mannequin head/torso/left/right limbs correctly highlighted from front-facing anatomy. Natural adults and complete focal areas, no labels or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50298,
+        "objectKey": "system-item-media/v1/suggests/28/349/cover/977a2bb0d4a5567a85f1ab94cbba41d0c4a4337febf6683978ce9d0f72842000.webp",
+        "fileSize": 196944
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/28/349/cover/977a2bb0d4a5567a85f1ab94cbba41d0c4a4337febf6683978ce9d0f72842000.webp"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-17T00:20:27.279Z",
+    "scenarios": 24,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-100\\live-qa.json"
+  }
 }

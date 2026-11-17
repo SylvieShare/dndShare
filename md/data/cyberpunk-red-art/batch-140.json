@@ -1,0 +1,106 @@
+{
+  "batch": 140,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-140",
+  "sourceAudit": "Live 44 section slots audited. All covers already published; 34 icons missing. Existing covers visually inspected for factual identity; existing ten section icons reviewed for compact cel shading. Latest user scope is section icons and defaults; individual record cover batches stopped.",
+  "assets": [
+    {
+      "key": "section-suggest_type-26-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 26,
+        "name": "Группы навыков"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One compact fan of three professional tools: an amber wrench, a teal magnifier and a burgundy neural training cartridge. Three distinct broad silhouettes, organized as an overlapping cluster.",
+      "original": "originals/section-suggest_type-26-icon-v1.png",
+      "final": "final/section-suggest_type-26-icon.webp",
+      "width": 128,
+      "height": 128
+    },
+    {
+      "key": "section-suggest_type-49-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 49,
+        "name": "Действия"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One sturdy burgundy street boot taking a step above a single broad teal directional chevron. Complete boot with two chunky buckles and pale sole, no leg or scenery.",
+      "original": "originals/section-suggest_type-49-icon-v1.png",
+      "final": "final/section-suggest_type-49-icon.webp",
+      "width": 128,
+      "height": 128
+    },
+    {
+      "key": "section-suggest_type-43-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 43,
+        "name": "Калибры и совместимость"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: Two sealed brass-gray cartridge exteriors of visibly different widths in a compact graphite fitted tray, one teal locating groove. Ordinary inert catalogue objects, no gun, loading action, cutaway or mechanism.",
+      "original": "originals/section-suggest_type-43-icon-v1.png",
+      "final": "final/section-suggest_type-43-icon.webp",
+      "width": 128,
+      "height": 128
+    },
+    {
+      "key": "section-suggest_type-30-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 30,
+        "name": "Категории киберимплантов"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: One compact pale cybernetic palm module with a single teal circular optic inset and three amber connector tabs beneath. Clearly a manufactured modular implant, no organic flesh.",
+      "original": "originals/section-suggest_type-30-icon-v1.png",
+      "final": "final/section-suggest_type-30-icon.webp",
+      "width": 128,
+      "height": 128
+    },
+    {
+      "key": "section-suggest_type-40-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 40,
+        "name": "Категории цен"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: Three plain graphite retail tags with rounded clipped corners, arranged as an ascending compact fan, broad bronze, silver and gold inset panels. No numbers, price marks, labels or currency symbols.",
+      "original": "originals/section-suggest_type-40-icon-v1.png",
+      "final": "final/section-suggest_type-40-icon.webp",
+      "width": 128,
+      "height": 128
+    },
+    {
+      "key": "section-suggest_type-39-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 39,
+        "name": "Качество оружия"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. Asset: ONE compact Cyberpunk RED 2045 game catalogue section icon for dndShare. Original polished graphic 2D CEL SHADING. Thick continuous deep-plum outer outline, sparse confident thinner inner lines, broad clean color planes, restrained two-step shadow and one broad upper-left highlight, matte materials, almost no texture. Must read at 64 pixels. Complete subject centered in square, occupies 82–86%, even transparent margins. GENUINE transparent alpha; no background, checkerboard, enclosing tile, disc, frame, ground shadow, glow halo, scenery, text, letters, numbers, logos or watermark. No photorealism, glossy 3D, miniature scene, medieval motifs or fantasy magic. Subject: Three overlapping armor-metal sample plates showing rough dark steel, clean matte gray and polished cream-gold finish, with the same simple outline. A compact quality-comparison emblem, no scratches finer than broad simple marks.",
+      "original": "originals/section-suggest_type-39-icon-v1.png",
+      "final": "final/section-suggest_type-39-icon.webp",
+      "width": 128,
+      "height": 128
+    }
+  ]
+}

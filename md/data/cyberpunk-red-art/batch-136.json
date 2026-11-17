@@ -1,0 +1,138 @@
+{
+  "batch": 136,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-136",
+  "sourceAudit": "Live own dictionary slots empty. Core297–300 district descriptions and313MorroRock construction read from user-supplied Core. Original2045 scene, no2077layout or labels, icons unchanged.",
+  "assets": [
+    {
+      "key": "dict-47-603-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 603,
+        "typeId": 47,
+        "name": "Знание местности (Аппер Марина)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. UPPER MARINA in Night City circa2045: a busy waterfront with old industrial warehouses next to renovated International-style blocks around a maintained yacht marina. A mature local guide and adult visitor walk the quay, cranes and small boats, no 2077 landmarks or text.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-47-603-cover-v1.png",
+      "final": "final/dict-47-603-cover.webp",
+      "statusBeforeDeferral": "queued"
+    },
+    {
+      "key": "dict-47-596-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 596,
+        "typeId": 47,
+        "name": "Знание местности (Военная база Северной Калифорнии)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. NORCAL MILITARY BASE in Night City circa2045: a strongly fortified closed compound north of the city, broad exterior perimeter, two checkpoints and a plain reception building between them, distant hangars. Mature civilian guide outside perimeter, no operational map, weak points, insignia or combat.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-47-596-cover-v1.png",
+      "final": "final/dict-47-596-cover.webp",
+      "statusBeforeDeferral": "queued"
+    },
+    {
+      "key": "dict-47-601-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 601,
+        "typeId": 47,
+        "name": "Знание местности (Глен)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. THE GLEN in Night City circa2045: a booming rebuilt district with important civic/government buildings, construction cranes, active public plaza and a mix of finished facades and scaffolding. Mature local guide with an adult visitor, no labels.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-47-601-cover-v1.png",
+      "final": "final/dict-47-601-cover.webp",
+      "statusBeforeDeferral": "queued"
+    },
+    {
+      "key": "dict-47-593-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 593,
+        "typeId": 47,
+        "name": "Знание местности (Маленькая Европа)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. LITTLE EUROPE in Night City circa2045: tightly connected blocks mixing older brick buildings and taller modern towers, lively repair shops and everyday residents, a mature guide helps an adult visitor at a street corner. No caricature or national flags.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-47-593-cover-v1.png",
+      "final": "final/dict-47-593-cover.webp",
+      "statusBeforeDeferral": "queued"
+    },
+    {
+      "key": "dict-47-592-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 592,
+        "typeId": 47,
+        "name": "Знание местности (Маленький Китай)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. LITTLE CHINA in Night City circa2045: dense layered urban neighborhood with small community shops and protective improvised shutters, families and adult residents preserving everyday life amid worn buildings. A mature local guide in foreground; no generic exotic costume, readable signs, gang glorification or violence.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-47-592-cover-v1.png",
+      "final": "final/dict-47-592-cover.webp",
+      "statusBeforeDeferral": "queued"
+    },
+    {
+      "key": "dict-47-594-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 594,
+        "typeId": 47,
+        "name": "Знание местности (Морро Рок)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. MORRO ROCK in Night City circa2045: a massive coastal volcanic rock supporting a GRAND CONSTRUCTION SITE for a future orbital mass-driver spaceport. Scaffolds, cranes and unfinished launch infrastructure, ocean below. Mature engineer-guide at a public overlook, no completed2077spaceport, launch or technical diagram.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-47-594-cover-v1.png",
+      "final": "final/dict-47-594-cover.webp",
+      "statusBeforeDeferral": "queued"
+    },
+    {
+      "key": "dict-47-595-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 595,
+        "typeId": 47,
+        "name": "Знание местности (Новый Вестбрук)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. NEW WESTBROOK in Night City circa2045: remnants of a formerly glittering corporate district with polished old facades alongside crowded temporary shelters and repurposed public space. Mature residents and guide, dignified everyday life, no luxury-only2077scene.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-47-595-cover-v1.png",
+      "final": "final/dict-47-595-cover.webp",
+      "statusBeforeDeferral": "queued"
+    }
+  ],
+  "workflowStatus": "deferred_by_user",
+  "scopeNote": "2026-11-17: User narrowed current work to section icons and default covers. Individual-record artwork is paused; generated files retained, no publication."
+}

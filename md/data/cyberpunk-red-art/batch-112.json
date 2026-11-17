@@ -16,12 +16,43 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature nomad preparing a small sheltered camp beside a parked vehicle in scrubland beyond a cyberpunk skyline, water bottle and practical bedding, no dangerous survival procedure. No weapon operation, assembly steps, technical diagram or readable code.",
       "width": 1600,
       "height": 640,
-      "original": "originals/dict-38-455-cover-v1.png",
-      "final": "final/dict-38-455-cover.webp"
+      "original": "originals/dict-38-455-cover-v2.png",
+      "final": "final/dict-38-455-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-afd57e4a-10d0-4ffe-9f55-ce8914aa98b4.png",
+      "originalSha256": "d0c05fbec1a5e5858b2aaef4bc7af975e409e009224b4b24dc21e961b26fcef0",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "d838c183f6e5fbc3ece7297f1a9aaa9712794c25b160ea4b336c4ae6991b0ecc",
+      "bytes": 349204,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "previousVariants": [
+        {
+          "original": "originals/dict-38-455-cover-v1.png",
+          "sourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1f58351c-dc21-4a46-ab3b-c967232abac0.png",
+          "originalSha256": "53ed2678bd5cc5ab3d65d342bcb38a97ed649c0eac6ce5bb094b2ab4f897ba1a",
+          "reason": "Reframed camping scene or removed guitar branding before publication."
+        }
+      ],
+      "revisionPrompt": "Reframe this SAME camping scene into a much WIDER5:2 panorama, pulling camera back. Preserve the mature adult, van, sleeping bag and camp. Keep the COMPLETE head/hair, both hands, sleeping bag and main camp equipment within the central70percent of image height, with extra scrubland and sky margins. Preserve natural anatomy and detailed cel shading. Intended1600x640, no cropped head, no text or logos.",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill panoramas inspected.455v2 camping scene keeps full head/hands/gear;461v2 has unbranded black guitar headstock, results individually reviewed. Natural adult rendering, no icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50390,
+        "objectKey": "system-item-media/v1/suggests/38/455/cover/d838c183f6e5fbc3ece7297f1a9aaa9712794c25b160ea4b336c4ae6991b0ecc.webp",
+        "fileSize": 349204
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/455/cover/d838c183f6e5fbc3ece7297f1a9aaa9712794c25b160ea4b336c4ae6991b0ecc.webp"
     },
     {
       "key": "dict-38-433-cover",
@@ -33,12 +64,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature athlete finishing a long steady run on an elevated city path, tired but determined posture, full natural body, soft dawn skyline. No weapon operation, assembly steps, technical diagram or readable code.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-38-433-cover-v1.png",
-      "final": "final/dict-38-433-cover.webp"
+      "final": "final/dict-38-433-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-689cece5-0c49-4b1d-a5b0-546d73069b87.png",
+      "originalSha256": "943f2868e0ec2b4e058245aa3138ca4b64914efc229d4939f5bedc62bc5f1973",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "285bda2b317ab085b980a8c0b8349bb0521ea28f1307641e2f1aa5b92e2ff29a",
+      "bytes": 274260,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill panoramas inspected.455v2 camping scene keeps full head/hands/gear;461v2 has unbranded black guitar headstock, results individually reviewed. Natural adult rendering, no icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50391,
+        "objectKey": "system-item-media/v1/suggests/38/433/cover/285bda2b317ab085b980a8c0b8349bb0521ea28f1307641e2f1aa5b92e2ff29a.webp",
+        "fileSize": 274260
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/433/cover/285bda2b317ab085b980a8c0b8349bb0521ea28f1307641e2f1aa5b92e2ff29a.webp"
     },
     {
       "key": "dict-38-429-cover",
@@ -50,12 +103,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature field scout examining ordinary footprints in muddy ground at an abandoned industrial lot, hand lamp and weathered surroundings, no pursuit of a specific person. No weapon operation, assembly steps, technical diagram or readable code.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-38-429-cover-v1.png",
-      "final": "final/dict-38-429-cover.webp"
+      "final": "final/dict-38-429-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f8427503-fe6c-40b2-b9a1-9ef4ce0720e7.png",
+      "originalSha256": "716a3765948920c20e8fe7e56967bf823e26e6f760d5c628b949904b7cd40582",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "f42f08377fd584e5ba99ee85626f3e5e6f25b7eba798bd815e0926c1c3f04c84",
+      "bytes": 335024,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill panoramas inspected.455v2 camping scene keeps full head/hands/gear;461v2 has unbranded black guitar headstock, results individually reviewed. Natural adult rendering, no icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50392,
+        "objectKey": "system-item-media/v1/suggests/38/429/cover/f42f08377fd584e5ba99ee85626f3e5e6f25b7eba798bd815e0926c1c3f04c84.webp",
+        "fileSize": 335024
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/429/cover/f42f08377fd584e5ba99ee85626f3e5e6f25b7eba798bd815e0926c1c3f04c84.webp"
     },
     {
       "key": "dict-38-475-cover",
@@ -67,12 +142,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature stylist helping an adult choose a well-fitted cyberpunk jacket at a salon mirror, several contrasting garments on a rack, detailed cloth and trim. No weapon operation, assembly steps, technical diagram or readable code.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-38-475-cover-v1.png",
-      "final": "final/dict-38-475-cover.webp"
+      "final": "final/dict-38-475-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3e4b76d8-5571-45bd-8cf6-64aa8a69a04b.png",
+      "originalSha256": "dc41579cb2646c82f10e0c9d9e9823e5450e8429697477ab84191756b5febb4f",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "8e8a0efc80e692560f865b19da7512dd7260384ffbee8c1127b0c966feb22f64",
+      "bytes": 253312,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill panoramas inspected.455v2 camping scene keeps full head/hands/gear;461v2 has unbranded black guitar headstock, results individually reviewed. Natural adult rendering, no icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50393,
+        "objectKey": "system-item-media/v1/suggests/38/475/cover/8e8a0efc80e692560f865b19da7512dd7260384ffbee8c1127b0c966feb22f64.webp",
+        "fileSize": 253312
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/475/cover/8e8a0efc80e692560f865b19da7512dd7260384ffbee8c1127b0c966feb22f64.webp"
     },
     {
       "key": "dict-38-431-cover",
@@ -84,12 +181,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult performer practicing a controlled flexibility stretch on a padded studio floor, plausible joints and full body, no extreme distortion or peril. No weapon operation, assembly steps, technical diagram or readable code.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-38-431-cover-v1.png",
-      "final": "final/dict-38-431-cover.webp"
+      "final": "final/dict-38-431-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6fc4d13e-8508-481d-a139-cc07695277fb.png",
+      "originalSha256": "1615c273703fdf0e3b890cfa802b8c0ac742151329fc44399305131c48a62bff",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "e401f417bb7032d10b58af714bab94625b17866f130d89c1e63ebcd07daf7e6e",
+      "bytes": 203322,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill panoramas inspected.455v2 camping scene keeps full head/hands/gear;461v2 has unbranded black guitar headstock, results individually reviewed. Natural adult rendering, no icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50394,
+        "objectKey": "system-item-media/v1/suggests/38/431/cover/e401f417bb7032d10b58af714bab94625b17866f130d89c1e63ebcd07daf7e6e.webp",
+        "fileSize": 203322
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/431/cover/e401f417bb7032d10b58af714bab94625b17866f130d89c1e63ebcd07daf7e6e.webp"
     },
     {
       "key": "dict-38-447-cover",
@@ -101,12 +220,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature detective comparing several unmarked photos and small everyday objects on a desk, a subtle moment of realization, no readable case board or accusations. No weapon operation, assembly steps, technical diagram or readable code.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-38-447-cover-v1.png",
-      "final": "final/dict-38-447-cover.webp"
+      "final": "final/dict-38-447-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c3ef0cec-a585-4e0e-bb2a-af742e18cf3e.png",
+      "originalSha256": "59f16ff7de8260fab49fb1bc12c0dbf1ed52bc0a737dcddb8a5a950fe5962f9c",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "63c2de036331a720cb6975e64e391a3427c6c3e2a61abf09c444325c8f7b18fc",
+      "bytes": 214082,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill panoramas inspected.455v2 camping scene keeps full head/hands/gear;461v2 has unbranded black guitar headstock, results individually reviewed. Natural adult rendering, no icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50395,
+        "objectKey": "system-item-media/v1/suggests/38/447/cover/63c2de036331a720cb6975e64e391a3427c6c3e2a61abf09c444325c8f7b18fc.webp",
+        "fileSize": 214082
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/447/cover/63c2de036331a720cb6975e64e391a3427c6c3e2a61abf09c444325c8f7b18fc.webp"
     },
     {
       "key": "dict-38-466-cover",
@@ -118,12 +259,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult inspecting a closed long equipment case beside a padded supervised training bench, hearing protection and a thoughtful posture, no aiming instruction or firing. No weapon operation, assembly steps, technical diagram or readable code.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-38-466-cover-v1.png",
-      "final": "final/dict-38-466-cover.webp"
+      "final": "final/dict-38-466-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-bb798344-db19-4e54-9519-bff286e15e6e.png",
+      "originalSha256": "9aaa69e2f58b3e3104bf57d53e064127cbcd28a61d7d114f4db0c49989c901ab",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "a520c1ee3163050a5d29a0a402a98c2dd9a23793abf350edb0d92e2132f75b52",
+      "bytes": 205582,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill panoramas inspected.455v2 camping scene keeps full head/hands/gear;461v2 has unbranded black guitar headstock, results individually reviewed. Natural adult rendering, no icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50396,
+        "objectKey": "system-item-media/v1/suggests/38/466/cover/a520c1ee3163050a5d29a0a402a98c2dd9a23793abf350edb0d92e2132f75b52.webp",
+        "fileSize": 205582
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/466/cover/a520c1ee3163050a5d29a0a402a98c2dd9a23793abf350edb0d92e2132f75b52.webp"
     },
     {
       "key": "dict-38-470-cover",
@@ -135,12 +298,45 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Two mature adults in a calm formal interview room across a plain table, investigator asking a question with an open hand while the other considers it. No restraints, intimidation, violence or readable transcript. No weapon operation, assembly steps, technical diagram or readable code.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-38-470-cover-v1.png",
-      "final": "final/dict-38-470-cover.webp"
+      "final": "final/dict-38-470-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e5a99880-95de-4f42-a674-a9234d3e5918.png",
+      "originalSha256": "21fa61675b3dd43ad840c96023c489ad7f54f5fd562c09e9290d8e24d960e26f",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "1cc14a138da3ee2e7a68e79b0e51fb2b3f96e3f2ac5d7ebf924a1db3aaaa4574",
+      "bytes": 180650,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final skill panoramas inspected.455v2 camping scene keeps full head/hands/gear;461v2 has unbranded black guitar headstock, results individually reviewed. Natural adult rendering, no icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50397,
+        "objectKey": "system-item-media/v1/suggests/38/470/cover/1cc14a138da3ee2e7a68e79b0e51fb2b3f96e3f2ac5d7ebf924a1db3aaaa4574.webp",
+        "fileSize": 180650
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/470/cover/1cc14a138da3ee2e7a68e79b0e51fb2b3f96e3f2ac5d7ebf924a1db3aaaa4574.webp"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-17T04:07:32.041Z",
+    "scenarios": 24,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-112\\live-qa.json"
+  }
 }

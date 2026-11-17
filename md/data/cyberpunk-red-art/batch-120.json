@@ -1,0 +1,294 @@
+{
+  "batch": 120,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-120",
+  "sourceAudit": "Live own dictionary slots empty. Structured values and previously reviewed Core categories guide original fictional narrative. Technical/medical concepts represented without operational or treatment instructions, icons unchanged.",
+  "assets": [
+    {
+      "key": "dict-41-502-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 502,
+        "typeId": 41,
+        "name": "Антибиотик"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature medtech checking a CLOSED plain antibiotic supply pack in a clean clinic cabinet, no pills being taken, dosage, readable label or treatment procedure. Warm reassuring clinical scene.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-41-502-cover-v1.png",
+      "final": "final/dict-41-502-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-00d265a5-e624-445c-9c11-0304654c6d0e.png",
+      "originalSha256": "774a8e6662301bc0cad41af7104b205420a0b7fcfa82755981d0c6ab3a68a7c6",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "bba369a51c446d3dda97d4f944ccd9a51047eea01c35cc2c09ab54ba9dbab6bf",
+      "bytes": 203598,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All seven pharmacy/phase panoramas inspected: sealed packs, non-graphic care/recovery, distinct focal objects and mature natural anatomy. No dosing/procedures, critical typography or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50406,
+        "objectKey": "system-item-media/v1/suggests/41/502/cover/bba369a51c446d3dda97d4f944ccd9a51047eea01c35cc2c09ab54ba9dbab6bf.webp",
+        "fileSize": 203598
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/41/502/cover/bba369a51c446d3dda97d4f944ccd9a51047eea01c35cc2c09ab54ba9dbab6bf.webp"
+    },
+    {
+      "key": "dict-41-503-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 503,
+        "typeId": 41,
+        "name": "Быстрый детокс"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature medtech preparing a CLOSED detox medicine case beside a rested clothed adult in a recovery chair, no injection, drug use, chemical formula or dosing.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-41-503-cover-v1.png",
+      "final": "final/dict-41-503-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4086c273-9094-45ab-bf80-8c5e2c98ba0f.png",
+      "originalSha256": "4d0b962439ab8f0059d039b9364175f96418d8e22432055f844c3035bdfc3497",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "89da3cfe295f32f8443f2910db5eae4aeeb2ea9ac43837ca5fec80fbb218ad47",
+      "bytes": 249536,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All seven pharmacy/phase panoramas inspected: sealed packs, non-graphic care/recovery, distinct focal objects and mature natural anatomy. No dosing/procedures, critical typography or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50407,
+        "objectKey": "system-item-media/v1/suggests/41/503/cover/89da3cfe295f32f8443f2910db5eae4aeeb2ea9ac43837ca5fec80fbb218ad47.webp",
+        "fileSize": 249536
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/41/503/cover/89da3cfe295f32f8443f2910db5eae4aeeb2ea9ac43837ca5fec80fbb218ad47.webp"
+    },
+    {
+      "key": "dict-41-506-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 506,
+        "typeId": 41,
+        "name": "Всплеск"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature medtech selecting a CLOSED orange-accented pharmacy kit from an organized clinic drawer while a tired adult waits calmly, no administration or dosage.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-41-506-cover-v1.png",
+      "final": "final/dict-41-506-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-984390ff-f874-4915-ae0f-ab5306f550e4.png",
+      "originalSha256": "c73a87fc6847631bb97693b75241e4f9660b675749e869c501c38e5cd8af65c7",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "013bb6513d24b7c4881a20222ffab3a2b043ccbfc7e53330790e6e96f4da8fe6",
+      "bytes": 245832,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All seven pharmacy/phase panoramas inspected: sealed packs, non-graphic care/recovery, distinct focal objects and mature natural anatomy. No dosing/procedures, critical typography or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50408,
+        "objectKey": "system-item-media/v1/suggests/41/506/cover/013bb6513d24b7c4881a20222ffab3a2b043ccbfc7e53330790e6e96f4da8fe6.webp",
+        "fileSize": 245832
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/41/506/cover/013bb6513d24b7c4881a20222ffab3a2b043ccbfc7e53330790e6e96f4da8fe6.webp"
+    },
+    {
+      "key": "dict-41-504-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 504,
+        "typeId": 41,
+        "name": "Спидхил"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature medtech presenting a CLOSED green-accented recovery medicine pack to a clothed adult resting with a clean existing arm support, no instant healing effect, dose or procedure.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-41-504-cover-v1.png",
+      "final": "final/dict-41-504-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8e6a4fc7-e2e7-4ac1-a0cf-c6e3c5c0d9f9.png",
+      "originalSha256": "4b794101e73f26ae8612f56c0b9789ebe90ea2b1a10698e7577457a1858c5f7a",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "49202d029db3d07a17c037c2ae62655eff4c3f34d73c5f937bf487db46309801",
+      "bytes": 250890,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All seven pharmacy/phase panoramas inspected: sealed packs, non-graphic care/recovery, distinct focal objects and mature natural anatomy. No dosing/procedures, critical typography or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50409,
+        "objectKey": "system-item-media/v1/suggests/41/504/cover/49202d029db3d07a17c037c2ae62655eff4c3f34d73c5f937bf487db46309801.webp",
+        "fileSize": 250890
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/41/504/cover/49202d029db3d07a17c037c2ae62655eff4c3f34d73c5f937bf487db46309801.webp"
+    },
+    {
+      "key": "dict-41-505-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 505,
+        "typeId": 41,
+        "name": "Стимулятор"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature medtech checking a CLOSED amber-accented pharmacy pack beside a clinic workstation, focused ordinary care, no injection, dosing, misuse or miraculous claim.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-41-505-cover-v1.png",
+      "final": "final/dict-41-505-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d3104cf7-12f0-451b-97c2-beb947acb7bf.png",
+      "originalSha256": "f5e1605a6bf199407dd727bae5bcb167d210bc312a4e9554b2bfc0e5fae7f564",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "c150ec5e0cd96c0fa9a46f01288555bc261ae5c211b60d4ea0520282ed12fde1",
+      "bytes": 244544,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All seven pharmacy/phase panoramas inspected: sealed packs, non-graphic care/recovery, distinct focal objects and mature natural anatomy. No dosing/procedures, critical typography or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50410,
+        "objectKey": "system-item-media/v1/suggests/41/505/cover/c150ec5e0cd96c0fa9a46f01288555bc261ae5c211b60d4ea0520282ed12fde1.webp",
+        "fileSize": 244544
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/41/505/cover/c150ec5e0cd96c0fa9a46f01288555bc261ae5c211b60d4ea0520282ed12fde1.webp"
+    },
+    {
+      "key": "dict-45-536-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 536,
+        "typeId": 45,
+        "name": "Основной эффект"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult resting under calm observation in a clinic after a fictional medication, subtle change in attention and abstract steady monitor glow, sealed medicine case nearby, no drug administration or instructions.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-45-536-cover-v1.png",
+      "final": "final/dict-45-536-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-df520084-a253-4912-a47f-48a989e3a5a3.png",
+      "originalSha256": "31ae9e5e3c8bea979e26c629c0804789ba4cd186489fced37e31051499d50ecf",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "6057071168d09982ce0e56b8bb52e7b5170d56ec2db4b35f24342979430ea21c",
+      "bytes": 214706,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All seven pharmacy/phase panoramas inspected: sealed packs, non-graphic care/recovery, distinct focal objects and mature natural anatomy. No dosing/procedures, critical typography or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50411,
+        "objectKey": "system-item-media/v1/suggests/45/536/cover/6057071168d09982ce0e56b8bb52e7b5170d56ec2db4b35f24342979430ea21c.webp",
+        "fileSize": 214706
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/45/536/cover/6057071168d09982ce0e56b8bb52e7b5170d56ec2db4b35f24342979430ea21c.webp"
+    },
+    {
+      "key": "dict-45-537-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 537,
+        "typeId": 45,
+        "name": "Последствия зависимости"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature adult in a quiet recovery room looking tired and reflective while a supportive clinician listens, a glass of water and closed medicine cabinet. Compassionate portrayal of dependence consequences, no drug taking or glamorization.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-45-537-cover-v1.png",
+      "final": "final/dict-45-537-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c761e808-4f06-44f3-bfb9-b9dfec76e178.png",
+      "originalSha256": "070601b7b6be6d7d0290dd9bc9ef2ac51a27f478e5d2a8118d5c441886107974",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "83ad98e7546a1ace9763aa9df0e6fee5b59a55964210c90adf6c85369d1e17d6",
+      "bytes": 186918,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All seven pharmacy/phase panoramas inspected: sealed packs, non-graphic care/recovery, distinct focal objects and mature natural anatomy. No dosing/procedures, critical typography or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50412,
+        "objectKey": "system-item-media/v1/suggests/45/537/cover/83ad98e7546a1ace9763aa9df0e6fee5b59a55964210c90adf6c85369d1e17d6.webp",
+        "fileSize": 186918
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/45/537/cover/83ad98e7546a1ace9763aa9df0e6fee5b59a55964210c90adf6c85369d1e17d6.webp"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-17T04:19:38.533Z",
+    "scenarios": 21,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-120\\live-qa.json"
+  }
+}

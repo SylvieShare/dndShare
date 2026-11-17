@@ -1,0 +1,156 @@
+{
+  "batch": 132,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-132",
+  "sourceAudit": "Live own dictionary slots empty. Language names/codes preserved from catalogue; artwork is original everyday oral-learning scene in multicultural Night City, not an assertion about ethnicity or canonical geography. Each value generated separately, icons unchanged.",
+  "assets": [
+    {
+      "key": "dict-46-566-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 566,
+        "typeId": 46,
+        "name": "Язык (маори)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Dictionary concept: Language (Maori). Illustrate everyday oral communication and community language learning in multicultural Night City, not a national emblem. A mature oral-history interviewer listens to an older adult speaker in a city apartment, small plain recorder and ordinary family objects. Late-afternoon amber light and cool reflected neon. Keep all people in contemporary retrofuturist everyday clothes, varied mature faces and natural adult proportions; no stereotyped national costume, flags or caricature. The language itself does not need written representation: absolutely no readable letters, captions or signs. A unique original composition for this entry.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-46-566-cover-v1.png",
+      "final": "final/dict-46-566-cover.webp",
+      "statusBeforeDeferral": "queued"
+    },
+    {
+      "key": "dict-46-568-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 568,
+        "typeId": 46,
+        "name": "Язык (монгольский)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Dictionary concept: Language (Mongolian). Illustrate everyday oral communication and community language learning in multicultural Night City, not a national emblem. Two mature adult artists discuss an unfinished abstract mural in a neighborhood studio, brushes set aside and natural thoughtful gestures. Late-afternoon amber light and cool reflected neon. Keep all people in contemporary retrofuturist everyday clothes, varied mature faces and natural adult proportions; no stereotyped national costume, flags or caricature. The language itself does not need written representation: absolutely no readable letters, captions or signs. A unique original composition for this entry.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-46-568-cover-v1.png",
+      "final": "final/dict-46-568-cover.webp",
+      "statusBeforeDeferral": "queued"
+    },
+    {
+      "key": "dict-46-569-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 569,
+        "typeId": 46,
+        "name": "Язык (навахо)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Dictionary concept: Language (Navajo). Illustrate everyday oral communication and community language learning in multicultural Night City, not a national emblem. A mature community tutor and adult learner share a patient face-to-face conversation at a small cafe table, natural expressive hands and an unlettered study notebook. Rainy-night magenta reflections with restrained teal interior light. Keep all people in contemporary retrofuturist everyday clothes, varied mature faces and natural adult proportions; no stereotyped national costume, flags or caricature. The language itself does not need written representation: absolutely no readable letters, captions or signs. A unique original composition for this entry.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-46-569-cover-v1.png",
+      "final": "final/dict-46-569-cover.webp",
+      "statusBeforeDeferral": "queued"
+    },
+    {
+      "key": "dict-46-552-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 552,
+        "typeId": 46,
+        "name": "Язык (немецкий)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Dictionary concept: Language (German). Illustrate everyday oral communication and community language learning in multicultural Night City, not a national emblem. Two mature adult neighbors practice conversation while tending a rooftop vegetable garden, one describes a harmless plant and the other listens, detailed tools and leaves. Rainy-night magenta reflections with restrained teal interior light. Keep all people in contemporary retrofuturist everyday clothes, varied mature faces and natural adult proportions; no stereotyped national costume, flags or caricature. The language itself does not need written representation: absolutely no readable letters, captions or signs. A unique original composition for this entry.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-46-552-cover-v1.png",
+      "final": "final/dict-46-552-cover.webp",
+      "statusBeforeDeferral": "queued"
+    },
+    {
+      "key": "dict-46-570-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 570,
+        "typeId": 46,
+        "name": "Язык (непальский)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Dictionary concept: Language (Nepali). Illustrate everyday oral communication and community language learning in multicultural Night City, not a national emblem. A mature workshop mentor explains a harmless repair task verbally to an adult learner, closed tools on a bench and attentive natural faces. Rainy-night magenta reflections with restrained teal interior light. Keep all people in contemporary retrofuturist everyday clothes, varied mature faces and natural adult proportions; no stereotyped national costume, flags or caricature. The language itself does not need written representation: absolutely no readable letters, captions or signs. A unique original composition for this entry.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-46-570-cover-v1.png",
+      "final": "final/dict-46-570-cover.webp",
+      "statusBeforeDeferral": "queued"
+    },
+    {
+      "key": "dict-46-571-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 571,
+        "typeId": 46,
+        "name": "Язык (норвежский)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Dictionary concept: Language (Norwegian). Illustrate everyday oral communication and community language learning in multicultural Night City, not a national emblem. A mature vendor and adult customer talk warmly across a neighborhood food counter, ordinary packaging and a small unmarked audio learning device. Rainy-night magenta reflections with restrained teal interior light. Keep all people in contemporary retrofuturist everyday clothes, varied mature faces and natural adult proportions; no stereotyped national costume, flags or caricature. The language itself does not need written representation: absolutely no readable letters, captions or signs. A unique original composition for this entry.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-46-571-cover-v1.png",
+      "final": "final/dict-46-571-cover.webp",
+      "statusBeforeDeferral": "queued"
+    },
+    {
+      "key": "dict-46-572-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 572,
+        "typeId": 46,
+        "name": "Язык (оромо)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Dictionary concept: Language (Oromo). Illustrate everyday oral communication and community language learning in multicultural Night City, not a national emblem. Two mature adult musicians discuss a rehearsal in a community studio, instruments resting safely on stands and natural open gestures. Rainy-night magenta reflections with restrained teal interior light. Keep all people in contemporary retrofuturist everyday clothes, varied mature faces and natural adult proportions; no stereotyped national costume, flags or caricature. The language itself does not need written representation: absolutely no readable letters, captions or signs. A unique original composition for this entry.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-46-572-cover-v1.png",
+      "final": "final/dict-46-572-cover.webp",
+      "statusBeforeDeferral": "queued"
+    },
+    {
+      "key": "dict-46-573-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 573,
+        "typeId": 46,
+        "name": "Язык (пама-ньюнгский)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "deferred",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Dictionary concept: Language (Pama-Nyungan). Illustrate everyday oral communication and community language learning in multicultural Night City, not a national emblem. A mature local guide chats with an adult newcomer at a sheltered transit platform, unmarked abstract route map and distant elevated train. Rainy-night magenta reflections with restrained teal interior light. Keep all people in contemporary retrofuturist everyday clothes, varied mature faces and natural adult proportions; no stereotyped national costume, flags or caricature. The language itself does not need written representation: absolutely no readable letters, captions or signs. A unique original composition for this entry.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-46-573-cover-v1.png",
+      "final": "final/dict-46-573-cover.webp",
+      "statusBeforeDeferral": "queued"
+    }
+  ],
+  "workflowStatus": "deferred_by_user",
+  "scopeNote": "2026-11-17: User narrowed current work to section icons and default covers. Individual-record artwork is paused; generated files retained, no publication."
+}

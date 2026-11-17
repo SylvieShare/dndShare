@@ -16,12 +16,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of extra-stout VERY-HEAVY-PISTOL cartridges in a deep padded storage tray, broad heavy silhouette and complete closed exterior, no cutaway. Dark graphite external finish with a narrow violet identification band; solid finished silhouette, no exposed core or armor demonstration.",
       "width": 1536,
       "height": 1024,
       "original": "originals/ammo-7599-cover-v1.png",
-      "final": "final/ammo-7599-cover.jpg"
+      "final": "final/ammo-7599-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ce230635-dfa7-4367-acef-b5fdc37e87cf.png",
+      "originalSha256": "8c53af644b22f550d09e0fba65db59d47d7b80b6cc5b76c6e63106224e06d237",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "c80103e982ccdb646286376bf21c4bc64c9ce82a687dfe0fd52424553439c52f",
+      "bytes": 293911,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final heavy-cartridge exports inspected: complete representative sets, finished materials and rubber/smart variants clear, no labels/diagrams or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50271,
+        "objectKey": "system-item-media/v1/items/7599/cover/c80103e982ccdb646286376bf21c4bc64c9ce82a687dfe0fd52424553439c52f.jpg",
+        "fileSize": 293911
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7599/cover/c80103e982ccdb646286376bf21c4bc64c9ce82a687dfe0fd52424553439c52f.jpg"
     },
     {
       "key": "ammo-7600-cover",
@@ -33,12 +55,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of extra-stout VERY-HEAVY-PISTOL cartridges in a deep padded storage tray, broad heavy silhouette and complete closed exterior, no cutaway. Plain standard finish, brass and dark metal, small neutral gray packaging accents.",
       "width": 1536,
       "height": 1024,
       "original": "originals/ammo-7600-cover-v1.png",
-      "final": "final/ammo-7600-cover.jpg"
+      "final": "final/ammo-7600-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d584ac67-8b83-4ba0-aeff-0c9626a3e616.png",
+      "originalSha256": "eac82fa1fe744e7c1cad247b761b85622bb4eeaf422f7fff28eb15cb6ecaa4d8",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "9b541cd8fc39e7a2ce2a0ad98e00098698b0266bdaa271ea9e8cabe07bde291e",
+      "bytes": 279399,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final heavy-cartridge exports inspected: complete representative sets, finished materials and rubber/smart variants clear, no labels/diagrams or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50272,
+        "objectKey": "system-item-media/v1/items/7600/cover/9b541cd8fc39e7a2ce2a0ad98e00098698b0266bdaa271ea9e8cabe07bde291e.jpg",
+        "fileSize": 279399
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7600/cover/9b541cd8fc39e7a2ce2a0ad98e00098698b0266bdaa271ea9e8cabe07bde291e.jpg"
     },
     {
       "key": "ammo-7601-cover",
@@ -50,12 +94,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of extra-stout VERY-HEAVY-PISTOL cartridges in a deep padded storage tray, broad heavy silhouette and complete closed exterior, no cutaway. Muted burgundy external band and broader rounded tip silhouette; no opening, expanding action or exposed structure.",
       "width": 1536,
       "height": 1024,
       "original": "originals/ammo-7601-cover-v1.png",
-      "final": "final/ammo-7601-cover.jpg"
+      "final": "final/ammo-7601-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-23f01930-6dda-4ac7-8d97-256b37f40ab7.png",
+      "originalSha256": "57e802fbc3fa1c67206b42d7455fdc49aa48b0e15116d799bb8129e630e34d6b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "32b9e75ed0ae917370e8e55948e00a7e1a2ae15d8685f71c22639d77eafd073a",
+      "bytes": 263523,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final heavy-cartridge exports inspected: complete representative sets, finished materials and rubber/smart variants clear, no labels/diagrams or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50273,
+        "objectKey": "system-item-media/v1/items/7601/cover/32b9e75ed0ae917370e8e55948e00a7e1a2ae15d8685f71c22639d77eafd073a.jpg",
+        "fileSize": 263523
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7601/cover/32b9e75ed0ae917370e8e55948e00a7e1a2ae15d8685f71c22639d77eafd073a.jpg"
     },
     {
       "key": "ammo-7602-cover",
@@ -67,12 +133,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of extra-stout VERY-HEAVY-PISTOL cartridges in a deep padded storage tray, broad heavy silhouette and complete closed exterior, no cutaway. Muted orange external identification band on a closed finished housing, unlit, no flame or exposed contents.",
       "width": 1536,
       "height": 1024,
       "original": "originals/ammo-7602-cover-v1.png",
-      "final": "final/ammo-7602-cover.jpg"
+      "final": "final/ammo-7602-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5041629e-4794-4771-99b6-962e407e1b2b.png",
+      "originalSha256": "2aebac856149f462aa7d501f4ab787c4e4594d2cbd9efa1367fa0c40c863908a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "abe92ab4bba67211770699668994d99ee9a9181fbd3e483fc1f5c7ad110ea63b",
+      "bytes": 282590,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final heavy-cartridge exports inspected: complete representative sets, finished materials and rubber/smart variants clear, no labels/diagrams or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50274,
+        "objectKey": "system-item-media/v1/items/7602/cover/abe92ab4bba67211770699668994d99ee9a9181fbd3e483fc1f5c7ad110ea63b.jpg",
+        "fileSize": 282590
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7602/cover/abe92ab4bba67211770699668994d99ee9a9181fbd3e483fc1f5c7ad110ea63b.jpg"
     },
     {
       "key": "ammo-7603-cover",
@@ -84,12 +172,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of extra-stout VERY-HEAVY-PISTOL cartridges in a deep padded storage tray, broad heavy silhouette and complete closed exterior, no cutaway. Clearly matte black RUBBER blunt tip with subtle broad soft-looking curvature, contrasting metal casing where applicable; no impact demonstration.",
       "width": 1536,
       "height": 1024,
       "original": "originals/ammo-7603-cover-v1.png",
-      "final": "final/ammo-7603-cover.jpg"
+      "final": "final/ammo-7603-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-fa7a41c3-5ba9-4e3b-9585-a66a10d2f999.png",
+      "originalSha256": "315680d1bb1bbdf7aa61ec9fe65d642c35222f97364c633f209fea81083c06a6",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f6fc998f5688f480a1f41c55fe258c31a28764049cc469a24e5a7295743e4dba",
+      "bytes": 253033,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final heavy-cartridge exports inspected: complete representative sets, finished materials and rubber/smart variants clear, no labels/diagrams or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50275,
+        "objectKey": "system-item-media/v1/items/7603/cover/f6fc998f5688f480a1f41c55fe258c31a28764049cc469a24e5a7295743e4dba.jpg",
+        "fileSize": 253033
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7603/cover/f6fc998f5688f480a1f41c55fe258c31a28764049cc469a24e5a7295743e4dba.jpg"
     },
     {
       "key": "ammo-7604-cover",
@@ -101,12 +211,45 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded cyberpunk 2045 game illustration, opaque 3:2 landscape. Fine varied ink, broad painted light/shadow planes, convincing metal/polymer/fabric detail and reflected light, softer lower-contrast storage-room background. Finished static fictional prop exterior only, not a diagram. All objects fully framed. No text, digits, labels, logos, UI, internal mechanism, cross-section, dimensions, chemistry, manufacturing/loading instructions, firearm, firing, explosion, flames, target or injury. No photo/3D, toy outlines or gore. A small representative selection of extra-stout VERY-HEAVY-PISTOL cartridges in a deep padded storage tray, broad heavy silhouette and complete closed exterior, no cutaway. Distinctive ivory-and-teal external casing accents and a tiny opaque sensor-like patch, no circuitry, tracking display or real-world mechanism.",
       "width": 1536,
       "height": 1024,
       "original": "originals/ammo-7604-cover-v1.png",
-      "final": "final/ammo-7604-cover.jpg"
+      "final": "final/ammo-7604-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f9abb383-64a2-423d-9eff-ab51c30a6b00.png",
+      "originalSha256": "51198b403e3a8d4c46dc41dc81eefacd460eb533943b2b0ec574736c10489b8f",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "aeae1be3adda378a7fd10439d2b524efabc85c8bcf8ad374274625acb85e1c8e",
+      "bytes": 264520,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final heavy-cartridge exports inspected: complete representative sets, finished materials and rubber/smart variants clear, no labels/diagrams or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50276,
+        "objectKey": "system-item-media/v1/items/7604/cover/aeae1be3adda378a7fd10439d2b524efabc85c8bcf8ad374274625acb85e1c8e.jpg",
+        "fileSize": 264520
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7604/cover/aeae1be3adda378a7fd10439d2b524efabc85c8bcf8ad374274625acb85e1c8e.jpg"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T23:24:50.437Z",
+    "scenarios": 18,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-97\\live-qa.json"
+  }
 }

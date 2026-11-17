@@ -16,12 +16,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature anthropologist interviewing adult residents at a cyberpunk community archive table with everyday objects and old photos, respectful ordinary urban people, no exoticizing costumes or readable documents.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-32-373-cover-v1.png",
-      "final": "final/dict-32-373-cover.webp"
+      "final": "final/dict-32-373-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ceb1ed68-7776-49ad-988e-339d7ece100a.png",
+      "originalSha256": "c2b1b715a909e9d20f78bb6a4d9539efcf5ad3977f4550a1af8474f33d8bbb1c",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "f8df07904186ae6ff46b44bb20000615ad7ad67e1af70e89ec5ed9acc38f0158",
+      "bytes": 279874,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: NET constructs remain clearly virtual; scientific scenes distinguish field/materials and use mature natural adults. No critical crop, labels, technical procedures or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50311,
+        "objectKey": "system-item-media/v1/suggests/32/373/cover/f8df07904186ae6ff46b44bb20000615ad7ad67e1af70e89ec5ed9acc38f0158.webp",
+        "fileSize": 279874
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/32/373/cover/f8df07904186ae6ff46b44bb20000615ad7ad67e1af70e89ec5ed9acc38f0158.webp"
     },
     {
       "key": "dict-32-374-cover",
@@ -33,12 +55,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature biologist examining harmless leaf and plant-cell samples under a microscope in a city greenhouse lab, living plants and sealed sample dishes, no pathogens or procedures.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-32-374-cover-v1.png",
-      "final": "final/dict-32-374-cover.webp"
+      "final": "final/dict-32-374-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ffb2ad31-88a2-4afc-98f1-7e69b3d148c4.png",
+      "originalSha256": "4e5abc06c8fdadf9711d719dee595b495ef0d5e01e9c5a5a302141392857c546",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "0123e18ef200fff2fd0f8acb5afc63a12c893f66aa0a4a82c9622114ea7ba51e",
+      "bytes": 321526,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: NET constructs remain clearly virtual; scientific scenes distinguish field/materials and use mature natural adults. No critical crop, labels, technical procedures or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50312,
+        "objectKey": "system-item-media/v1/suggests/32/374/cover/0123e18ef200fff2fd0f8acb5afc63a12c893f66aa0a4a82c9622114ea7ba51e.webp",
+        "fileSize": 321526
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/32/374/cover/0123e18ef200fff2fd0f8acb5afc63a12c893f66aa0a4a82c9622114ea7ba51e.webp"
     },
     {
       "key": "dict-32-376-cover",
@@ -50,12 +94,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature geologist comparing clearly different rock cores and mineral samples on a field table near a futuristic city excavation, rugged cases and hand lens, no text labels.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-32-376-cover-v1.png",
-      "final": "final/dict-32-376-cover.webp"
+      "final": "final/dict-32-376-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-195ee996-e4c3-4116-9a7c-0ce097777328.png",
+      "originalSha256": "adfa4d6015d5f9ffd29c40eb59597db9fb4a21e567ff56e9295cd169085591b0",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "2956337a5368a84c275559248f1e06c633cb236db7e7a0aa45fc3d56dc442bbd",
+      "bytes": 322786,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: NET constructs remain clearly virtual; scientific scenes distinguish field/materials and use mature natural adults. No critical crop, labels, technical procedures or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50313,
+        "objectKey": "system-item-media/v1/suggests/32/376/cover/2956337a5368a84c275559248f1e06c633cb236db7e7a0aa45fc3d56dc442bbd.webp",
+        "fileSize": 322786
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/32/376/cover/2956337a5368a84c275559248f1e06c633cb236db7e7a0aa45fc3d56dc442bbd.webp"
     },
     {
       "key": "dict-32-380-cover",
@@ -67,12 +133,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature zoologist observing a calm small urban bird through a safe window habitat, tablet with abstract shapes and ecological notes not legible, cyberpunk research setting, no animal experiments.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-32-380-cover-v1.png",
-      "final": "final/dict-32-380-cover.webp"
+      "final": "final/dict-32-380-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2cbcc7b2-2735-4f28-942a-0f27080ee061.png",
+      "originalSha256": "ac03e2955de36a198ae3ab5336b8e3ada938a61f1ecbe417c99ae0a550046fbb",
+      "sourceDimensions": {
+        "width": 1774,
+        "height": 887
+      },
+      "sha256": "342c76edb30436f0d81ec82768b67d7ca7a6b0ecc948e5cf72f078ea1c2df3ba",
+      "bytes": 277288,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: NET constructs remain clearly virtual; scientific scenes distinguish field/materials and use mature natural adults. No critical crop, labels, technical procedures or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50314,
+        "objectKey": "system-item-media/v1/suggests/32/380/cover/342c76edb30436f0d81ec82768b67d7ca7a6b0ecc948e5cf72f078ea1c2df3ba.webp",
+        "fileSize": 277288
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/32/380/cover/342c76edb30436f0d81ec82768b67d7ca7a6b0ecc948e5cf72f078ea1c2df3ba.webp"
     },
     {
       "key": "dict-32-377-cover",
@@ -84,12 +172,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature historian studying old city photographs and architectural models in a cyberpunk archive, layered evidence and a desk lamp, no legible dates or text.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-32-377-cover-v1.png",
-      "final": "final/dict-32-377-cover.webp"
+      "final": "final/dict-32-377-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f13fe31f-4aff-41ff-b6fc-b0615198129e.png",
+      "originalSha256": "ca9b056dd46842ac919be6e1dc9d6646f9e0c3edb542a09003bce5a33d85303b",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "4d05fe22d2954e75c0f7cdce47a5e80b50abfb449a7287d7cd38dce8622365b3",
+      "bytes": 289336,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: NET constructs remain clearly virtual; scientific scenes distinguish field/materials and use mature natural adults. No critical crop, labels, technical procedures or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50315,
+        "objectKey": "system-item-media/v1/suggests/32/377/cover/4d05fe22d2954e75c0f7cdce47a5e80b50abfb449a7287d7cd38dce8622365b3.webp",
+        "fileSize": 289336
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/32/377/cover/4d05fe22d2954e75c0f7cdce47a5e80b50abfb449a7287d7cd38dce8622365b3.webp"
     },
     {
       "key": "dict-32-378-cover",
@@ -101,12 +211,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature mathematician considering translucent geometric solids and tessellated models on a table in a city study, precise spatial forms, no equations or written numbers.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-32-378-cover-v1.png",
-      "final": "final/dict-32-378-cover.webp"
+      "final": "final/dict-32-378-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-101f59aa-b003-4c7d-8db5-6ecdb5bb4914.png",
+      "originalSha256": "f99445df503f2b0f5cd6b257c72b8bbbd7d3c57f5866f40d393bf05c62325a86",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "237c5896d88f133b82e823aec112929abb677484eec37f23d9901e687bd16e4a",
+      "bytes": 300802,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: NET constructs remain clearly virtual; scientific scenes distinguish field/materials and use mature natural adults. No critical crop, labels, technical procedures or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50316,
+        "objectKey": "system-item-media/v1/suggests/32/378/cover/237c5896d88f133b82e823aec112929abb677484eec37f23d9901e687bd16e4a.webp",
+        "fileSize": 300802
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/32/378/cover/237c5896d88f133b82e823aec112929abb677484eec37f23d9901e687bd16e4a.webp"
     },
     {
       "key": "dict-32-379-cover",
@@ -118,12 +250,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature physicist examining an enclosed optical experiment with prisms and soft colored light beams on a lab bench, no dangerous apparatus, circuit diagram or instructions.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-32-379-cover-v1.png",
-      "final": "final/dict-32-379-cover.webp"
+      "final": "final/dict-32-379-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2e817466-f8ef-4b52-9923-d5bdb4f30d39.png",
+      "originalSha256": "775b9a680fcc8943eba0813da7f9cd8ac0a8eb77c7ebc0f848ac92878c165329",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "a4c1a9f8cdecb7d2fc8f87a4b4c463d1d963d8acd8691d11d0337233a406b7ca",
+      "bytes": 230822,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: NET constructs remain clearly virtual; scientific scenes distinguish field/materials and use mature natural adults. No critical crop, labels, technical procedures or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50317,
+        "objectKey": "system-item-media/v1/suggests/32/379/cover/a4c1a9f8cdecb7d2fc8f87a4b4c463d1d963d8acd8691d11d0337233a406b7ca.webp",
+        "fileSize": 230822
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/32/379/cover/a4c1a9f8cdecb7d2fc8f87a4b4c463d1d963d8acd8691d11d0337233a406b7ca.webp"
     },
     {
       "key": "dict-32-375-cover",
@@ -135,12 +289,45 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature chemist checking sealed benign sample containers beside a clean laboratory analyzer, colored glass reflections and protective eyewear, no reactions, formulas, recipes or open hazardous substances.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-32-375-cover-v1.png",
-      "final": "final/dict-32-375-cover.webp"
+      "final": "final/dict-32-375-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a47a72e0-9814-43e7-a919-dc7535a675bc.png",
+      "originalSha256": "7af1d4218b10137de72bdc4cdaf06cb5e0c60647799f111f9e9d256ade342fc4",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "e731f65a3b276d25e4d6a4740cce8d403a205529a575337301eec1944a07509c",
+      "bytes": 249860,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: NET constructs remain clearly virtual; scientific scenes distinguish field/materials and use mature natural adults. No critical crop, labels, technical procedures or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50318,
+        "objectKey": "system-item-media/v1/suggests/32/375/cover/e731f65a3b276d25e4d6a4740cce8d403a205529a575337301eec1944a07509c.webp",
+        "fileSize": 249860
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/32/375/cover/e731f65a3b276d25e4d6a4740cce8d403a205529a575337301eec1944a07509c.webp"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-17T00:36:30.620Z",
+    "scenarios": 24,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-104\\live-qa.json"
+  }
 }

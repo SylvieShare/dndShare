@@ -1,0 +1,294 @@
+{
+  "batch": 122,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-122",
+  "sourceAudit": "Live own dictionary slots empty. Structured values and previously reviewed Core categories guide original fictional narrative. Technical/medical concepts represented without operational or treatment instructions, icons unchanged.",
+  "assets": [
+    {
+      "key": "dict-42-520-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 520,
+        "typeId": 42,
+        "name": "Слезоточивый газ"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature stockroom clerk shelving CLOSED gray-and-ochre equipment transport cases, contents hidden; no gas, chemical, spray, crowd-control scene or instructions.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-42-520-cover-v1.png",
+      "final": "final/dict-42-520-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-51f01ead-c9f4-4271-b3fe-9b3720fb6908.png",
+      "originalSha256": "a81df87a2c4c8a3a891af25c950593471f0c7cc0030d0e8a49999e49c614dd5c",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "5276cda175fc07229dfab431a7e0917f6e120ae529444ebb0884eb8c39ecb962",
+      "bytes": 190906,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: material/packaging and compatibility forms distinguished, natural adult hands, sealed opaque hazardous-theme contents and no operational diagrams. No critical text/crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50454,
+        "objectKey": "system-item-media/v1/suggests/42/520/cover/5276cda175fc07229dfab431a7e0917f6e120ae529444ebb0884eb8c39ecb962.webp",
+        "fileSize": 190906
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/42/520/cover/5276cda175fc07229dfab431a7e0917f6e120ae529444ebb0884eb8c39ecb962.webp"
+    },
+    {
+      "key": "dict-42-515-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 515,
+        "typeId": 42,
+        "name": "Снотворное"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature stockroom clerk inventorying CLOSED pale-blue and navy supply cases, contents hidden; no sedative, dosing, person asleep by force or weapon.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-42-515-cover-v1.png",
+      "final": "final/dict-42-515-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e04491c7-ea31-4ec7-8e9a-af905916e9bb.png",
+      "originalSha256": "61cacbaeb944f745659106f60b64c7618b81b1ead59092fa4f609d2a3d567fb2",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "371c6cba3c63a29226da1c9b93109901a1a9dea16d8197c9e23bffac6b427e5e",
+      "bytes": 259980,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: material/packaging and compatibility forms distinguished, natural adult hands, sealed opaque hazardous-theme contents and no operational diagrams. No critical text/crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50455,
+        "objectKey": "system-item-media/v1/suggests/42/515/cover/371c6cba3c63a29226da1c9b93109901a1a9dea16d8197c9e23bffac6b427e5e.webp",
+        "fileSize": 259980
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/42/515/cover/371c6cba3c63a29226da1c9b93109901a1a9dea16d8197c9e23bffac6b427e5e.webp"
+    },
+    {
+      "key": "dict-42-507-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 507,
+        "typeId": 42,
+        "name": "Стандартные"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature equipment vendor organizing ordinary sealed supply boxes on a warehouse counter, plain neutral materials and practical packaging, no visible firearm or loading.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-42-507-cover-v1.png",
+      "final": "final/dict-42-507-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c72062e3-b611-4f8e-85e9-4d51e5661dfd.png",
+      "originalSha256": "2410706b85ed70219fd6694f9a0eae05eac98e2fc3b8825770c5344313447180",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "ea1395e782f808d89ccbc53631d95ea5350a7cc0804c2c2d076a390c1897265e",
+      "bytes": 204978,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: material/packaging and compatibility forms distinguished, natural adult hands, sealed opaque hazardous-theme contents and no operational diagrams. No critical text/crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50456,
+        "objectKey": "system-item-media/v1/suggests/42/507/cover/ea1395e782f808d89ccbc53631d95ea5350a7cc0804c2c2d076a390c1897265e.webp",
+        "fileSize": 204978
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/42/507/cover/ea1395e782f808d89ccbc53631d95ea5350a7cc0804c2c2d076a390c1897265e.webp"
+    },
+    {
+      "key": "dict-42-512-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 512,
+        "typeId": 42,
+        "name": "Умные"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature electronics specialist examining a CLOSED ivory-and-teal smart-equipment package with a tiny unmarked status light, no circuitry, targeting, ammunition interior or instructions.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-42-512-cover-v1.png",
+      "final": "final/dict-42-512-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e27b3624-0a03-4c9a-96fb-c80d64fa91af.png",
+      "originalSha256": "157ab41b4e9f1ebea9a82857c91b6c6ee428b4e6d6129bb67ed3c0afcc189cfd",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "90c15fa2e4e6694f16ec451270d7c083575818b63b3fdf9829a93263566b2e2b",
+      "bytes": 231564,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: material/packaging and compatibility forms distinguished, natural adult hands, sealed opaque hazardous-theme contents and no operational diagrams. No critical text/crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50457,
+        "objectKey": "system-item-media/v1/suggests/42/512/cover/90c15fa2e4e6694f16ec451270d7c083575818b63b3fdf9829a93263566b2e2b.webp",
+        "fileSize": 231564
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/42/512/cover/90c15fa2e4e6694f16ec451270d7c083575818b63b3fdf9829a93263566b2e2b.webp"
+    },
+    {
+      "key": "dict-42-509-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 509,
+        "typeId": 42,
+        "name": "Экспансивные"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature stockroom clerk sorting CLOSED burgundy-accented equipment boxes, no visible projectile internals, expanding action, injury or instructions.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-42-509-cover-v1.png",
+      "final": "final/dict-42-509-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ca58b3e4-4646-45f7-8bd2-75d85f67a041.png",
+      "originalSha256": "96b291e539bc4095489f11275cb115b781eb682f37531f8ffdf2509a9543e283",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "28bbfc7cc7c21dce303b3567145c55cf35a07f81d7f02a3ace44d90dc2a409fc",
+      "bytes": 241868,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: material/packaging and compatibility forms distinguished, natural adult hands, sealed opaque hazardous-theme contents and no operational diagrams. No critical text/crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50458,
+        "objectKey": "system-item-media/v1/suggests/42/509/cover/28bbfc7cc7c21dce303b3567145c55cf35a07f81d7f02a3ace44d90dc2a409fc.webp",
+        "fileSize": 241868
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/42/509/cover/28bbfc7cc7c21dce303b3567145c55cf35a07f81d7f02a3ace44d90dc2a409fc.webp"
+    },
+    {
+      "key": "dict-42-517-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 517,
+        "typeId": 42,
+        "name": "ЭМИ"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature technician displaying an inert closed graphite-and-cobalt electronic module in a padded case, no electrical discharge, EMP mechanism, victim or diagram.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-42-517-cover-v1.png",
+      "final": "final/dict-42-517-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4f071ff7-9266-4317-a743-b4a4d0a721a1.png",
+      "originalSha256": "122791af466185ec8628a91f83fb350065af2bfafb69e3417028ca5b382ff8b9",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "93888a6b29fffe951fb105f14b7fc555577c922504e464810e15147631cd8642",
+      "bytes": 260674,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: material/packaging and compatibility forms distinguished, natural adult hands, sealed opaque hazardous-theme contents and no operational diagrams. No critical text/crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50459,
+        "objectKey": "system-item-media/v1/suggests/42/517/cover/93888a6b29fffe951fb105f14b7fc555577c922504e464810e15147631cd8642.webp",
+        "fileSize": 260674
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/42/517/cover/93888a6b29fffe951fb105f14b7fc555577c922504e464810e15147631cd8642.webp"
+    },
+    {
+      "key": "dict-42-513-cover",
+      "target": {
+        "kind": "suggest",
+        "id": 513,
+        "typeId": 42,
+        "name": "Яд"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature stockroom clerk handling CLOSED dark-olive protective cases with fully opaque lids, no poison, chemicals, vial, weapon, open contents or instructions.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-42-513-cover-v1.png",
+      "final": "final/dict-42-513-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d07ab340-3e74-4e33-87ff-fd1dda75c129.png",
+      "originalSha256": "4f41d1896d7ed8202edcec20d81ce2c31cc8efd39d170380ddf1b3f62eac8e5f",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "44c167e3683e797b697fb148a187ead97d8d5b3538c014555c7a04dc26bb02d5",
+      "bytes": 214344,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final panoramas inspected: material/packaging and compatibility forms distinguished, natural adult hands, sealed opaque hazardous-theme contents and no operational diagrams. No critical text/crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50460,
+        "objectKey": "system-item-media/v1/suggests/42/513/cover/44c167e3683e797b697fb148a187ead97d8d5b3538c014555c7a04dc26bb02d5.webp",
+        "fileSize": 214344
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/42/513/cover/44c167e3683e797b697fb148a187ead97d8d5b3538c014555c7a04dc26bb02d5.webp"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-17T06:24:14.140Z",
+    "scenarios": 21,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-122\\live-qa.json"
+  }
+}

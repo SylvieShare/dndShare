@@ -16,12 +16,47 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Two mature AIKIDO practitioners in plain training clothes calmly practicing balanced circular footwork and an open-hand partner grip on a padded cyberpunk dojo floor. Natural anatomy, no painful lock or step-by-step sequence.",
       "width": 1600,
       "height": 640,
-      "original": "originals/dict-33-381-cover-v1.png",
-      "final": "final/dict-33-381-cover.webp"
+      "original": "originals/dict-33-381-cover-v2.png",
+      "final": "final/dict-33-381-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6a72520e-c125-4bb3-814b-3735c38ae1e0.png",
+      "originalSha256": "fdcdb4257cdc3e1341a7f3598d84d02029916b9fdb80df6ffbe9781d5afb191b",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "c0b2e6b32a74377f66c282170a0f6f5622fc7561a5f345b6921c8b2211c0339a",
+      "bytes": 262034,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "previousVariants": [
+        {
+          "original": "originals/dict-33-381-cover-v1.png",
+          "sourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c8aea4bd-bc2e-46f4-b082-4aea5ba610e1.png",
+          "originalSha256": "6a52f1edba4c58eeaf6f74586c8a04e8461b0bcfdb09bf06187b3542b5035fa2",
+          "sourceDimensions": {
+            "width": 1774,
+            "height": 887
+          },
+          "reason": "Reframed to preserve heads/supporting feet in final5:2 panorama."
+        }
+      ],
+      "revisionPrompt": "Reframe this same scene as a much WIDER 5:2 landscape panorama, pulling the camera back substantially. Preserve the two adult practitioners, their faces, clothes, pose and detailed cel-shaded rendering, with a little more surrounding gym. BOTH people's COMPLETE heads, hands, legs and feet must fit safely inside the central 70% of image height, leaving generous visible floor below all feet and ceiling/background above heads. No cropped hair, toes or heels. Do not zoom into faces. Do not alter pose or add people, text or logos. This will be displayed at 1600x640.",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Four martial-art scenes inspected, controlled adult practice. Aikido/Taekwondo v2 pulled back with full heads/feet safely within5:2, results individually inspected. No labels, graphic harm or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50328,
+        "objectKey": "system-item-media/v1/suggests/33/381/cover/c0b2e6b32a74377f66c282170a0f6f5622fc7561a5f345b6921c8b2211c0339a.webp",
+        "fileSize": 262034
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/33/381/cover/c0b2e6b32a74377f66c282170a0f6f5622fc7561a5f345b6921c8b2211c0339a.webp"
     },
     {
       "key": "dict-33-382-cover",
@@ -33,12 +68,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. Two mature JUDO practitioners in plain durable gis practicing a stable standing lapel grip on padded mats, no throw in progress, collision or injury. Cyberpunk community gym, believable hands.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-33-382-cover-v1.png",
-      "final": "final/dict-33-382-cover.webp"
+      "final": "final/dict-33-382-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f1ae6f21-fcf3-4cc9-bfae-734e62ca73f3.png",
+      "originalSha256": "5c09040f402e32ba1bdf9bfa68369cd86fb1b9a722e75b1aa12cca7af063f37c",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "d30791c6a582d3020e0810d28b8f5c254b835ba20b7f4aadf11c84e9c0b05016",
+      "bytes": 272452,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Four martial-art scenes inspected, controlled adult practice. Aikido/Taekwondo v2 pulled back with full heads/feet safely within5:2, results individually inspected. No labels, graphic harm or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50329,
+        "objectKey": "system-item-media/v1/suggests/33/382/cover/d30791c6a582d3020e0810d28b8f5c254b835ba20b7f4aadf11c84e9c0b05016.webp",
+        "fileSize": 272452
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/33/382/cover/d30791c6a582d3020e0810d28b8f5c254b835ba20b7f4aadf11c84e9c0b05016.webp"
     },
     {
       "key": "dict-33-383-cover",
@@ -50,12 +107,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature KARATE practitioner in a cyberpunk dojo holding a grounded controlled stance with one straight arm and the other at the hip, no opponent struck, natural adult proportions.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-33-383-cover-v1.png",
-      "final": "final/dict-33-383-cover.webp"
+      "final": "final/dict-33-383-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3c49004b-d1c8-469b-b729-42ddef23f842.png",
+      "originalSha256": "5eb6cf04c5e863bbe58dc5ac36e03a0c289ec91fbf806872feea53dda5df1405",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "2b2423730a521ce893588bbd24752d1edabf5d85189863db1ac7dc0c8434855e",
+      "bytes": 280790,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Four martial-art scenes inspected, controlled adult practice. Aikido/Taekwondo v2 pulled back with full heads/feet safely within5:2, results individually inspected. No labels, graphic harm or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50330,
+        "objectKey": "system-item-media/v1/suggests/33/383/cover/2b2423730a521ce893588bbd24752d1edabf5d85189863db1ac7dc0c8434855e.webp",
+        "fileSize": 280790
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/33/383/cover/2b2423730a521ce893588bbd24752d1edabf5d85189863db1ac7dc0c8434855e.webp"
     },
     {
       "key": "dict-33-384-cover",
@@ -67,12 +146,58 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature TAEKWONDO practitioner holding a controlled raised-leg practice pose beside a coach and padded target, no contact or injury, whole limbs within frame, realistic balance in a cyberpunk gym.",
       "width": 1600,
       "height": 640,
-      "original": "originals/dict-33-384-cover-v1.png",
-      "final": "final/dict-33-384-cover.webp"
+      "original": "originals/dict-33-384-cover-v2.png",
+      "final": "final/dict-33-384-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-24e85c6c-61fe-44da-9674-50e69fd86cd3.png",
+      "originalSha256": "55ec5ac1dd33fabe82d9a53eca7b7d576ca433a970593c03a119f0d295c29696",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "741c982cd640cd379c2562294d869406e2dbabec296a26dc68a0a96e2bf6b4a9",
+      "bytes": 258118,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "previousVariants": [
+        {
+          "original": "originals/dict-33-384-cover-v1.png",
+          "sourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-db9e30c8-b487-40e6-9fba-7c0ea2d0854d.png",
+          "originalSha256": "6b7cfb41f0299468b19c9229d2ae92e5e61e77c456b9980ce9b4502e72328662",
+          "sourceDimensions": {
+            "width": 1983,
+            "height": 793
+          },
+          "reason": "Reframed to preserve heads/supporting feet in final5:2 panorama."
+        }
+      ],
+      "revisionPrompt": "Reframe this same scene as a much WIDER 5:2 landscape panorama, pulling the camera back substantially. Preserve the two adult practitioners, their faces, clothes, pose and detailed cel-shaded rendering, with a little more surrounding gym. BOTH people's COMPLETE heads, hands, legs and feet must fit safely inside the central 70% of image height, leaving generous visible floor below all feet and ceiling/background above heads. No cropped hair, toes or heels. Do not zoom into faces. Do not alter pose or add people, text or logos. This will be displayed at 1600x640.",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Four martial-art scenes inspected, controlled adult practice. Aikido/Taekwondo v2 pulled back with full heads/feet safely within5:2, results individually inspected. No labels, graphic harm or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50331,
+        "objectKey": "system-item-media/v1/suggests/33/384/cover/741c982cd640cd379c2562294d869406e2dbabec296a26dc68a0a96e2bf6b4a9.webp",
+        "fileSize": 258118
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/33/384/cover/741c982cd640cd379c2562294d869406e2dbabec296a26dc68a0a96e2bf6b4a9.webp"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-17T01:00:08.632Z",
+    "scenarios": 12,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-105\\live-qa.json"
+  }
 }

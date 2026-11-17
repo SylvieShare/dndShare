@@ -16,12 +16,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature local law officer calmly mediating between two adults outside a damaged cyberpunk apartment block, radio on shoulder, relaxed hands, community role rather than active arrest or gunfight.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-35-401-cover-v1.png",
-      "final": "final/dict-35-401-cover.webp"
+      "final": "final/dict-35-401-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-54f81b52-07a3-416c-a300-e39c6cc9d0f1.png",
+      "originalSha256": "df687436ce6059234bc3feea307ca919e17740dea606166ccd5175c373c7c09c",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "e4aff4c6425d99078399b81123ae6e0efb0ac52ea5dc3d42ef784cf151b46786",
+      "bytes": 313370,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten role panoramas inspected: professional activities distinct, adult anatomy and cel shading retained. Rocker395v3 uses plain black unbranded headstock after first failed cleanup; full result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50372,
+        "objectKey": "system-item-media/v1/suggests/35/401/cover/e4aff4c6425d99078399b81123ae6e0efb0ac52ea5dc3d42ef784cf151b46786.webp",
+        "fileSize": 313370
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/35/401/cover/e4aff4c6425d99078399b81123ae6e0efb0ac52ea5dc3d42ef784cf151b46786.webp"
     },
     {
       "key": "dict-35-402-cover",
@@ -33,12 +55,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature corporate executive coordinating a small adult team around a holographic city development model in a high-rise office, natural gestures, no readable charts or logos.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-35-402-cover-v1.png",
-      "final": "final/dict-35-402-cover.webp"
+      "final": "final/dict-35-402-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6132571a-3340-4a5d-9a8c-27f093304875.png",
+      "originalSha256": "93204bf744bf3af4236865eb8ef9f9bfbbd73d8ded0bf655c337e2a9eddf1db7",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "4901efcbd6fa356b45a8a0a08fa60b988d8069be6926d699a04a9272de9bc931",
+      "bytes": 283784,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten role panoramas inspected: professional activities distinct, adult anatomy and cel shading retained. Rocker395v3 uses plain black unbranded headstock after first failed cleanup; full result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50373,
+        "objectKey": "system-item-media/v1/suggests/35/402/cover/4901efcbd6fa356b45a8a0a08fa60b988d8069be6926d699a04a9272de9bc931.webp",
+        "fileSize": 283784
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/35/402/cover/4901efcbd6fa356b45a8a0a08fa60b988d8069be6926d699a04a9272de9bc931.webp"
     },
     {
       "key": "dict-35-404-cover",
@@ -50,12 +94,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. An adult nomad family crew preparing a repaired vehicle convoy at dawn, mature leader checks a physical map with no labels, practical travel bags and workshop detail, no combat.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-35-404-cover-v1.png",
-      "final": "final/dict-35-404-cover.webp"
+      "final": "final/dict-35-404-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2a625c02-f57b-45ba-b563-19cd2fafe3fc.png",
+      "originalSha256": "9ca0bbbf4f93f88692e36292d436213a27a5bbcc2edf28211a86c0451f09f955",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "05334a3cb437165df8eafa94de23d54115d76e188a6df4602f08ca78c782340e",
+      "bytes": 344680,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten role panoramas inspected: professional activities distinct, adult anatomy and cel shading retained. Rocker395v3 uses plain black unbranded headstock after first failed cleanup; full result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50374,
+        "objectKey": "system-item-media/v1/suggests/35/404/cover/05334a3cb437165df8eafa94de23d54115d76e188a6df4602f08ca78c782340e.webp",
+        "fileSize": 344680
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/35/404/cover/05334a3cb437165df8eafa94de23d54115d76e188a6df4602f08ca78c782340e.webp"
     },
     {
       "key": "dict-35-400-cover",
@@ -67,12 +133,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature independent reporter interviewing an adult witness at a neighborhood market, small camera and recorder, thoughtful listening, urban context, no readable headlines.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-35-400-cover-v1.png",
-      "final": "final/dict-35-400-cover.webp"
+      "final": "final/dict-35-400-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0f9b821f-6542-4388-b667-78309f4012f4.png",
+      "originalSha256": "e106a65fb9a2bde2e78fff971cc3d69150f5bdbef249e1c932382d729f162548",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "cb8380eeb2a645cc02b806ad537659ce0344f7050962f9547acda06aa3d9e473",
+      "bytes": 316684,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten role panoramas inspected: professional activities distinct, adult anatomy and cel shading retained. Rocker395v3 uses plain black unbranded headstock after first failed cleanup; full result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50375,
+        "objectKey": "system-item-media/v1/suggests/35/400/cover/cb8380eeb2a645cc02b806ad537659ce0344f7050962f9547acda06aa3d9e473.webp",
+        "fileSize": 316684
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/35/400/cover/cb8380eeb2a645cc02b806ad537659ce0344f7050962f9547acda06aa3d9e473.webp"
     },
     {
       "key": "dict-35-399-cover",
@@ -84,12 +172,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature medtech helping a clothed adult patient adjust a clean arm support in a neighborhood clinic, precise equipment and compassionate expression, no surgery or wound.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-35-399-cover-v1.png",
-      "final": "final/dict-35-399-cover.webp"
+      "final": "final/dict-35-399-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2a4195bf-3e78-43c9-9dbe-3bd4ae3d5673.png",
+      "originalSha256": "2539e64b08198648a296ad3842282579156a3e065b15242136276bc0d1dc4ccd",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "442e694bb92615f43f92e5bd7e6785e014b3db9552390f4797791d043dbfd206",
+      "bytes": 251972,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten role panoramas inspected: professional activities distinct, adult anatomy and cel shading retained. Rocker395v3 uses plain black unbranded headstock after first failed cleanup; full result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50376,
+        "objectKey": "system-item-media/v1/suggests/35/399/cover/442e694bb92615f43f92e5bd7e6785e014b3db9552390f4797791d043dbfd206.webp",
+        "fileSize": 251972
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/35/399/cover/442e694bb92615f43f92e5bd7e6785e014b3db9552390f4797791d043dbfd206.webp"
     },
     {
       "key": "dict-35-397-cover",
@@ -101,12 +211,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature netrunner connecting a closed cyberdeck in a sheltered city booth, subtle abstract virtual reflections and cable ports, no code, intrusion instructions or screen UI.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-35-397-cover-v1.png",
-      "final": "final/dict-35-397-cover.webp"
+      "final": "final/dict-35-397-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5e05f633-345f-452c-bb2a-f096a62cffcb.png",
+      "originalSha256": "6eb033104bb1a2f54d18c946208e56f33c9edf63a16a031441546fb1331b2970",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "9756c8bb303868e7ab7aaa24e26a01f180f8af08fae102a658042c3646d23191",
+      "bytes": 258094,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten role panoramas inspected: professional activities distinct, adult anatomy and cel shading retained. Rocker395v3 uses plain black unbranded headstock after first failed cleanup; full result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50377,
+        "objectKey": "system-item-media/v1/suggests/35/397/cover/9756c8bb303868e7ab7aaa24e26a01f180f8af08fae102a658042c3646d23191.webp",
+        "fileSize": 258094
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/35/397/cover/9756c8bb303868e7ab7aaa24e26a01f180f8af08fae102a658042c3646d23191.webp"
     },
     {
       "key": "dict-35-395-cover",
@@ -118,12 +250,50 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature rocker performing passionately on a neighborhood rooftop stage for an attentive adult crowd, detailed electric guitar and microphone, city skyline, no banners or text.",
       "width": 1600,
       "height": 640,
-      "original": "originals/dict-35-395-cover-v1.png",
-      "final": "final/dict-35-395-cover.webp"
+      "original": "originals/dict-35-395-cover-v3.png",
+      "final": "final/dict-35-395-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9d30c84d-ce07-479a-9f02-c33454738f21.png",
+      "originalSha256": "e6488e913d495bc030e18c79d06ff94b5563209cf8d6b42405269a36ab0b2c33",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "59433976f0f5e6766c15e153fd8b63edfb873d7835476e5f9578516533e35698",
+      "bytes": 303296,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "previousVariants": [
+        {
+          "original": "originals/dict-35-395-cover-v1.png",
+          "sourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-93a58166-9cd5-4f81-8bdf-9edcff6cd63c.png",
+          "originalSha256": "e5c1a4464767ebbdd792a56929cd604abbb71bc663ebfa9ea1e7807971a450fb",
+          "reason": "Gold headstock branding removed before publication."
+        },
+        {
+          "original": "originals/dict-35-395-cover-v2.png",
+          "sourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5fd3aa77-990d-4263-b66b-aa0580b8a755.png",
+          "originalSha256": "33c833342b51d352ac8d9c2666c429b6ac55d55599702a304639ebf24d5872b5",
+          "prompt": "Remove the tiny gold brand-like lettering from the RED GUITAR HEADSTOCK at the far right of this scene, replacing it with plain matching red painted wood. Preserve all people, faces, hands, guitar shape, music performance, lighting and detailed cel shading. Keep wide5:2 framing. No added letters or logos.",
+          "reason": "Gold mark remained after first edit, confirmed with QA crop; not published."
+        }
+      ],
+      "revisionPrompt": "Image1 is the full panorama to edit. Image2 is ONLY a magnified location reference showing the unwanted gold logo. In Image1 REPAINT THE ENTIRE GUITAR HEADSTOCK FACE PLAIN MATTE GRAPHITE BLACK, preserving its exact shape, metal tuning pegs and strings. Remove ALL gold lettering, decorative gold marks and emblem from this area. The headstock must be completely unbranded black; the guitar BODY stays red. Preserve the full panorama, people, hands, composition, lighting and cel shading. Return the FULL wide5:2 scene, not a close-up, with no new text or logo.",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten role panoramas inspected: professional activities distinct, adult anatomy and cel shading retained. Rocker395v3 uses plain black unbranded headstock after first failed cleanup; full result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50378,
+        "objectKey": "system-item-media/v1/suggests/35/395/cover/59433976f0f5e6766c15e153fd8b63edfb873d7835476e5f9578516533e35698.webp",
+        "fileSize": 303296
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/35/395/cover/59433976f0f5e6766c15e153fd8b63edfb873d7835476e5f9578516533e35698.webp"
     },
     {
       "key": "dict-35-396-cover",
@@ -135,12 +305,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature solo escorting an adult client through a crowded night market, alert posture and protective jacket, hands relaxed, no drawn gun, threat or combat. Professional situational awareness.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-35-396-cover-v1.png",
-      "final": "final/dict-35-396-cover.webp"
+      "final": "final/dict-35-396-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-de228c4f-7977-41b2-a518-a485efe9a9f7.png",
+      "originalSha256": "c1edb73f5789defeca165d96536a03b5410d9d0f9e1988b33eae3a7f5b2c249d",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "41d19af6b56f0eaeb8c81cfd56b444995831c260edf76fde66866f3ccdc9783a",
+      "bytes": 252246,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten role panoramas inspected: professional activities distinct, adult anatomy and cel shading retained. Rocker395v3 uses plain black unbranded headstock after first failed cleanup; full result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50379,
+        "objectKey": "system-item-media/v1/suggests/35/396/cover/41d19af6b56f0eaeb8c81cfd56b444995831c260edf76fde66866f3ccdc9783a.webp",
+        "fileSize": 252246
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/35/396/cover/41d19af6b56f0eaeb8c81cfd56b444995831c260edf76fde66866f3ccdc9783a.webp"
     },
     {
       "key": "dict-35-398-cover",
@@ -152,12 +344,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature tech repairing a broken service drone in a cluttered community workshop, functional fasteners and natural hands, no technical blueprint or readable labels.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-35-398-cover-v1.png",
-      "final": "final/dict-35-398-cover.webp"
+      "final": "final/dict-35-398-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7daa1513-5e63-4701-bd1d-f8e96cee2d6f.png",
+      "originalSha256": "9b0aeb2293635a175a23b27666d2eae5c4d243a7a025794516c75f8214601d53",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "833921348ca97d3476cc073f82bd4be157f600098a369687d8481a2835888d22",
+      "bytes": 289582,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten role panoramas inspected: professional activities distinct, adult anatomy and cel shading retained. Rocker395v3 uses plain black unbranded headstock after first failed cleanup; full result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50380,
+        "objectKey": "system-item-media/v1/suggests/35/398/cover/833921348ca97d3476cc073f82bd4be157f600098a369687d8481a2835888d22.webp",
+        "fileSize": 289582
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/35/398/cover/833921348ca97d3476cc073f82bd4be157f600098a369687d8481a2835888d22.webp"
     },
     {
       "key": "dict-35-403-cover",
@@ -169,12 +383,45 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: illustration-story. IMAGE-ONLY original mature detailed cel-shaded Cyberpunk RED 2045 illustration, WIDE 5:2 PANORAMA. Fine varied ink contours, broad painted light/shadow planes with reflected light, material-specific detail, adult natural faces around 35–60 with nuanced eyelids/jaw and plausible hands, no youthful anime features. Softer lower-contrast inhabited city background. A single concrete narrative scene filling the panorama; keep all defining faces, hands, objects and limb ends inside safe margins. No text, numbers, logos, labels, speech bubbles, UI overlays, fantasy magic, photo/3D or thick toy-like outline. No gore, exposed wounds or surgery. A mature fixer introducing two adult clients across a quiet booth table, closed small merchandise case and casual refreshments, warm/cool neon light and nuanced expressions.",
       "width": 1600,
       "height": 640,
       "original": "originals/dict-35-403-cover-v1.png",
-      "final": "final/dict-35-403-cover.webp"
+      "final": "final/dict-35-403-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-87b7f807-134d-432a-b884-de95af8570c0.png",
+      "originalSha256": "60b775cb0091c02dcb973126362c724c1aa3562c76ae1ad4fc0590f336b75faa",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "beec7dc553f1d592decf0a95b46e158292cf70e5de3c81f0e373a7dd739705bd",
+      "bytes": 270814,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All ten role panoramas inspected: professional activities distinct, adult anatomy and cel shading retained. Rocker395v3 uses plain black unbranded headstock after first failed cleanup; full result inspected. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50381,
+        "objectKey": "system-item-media/v1/suggests/35/403/cover/beec7dc553f1d592decf0a95b46e158292cf70e5de3c81f0e373a7dd739705bd.webp",
+        "fileSize": 270814
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/35/403/cover/beec7dc553f1d592decf0a95b46e158292cf70e5de3c81f0e373a7dd739705bd.webp"
     }
-  ]
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-17T02:23:44.897Z",
+    "scenarios": 30,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-106\\live-qa.json"
+  }
 }
