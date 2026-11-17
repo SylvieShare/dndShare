@@ -11534,9 +11534,11 @@
       "id": 26,
       "name": "Группы навыков",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 140
+      "batch": 140,
+      "sha256": "15685d756c3f21dfe93e3acc81d5cb5b6378a4607dbc5b49e018c2aed08f3ccf",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/26/icon/15685d756c3f21dfe93e3acc81d5cb5b6378a4607dbc5b49e018c2aed08f3ccf.webp"
     },
     {
       "kind": "suggest_type",
@@ -11554,9 +11556,11 @@
       "id": 49,
       "name": "Действия",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 140
+      "batch": 140,
+      "sha256": "7acfd91e13916f1d4ebe2fd5a54e96e9ee48b7b7882bb13e4b5f577e3f1bcb0b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/49/icon/7acfd91e13916f1d4ebe2fd5a54e96e9ee48b7b7882bb13e4b5f577e3f1bcb0b.webp"
     },
     {
       "kind": "suggest_type",
@@ -11574,9 +11578,11 @@
       "id": 43,
       "name": "Калибры и совместимость",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 140
+      "batch": 140,
+      "sha256": "08edabcb0a4ec4be1488dce416d194fe75da357b149fdf6be4a65cce0c07abdc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/43/icon/08edabcb0a4ec4be1488dce416d194fe75da357b149fdf6be4a65cce0c07abdc.webp"
     },
     {
       "kind": "suggest_type",
@@ -11594,9 +11600,11 @@
       "id": 30,
       "name": "Категории киберимплантов",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 140
+      "batch": 140,
+      "sha256": "c713884782cdc9b697464e316db438ea4998cb8e388d933b11d4db2b0eed6b3c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/30/icon/c713884782cdc9b697464e316db438ea4998cb8e388d933b11d4db2b0eed6b3c.webp"
     },
     {
       "kind": "suggest_type",
@@ -11614,9 +11622,11 @@
       "id": 40,
       "name": "Категории цен",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 140
+      "batch": 140,
+      "sha256": "b16b7cb6872432db28d6a4907aac8a8d727053531cc6804a2129250ea99b7acd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/40/icon/b16b7cb6872432db28d6a4907aac8a8d727053531cc6804a2129250ea99b7acd.webp"
     },
     {
       "kind": "suggest_type",
@@ -11634,9 +11644,11 @@
       "id": 39,
       "name": "Качество оружия",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 140
+      "batch": 140,
+      "sha256": "3fcc37fce5a131c18a28c343ef595922edfd8833d3839320d9dd22d29034dce2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/39/icon/3fcc37fce5a131c18a28c343ef595922edfd8833d3839320d9dd22d29034dce2.webp"
     },
     {
       "kind": "suggest_type",
@@ -11654,9 +11666,11 @@
       "id": 44,
       "name": "Классы программ",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 141
+      "batch": 141,
+      "sha256": "17ca50dfd95f80cd4153e918ed2912e612aa4fe6083ca0d1afab3a6bc7b66920",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/44/icon/17ca50dfd95f80cd4153e918ed2912e612aa4fe6083ca0d1afab3a6bc7b66920.webp"
     },
     {
       "kind": "suggest_type",
@@ -11674,9 +11688,11 @@
       "id": 29,
       "name": "Локализации",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 141
+      "batch": 141,
+      "sha256": "04cb4a40647b41fe6db29d17ab7ce0b15f7d69bcadf7956f153a54d0137bd48f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/29/icon/04cb4a40647b41fe6db29d17ab7ce0b15f7d69bcadf7956f153a54d0137bd48f.webp"
     },
     {
       "kind": "suggest_type",
@@ -11694,9 +11710,11 @@
       "id": 27,
       "name": "Места установки",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 141
+      "batch": 141,
+      "sha256": "5acd743da1080541028235c68cd9955d346c8568d04bde0ca9dd89e7b471e2fb",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/27/icon/5acd743da1080541028235c68cd9955d346c8568d04bde0ca9dd89e7b471e2fb.webp"
     },
     {
       "kind": "suggest_type",
@@ -11714,9 +11732,11 @@
       "id": 47,
       "name": "Местности",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 141
+      "batch": 141,
+      "sha256": "184b51a9afc7de1742b7293e27ebc596700ec506b9150ca3025d782e0961b574",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/47/icon/184b51a9afc7de1742b7293e27ebc596700ec506b9150ca3025d782e0961b574.webp"
     },
     {
       "kind": "suggest_type",
@@ -11734,9 +11754,11 @@
       "id": 36,
       "name": "Методы создания",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 141
+      "batch": 141,
+      "sha256": "58eaac63f1aa352768f4f97e8b71d4292362ae79a4d5cf7d7461e0e2d6751dae",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/36/icon/58eaac63f1aa352768f4f97e8b71d4292362ae79a4d5cf7d7461e0e2d6751dae.webp"
     },
     {
       "kind": "suggest_type",
@@ -11754,9 +11776,11 @@
       "id": 25,
       "name": "Музыкальные инструменты",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 141
+      "batch": 141,
+      "sha256": "b3f3892620f2451ce4b3fa2d106b5958d4543127df185d8df495f9f7b4765c85",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/25/icon/b3f3892620f2451ce4b3fa2d106b5958d4543127df185d8df495f9f7b4765c85.webp"
     },
     {
       "kind": "suggest_type",
@@ -11774,9 +11798,11 @@
       "id": 38,
       "name": "Навыки",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 142
+      "batch": 142,
+      "sha256": "a6d7dcec18763cfb3c202964f216fa4cafe1bf1a63de2c37dd8dd33bb8e1cd42",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/38/icon/a6d7dcec18763cfb3c202964f216fa4cafe1bf1a63de2c37dd8dd33bb8e1cd42.webp"
     },
     {
       "kind": "suggest_type",
@@ -11794,9 +11820,11 @@
       "id": 32,
       "name": "Науки",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 142
+      "batch": 142,
+      "sha256": "8c147a5dd7005fa53e48ac5174fd3260c1840c7034c5fbcb3107318254733d5f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/32/icon/8c147a5dd7005fa53e48ac5174fd3260c1840c7034c5fbcb3107318254733d5f.webp"
     },
     {
       "kind": "suggest_type",
@@ -11814,9 +11842,11 @@
       "id": 35,
       "name": "Роли",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 142
+      "batch": 142,
+      "sha256": "e123895e673e64f8594f8ac6cb86a2986f1b647bf0130a422fbf657f7a12bbc0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/35/icon/e123895e673e64f8594f8ac6cb86a2986f1b647bf0130a422fbf657f7a12bbc0.webp"
     },
     {
       "kind": "suggest_type",
@@ -11834,9 +11864,11 @@
       "id": 28,
       "name": "Состояния ранений",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 142
+      "batch": 142,
+      "sha256": "a00319f6ed47ebc8dff2759da56dbc77697786d977e1509c063b54a7a0e9707a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/28/icon/a00319f6ed47ebc8dff2759da56dbc77697786d977e1509c063b54a7a0e9707a.webp"
     },
     {
       "kind": "suggest_type",
@@ -11854,9 +11886,11 @@
       "id": 42,
       "name": "Типы боеприпасов",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 142
+      "batch": 142,
+      "sha256": "e111033a7ff8fea2a830d508691ee429924b765e966ca9f0bc755fe54c40d7df",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/42/icon/e111033a7ff8fea2a830d508691ee429924b765e966ca9f0bc755fe54c40d7df.webp"
     },
     {
       "kind": "suggest_type",
@@ -11874,9 +11908,11 @@
       "id": 37,
       "name": "Типы оружия",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 142
+      "batch": 142,
+      "sha256": "e4365c53553c21c410a01e156c235bee4a39ed889ac26f0c224fe929d6762fcb",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/37/icon/e4365c53553c21c410a01e156c235bee4a39ed889ac26f0c224fe929d6762fcb.webp"
     },
     {
       "kind": "suggest_type",
@@ -11894,9 +11930,11 @@
       "id": 31,
       "name": "Узлы NET",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 143
+      "batch": 143,
+      "sha256": "6dfea7f57436379674858a435d2f4d990a0b7ba5455782129160bbabe04b67eb",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/31/icon/6dfea7f57436379674858a435d2f4d990a0b7ba5455782129160bbabe04b67eb.webp"
     },
     {
       "kind": "suggest_type",
@@ -11914,9 +11952,11 @@
       "id": 45,
       "name": "Фазы препаратов",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 143
+      "batch": 143,
+      "sha256": "08b736a1b6920561593418cc132b9dea874688270fdf7f9460fa0c3010816780",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/45/icon/08b736a1b6920561593418cc132b9dea874688270fdf7f9460fa0c3010816780.webp"
     },
     {
       "kind": "suggest_type",
@@ -11934,9 +11974,11 @@
       "id": 41,
       "name": "Фармацевтические препараты",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 143
+      "batch": 143,
+      "sha256": "ac032f51cccacdf754ef09a3a23f134b7f6a70b7e0f69d182d6b2c00648c97ad",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/41/icon/ac032f51cccacdf754ef09a3a23f134b7f6a70b7e0f69d182d6b2c00648c97ad.webp"
     },
     {
       "kind": "suggest_type",
@@ -11976,9 +12018,11 @@
       "id": 46,
       "name": "Языки",
       "slot": "icon",
-      "status": "queued",
+      "status": "published",
       "sourceId": 3,
-      "batch": 143
+      "batch": 143,
+      "sha256": "e486387b9f80bd2fd21e4ab46bbea5c37d3715ad62fe6e71f45a83a32bccfb82",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/46/icon/e486387b9f80bd2fd21e4ab46bbea5c37d3715ad62fe6e71f45a83a32bccfb82.webp"
     },
     {
       "kind": "suggest_type",
@@ -18751,7 +18795,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 889,
+    "publishedSlots": 911,
     "readySlots": 0,
     "totalSlots": 1848
   }
