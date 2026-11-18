@@ -1,12 +1,5 @@
 <template>
-  <nav ref="rail" class="rail" :class="{ 'rail--with-action': showIncomplete }" aria-label="Шаги создания персонажа">
-    <div class="rail-head">
-      <div class="rail-caption">Создание</div>
-      <button type="button" class="rail-reset" title="Начать создание сначала" @click="$emit('reset')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" /></svg>
-        Сбросить
-      </button>
-    </div>
+  <nav ref="rail" class="rail" aria-label="Шаги создания персонажа">
     <button
       v-for="(s, i) in steps"
       :key="s.key"
@@ -28,32 +21,18 @@
         <span v-if="s.summary" class="rail-summary">{{ s.summary }}</span>
       </span>
     </button>
-    <button
-      v-if="showIncomplete"
-      type="button"
-      class="rail-incomplete"
-      :disabled="creating"
-      title="Создать лист сейчас и заполнить недостающее позже"
-      @click="$emit('create-incomplete')"
-    >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-dasharray="2.5 3" /><path d="M12 8v4l2.5 1.5" /></svg>
-      <LoadingIndicator v-if="creating" label="Создание…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ creating ? 'Создание…' : 'Создать неполноценного' }}
-    </button>
   </nav>
 </template>
 
 <script setup>
-import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 const props = defineProps({
   steps: { type: Array, required: true },
   current: { type: Number, default: 0 },
   reachable: { type: Number, default: 0 },
-  showIncomplete: { type: Boolean, default: false },
-  creating: { type: Boolean, default: false },
   sequential: { type: Boolean, default: true },
 })
-defineEmits(['go', 'reset', 'create-incomplete'])
+defineEmits(['go'])
 const rail = ref(null)
 let observer
 function revealCurrentStep() {
@@ -86,25 +65,10 @@ watch(() => props.steps[props.current]?.key, revealCurrentStep, { flush: 'post' 
 .rail::before {
   content: '';
   position: absolute;
-  top: 54px; bottom: 24px; left: 27px;
+  top: 30px; bottom: 30px; left: 30px;
   width: 1px;
   background: color-mix(in srgb, var(--border-strong) 72%, transparent);
 }
-.rail--with-action::before { bottom: 66px; }
-.rail-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 1px 3px 4px 10px; }
-.rail-caption {
-  padding: 2px 0 4px;
-  font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-  color: var(--text-muted);
-}
-.rail-reset {
-  display: inline-flex; align-items: center; gap: 4px; padding: 5px 6px; border: 0; border-radius: 7px;
-  background: transparent; color: var(--text-muted); font: inherit; font-size: 9px; font-weight: 650; cursor: pointer;
-  transition: color .15s, background .15s;
-}
-.rail-reset:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 9%, transparent); }
-.rail-reset:focus-visible, .rail-incomplete:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail-reset svg { width: 12px; height: 12px; }
 .rail-step {
   position: relative;
   display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: start; gap: 11px;
@@ -154,15 +118,6 @@ watch(() => props.steps[props.current]?.key, revealCurrentStep, { flush: 'post' 
 .rail-step.active .rail-title { color: var(--text-1); font-weight: 500; }
 .rail-step.active .rail-summary { color: var(--accent-soft); }
 .rail-step.locked .rail-title { color: var(--text-muted); }
-.rail-incomplete {
-  position: relative; z-index: 1; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;
-  margin-top: 5px; padding: 9px 7px 6px; border: 0; border-top: 1px solid color-mix(in srgb, var(--border-strong) 44%, transparent);
-  background: transparent; color: var(--text-muted); font: inherit; font-size: 9px; line-height: 1.2; cursor: pointer;
-  transition: color .15s;
-}
-.rail-incomplete:hover:not(:disabled) { color: var(--text-2); }
-.rail-incomplete:disabled { opacity: .5; cursor: default; }
-.rail-incomplete svg { width: 13px; height: 13px; }
 @media (max-width: 920px) {
   .rail {
     flex-direction: row;
@@ -176,7 +131,7 @@ watch(() => props.steps[props.current]?.key, revealCurrentStep, { flush: 'post' 
     border-radius: 0;
     background: transparent;
   }
-  .rail::before, .rail-head, .rail-incomplete { display: none; }
+  .rail::before { display: none; }
   .rail-step { flex: 0 0 auto; align-items: center; }
   .rail-copy { padding-top: 0; }
   .rail-summary, .rail-jump { display: none; }

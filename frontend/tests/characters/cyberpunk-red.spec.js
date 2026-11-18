@@ -48,7 +48,7 @@ async function fixture(page){
  return {getData:()=>data,getRolls:()=>rolls}
 }
 
-test('D&D and RED use the same responsive creation rail', async ({ page }, info) => {
+test('D&D and RED share the creation header actions and responsive step rail', async ({ page }, info) => {
   await fixture(page)
   await page.route('**/api/sources', route => route.fulfill({ json: { sources: [
     { id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }, { id: 2, version: '2024' }] },
@@ -57,25 +57,45 @@ test('D&D and RED use the same responsive creation rail', async ({ page }, info)
   await page.route('**/api/handbook/sync?**', route => route.fulfill({ json: { protocol: 1, entries: [], hasMore: false, cursor: 'empty', visibleIds: [], metadata: { types: [], suggests: {}, suggestTypes: [], books: [] } } }))
   await page.setViewportSize({ width: 475, height: 751 })
   const rail = page.getByRole('navigation', { name: 'Шаги создания персонажа' })
+  const header = page.locator('.cc-head')
+  const reset = header.getByRole('button', { name: 'Начать создание сначала', exact: true })
+  const incomplete = header.getByRole('button', { name: 'Создать неполноценного', exact: true })
   const current = rail.locator('[aria-current="step"]')
   const step = name => rail.getByRole('button', { name: new RegExp(name) })
   for (const [system, active, locked] of [['dnd5e', 'Версия', 'Класс'], ['cyberpunk-red', 'Роль', 'Завершение']]) {
     await page.goto(`/chars/new?system=${system}`)
     await expect(current).toContainText(active)
     await expect(step(locked)).toBeDisabled()
-    for (const width of [475, 834, 1440]) {
+    for (const width of [320, 475, 834, 1440]) {
       await page.setViewportSize({ width, height: 751 })
       await expect(rail).toBeVisible()
       await expect(rail).toHaveCSS('flex-direction', width < 921 ? 'row' : 'column')
       await expect(page.getByRole('button', { name: 'Создать неполноценного', exact: true })).toHaveCount(1)
+      await expect(incomplete).toBeEnabled()
+      await expect(reset).toHaveCSS('flex-direction', 'column')
+      await expect(incomplete).toHaveCSS('flex-direction', 'column')
       await expect.poll(() => page.evaluate(() => {
         const stepRail = document.querySelector('.cc-rail').getBoundingClientRect()
         const main = document.querySelector('.cc-main').getBoundingClientRect()
         return { vertical: stepRail.bottom <= main.top + 1, withinWindow: document.documentElement.scrollWidth <= innerWidth }
       })).toEqual({ vertical: width < 921, withinWindow: true })
+      const actionBounds = await Promise.all([incomplete.boundingBox(), reset.boundingBox(), header.locator('.creation-title').boundingBox()])
+      const [createBox, resetBox, titleBox] = actionBounds
+      expect(titleBox.x + titleBox.width).toBeLessThanOrEqual(createBox.x)
+      expect(createBox.x + createBox.width).toBeLessThanOrEqual(resetBox.x)
+      expect(createBox.y).toBeCloseTo(resetBox.y, 0)
+      expect(resetBox.x + resetBox.width).toBeLessThanOrEqual(width)
       await info.attach(`${system}-steps-${width}`, { body: await page.screenshot({ animations: 'disabled' }), contentType: 'image/png' })
     }
     await page.setViewportSize({ width: 475, height: 751 })
+    const resetDialog = page.getByRole('dialog', { name: system === 'dnd5e' ? 'Начать сначала?' : 'Сбросить черновик RED?' })
+    await reset.click()
+    await expect(resetDialog).toBeVisible()
+    await resetDialog.getByRole('button', { name: 'Отмена', exact: true }).click()
+    const incompleteDialog = page.getByRole('dialog', { name: system === 'dnd5e' ? 'Создать персонажа?' : 'Создать неполноценного персонажа?' })
+    await incomplete.click()
+    await expect(incompleteDialog).toBeVisible()
+    await incompleteDialog.getByRole('button', { name: 'Отмена', exact: true }).click()
     if (system === 'dnd5e') {
       for (const edition of ['2024', '2014']) {
         await page.getByRole('button', { name: new RegExp(`^${edition}`) }).click()

@@ -86,8 +86,9 @@ to `POST /api/chars`. The server rejects a missing/unknown version; there is no
 default-version fallback.
 
 В полноразмерном визарде боковой список шагов отделён верхним отступом от
-общей шапки создания. D&D и RED используют одну раскладку области шагов и
-нижних действий. При ширине до 920 px шаги обеих систем располагаются в
+общей шапки создания. В обоих визардах «Создать неполноценного» находится
+рядом со «Сбросить» в шапке. У обеих кнопок подпись расположена под иконкой.
+При ширине до 920 px шаги обеих систем располагаются в
 горизонтальной прокручиваемой строке. При переходе текущий шаг остаётся видимым,
 а возможность перейти к следующему шагу определяется правилами выбранной системы.
 
@@ -109,12 +110,9 @@ area. A separate 220px step rail floats directly
 to that column's left; there is no permanent right preview. The rail shows the
 primary current value for each step (for example,
 the chosen race, class/subclass or background) without repeating its mechanical
-details. Reset sits in the rail heading opposite “Создание”; the central footer
-contains only ordinary step navigation. When at least one required choice is
-still missing, a deliberately quiet “Создать неполноценного” action appears below
-the step list and opens the shared confirmation before building the partial sheet.
-It disappears once every step validates. In the single-column layout, reset
-and partial creation are available in the header and footer, respectively.
+details. When at least one required choice is still missing, the header offers
+“Создать неполноценного” and opens the existing confirmation before building
+the partial sheet. The action disappears once every step validates.
 Личность — последний шаг: рядом с созданием доступен необязательный
 «Предпросмотр листа». Он собирает текущий черновик тем же `buildPayload`, открывает
 настоящий полноэкранный лист с его вкладками в `ownerMode=false` и ничего не

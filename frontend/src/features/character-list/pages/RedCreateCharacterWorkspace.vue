@@ -4,8 +4,12 @@
       class="cc-head"
       red
       :scroll-source="mainRef"
+      :show-incomplete="!fullyValid"
+      :creating="creating"
+      :incomplete-disabled="!available"
       @close="exit"
       @reset="resetOpen = true"
+      @create-incomplete="requestIncomplete"
     />
     <div class="cc-body">
       <CreateStepRail
@@ -13,11 +17,7 @@
         :steps="steps"
         :current="step"
         :reachable="reachableStep"
-        :show-incomplete="!fullyValid"
-        :creating="creating || !available"
         @go="goTo"
-        @create-incomplete="requestIncomplete"
-        @reset="resetOpen = true"
       />
       <main ref="mainRef" class="cc-main red-wizard-main">
         <p v-if="displayError" class="red-danger" role="alert">
@@ -60,13 +60,6 @@
           <ActionButton :disabled="creating || !available || !!blockReason" @click="advance">
             {{ creating ? "Создание…" : step < lastStep ? "Далее" : "Создать персонажа" }}
           </ActionButton>
-        </div>
-        <div v-if="!fullyValid" class="cc-incomplete-compact red-incomplete-compact">
-          <ActionButton
-            variant="quiet"
-            :disabled="creating || !available"
-            @click="requestIncomplete"
-          >Создать неполноценного</ActionButton>
         </div>
       </div>
     </footer>
@@ -334,5 +327,4 @@ defineExpose({ clearDraft: wizard.clearDraft });
   color: var(--text-muted);
   font-size: var(--type-group-size);
 }
-.red-incomplete-compact { margin-inline: auto; }
 </style>
