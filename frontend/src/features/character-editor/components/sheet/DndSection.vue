@@ -2,6 +2,7 @@
   <div class="sheet-stack dnd-section" :data-sheet-section="section">
     <CharacterBlock v-if="format !== 'desktop'" block-id="read_only_notice" />
     <DndStats v-if="section === 'stats'" :format="format" />
+    <DndBasicActions v-else-if="section === 'basic-actions'" />
     <CharacterBlock v-else-if="section === 'weapons'" block-id="weapon"
       :options="{ show_add_in_view: true }" />
     <CharacterBlock v-else-if="section === 'spells'" block-id="spells" :options="{ show_add_in_view: true }" />
@@ -22,6 +23,7 @@ import CharacterBlock from '../CharacterBlock.vue'
 import DndStats from './DndStats.vue'
 import DndPersonality from './DndPersonality.vue'
 import DndAbilities from './DndAbilities.vue'
+import DndBasicActions from './DndBasicActions.vue'
 defineProps({ section: String, format: String })
 </script>
 <style scoped>
