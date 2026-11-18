@@ -109,6 +109,25 @@ for(const width of [390,834,1440])test(`persistent checkboxes, shared groups and
   await sidebar.getByRole('button',{name:'Свернуть боковую панель',exact:true}).click()
   await expect(scene.getByRole('button',{name:/^Убрать со сцены:/})).toHaveCount(0)
   const combatActions=await openRosterActions(page, page.locator('.enc-secondary'))
+  const groups = await combatActions.evaluate(menu => {
+    const groups = [[]]
+    for (const row of menu.querySelectorAll('[role="menuitem"], [role="separator"]')) {
+      if (row.getAttribute('role') === 'separator') groups.push([])
+      else groups.at(-1).push(row.getAttribute('aria-label'))
+    }
+    return groups
+  })
+  expect(groups).toEqual([
+    ['Провести испытание', 'Нанести урон: 2', 'Добавить опыт: 1'],
+    ['Ввести в бой: 1', 'Убрать со сцены: 1'],
+    ['Отметить выбранных погибшими', 'Удалить НПС: 1'],
+  ])
+  await expect(combatActions.getByRole('menuitem', { name: 'Отметить выбранных погибшими' })).toContainText('Отметить погибшими')
+  await expect.poll(() => combatActions.evaluate(menu => {
+    const bounds = menu.getBoundingClientRect()
+    return bounds.left >= 0 && bounds.right <= innerWidth && menu.scrollWidth <= menu.clientWidth
+  })).toBe(true)
+  await info.attach(`grouped-combat-actions-${width}`, { body: await page.screenshot({ animations: 'disabled' }), contentType: 'image/png' })
   const removeFromScene=combatActions.getByRole('menuitem',{name:'Убрать со сцены: 1',exact:true})
   await expect(removeFromScene).toBeEnabled()
   await expect(combatActions.getByRole('menuitem',{name:'Ввести в бой: 1',exact:true})).toBeEnabled()

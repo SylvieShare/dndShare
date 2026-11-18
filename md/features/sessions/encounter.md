@@ -43,7 +43,7 @@ During combat, the phase header places the round beside the phase and roster
 count. The turn arrows are paired and the forward action is labelled «Следующий».
 «Закончить бой» is an outlined one-line action. «Бои сценария» belongs to the
 combat controls. The shared selection toolbar uses the available-actions menu
-and shows eligible target icons and totals per action. It stays in the sidebar
+and displays grouped target portraits with counts for repeated creatures. It stays in the sidebar
 header until the collapse transition finishes. The combat card then reveals it
 below a divider. The summary row contains three stacked icon actions in order:
 «Сбросить выбор», «Действия» and, after a challenge, «Убрать испытание».

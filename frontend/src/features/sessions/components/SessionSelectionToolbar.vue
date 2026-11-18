@@ -10,7 +10,7 @@
           <span class="roster-action-label">Сбросить<br />выбор</span>
           <span class="roster-action-label-short">Сброс</span>
         </ActionButton>
-        <RowActionMenu v-if="actionsVisible" ref="menu" title="Действия с выбранными" follow-anchor :disabled="!hasActions">
+        <RowActionMenu v-if="actionsVisible" ref="menu" title="Действия с выбранными" :width="320" follow-anchor :disabled="!hasActions">
           <template #trigger="{ open }">
             <ActionButton class="roster-actions-trigger" variant="secondary" layout="stacked" :disabled="!hasActions" aria-haspopup="menu" :aria-expanded="open">
               <template #icon><ListFilter :size="16" aria-hidden="true" /></template>
@@ -28,6 +28,7 @@
               @click="close(); open('experience')">
               {{ encounter.isRed ? 'Добавить IP' : 'Добавить опыт' }}<template #suffix><SessionActionTargets :items="selection.experienceTargets" :encounter="encounter" /></template>
             </RowActionItem>
+            <RowActionSeparator v-if="hasRollActions && hasMoveActions" />
             <RowActionItem v-if="selection.moveTargets.length" :icon="Swords"
               :aria-label="`${encounter.encounter.active ? 'Ввести в бой' : 'Добавить на сцену'}: ${selection.moveTargets.length}`"
               @click="encounter.sendCombatantsTo(selection.moveTargets, 'combat'); close()">
@@ -38,9 +39,10 @@
               :aria-label="`Убрать со сцены: ${selection.returnTargets.length}`" @click="encounter.sendCombatantsTo(selection.returnTargets, 'reserve'); close()">
               Убрать со сцены<template #suffix><SessionActionTargets :items="selection.returnTargets" :encounter="encounter" /></template>
             </RowActionItem>
+            <RowActionSeparator v-if="hasRemovalActions && (hasRollActions || hasMoveActions)" />
             <RowActionItem v-if="canMarkDefeated" :icon="Skull" tone="danger"
-              aria-label="Отметить выбранных погибшими" @click="encounter.sendSelectedTo('dead'); close()">
-              Отметить гибель<template #suffix><SessionActionTargets :items="defeatedTargets" :encounter="encounter" /></template>
+              aria-label="Отметить выбранных погибшими" :aria-description="`Целей: ${defeatedTargets.length}`" @click="encounter.sendSelectedTo('dead'); close()">
+              Отметить погибшими<template #suffix><SessionActionTargets :items="defeatedTargets" :encounter="encounter" /></template>
             </RowActionItem>
             <RowActionItem v-if="npcTargets.length" action="delete" tone="danger"
               :aria-label="`Удалить НПС: ${encounter.selectedNpcCount}`" aria-keyshortcuts="Backspace" @click="encounter.removeSelectedNpcs(); close()">
@@ -86,6 +88,7 @@ import { ActionButton, AppModalFrame, CompactCheckbox, FormActionButtons, FormFi
 import { Eraser, HeartCrack, ListFilter, ListX, LogOut, Skull, Sparkles, Swords } from '@lucide/vue'
 import EncounterChallengeMenu from './EncounterChallengeMenu.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
+import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import SessionActionTargets from './SessionActionTargets.vue'
 import SessionSelectionSummary from './SessionSelectionSummary.vue'
 import { layoutTokens } from '@/app/design-tokens'
@@ -108,9 +111,10 @@ const npcTargets = computed(() => props.selection.selected.filter(actor => actor
 const canChallenge = computed(() => !props.encounter.challengeBusy && !props.encounter.challengeActive && challengeTargets.value.length > 0)
 const canReturn = computed(() => props.combatWorkspace && props.selection.returnTargets.length > 0)
 const canMarkDefeated = computed(() => props.combatWorkspace && !props.encounter.impactBusy && defeatedTargets.value.length > 0)
-const hasActions = computed(() => canChallenge.value || canReturn.value || canMarkDefeated.value
-  || props.selection.damageTargets.length > 0 || props.selection.experienceTargets.length > 0
-  || props.selection.moveTargets.length > 0 || npcTargets.value.length > 0)
+const hasRollActions = computed(() => canChallenge.value || props.selection.damageTargets.length > 0 || props.selection.experienceTargets.length > 0)
+const hasMoveActions = computed(() => canReturn.value || props.selection.moveTargets.length > 0)
+const hasRemovalActions = computed(() => canMarkDefeated.value || npcTargets.value.length > 0)
+const hasActions = computed(() => hasRollActions.value || hasMoveActions.value || hasRemovalActions.value)
 watch(hasActions, available => { if (!available) menu.value?.close() })
 const visibleRows=computed(()=>{const ids=new Set(props.selection.items.map(row=>row.uid));return [...new Map(props.visibleItems.filter(row=>ids.has(row.uid)).map(row=>[row.uid,row])).values()]})
 const allVisible=computed(()=>visibleRows.value.length>0&&visibleRows.value.every(row=>props.encounter.isSelected(row)))
