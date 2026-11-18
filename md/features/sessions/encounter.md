@@ -126,8 +126,10 @@ letter-marker popover. The combat scene stays mounted during preparation and act
 select-all action lives in the command column. Sidebar groups and the command column use the same global selection with constant checkboxes. State editing uses the character setting's state
 value path and suggestion dictionary (the `states` part of the combined D&D
 status overview), so the same condition list is available for players and NPCs.
-Starting and ending combat animate the scene state while home rows remain
-visible. Neither player nor NPC home rows fade out or move between groups. Controls stay locked for the short transition, while
+Starting and ending combat update scene state while home rows remain
+visible. Ending keeps the complete scene roster, HP, effects and group refs,
+resets turn/initiative/surprise, and returns to preparation. The scene does not
+fade out during completion; removal is an explicit command. Neither player nor NPC home rows fade out or move between groups. Controls stay locked for the short transition, while
 reduced-motion users get the direct state change.
 
 When the combat rail changes the canvas safe-left inset, `NarrativeGraphCanvas`
@@ -177,7 +179,11 @@ by UID; a creature shown in two views receives damage or XP only once. Constant
 leading checkboxes separate selection from body menus. Checkbox targets are 48px
 with 22px glyphs; pointer/key events do not open menus or claim drag. Vertical
 touch movement scrolls both lists. HP and state controls stay interactive.
-There is no selection mode. The header shows a global count and clear action,
+There is no selection mode. The header shows a global count and clear action; the left combat header
+replaces the visible number with per-type icon quantities and individual player
+portraits. NPC templates group by itemId, simple creatures by name, actors dedupe
+by UID. A horizontal scroll handles long selections; the numeric live status
+stays available to assistive technology. Other headers retain the number,
 plus an All checkbox scoped to the open tab with a mixed state. Each group action
 shows its eligible count, including separate add-to-scene and remove-from-scene
 counts for mixed selections. The row remains visible with unavailable actions disabled.
@@ -186,7 +192,9 @@ command. D&D XP/IP targets characters only and retries only unconfirmed writes.
 Starting combat uses only prepared scene members. Selecting a reserve actor alone
 never adds it to combat; unchecking a participant never removes it. A home group
 keeps live actors even while they participate in combat. Membership, HP and states
-are shared, while the badge changes from “На сцене” to “В бою”. The current turn
+are shared. Home tiles use a sword watermark below the clipped selection
+paint instead of a membership caption. Selected watermarks increase contrast
+and retain their accessible state label; scene captions remain visible. The current turn
 has its own arrow/text and warm tint, independent of purple selection.
 Dragging within a home group retains combat participation. Cross-view previews
 exclude an already present UID before insertion. Returning an actor from the

@@ -161,8 +161,7 @@ for (const reduced of [false, true])
       reducedMotion: reduced ? "reduce" : "no-preference",
     });
     await ready(page, "board");
-    const tab = await switchTab(page, "Существа");
-    expect(tab.animated).toBe(!reduced);
+    await page.getByRole("button",{name:"На карту",exact:true}).click();
     const roster = page.getByRole("region", { name: "Существа сессии" });
     await roster.getByRole("button", { name: "Лира", exact: true }).press("Enter");
     await page.getByRole("menuitem", { name: "Выбрать на карте", exact: true }).click();
@@ -172,6 +171,7 @@ for (const reduced of [false, true])
     await expect(
       panel.getByRole("heading", { name: "Лира", exact: true }),
     ).toBeVisible();
+    await page.getByRole("button",{name:"На карту",exact:true}).click();
     await roster.getByRole("button", { name: "A · Огр", exact: true }).press("Enter");
     const animated = await page
       .getByRole("menu", { name: "Огр", exact: true })

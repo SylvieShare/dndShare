@@ -25,7 +25,7 @@ test("session uses the full editor, writes its own scene and retains the templat
     page
       .locator(".map-sidebar")
       .getByRole("separator", { name: "Вкладки редактора" }),
-  ).toBeVisible();
+  ).toHaveCount(0);
   expect(
     await page
       .locator(".map-sidebar-tabs > button")
@@ -33,7 +33,6 @@ test("session uses the full editor, writes its own scene and retains the templat
         buttons.map((b) => b.getAttribute("aria-label")),
       ),
   ).toEqual([
-    "Существа",
     "Плитки",
     "Объекты",
     "Декали",
@@ -87,7 +86,7 @@ test("players and creatures have HP and a shared right focus, and placement is d
   page,
 }) => {
   await ready(page);
-  await page.getByRole("button", { name: "Существа", exact: true }).click();
+  await page.getByRole("button", { name: "На карту", exact: true }).click();
   const roster = page.getByRole("region", { name: "Существа сессии" });
   await expect(
     roster.getByRole("button", { name: "Лира", exact: true }),

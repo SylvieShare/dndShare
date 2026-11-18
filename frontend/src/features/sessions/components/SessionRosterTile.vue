@@ -1,7 +1,8 @@
 <template>
   <BaseTile :outlined="false" :color="color || 'var(--text-muted)'" class="session-roster-tile"
-            :class="{'session-roster-tile--current':current,'session-roster-tile--compact':compact,'session-roster-tile--selectable':selectable && !compact,'session-roster-tile--selected':selected}"
+            :class="{'session-roster-tile--current':current,'session-roster-tile--on-scene':stageBackdrop,'session-roster-tile--compact':compact,'session-roster-tile--selectable':selectable && !compact,'session-roster-tile--selected':selected}"
             :style="{'--player-color':color || 'transparent','--roster-paint-default':defaultPaintClip,'--roster-ink-position':inkPosition}">
+    <span v-if="stageBackdrop" class="roster-stage-backdrop" role="img" :aria-label="stageDescription"><Swords aria-hidden="true" :stroke-width="1.25" /></span>
     <div v-if="selectable && !compact" class="roster-select-zone" @click.stop="$emit('select')" @pointerdown.stop @keydown.stop>
       <CompactCheckbox :model-value="selected" :size="layoutTokens['roster-checkbox-icon']" :hit-size="layoutTokens['touch-min']" :label="`Выбрать: ${name}`" @update:model-value="$emit('select')" />
     </div>
@@ -24,11 +25,12 @@
 <script setup>
 import { BaseTile, CompactCheckbox } from '@sylvieshare/share-ui'
 import { computed } from 'vue'
+import { Swords } from '@lucide/vue'
 import { layoutTokens } from '@/app/design-tokens'
 import { roughRowPaintStyle } from '@/shared/ui/roughRowSeam'
 import CharacterSummaryTile from '@/features/character-editor/components/sheet/CharacterSummaryTile.vue'
 const props=defineProps({name:String,avatarUrl:String,color:String,hp:Object,armor:Number,healthVisible:Boolean,editHealth:Boolean,
-  showPassives:Boolean,perception:Number,investigation:Number,current:Boolean,compact:Boolean,hasStatuses:Boolean,selectable:Boolean,selected:Boolean,surprised:Boolean})
+  showPassives:Boolean,perception:Number,investigation:Number,current:Boolean,compact:Boolean,hasStatuses:Boolean,selectable:Boolean,selected:Boolean,surprised:Boolean,stageBackdrop:Boolean,stageDescription:String})
 const defaultPaintClip=roughRowPaintStyle(0)['--roster-paint-clip']
 const inkPosition=computed(()=>{
   let hash=0
@@ -44,6 +46,9 @@ defineEmits(['health','select'])
 .session-roster-tile--selectable.base-tile {grid-template-columns:var(--layout-touch-min) minmax(0,1fr)}
 .roster-select-zone {box-sizing:border-box;display:flex;justify-content:center;align-items:flex-start;min-height:var(--layout-touch-min);padding-top:calc((var(--summary-avatar-size,var(--layout-sheet-header-icon)) - var(--layout-roster-checkbox-icon)) / 2);touch-action:pan-y}
 .roster-content {min-width:0}
+.roster-stage-backdrop {position:absolute;inset:calc(var(--spacing-small) / -2) 0;z-index:-2;pointer-events:none;overflow:hidden;clip-path:var(--roster-paint-clip,var(--roster-paint-default))}
+.roster-stage-backdrop svg {position:absolute;inset-inline-end:var(--spacing-small);top:50%;transform:translateY(-50%);width:var(--layout-roster-stage-watermark);height:100%;max-height:var(--layout-roster-stage-watermark);color:var(--text-2);opacity:.16;transition:opacity var(--motion-feedback)}
+.session-roster-tile--selected .roster-stage-backdrop svg {opacity:.28}
 @media(--ui-phone){.session-roster-tile--selectable {--summary-avatar-size:var(--layout-touch-min);--creature-avatar-size:var(--layout-touch-min)}}
 .session-roster-tile.base-tile::before,.session-roster-tile.base-tile::after {content:'';position:absolute;inset:calc(var(--spacing-small) / -2) 0;z-index:-1;pointer-events:none;background:var(--accent);opacity:0;clip-path:var(--roster-paint-clip,var(--roster-paint-default));transition:opacity var(--motion-feedback)}
 .session-roster-tile.base-tile::before {background:var(--roster-state-color);opacity:var(--roster-state-opacity)}
@@ -53,5 +58,5 @@ defineEmits(['health','select'])
 .session-roster-tile--selected.session-roster-tile.base-tile::after {opacity:.34}
 .p-statuses-area {margin-top:var(--spacing-small);min-width:0;--status-scroll-inset-start:0px;--status-scroll-inset-end:0px}
 .roster-surprised {flex:none;color:var(--warning);font-size:var(--type-context-size)}
-@media(prefers-reduced-motion:reduce){.session-roster-tile.base-tile::before,.session-roster-tile.base-tile::after{transition:none}}
+@media(prefers-reduced-motion:reduce){.session-roster-tile.base-tile::before,.session-roster-tile.base-tile::after,.roster-stage-backdrop svg{transition:none}}
 </style>

@@ -16,7 +16,7 @@
         <p v-if="!group.items.length" class="map-hint">{{ group.empty }}</p>
         <template v-for="item in group.items" :key="creatureKey(item)">
           <MapEntityRow v-if="item.kind === 'marker'" :entry="item" :selected="selected === creatureKey(item)" :placed="!!onMap(item)" :activate-on-click="false" @pointerdown="emit('drag', item, $event)" @select="emit('focus', item)" />
-          <MapCreatureTile v-else :entry="item" :selected="selected === creatureKey(item)" :placed="!!onMap(item)" @drag="emit('drag', item, $event)" @focus="emit('focus', item)" />
+          <MapCreatureTile v-else :related-menu="relatedMenus" :entry="item" :selected="selected === creatureKey(item)" :placed="!!onMap(item)" @drag="emit('drag', item, $event)" @focus="emit('focus', item)" />
         </template>
       </div>
     </section>
@@ -48,6 +48,7 @@ const props = defineProps({
   editor: Object,
   candidates: Array,
   selected: String,
+  relatedMenus: Boolean,
 });
 const emit = defineEmits(["focus", "place", "drag"]),
   query = ref("");

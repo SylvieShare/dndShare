@@ -11,7 +11,7 @@ async function ready(page, extra = "") {
   await expect(page.locator(".map-canvas canvas")).toBeVisible();
   const topView = page.getByTitle("Вид сверху", { exact: true });
   if (await topView.count()) await topView.click();
-  await page.getByRole("button", { name: "Существа", exact: true }).click();
+  await page.getByRole("button", { name: "На карту", exact: true }).click();
   return page.getByRole("region", { name: "Существа сессии" });
 }
 async function startDrag(page, row, point) {
@@ -64,6 +64,7 @@ test("roster drags preview before committing, mark placed creatures and focus th
       (await saved(page)).some((t) => t.ref === "41" && !!t.placement),
     )
     .toBe(true);
+  await page.getByRole("button",{name:"На карту",exact:true}).click();
   await expect(row).toHaveCSS("--participant-frame-width", "2px");
   expect(
     await row.evaluate((el) => getComputedStyle(el).getPropertyValue("--participant-frame-width")),
@@ -75,10 +76,12 @@ test("roster drags preview before committing, mark placed creatures and focus th
   await expect(focus.locator(".workspace-focus-content")).not.toHaveClass(
     /base-tile--framed/,
   );
+  await page.getByRole("button",{name:"На карту",exact:true}).click();
   await page.locator(".map-canvas-surface").focus();
   await page.keyboard.down("ArrowRight");
   await page.waitForTimeout(150);
   await page.keyboard.up("ArrowRight");
+  await page.getByRole("button",{name:"На карту",exact:true}).click();
   await row.press('Enter');
   await page.getByRole('menu', { name: 'Лира', exact: true })
     .getByRole('menuitem', { name: 'Выбрать на карте', exact: true }).click();
@@ -109,6 +112,7 @@ test("roster drags preview before committing, mark placed creatures and focus th
       ),
     )
     .toBeCloseTo(4.5, 0);
+  await page.getByRole("button",{name:"На карту",exact:true}).click();
   const previous = (await saved(page)).find((t) => t.ref === "41");
   const next = await mapPoint(page, 5.5, 4.5);
   await startDrag(page, row, next);
@@ -131,6 +135,7 @@ test("roster drops outside the field or on invalid surfaces never create a creat
   await startDrag(page, row, { x: 1450, y: 1100 });
   await page.mouse.up();
   expect((await saved(page)).some((t) => t.ref === "ogre")).toBe(false);
+  await expect(page.getByRole('dialog',{name:'На карту',exact:true}).getByRole('status')).toBeVisible();
   await startDrag(page, row, await mapPoint(page, 11.5, 9.5));
   await page.mouse.up();
   expect((await saved(page)).some((t) => t.ref === "ogre")).toBe(false);
@@ -166,6 +171,7 @@ test('dead creatures move to their own group and revive without rewriting map pl
   await page.mouse.up();
   await expect.poll(async () => (await saved(page)).some(t => t.ref === 'ogre')).toBe(true);
   const before = (await saved(page)).find(t => t.ref === 'ogre');
+  await page.getByRole('button',{name:'На карту',exact:true}).click();
   await ogre.locator('.p-name').click();
   await page.getByText('Отношение', { exact: true }).click();
   await page.getByRole('menuitem', { name: 'Союзник', exact: true }).click();

@@ -19,7 +19,7 @@
     @keydown.enter.self.prevent="openMenu"
     @keydown.space.self.prevent="openMenu"
   />
-  <RowActionMenu ref="menu" :anchor="anchor" :title="entry.name" :trigger-attrs="{ style: { display: 'none' } }">
+  <RowActionMenu :related="relatedMenu" ref="menu" :anchor="anchor" :title="entry.name" :trigger-attrs="{ style: { display: 'none' } }">
     <template #default="{ close }">
       <RowActionItem :icon="Focus" @click="$emit('focus'); close()">Выбрать на карте</RowActionItem>
       <RowActionItem v-if="entry.kind === 'creature' && entry.itemId" action="view" @click="enc.openNpcDetail(combatant); close()">Открыть карточку</RowActionItem>
@@ -35,7 +35,7 @@ import { RowActionMenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import SessionCombatantTile from '@/features/sessions/components/SessionCombatantTile.vue'
 import EncounterSideMenu from '@/features/sessions/components/EncounterSideMenu.vue'
-const props = defineProps({ entry: { type: Object, required: true }, placed: Boolean, selected: Boolean })
+const props = defineProps({ entry: { type: Object, required: true }, placed: Boolean, selected: Boolean, relatedMenu:Boolean })
 const combatant = computed(() => props.entry.combatant || { type: 'player', charId: props.entry.participant.charId, position: 'reserve' })
 const emit = defineEmits(['drag', 'focus'])
 const enc = inject('encounter', null) || inject('applicationEncounter', null)

@@ -154,7 +154,7 @@
         <template #reserve-title><EncounterReserveHeader :encounter="encounter" :ui="reserveSidebar" /></template>
         <template #reserve-actions><EncounterReserveHeader :encounter="encounter" :ui="reserveSidebar" actions /></template>
         <template #panels><EncounterReservePanel :encounter="encounter" :ui="reserveSidebar" /></template>
-        <template #selection-header><SessionSelectionToolbar :encounter="encounter" :selection="sidebarSelection" :visible-items="sidebar.selected.value === 'players' ? encounterPlayers : encounter.reserveNpcs" /></template>
+        <template #selection-header><SessionSelectionToolbar :encounter="encounter" :selection="sidebarSelection" :grouped-summary="playersRailMode === 'combat'" :visible-items="sidebar.selected.value === 'players' ? encounterPlayers : encounter.reserveNpcs" /></template>
         <template #players-actions>
           <SessionPlayersMenu :live-status="liveStatus" :sync-status="syncStatus" :syncing="syncRunning || liveCatchingUp"
                               @join="openJoinOwn" @create="openCreate" @copy-code="copyCode" @copy-link="copyLink" />

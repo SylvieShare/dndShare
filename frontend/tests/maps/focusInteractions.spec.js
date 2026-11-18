@@ -113,7 +113,7 @@ test("Escape dismisses object and light focus even from text fields and a sessio
   await page.keyboard.press("Escape");
   await expect(focus(page)).toHaveCount(0);
   await ready(page, "&creatures", "board");
-  await page.getByRole("button", { name: "Существа", exact: true }).click();
+  await page.getByRole("button", { name: "На карту", exact: true }).click();
   await page.getByRole("button", { name: "Лира", exact: true }).press("Enter");
     await page.getByRole("menuitem", { name: "Выбрать на карте", exact: true }).click();
   await expect(

@@ -31,7 +31,7 @@ test("placing an NPC loads its bound miniature and saves the bestiary ID", async
   await page.goto(
     "/tests/maps/fixtures/maps.html?mode=board&creatures&miniatures",
   );
-  await page.getByRole("button", { name: "Существа", exact: true }).click();
+  await page.getByRole("button", { name: "На карту", exact: true }).click();
   const row = page
     .getByRole("region", { name: "Существа сессии" })
     .getByRole("button", { name: "A · Огр", exact: true });
@@ -108,7 +108,7 @@ test("the creature base toggle persists its random choice and R/T reach the sele
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/tests/maps/fixtures/maps.html?mode=board&creatures&miniatures&miniatureLegacy&miniatureBases");
   await expect(page.locator(".map-canvas canvas")).toBeVisible();
-  await page.getByRole("button", { name: "Существа", exact: true }).click();
+  await page.getByRole("button", { name: "На карту", exact: true }).click();
   const toggle = page.getByRole("switch", { name: "Использовать подставки", exact: true });
   await toggle.click();
   const token = () => page.evaluate(() => window.latestBoard.state.tokens.find(t => t.id === "old-ogre"));

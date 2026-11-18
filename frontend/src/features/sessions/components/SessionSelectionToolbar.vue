@@ -2,7 +2,8 @@
   <div class="roster-selection" :aria-label="label">
     <div class="roster-selection-heading">
       <label class="roster-all-check"><CompactCheckbox :model-value="allVisible" :indeterminate="someVisible && !allVisible" :size="layoutTokens['roster-checkbox-icon']" :hit-size="layoutTokens['touch-min']" :disabled="!encounter.canManageReserves || !visibleRows.length" :label="visibleLabel" @update:model-value="selection.setVisibleSelection(visibleRows,$event)" /><span>Все</span></label>
-      <span class="roster-selection-count" role="status">Выбрано: {{ selection.selected.length }}</span>
+      <span class="roster-selection-count" :class="{'roster-count-sr-only':groupedSummary}" role="status">Выбрано: {{ selection.selected.length }}</span>
+      <SessionSelectionSummary v-if="groupedSummary" :items="selection.selected" :encounter="encounter" />
       <ActionButton variant="quiet" icon-only :disabled="!selection.selected.length" aria-label="Снять весь выбор" title="Снять весь выбор" @click="selection.clear"><template #icon><X :size="18" /></template></ActionButton>
       <slot />
     </div>
@@ -29,11 +30,12 @@
 import { computed, ref, shallowRef } from 'vue'
 import { ActionButton, AppModalFrame, CompactCheckbox, FormActionButtons, FormField, FormNumberInput } from '@sylvieshare/share-ui'
 import { HeartCrack, LogOut, Sparkles, Swords, X } from '@lucide/vue'
+import SessionSelectionSummary from './SessionSelectionSummary.vue'
 import { layoutTokens } from '@/app/design-tokens'
 import { charactersApi } from '@/shared/api/charactersApi'
 import { pvExperiencePath } from '../lib/participantView'
 import { experiencePlan, saveExperiencePlan } from '../lib/rosterExperience'
-const props=defineProps({encounter:{type:Object,required:true},selection:{type:Object,required:true},visibleItems:{type:Array,default:()=>[]},visibleLabel:{type:String,default:'Выбрать всех в этой вкладке'},actionsVisible:{type:Boolean,default:true},label:{type:String,default:'Выбор участников'}})
+const props=defineProps({encounter:{type:Object,required:true},selection:{type:Object,required:true},visibleItems:{type:Array,default:()=>[]},visibleLabel:{type:String,default:'Выбрать всех в этой вкладке'},groupedSummary:Boolean,actionsVisible:{type:Boolean,default:true},label:{type:String,default:'Выбор участников'}})
 const visibleRows=computed(()=>{const ids=new Set(props.selection.items.map(row=>row.uid));return [...new Map(props.visibleItems.filter(row=>ids.has(row.uid)).map(row=>[row.uid,row])).values()]})
 const allVisible=computed(()=>visibleRows.value.length>0&&visibleRows.value.every(row=>props.encounter.isSelected(row)))
 const someVisible=computed(()=>visibleRows.value.some(row=>props.encounter.isSelected(row)))
@@ -60,6 +62,7 @@ async function apply() {
 <style scoped>
 .roster-selection {min-width:0}
 .roster-selection-heading {display:flex;align-items:center;flex-wrap:wrap;gap:var(--spacing-xs)}
+.roster-count-sr-only {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .roster-action-summary {font-size:var(--type-caption-size);color:var(--text-muted)}
 .roster-all-check {display:inline-flex;align-items:center;gap:var(--spacing-small);min-height:var(--layout-touch-min);margin-inline-start:var(--spacing-medium);cursor:pointer}
 .roster-selection-count {margin-inline-start:auto;min-width:var(--spacing-large);padding-inline:var(--spacing-xs);border-radius:var(--radius-badge);background:var(--background);font-variant-numeric:tabular-nums}

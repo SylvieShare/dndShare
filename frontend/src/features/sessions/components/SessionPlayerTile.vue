@@ -1,5 +1,5 @@
 <template>
-  <SessionRosterTile class="session-player-tile" :name="name" :avatar-url="avatarUrl" :color="color" :hp="hp" :health-visible="healthVisible"
+  <SessionRosterTile class="session-player-tile" :name="name" :avatar-url="avatarUrl" :color="color" :hp="hp" :stage-backdrop="stageBackdrop" :stage-description="stageDescription" :health-visible="healthVisible"
     :armor="showStats && !loading && !error ? stats.armorClass : undefined" :show-passives="showStats && !loading && !error"
     :perception="stats.passives[0]?.value" :investigation="stats.passives[1]?.value" :current="current" :compact="compact"
     :has-statuses="hasStatuses" :selectable="selectable" :selected="selected" :edit-health="editHealth" :surprised="surprised" @health="$emit('health')" @select="$emit('select')">
@@ -15,7 +15,7 @@ import { SkeletonBlock } from '@sylvieshare/share-ui'
 import SessionRosterTile from './SessionRosterTile.vue'
 import { useParticipantDefenses } from '../composables/useParticipantDefenses'
 const props=defineProps({participant:Object,name:String,avatarUrl:String,color:String,hp:Object,healthVisible:Boolean,showStats:Boolean,
-  compact:Boolean,current:Boolean,hasStatuses:Boolean,selectable:Boolean,selected:Boolean,editHealth:Boolean,surprised:Boolean})
+  compact:Boolean,current:Boolean,hasStatuses:Boolean,selectable:Boolean,selected:Boolean,editHealth:Boolean,surprised:Boolean,stageBackdrop:Boolean,stageDescription:String})
 defineEmits(['health','select'])
 const { stats,loading,error }=useParticipantDefenses(()=>props.participant,()=>props.showStats)
 </script>

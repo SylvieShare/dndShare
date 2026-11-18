@@ -78,7 +78,6 @@ export function useEncounterFlow({
     if (encounter.value.active) {
       mutate(() => {
         for (const c of encounter.value.combatants) {
-          if (c.position === 'combat') c.position = 'reserve'
           c.initiative = null
           c.surprised = false
         }

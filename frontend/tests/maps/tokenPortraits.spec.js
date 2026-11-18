@@ -85,7 +85,7 @@ test("existing player and creature cylinders gain raster and delayed SVG icons o
     .poll(async () => (await portraitPixels(page, canvas, points))[1].magenta)
     .toBeGreaterThan(60);
   // A selection rebuild retains the already loaded images.
-  await page.getByRole("button", { name: "Существа", exact: true }).click();
+  await page.getByRole("button", { name: "На карту", exact: true }).click();
   await page
     .getByRole("region", { name: "Существа сессии" })
     .getByRole("button", { name: "A · Огр", exact: true })

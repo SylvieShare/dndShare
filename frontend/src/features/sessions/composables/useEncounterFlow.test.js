@@ -103,3 +103,17 @@ it('reordering a home group retains combat participation and its canonical actor
   expect(encounter.value.combatants.filter(row=>row.uid===npc.uid)).toHaveLength(1)
   expect(npc).toMatchObject({position:'combat',reserveTabId:'wolves'})
 })
+
+it('ending combat retains the scene, actor data and home groups until explicitly removed',()=>{
+  const {encounter,flow}=createFlow()
+  Object.assign(encounter.value.combatants[0],{position:'combat',hpCurrent:17,initiative:18})
+  Object.assign(encounter.value.combatants[1],{position:'combat',hpCurrent:7,reserveTabId:'wolves',initiative:12})
+  flow.toggleCombat()
+  expect(encounter.value).toMatchObject({active:false,round:0,turnIndex:0})
+  expect(encounter.value.combatants.map(row=>row.position)).toEqual(['combat','combat'])
+  expect(encounter.value.combatants[0]).toMatchObject({hpCurrent:17,initiative:null})
+  expect(encounter.value.combatants[1]).toMatchObject({hpCurrent:7,reserveTabId:'wolves',initiative:null})
+  flow.sendCombatantsTo([encounter.value.combatants[1]],'reserve')
+  expect(encounter.value.combatants[0].position).toBe('combat')
+  expect(encounter.value.combatants[1].position).toBe('reserve')
+})

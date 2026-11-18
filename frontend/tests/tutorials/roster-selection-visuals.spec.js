@@ -1,0 +1,53 @@
+import { expect,test } from '@playwright/test'
+import { rosterSelectionFixture } from './fixtures/session-roster.js'
+
+for(const width of [390,834,1440])test(`combat selection icons and stage watermark at ${width}`,async({page},info)=>{
+  const api=await rosterSelectionFixture(page,width)
+  const wolf=api.encounter().combatants.find(row=>row.uid==='wolf')
+  wolf.itemId=700
+  api.encounter().combatants.push({...structuredClone(wolf),uid:'wolf2'})
+  await page.reload()
+  const sidebar=page.locator('aside.map-sidebar'),nav=sidebar.getByRole('navigation'),toolbar=sidebar.locator('.session-sidebar-header-controls')
+  await nav.getByRole('button',{name:'Запас',exact:true}).click()
+  const first=sidebar.locator('[data-encounter-uid="wolf"]'),second=sidebar.locator('[data-encounter-uid="wolf2"]')
+  await first.getByRole('checkbox').click();await second.getByRole('checkbox').click()
+  await expect(toolbar.locator('.roster-selection-summary')).toHaveCount(0)
+  await page.getByRole('button',{name:/Открыть бой/}).click()
+  const summary=toolbar.locator('.roster-selection-summary')
+  await expect(summary.getByRole('img',{name:'Волк: 2',exact:true})).toBeVisible()
+  await expect(summary.locator('.selection-summary-item')).toHaveCount(1)
+  await toolbar.getByRole('button',{name:'Добавить на сцену: 2',exact:true}).click()
+  await expect(first.locator('.roster-stage-backdrop')).toHaveAccessibleName('На сцене')
+  await expect(first.locator('.roster-presence')).toHaveCount(0)
+  await expect(first.locator('.roster-stage-backdrop svg')).toHaveCSS('opacity','0.28')
+  const geometry=await first.locator('.session-roster-tile').evaluate(node=>({under:getComputedStyle(node.querySelector('.roster-stage-backdrop')).zIndex,paint:getComputedStyle(node,'::before').zIndex,underClip:getComputedStyle(node.querySelector('.roster-stage-backdrop')).clipPath,paintClip:getComputedStyle(node,'::before').clipPath}))
+  expect(+geometry.under).toBeLessThan(+geometry.paint)
+  expect(geometry.underClip).toBe(geometry.paintClip)
+  await second.getByRole('checkbox').click()
+  await expect(second.locator('.roster-stage-backdrop svg')).toHaveCSS('opacity','0.16')
+  await expect(summary.getByRole('img',{name:'Волк: 1',exact:true})).toBeVisible()
+  await info.attach(`stage-background-${width}`,{body:await sidebar.screenshot({animations:'disabled'}),contentType:'image/png'})
+  await expect.poll(()=>api.encounter().combatants.filter(c=>c.position==='combat').length).toBe(2)
+  expect(api.errors).toEqual([]);expect(api.warnings).toEqual([])
+})
+
+test('many selected portraits scroll within the header and leave clear selection reachable',async({page})=>{
+  const api=await rosterSelectionFixture(page,834)
+  for(let i=2;i<9;i++){
+    api.participants.push({...structuredClone(api.participants[0]),charId:i+1,charUuid:`player-${i}`,data:{values:{...structuredClone(api.participants[0].data.values),name:`Герой ${i}`}}})
+    api.encounter().combatants.push({uid:`p-${i+1}`,type:'player',charId:i+1,position:'reserve'})
+  }
+  await page.reload()
+  const sidebar=page.locator('aside.map-sidebar'),nav=sidebar.getByRole('navigation')
+  await nav.getByRole('button',{name:'Игроки',exact:true}).click()
+  await page.getByRole('button',{name:/Открыть бой/}).click()
+  const toolbar=sidebar.locator('.session-sidebar-header-controls')
+  await toolbar.getByRole('checkbox').click()
+  const summary=toolbar.locator('.roster-selection-summary')
+  await expect(summary.locator('.selection-summary-item')).toHaveCount(9)
+  expect(await summary.evaluate(n=>n.scrollWidth>n.clientWidth)).toBe(true)
+  await summary.evaluate(n=>n.scrollLeft=n.scrollWidth)
+  await expect(toolbar.getByRole('button',{name:'Снять весь выбор',exact:true})).toBeVisible()
+  await toolbar.getByRole('button',{name:'Снять весь выбор',exact:true}).click()
+  await expect(summary).toHaveText('Никто не выбран')
+})

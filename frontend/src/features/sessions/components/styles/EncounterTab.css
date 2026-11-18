@@ -14,7 +14,7 @@
 .enc-rows {display:flex;flex-direction:column;gap:0}
 .enc-empty {padding:var(--spacing-page) var(--spacing-small);color:var(--text-muted);font-size:var(--type-caption-size);line-height:var(--type-caption-line-height)}
 .enc-combat-scene {opacity:1;transform:translateY(0);transition:opacity var(--motion-enter),transform var(--motion-enter)}
-.enc-wrap--combat-ending .enc-combat-scene,.enc-wrap--combat-ending :deep(.turn-preview) {opacity:0;transform:translateY(var(--spacing-small));pointer-events:none}
+.enc-wrap--combat-ending :deep(.turn-preview) {opacity:0;transform:translateY(var(--spacing-small));pointer-events:none}
 .enc-combat-scene-enter-active,.enc-combat-scene-leave-active,.enc-turn-preview-enter-active,.enc-turn-preview-leave-active {transition:opacity var(--motion-enter),transform var(--motion-enter)}
 .enc-combat-scene-enter-from,.enc-combat-scene-leave-to,.enc-turn-preview-enter-from,.enc-turn-preview-leave-to {opacity:0;transform:translateY(var(--spacing-small))}
 .enc-combat-scene-leave-active,.enc-turn-preview-leave-active {pointer-events:none}

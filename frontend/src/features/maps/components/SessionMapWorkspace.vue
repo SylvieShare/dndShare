@@ -8,7 +8,7 @@
       @select="select"
       @rename="renaming = $event"
       @add="picker = true"
-      ><SessionMapToolbar
+      ><SessionMapCreaturePicker v-if="workspace?.editor" ref="creaturePicker" :editor="workspace.editor" :candidates="candidates" :selected="tokens.focused" :error="tokens.error" @focus="focusCreature" @place="placeCreature" @drag="dragCreature" /><SessionMapToolbar
         v-if="c.display"
         :editor="workspace?.editor"
         :controller="c"
@@ -47,7 +47,6 @@
           :embedded="integratedHeader"
           :active="active"
           :broadcast-view="broadcastView"
-          :extra-tabs="tabs"
           :custom-focus="!!tokens.candidate"
           :custom-focus-key="tokens.focused"
           :selected-token="tokens.selected"
@@ -66,15 +65,6 @@
           @camera-move="tokenDrag.cameraMoved"
           @sidebar-resize="emit('inspector-resize', $event)"
         >
-          <template #creatures="{ editor }"
-            ><SessionMapCreatures
-              :editor="editor"
-              :candidates="candidates"
-              :selected="tokens.focused"
-              @focus="focusCreature"
-              @drag="dragCreature"
-              @place="tokens.place"
-          /></template>
           <template #focus="{ editor }"
             ><SessionMapCreatureFocus
               v-if="tokens.candidate"
@@ -128,7 +118,7 @@ import {
   ConfirmDialog,
   LoadingState,
 } from "@sylvieshare/share-ui";
-import { Map, UsersRound } from "@lucide/vue";
+import { Map } from "@lucide/vue";
 import { useSessionMaps } from "../composables/useSessionMaps";
 import { useSuggestStore } from "@/stores/suggest";
 import { sessionTokens } from "../composables/sessionTokens";
@@ -139,7 +129,7 @@ import {
 } from "../lib/sessionCreatures";
 import { normalizeSessionMap } from "../lib/sessionMapState";
 import MapEditor from "./MapEditor.vue";
-import SessionMapCreatures from "./SessionMapCreatures.vue";
+import SessionMapCreaturePicker from "./SessionMapCreaturePicker.vue";
 import SessionMapCreatureFocus from "./SessionMapCreatureFocus.vue";
 import SessionMapToolbar from "./SessionMapToolbar.vue";
 import SessionMapPicker from "./SessionMapPicker.vue";
@@ -157,6 +147,7 @@ const props = defineProps({
 const emit = defineEmits(["inspector-resize", "participant"]);
 const c = reactive(useSessionMaps(props.sessionUuid)),
   workspace = ref(null),
+  creaturePicker = ref(null),
   picker = ref(false),
   pendingDelete = ref(null),
   renaming = ref(null);
@@ -197,7 +188,9 @@ const tokenDrag = useCatalogueDrag(
     drop(point) {
       if (workspace.value?.editor)
         tokens.gesture({ phase: "start", point }, workspace.value.editor);
+      const placed=!!workspace.value?.editor && !tokens.pending;
       this.cancel();
+      if(placed)creaturePicker.value?.close();
     },
     cancel() {
       if (workspace.value?.editor)
@@ -208,12 +201,13 @@ const tokenDrag = useCatalogueDrag(
 function focusCreature(item) {
   tokenDrag.cancel();
   tokens.focus(item);
+  creaturePicker.value?.close();
 }
 function dragCreature(item, event) {
   workspace.value?.cancelPlacement();
   tokenDrag.begin(item, event, {
     threshold: 5,
-    click: () => tokens.focus(item),
+    click: () => item.kind === "marker" ? focusCreature(item) : tokens.focus(item),
   });
 }
 function clearTokens() {
@@ -226,7 +220,7 @@ watch(
     if (!active) tokenDrag.cancel();
   },
 );
-const tabs = [{ key: "creatures", label: "Существа", icon: UsersRound }];
+function placeCreature(item){tokens.place(item);creaturePicker.value?.close()}
 const { broadcastView, source, capture, showBroadcastView } =
   useSessionMapBroadcast(c, workspace, prepareLeave, select);
 const screenPath = computed(

@@ -123,7 +123,7 @@ test("2D image mode hides 3D tools and places creatures at logical grid centres"
   await expect(
     page.getByRole("region", { name: "Изображение и сетка" }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Существа", exact: true }).click();
+  await page.getByRole("button", { name: "На карту", exact: true }).click();
   const creature = page
     .getByRole("region", { name: "Существа сессии" })
     .getByRole("button", { name: "Лира", exact: true });

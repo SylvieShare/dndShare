@@ -69,7 +69,7 @@ for (const mobile of [false, true])
       mobile ? { width: 430, height: 932 } : { width: 1440, height: 1000 },
     );
     await ready(page);
-    await page.getByRole("button", { name: "Существа", exact: true }).click();
+    await page.getByRole("button", { name: "На карту", exact: true }).click();
     await page.getByRole("button", { name: "Следопыт", exact: true }).click();
     await page
       .getByRole("switch", { name: "Физическая миниатюра", exact: true })

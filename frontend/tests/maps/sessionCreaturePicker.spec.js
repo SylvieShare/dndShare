@@ -1,0 +1,26 @@
+import { test,expect } from '@playwright/test'
+import { mapPoint } from './editorHelpers'
+
+for(const width of [390,834,1440])test(`session creature placement menu replaces the sidebar tab at ${width}`,async({page},info)=>{
+  page.on('pageerror',error=>{throw error})
+  await page.setViewportSize({width,height:980})
+  await page.goto('/tests/maps/fixtures/maps.html?mode=board&creatures&imageMap')
+  await expect(page.locator('.map-canvas canvas')).toBeVisible()
+  const nav=page.getByRole('navigation',{name:'Боковые вкладки редактора'})
+  await expect(nav.getByRole('button',{name:'Существа',exact:true})).toHaveCount(0)
+  const button=page.getByRole('button',{name:'На карту',exact:true})
+  await expect(button).toBeInViewport()
+  await button.click()
+  const picker=page.getByRole('dialog',{name:'На карту',exact:true})
+  await expect(picker).toBeVisible()
+  await expect(picker.getByRole('button',{name:'Лира',exact:true})).toBeVisible()
+  await picker.getByRole('switch',{name:'Использовать подставки',exact:true}).click()
+  await expect.poll(()=>page.evaluate(()=>window.latestBoard.state.useCreatureBases)).toBe(true)
+  await info.attach(`map-creature-picker-${width}`,{body:await page.screenshot({animations:'disabled'}),contentType:'image/png'})
+  await picker.getByRole('button',{name:'Добавить метку',exact:true}).click()
+  await expect(picker).toHaveCount(0)
+  const point=await mapPoint(page,6.2,5.8)
+  await page.mouse.click(point.x,point.y)
+  await expect.poll(()=>page.evaluate(()=>window.latestBoard.state.tokens.some(t=>t.name==='Метка'))).toBe(true)
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
+})
