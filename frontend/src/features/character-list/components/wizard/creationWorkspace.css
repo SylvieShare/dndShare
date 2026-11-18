@@ -1,0 +1,80 @@
+.cc {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100vh - var(--header-h));
+  height: calc(100dvh - var(--header-h));
+  min-height: 0;
+  color: var(--text-1);
+}
+
+.cc--embedded { height: 100%; }
+.cc-head { position: relative; z-index: 20; isolation: isolate; }
+
+.cc-body,
+.cc-foot {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1120px);
+  justify-content: center;
+  gap: 24px;
+  padding-inline: 24px;
+}
+.cc-body { flex: 1; min-height: 0; }
+.cc-rail {
+  align-self: start;
+  width: 100%;
+  margin-block-start: var(--spacing-medium);
+  max-height: calc(100% - var(--spacing-medium));
+  overflow-y: auto;
+}
+.cc-main,
+.cc-foot-main {
+  grid-column: 2;
+  min-width: 0;
+  background: var(--bg);
+}
+.cc-main {
+  overflow-x: clip;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+  padding: 4px 16px 16px;
+}
+.cc-foot-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--border-strong);
+}
+.cc-actions { margin-inline-start: auto; display: flex; flex-wrap: wrap; gap: 10px; }
+.cc-fade-enter-active, .cc-fade-leave-active { transition: opacity .16s ease; }
+.cc-fade-enter-from, .cc-fade-leave-to { opacity: 0; }
+
+@media (max-width: 920px) {
+  .cc-body, .cc-foot { grid-template-columns: minmax(0, 1fr); padding-inline: 0; }
+  .cc-main, .cc-foot-main { grid-column: 1; padding-inline: 24px; }
+  .cc-body { grid-template-rows: minmax(0, 1fr); gap: 0; }
+  .cc-body--compact-steps { grid-template-rows: auto minmax(0, 1fr); }
+  .cc-rail { display: none; }
+  .cc-body--compact-steps .cc-rail {
+    display: flex;
+    margin: var(--spacing-small) 0;
+    max-height: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .cc-main { padding: 4px 20px 14px; }
+  .cc-foot { position: sticky; bottom: 0; z-index: 20; }
+  .cc-foot-main {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 20px max(12px, env(safe-area-inset-bottom));
+  }
+  .cc-actions { gap: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cc-fade-enter-active, .cc-fade-leave-active { transition: none; }
+}

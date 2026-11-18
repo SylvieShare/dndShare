@@ -9,6 +9,7 @@ export function redCatalogueItem(row) {
         facts: row.data.facts || {},
         page: row.contentSources?.[0]?.page,
         description: row.data.description || "",
+        coverImageUrl: row.coverImageUrl,
       }
     : row;
 }

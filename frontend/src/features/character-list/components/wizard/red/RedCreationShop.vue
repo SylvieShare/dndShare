@@ -1,8 +1,8 @@
 <template>
   <div class="red-stack">
+    <RedCreationIntro :title="cyber ? 'Киберимпланты' : 'Снаряжение'" :cover="cover" />
     <BaseTile :outlined="false"
       ><div class="red-panel">
-        <h2>{{ cyber ? "Киберимпланты" : "Снаряжение" }}</h2>
         <div class="red-two">
           <div>
             <small>Основной бюджет</small
@@ -129,6 +129,7 @@ import {
   FormSelect,
   FormNumberInput,
 } from "@sylvieshare/share-ui";
+import RedCreationIntro from "./RedCreationIntro.vue";
 import RedItemPicker from "@/features/character-editor/components/sheet/cyberpunk-red/RedItemPicker.vue";
 import {
   RED_STARTING_KITS,
@@ -140,6 +141,7 @@ const props = defineProps({
   items: Array,
   summary: Object,
   cyber: Boolean,
+  cover: String,
 });
 const emit = defineEmits(["patch"]);
 const picker = ref(false),

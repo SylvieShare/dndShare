@@ -7,12 +7,14 @@ import {RED_STARTING_KITS} from '../../src/features/character-editor/settings/cy
 
 const core=JSON.parse(fs.readFileSync(new URL('../../../internal/cyberpunkred/core.json',import.meta.url),'utf8'))
 const uuid='c0000000-0000-4000-8000-000000000001'
+const cover='/test-red-cover.svg'
 async function fixture(page){
  const options={nativeLanguage:'Русский',specializations:{science:'Биология','play-instrument':'Гитара'}}
  let data=finishRedCreation({...options,name:'STATIC',role:'netrunner',method:'streetrat',stats:redStatsFromRolls('netrunner','streetrat',[6]),statRolls:[6],skills:redInitialSkills('netrunner','streetrat',options),kitChoices:Object.fromEntries(RED_STARTING_KITS.netrunner.filter(r=>r.choice).map(r=>[r.choice,0])),cart:[]},core.items)
  let version=1;const rolls=[]
  const response=()=>({uuid,id:1,templateId:3,templateName:'CYBERPUNK_RED',sourceName:'Cyberpunk',sourceId:3,sourceVersionId:30,sourceVersion:'RED',version,userId:1,publicVisible:true,data})
- const items=core.items.map((i,index)=>({id:index+1000,typeId:100,name:i.name,nameEn:i.nameEn,data:{red_key:i.key,red_kind:i.kind,price_eb:i.facts.price,facts:i.facts},contentSources:[{page:i.page}]}))
+ const items=core.items.map((i,index)=>({id:index+1000,typeId:100,name:i.name,nameEn:i.nameEn,coverImageUrl:i.kind==='role'?cover:undefined,data:{red_key:i.key,red_kind:i.kind,price_eb:i.facts.price,facts:i.facts},contentSources:[{page:i.page}]}))
+ await page.route('**/test-red-cover.svg',route=>route.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" width="50" height="20"><rect width="50" height="20" fill="teal"/></svg>'}))
  await page.route(url=>url.pathname.startsWith('/api/'),async route=>{
   const request=route.request(),url=new URL(request.url()),path=url.pathname,method=request.method()
   if(path===`/api/char/${uuid}`)return route.fulfill({json:response()})
@@ -32,7 +34,11 @@ async function fixture(page){
    '/api/templates':{templates:[{id:1,name:'DND5'},{id:3,name:'CYBERPUNK_RED'}]},
    '/api/cyberpunk-red/catalogue':{items,revision:core.revision,groups:core.groups},
    '/api/chars':{chars:[response()],sessionsByChar:{}},
-   '/api/item-types':{types:[]},'/api/items/by-ids':{items:[]},'/api/suggest/types':{items:[]},'/api/suggest/batch':{items:{}},'/api/sessions/active':{sessions:[]},
+   '/api/item-types':{types:[{name:'Киберимпланты',coverImageUrl:cover}]},
+   '/api/items/by-ids':{items:[]},
+   '/api/suggest/types':{items:[{id:36,name:'Методы создания'},{id:34,name:'Характеристики',coverImageUrl:cover}]},
+   '/api/suggest/36':{items:[{code:'complete',coverImageUrl:cover}]},
+   '/api/suggest/batch':{items:{}},'/api/sessions/active':{sessions:[]},
    '/api/account/tutorials':{tutorials:['mobile','desktop'].map(device=>({flowId:'character',sourceKey:'edition:30',device,status:'completed',revision:58}))},[`/api/char/${uuid}/sessions`]:{sessions:[]},[`/api/char/${uuid}/history`]:{changes:[]},
   }[path]||{}})
  })
@@ -66,11 +72,20 @@ for(const width of [390,840,1440]){
   await expect(page.locator('.character-heading h1')).toHaveText('STATIC II')
   await page.goto('/chars/new?system=cyberpunk-red')
   await expect(page.getByRole('heading',{name:'Способ создания'})).toBeVisible()
+  await expect(page.getByRole('button',{name:'Полный пакет',exact:true}).locator('img')).toHaveJSProperty('naturalWidth',50)
   await page.getByRole('button',{name:'Уличная крыса',exact:true}).click()
   await page.getByRole('button',{name:'Изменить',exact:true}).click()
-  await page.getByRole('button',{name:'2. Роль',exact:true}).click()
+  const rail=page.getByRole('navigation',{name:'Шаги создания персонажа'})
+  await rail.getByText('Роль',{exact:true}).click()
+  await expect(page.getByRole('button',{name:'Соло',exact:true}).locator('img')).toHaveJSProperty('naturalWidth',50)
   await testInfo.attach(`wizard-${width}`,{body:await page.screenshot({animations:'disabled',timeout:10000}),contentType:'image/png'})
-  await page.getByRole('button',{name:'8. Завершение',exact:true}).click()
+  await rail.getByText('Характеристики',{exact:true}).click()
+  await expect(page.locator('.creation-cover')).toHaveJSProperty('naturalWidth',50)
+  await rail.getByText('Киберимпланты',{exact:true}).click()
+  await expect(page.getByRole('heading',{name:'Киберимпланты',exact:true})).toBeVisible()
+  await expect(page.locator('.creation-cover')).toHaveJSProperty('naturalWidth',50)
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
+  await rail.getByText('Завершение',{exact:true}).click()
   await page.locator('.red-wizard-main input').fill('Новый RED')
   await page.getByRole('button',{name:'Создать персонажа',exact:true}).click()
   await expect(page).toHaveURL(new RegExp(`/char/${uuid}$`))

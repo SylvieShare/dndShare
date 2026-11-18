@@ -80,6 +80,11 @@ Both flows resolve `sourceVersionId` from `/api/sources` and send it explicitly
 to `POST /api/chars`. The server rejects a missing/unknown version; there is no
 default-version fallback.
 
+В полноразмерном визарде боковой список шагов отделён верхним отступом от
+общей шапки создания. D&D и RED используют одну раскладку области шагов и
+нижних действий. В компактном формате RED сохраняет горизонтальный список
+из восьми шагов.
+
 `/chars/new` is public. An anonymous visitor can complete every wizard step;
 authentication is requested only by the final create action, after which the
 draft remains in place. Successful creation seeds the character-sheet route

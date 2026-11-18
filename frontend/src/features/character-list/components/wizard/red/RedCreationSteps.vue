@@ -1,31 +1,38 @@
 <template>
   <div class="red-stack">
-    <template v-if="step === 0"
-      ><h2>Способ создания</h2>
-      <div class="red-form-grid">
-        <ChoiceCard
-          v-for="m in methods"
-          :key="m.key"
-          :label="m.name"
-          :description="m.description"
-          :model-value="draft.method === m.key"
-          @update:model-value="emit('method', m.key)"
+    <IllustratedChoiceStage v-if="step === 0" class="method-stage" title="Способ создания" two-column>
+      <template #cards>
+        <BackgroundSelectCard
+          v-for="method in methods"
+          :key="method.key"
+          :title="method.name"
+          :description="method.description"
+          :monogram="method.name[0]"
+          :image-url="art.methodCover(method.key)"
+          :selected="draft.method === method.key"
+          :expanded-selection="false"
+          panoramic
+          @select="emit('method', method.key)"
         />
-      </div>
-      <p>Cyberpunk RED · Core 1.25 · 2045 год</p></template
-    >
-    <template v-else-if="step === 1"
-      ><h2>Роль</h2>
-      <div class="red-form-grid">
-        <ChoiceCard
-          v-for="r in RED_ROLES"
-          :key="r.key"
-          :label="r.name"
-          :description="r.originalName + ' · начальный ранг 4'"
-          :model-value="draft.role === r.key"
-          @update:model-value="emit('role', r.key)"
-        />
-      </div>
+      </template>
+    </IllustratedChoiceStage>
+    <template v-else-if="step === 1">
+      <IllustratedChoiceStage title="Роль" two-column>
+        <template #cards>
+          <BackgroundSelectCard
+            v-for="role in RED_ROLES"
+            :key="role.key"
+            :title="role.name"
+            :description="roleItem(role.key)?.description || role.originalName"
+            :monogram="role.name[0]"
+            :image-url="roleItem(role.key)?.coverImageUrl || art.collectionCover('Роли')"
+            :selected="draft.role === role.key"
+            :expanded-selection="false"
+            panoramic
+            @select="emit('role', role.key)"
+          />
+        </template>
+      </IllustratedChoiceStage>
       <div v-if="roleFields[draft.role]" class="red-panel">
         <h3>Специальности роли</h3>
         <FormField
@@ -63,7 +70,7 @@
       </div></template
     >
     <template v-else-if="step === 2"
-      ><h2>Жизненный путь</h2>
+      ><RedCreationIntro title="Жизненный путь" :cover="art.dictionaryCover('Местности')" />
       <div class="red-form-grid">
         <FormField label="Родной язык · бесплатный ранг 4" vertical
           ><FormTextInput
@@ -96,7 +103,7 @@
         /></FormField></div
     ></template>
     <template v-else-if="step === 3"
-      ><h2>Характеристики</h2>
+      ><RedCreationIntro title="Характеристики" :cover="art.dictionaryCover('Характеристики')" />
       <p v-if="draft.method === 'complete'">
         Распределено {{ statTotal }} из 62. Каждое значение от 2 до 8.
       </p>
@@ -127,7 +134,7 @@
       </div></template
     >
     <template v-else-if="step === 4"
-      ><h2>Навыки</h2>
+      ><RedCreationIntro title="Навыки" :cover="art.dictionaryCover('Навыки')" />
       <p>
         Стоимость: {{ validation.skills?.spent || 0 }} / 86. Родной язык 4 не
         расходует очки.
@@ -168,10 +175,14 @@
       :items="items"
       :summary="shopping"
       :cyber="step === 6"
+      :cover="art.collectionCover(step === 6 ? 'Киберимпланты' : 'Снаряжение')"
       @patch="patch"
     />
     <template v-else
-      ><h2>Готовность персонажа</h2>
+      ><RedCreationIntro
+        title="Готовность персонажа"
+        :cover="roleItem(draft.role)?.coverImageUrl || art.collectionCover('Роли')"
+      />
       <FormField label="Имя / handle" vertical
         ><FormTextInput
           :value="draft.name"
@@ -179,7 +190,7 @@
       /></FormField>
       <p>
         {{ RED_ROLES.find((r) => r.key === draft.role)?.name }} · ранг 4 ·
-        {{ draft.method }}
+        {{ methods.find(method => method.key === draft.method)?.name }}
       </p>
       <p>
         Остаток денег: {{ shopping.cash }} eb. Неиспользованные деньги на одежду
@@ -199,7 +210,6 @@
 import { computed } from "vue";
 import {
   ActionButton,
-  ChoiceCard,
   FormField,
   FormTextInput,
   FormNumberInput,
@@ -213,11 +223,15 @@ import {
   RED_ROLE_LIFEPATH,
 } from "@/features/character-editor/settings/cyberpunk-red/lifepath";
 import RedSkills from "@/features/character-editor/components/sheet/cyberpunk-red/RedSkills.vue";
+import BackgroundSelectCard from "../BackgroundSelectCard.vue";
+import IllustratedChoiceStage from "../IllustratedChoiceStage.vue";
+import RedCreationIntro from "./RedCreationIntro.vue";
 import RedCreationShop from "./RedCreationShop.vue";
 const props = defineProps({
   draft: Object,
   step: Number,
   items: Array,
+  art: { type: Object, required: true },
   validation: Object,
   shopping: Object,
   skillValues: Object,
@@ -230,6 +244,10 @@ const emit = defineEmits([
   "native-language",
   "specialization",
 ]);
+const roleItems = computed(() => new Map(
+  props.items.filter(item => item.kind === "role").map(item => [item.key, item]),
+));
+const roleItem = key => roleItems.value.get(`role-${key}`);
 const patch = (value) => emit("patch", value);
 function toggleRecipe(key) {
   const known = props.draft.roleChoices.knownRecipes || [];
@@ -302,3 +320,11 @@ const errors = {
 const errorText = (e) =>
   `${errors[e.code] || "Проверьте выбор"}${e.key ? `: ${e.key}` : ""}${e.expected != null ? ` (${e.actual} / ${e.expected})` : ""}`;
 </script>
+
+<style scoped>
+@media (min-width: 1050px) {
+  .method-stage :deep(.illustrated-choice-list--two-column) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+</style>

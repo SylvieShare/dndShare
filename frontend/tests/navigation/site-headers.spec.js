@@ -49,6 +49,11 @@ for(const width of [390,834,1440]) test(`creation uses one common header at ${wi
   await expect(page.locator('.app-header')).toHaveCount(0)
   await expect(page.locator('.cc-head')).toHaveCSS('background-color','rgb(30, 30, 34)')
   await expect(page.locator('.cc-head .workspace-header-backdrop')).toHaveCount(0)
+  if(width===1440){
+    const header=await page.locator('.cc-head').boundingBox()
+    const steps=await page.getByRole('navigation',{name:'Шаги создания персонажа'}).boundingBox()
+    expect(steps.y-header.y-header.height).toBeGreaterThanOrEqual(8)
+  }
   await page.locator('.cc-head').getByRole('button',{name:'Закрыть создание персонажа'}).click()
   await expect(page.locator('#app-header-actions').getByRole('button',{name:'Новый персонаж',exact:true})).toBeVisible()
 })

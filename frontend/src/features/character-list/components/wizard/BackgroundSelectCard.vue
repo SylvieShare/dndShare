@@ -2,12 +2,17 @@
   <button
     type="button"
     class="background-card"
-    :class="{ 'background-card--selected': selected }"
+    :class="{
+      'background-card--selected': selected && expandedSelection,
+      'background-card--panoramic': panoramic,
+      'background-card--active': selected,
+    }"
+    :aria-label="panoramic ? title : undefined"
     :aria-pressed="selected"
     @click="$emit('select')"
   >
     <span class="background-card-visual">
-      <img v-if="imageUrl" :src="imageUrl" :alt="`Иллюстрация предыстории «${title}»`" loading="lazy" />
+      <img v-if="imageUrl && failedImage !== imageUrl" :src="imageUrl" alt="" loading="lazy" @error="failedImage = imageUrl" />
       <span v-else class="background-card-fallback" aria-hidden="true">{{ monogram }}</span>
       <span class="background-card-vignette" aria-hidden="true" />
       <span v-if="selected" class="background-card-status">
@@ -28,6 +33,9 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
+const failedImage = ref('')
 defineProps({
   title: { type: String, default: '' },
   subtitle: { type: String, default: '' },
@@ -35,6 +43,8 @@ defineProps({
   monogram: { type: String, default: '' },
   imageUrl: { type: String, default: '' },
   selected: { type: Boolean, default: false },
+  expandedSelection: { type: Boolean, default: true },
+  panoramic: { type: Boolean, default: false },
 })
 defineEmits(['select'])
 </script>
@@ -51,6 +61,8 @@ defineEmits(['select'])
 .background-card--selected { min-height: 270px; display: grid; grid-template-columns: minmax(280px, .95fr) minmax(0, 1.55fr); border-color: color-mix(in srgb, var(--accent) 58%, var(--border)); box-shadow: 0 14px 34px color-mix(in srgb, var(--bg) 30%, transparent); }
 .background-card--selected:hover { transform: none; }
 .background-card-visual { position: relative; display: block; width: 100%; aspect-ratio: 3 / 2; overflow: hidden; background: color-mix(in srgb, var(--accent) 8%, var(--surface-raised)); }
+.background-card--active { border-color: color-mix(in srgb, var(--accent) 58%, var(--border)); }
+.background-card--panoramic .background-card-visual { aspect-ratio: 5 / 2; }
 .background-card-visual img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 28%; transition: transform .35s cubic-bezier(.22,1,.36,1); }
 .background-card:hover .background-card-visual img { transform: scale(1.025); }
 .background-card-vignette { position: absolute; inset: 0; background: linear-gradient(to top, color-mix(in srgb, var(--bg) 58%, transparent), transparent 48%); pointer-events: none; }

@@ -1,5 +1,5 @@
 <template>
-  <nav class="rail" :class="{ 'rail--with-action': showIncomplete }" aria-label="Шаги создания персонажа">
+  <nav ref="rail" class="rail" :class="{ 'rail--with-action': showIncomplete, 'rail--compact': compact }" aria-label="Шаги создания персонажа">
     <div class="rail-head">
       <div class="rail-caption">Создание</div>
       <button type="button" class="rail-reset" title="Начать создание сначала" @click="$emit('reset')">
@@ -11,19 +11,19 @@
       v-for="(s, i) in steps"
       :key="s.key"
       class="rail-step"
-      :class="{ active: i === current, done: i < current, ahead: i > current && i <= reachable, locked: i > reachable }"
+      :class="{ active: i === current, done: sequential && i < current, ahead: i !== current && i <= reachable && (!sequential || i > current), locked: i > reachable }"
       :disabled="i > reachable"
       :aria-current="i === current ? 'step' : undefined"
       @click="$emit('go', i)"
     >
       <span class="rail-badge">
-        <svg v-if="i < current" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6" /></svg>
+        <svg v-if="sequential && i < current" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6" /></svg>
         <template v-else>{{ i + 1 }}</template>
       </span>
       <span class="rail-copy">
         <span class="rail-title-row">
           <span class="rail-title">{{ s.title }}</span>
-          <svg v-if="i > current && i <= reachable" class="rail-jump" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+          <svg v-if="sequential && i > current && i <= reachable" class="rail-jump" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
         </span>
         <span v-if="s.summary" class="rail-summary">{{ s.summary }}</span>
       </span>
@@ -44,14 +44,30 @@
 
 <script setup>
 import { LoadingIndicator } from '@sylvieshare/share-ui'
-defineProps({
+import { onMounted, ref, watch } from 'vue'
+const props = defineProps({
   steps: { type: Array, required: true },
   current: { type: Number, default: 0 },
   reachable: { type: Number, default: 0 },
   showIncomplete: { type: Boolean, default: false },
   creating: { type: Boolean, default: false },
+  compact: { type: Boolean, default: false },
+  sequential: { type: Boolean, default: true },
 })
 defineEmits(['go', 'reset', 'create-incomplete'])
+const rail = ref(null)
+function revealCurrentStep() {
+  if (!props.compact || !rail.value) return
+  const nav = rail.value
+  const active = nav.querySelector('[aria-current="step"]')
+  if (!active || nav.scrollWidth <= nav.clientWidth) return
+  const viewport = nav.getBoundingClientRect()
+  const button = active.getBoundingClientRect()
+  nav.scrollLeft += Math.min(0, button.left - viewport.left) +
+    Math.max(0, button.right - viewport.right)
+}
+onMounted(revealCurrentStep)
+watch(() => props.current, revealCurrentStep, { flush: 'post' })
 </script>
 
 <style scoped>
@@ -143,4 +159,21 @@ defineEmits(['go', 'reset', 'create-incomplete'])
 .rail-incomplete:hover:not(:disabled) { color: var(--text-2); }
 .rail-incomplete:disabled { opacity: .5; cursor: default; }
 .rail-incomplete svg { width: 13px; height: 13px; }
+@media (max-width: 920px) {
+  .rail--compact {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: var(--spacing-small);
+    padding: 4px var(--spacing-page);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .rail--compact::before, .rail--compact .rail-head { display: none; }
+  .rail--compact .rail-step { flex: 0 0 auto; align-items: center; }
+  .rail--compact .rail-copy { padding-top: 0; }
+  .rail--compact .rail-summary, .rail--compact .rail-jump { display: none; }
+}
 </style>

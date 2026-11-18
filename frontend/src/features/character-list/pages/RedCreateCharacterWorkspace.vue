@@ -1,81 +1,64 @@
 <template>
-  <div class="red-wizard red-sheet">
-    <header class="red-row">
-      <div>
-        <h1>Создание персонажа</h1>
-        <small>Cyberpunk RED · Core 1.25</small>
-      </div>
-      <div class="red-actions">
-        <ActionButton variant="quiet" @click="resetOpen = true"
-          >Сбросить</ActionButton
-        ><ActionButton variant="quiet" @click="exit">Закрыть</ActionButton>
-      </div>
-    </header>
-    <div
-      v-if="loading"
-      class="red-skeleton"
-      aria-label="Загрузка создания персонажа"
+  <div class="cc red-wizard" :class="{ 'cc--embedded': embedded }">
+    <CharacterCreationHeader
+      class="cc-head"
+      red
+      :scroll-source="mainRef"
+      @close="exit"
+      @reset="resetOpen = true"
     />
-    <p
-      v-if="error || catalogue.error.value || wizard.storageError.value"
-      class="red-danger"
-      role="alert"
-    >
-      {{ error || catalogue.error.value || wizard.storageError.value
-      }}<ActionButton v-if="catalogue.error.value" @click="catalogue.load"
-        >Повторить</ActionButton
-      >
-    </p>
-    <div v-if="!loading" class="red-wizard-layout">
-      <nav class="red-step-rail" aria-label="Шаги создания">
-        <ActionButton
-          v-for="(name, index) in RED_CREATE_STEPS"
-          :key="name"
-          :aria-current="step === index ? 'step' : undefined"
-          @click="step = index"
-          >{{ index + 1 }}. {{ name }}</ActionButton
-        >
-      </nav>
-      <main class="red-wizard-main">
-        <RedCreationSteps
-          :draft="draft"
-          :step="step"
-          :items="catalogue.items.value"
-          :validation="wizard.validation.value"
-          :shopping="wizard.shopping.value"
-          :skill-values="wizard.skillValues.value"
-          @patch="patch"
-          @method="pendingChange = { kind: 'method', value: $event }"
-          @role="pendingChange = { kind: 'role', value: $event }"
-          @roll-stats="wizard.rollStats"
-          @native-language="nativeLanguage"
-          @specialization="specialization"
-        />
-        <footer class="red-wizard-footer">
-          <ActionButton variant="quiet" @click="step > 0 ? step-- : exit()">{{
-            step ? "Назад" : "Отмена"
-          }}</ActionButton>
-          <div class="red-actions">
-            <ActionButton
-              v-if="step === 7"
-              :disabled="creating || !available"
-              @click="preview"
-              >Предпросмотр листа</ActionButton
-            ><ActionButton
-              :disabled="creating || !available"
-              @click="step < 7 ? step++ : create()"
-              >{{
-                creating
-                  ? "Создание…"
-                  : step < 7
-                    ? "Далее"
-                    : "Создать персонажа"
-              }}</ActionButton
-            >
-          </div>
-        </footer>
+    <div class="cc-body cc-body--compact-steps">
+      <CreateStepRail
+        class="cc-rail"
+        compact
+        :sequential="false"
+        :steps="steps"
+        :current="step"
+        :reachable="lastStep"
+        @go="step = $event"
+        @reset="resetOpen = true"
+      />
+      <main ref="mainRef" class="cc-main red-wizard-main">
+        <p v-if="displayError" class="red-danger" role="alert">
+          {{ displayError }}
+          <ActionButton v-if="catalogue.error.value" @click="catalogue.load">Повторить</ActionButton>
+        </p>
+        <LoadingState v-if="loading || catalogue.loading.value && !catalogue.items.value.length" label="Загрузка создания персонажа…" />
+        <Transition v-else name="cc-fade" mode="out-in">
+          <RedCreationSteps
+            :key="step"
+            :draft="draft"
+            :step="step"
+            :items="catalogue.items.value"
+            :art="art"
+            :validation="wizard.validation.value"
+            :shopping="wizard.shopping.value"
+            :skill-values="wizard.skillValues.value"
+            @patch="patch"
+            @method="requestChange('method', $event)"
+            @role="requestChange('role', $event)"
+            @roll-stats="wizard.rollStats"
+            @native-language="nativeLanguage"
+            @specialization="specialization"
+          />
+        </Transition>
       </main>
     </div>
+    <footer class="cc-foot">
+      <div class="cc-foot-main">
+        <ActionButton variant="quiet" @click="step > 0 ? step-- : exit()">
+          {{ step ? "Назад" : "Отмена" }}
+        </ActionButton>
+        <div class="cc-actions">
+          <ActionButton v-if="step === lastStep" variant="quiet" :disabled="creating || !available" @click="preview">
+            Предпросмотр листа
+          </ActionButton>
+          <ActionButton :disabled="creating || !available" @click="step < lastStep ? step++ : create()">
+            {{ creating ? "Создание…" : step < lastStep ? "Далее" : "Создать персонажа" }}
+          </ActionButton>
+        </div>
+      </div>
+    </footer>
     <CharacterSheetModal
       v-if="previewDraft"
       :draft="previewDraft"
@@ -103,9 +86,9 @@
   </div>
 </template>
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { ActionButton, ConfirmDialog } from "@sylvieshare/share-ui";
+import { ActionButton, ConfirmDialog, LoadingState } from "@sylvieshare/share-ui";
 import { fetchGet, fetchPost } from "@/shared/api/http";
 import { useAccountStore } from "@/stores/account";
 import { useTemplateStore } from "@/stores/template";
@@ -115,6 +98,10 @@ import {
   useRedCreateWizard,
   RED_CREATE_STEPS,
 } from "../composables/useRedCreateWizard";
+import { RED_ROLES } from "@/features/character-editor/settings/cyberpunk-red/catalogue";
+import { useRedCreationArt } from "../composables/useRedCreationArt";
+import CharacterCreationHeader from "../components/CharacterCreationHeader.vue";
+import CreateStepRail from "../components/wizard/CreateStepRail.vue";
 import RedCreationSteps from "../components/wizard/red/RedCreationSteps.vue";
 import CharacterSheetModal from "@/features/character-editor/components/CharacterSheetModal.vue";
 const props = defineProps({
@@ -138,13 +125,31 @@ const { draft, step } = wizard,
   previewDraft = ref(null),
   resetOpen = ref(false),
   pendingChange = ref(null);
+const art = useRedCreationArt();
+const mainRef = ref(null);
+const lastStep = RED_CREATE_STEPS.length - 1;
+const summaries = computed(() => ({
+  Правила: "Cyberpunk RED · Core 1.25",
+  Роль: RED_ROLES.find(role => role.key === draft.value.role)?.name,
+  Завершение: draft.value.name.trim(),
+}));
+const steps = computed(() => RED_CREATE_STEPS.map(title => ({
+  key: title,
+  title,
+  summary: summaries.value[title],
+})));
+watch(step, () => { if (mainRef.value) mainRef.value.scrollTop = 0; });
 const creating = computed(() => props.creating || submitting.value),
   error = computed(() => props.error || localError.value),
+  displayError = computed(() => error.value || catalogue.error.value || wizard.storageError.value),
   available = computed(
     () => templateId.value && versionId.value && catalogue.items.value.length,
   );
 function patch(value) {
   Object.assign(draft.value, value);
+}
+function requestChange(kind, value) {
+  if (draft.value[kind] !== value) pendingChange.value = { kind, value };
 }
 function applyChange() {
   const change = pendingChange.value;
@@ -243,6 +248,7 @@ onMounted(async () => {
     versionId.value =
       props.sourceVersionId ||
       source?.versions?.find((v) => v.version === "RED")?.id;
+    if (source?.id) void art.load(source.id);
     if (!templateId.value || !versionId.value)
       throw new Error("Cyberpunk RED ещё не подключён к этому серверу");
   } catch (e) {
@@ -256,62 +262,8 @@ defineExpose({ clearDraft: wizard.clearDraft });
 <style
   src="../../character-editor/components/sheet/cyberpunk-red/redSheet.css"
 ></style>
+<style scoped src="../components/wizard/creationWorkspace.css"></style>
 <style scoped>
-.red-wizard {
-  max-width: 1400px;
-  margin: auto;
-}
-.red-wizard h1 {
-  margin: 0;
-  font-family: var(--font-ui);
-  font-size: var(--type-title-size);
-}
-.red-wizard-layout {
-  display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
-  gap: var(--spacing-section);
-}
-.red-step-rail {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-small);
-  align-self: start;
-  position: sticky;
-  top: var(--layout-header);
-}
-.red-step-rail [aria-current="step"] {
-  color: var(--accent-soft);
-}
-.red-wizard-main {
-  min-width: 0;
-  display: grid;
-  gap: var(--spacing-section);
-}
-.red-wizard-footer {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--spacing-medium);
-  padding-block: var(--spacing-large);
-  position: sticky;
-  bottom: 0;
-  background: var(--bg);
-  z-index: 2;
-  flex-wrap: wrap;
-}
-@media (max-width: 1199px) {
-  .red-wizard-layout {
-    grid-template-columns: 1fr;
-  }
-  .red-step-rail {
-    position: static;
-    flex-direction: row;
-    overflow: auto;
-  }
-  .red-step-rail > * {
-    flex: none;
-  }
-  .red-wizard-footer {
-    padding-bottom: calc(var(--spacing-large) + env(safe-area-inset-bottom));
-  }
-}
+.red-wizard-main { padding-block-start: var(--spacing-medium); }
+.red-wizard-main > [role="alert"] { margin: 0 0 var(--spacing-medium); }
 </style>
