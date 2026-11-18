@@ -6,7 +6,6 @@
     <template #name-suffix><slot name="name-suffix" /></template>
     <template v-if="$slots.health" #health><slot name="health" /></template>
     <template #metrics><SkeletonBlock v-if="showStats && loading" width="110px" height="28px" /><span v-else-if="showStats && error" class="player-metric-error" role="alert">{{ error }}</span></template>
-    <template #presence><slot name="presence" /></template>
     <template #statuses><slot name="statuses" /></template>
   </SessionRosterTile>
 </template>

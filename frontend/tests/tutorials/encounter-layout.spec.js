@@ -17,9 +17,10 @@ for (const width of [390, 932, 1440]) test(`passing the turn keeps every row in 
   })
   await page.getByRole('button', { name: /Открыть бой/ }).click()
   const root = page.locator('.enc-wrap--workspace')
-  const active = root.locator('.roster-presence-slot[aria-hidden="false"]')
-  await expect(active).toHaveCount(1)
-  await expect(root.locator('.enc-row--current')).toContainText('Лира')
+  const active = root.locator('.session-roster-tile[aria-current="true"]')
+  await expect(active).toContainText('Лира')
+  await expect(root.locator('.enc-row-order--current span')).toHaveText('1')
+  await expect(root.getByText('Сейчас ход', { exact: true })).toHaveCount(0)
   await page.mouse.move(0, 0)
   await page.evaluate(async () => {
     await document.fonts.ready
@@ -33,13 +34,11 @@ for (const width of [390, 932, 1440]) test(`passing the turn keeps every row in 
     const next = element.querySelector('button[aria-label="Следующий ход"]')
     const previous = element.querySelector('button[aria-label="Предыдущий ход"]')
     const sample = () => tiles.map(tile => {
-      const label = tile.querySelector('.roster-presence-slot')
       const paint = getComputedStyle(tile, '::before')
       const bounds = tile.getBoundingClientRect()
       return {
         top: bounds.top,
         height: bounds.height,
-        labelOpacity: Number(getComputedStyle(label).opacity),
         color: paint.backgroundColor,
       }
     })
@@ -61,22 +60,21 @@ for (const width of [390, 932, 1440]) test(`passing the turn keeps every row in 
     await frame()
     return { before, samples, after, reversing, retargeted: sample() }
   })
-  expect(motion.before.map(tile => tile.labelOpacity)).toEqual([1, 0, 0])
-  expect(motion.after.map(tile => tile.labelOpacity)).toEqual([0, 1, 0])
+  const [currentColor, idleColor, lastColor] = motion.before.map(tile => tile.color)
+  expect(currentColor).not.toBe(idleColor)
+  expect(motion.after.map(tile => tile.color)).toEqual([idleColor, currentColor, lastColor])
   const geometry = tiles => tiles.map(({ top, height }) => ({ top: +top.toFixed(2), height: +height.toFixed(2) }))
   for (const sample of [...motion.samples, motion.reversing, motion.retargeted]) {
     expect(geometry(sample)).toEqual(geometry(motion.before))
   }
   for (const [index, start] of motion.before.slice(0, 2).entries()) {
     const end = motion.after[index]
-    const min = Math.min(start.labelOpacity, end.labelOpacity), max = Math.max(start.labelOpacity, end.labelOpacity)
-    expect(motion.samples.some(sample => sample[index].labelOpacity > min && sample[index].labelOpacity < max)).toBe(true)
     expect(motion.samples.some(sample => sample[index].color !== start.color && sample[index].color !== end.color)).toBe(true)
   }
   await expect.poll(() => api.encounter().turnIndex).toBe(1)
-  await expect(root.locator('.enc-row--current')).toContainText('Волк')
-  await expect(root.locator('[data-encounter-uid="p-1"] .roster-presence')).toBeHidden()
-  await expect(active).toHaveCount(1)
+  await expect(active).toContainText('Волк')
+  await expect(root.locator('.enc-row-order--current span')).toHaveText('2')
+  await expect(root.getByText('Сейчас ход', { exact: true })).toHaveCount(0)
   await info.attach('turn-motion-frames', { body: Buffer.from(JSON.stringify(motion)), contentType: 'application/json' })
   await info.attach(`turn-motion-final-${width}`, { body: await page.screenshot({ animations: 'disabled' }), contentType: 'image/png' })
 
@@ -87,17 +85,16 @@ for (const width of [390, 932, 1440]) test(`passing the turn keeps every row in 
     return [...element.querySelectorAll('.session-roster-tile')].map(tile => ({
       top: tile.getBoundingClientRect().top,
       height: tile.getBoundingClientRect().height,
-      labelOpacity: Number(getComputedStyle(tile.querySelector('.roster-presence-slot')).opacity),
       color: getComputedStyle(tile, '::before').backgroundColor,
     }))
   })
   expect(geometry(immediate)).toEqual(geometry(motion.before))
   for (const [index, tile] of immediate.entries()) {
-    expect(tile.labelOpacity).toBe(motion.before[index].labelOpacity)
     expect(tile.color).toBe(motion.before[index].color)
   }
   await expect.poll(() => api.encounter().turnIndex).toBe(0)
-  await expect(root.locator('.enc-row--current')).toContainText('Лира')
+  await expect(active).toContainText('Лира')
+  await expect(root.locator('.enc-row-order--current span')).toHaveText('1')
 })
 
 test('combat commands occupy their own column and both columns scroll independently',async({page},info)=>{

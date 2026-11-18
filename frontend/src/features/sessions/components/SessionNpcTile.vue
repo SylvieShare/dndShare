@@ -14,13 +14,11 @@
       </button>
       <EncounterDefeatedMark v-else />
     </template>
-    <template #presence><SessionCombatPresence :combatant="combatant" :active="enc.encounter.active" :current="enc.currentTurnUid === combatant.uid" /></template>
     <template #statuses><EncounterStatuses :combatant="combatant" :editable="editable" detailed /></template>
   </SessionRosterTile>
 </template>
 <script setup>
 import { computed, inject } from 'vue'
-import SessionCombatPresence from './SessionCombatPresence.vue'
 import SessionRosterTile from './SessionRosterTile.vue'
 import EncounterDefeatedMark from './EncounterDefeatedMark.vue'
 import EncounterAvatar from './EncounterAvatar.vue'

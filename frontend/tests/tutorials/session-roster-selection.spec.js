@@ -102,7 +102,7 @@ for(const width of [390,834,1440])test(`persistent checkboxes, shared groups and
   await expect.poll(()=>api.encounter().combatants.find(c=>c.uid==='wolf').position).toBe('reserve')
   expect(api.encounter().combatants.find(c=>c.uid==='p-2').position).toBe('reserve')
   expect(api.encounter().combatants).toHaveLength(4)
-  await open('Запас');await expect(card(sidebar,'Волк').locator('.roster-presence')).toBeHidden()
+  await open('Запас');await expect(card(sidebar,'Волк')).not.toHaveAttribute('aria-current','true')
   await info.attach(`checkbox-roster-${width}`,{body:await sidebar.screenshot({animations:'disabled'}),contentType:'image/png'})
   await page.reload();await open('Дозор')
   await expect(card(sidebar,'Сова').locator('.roster-stage-backdrop')).toHaveAccessibleName('В бою')

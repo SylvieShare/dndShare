@@ -22,10 +22,10 @@ column contains the prepared or active roster. The right column contains
 participant's row, and the participant menu opens the character sheet or bestiary card.
 Порядковые номера на боевой сцене показаны шрифтом Cormorant Garamond
 без ведущих нулей.
-Во время боя в плитках участников сцены зарезервировано место для подписи
-«Сейчас ход». При передаче хода плавно меняются видимость подписи и подсветка,
-поэтому строки сохраняют положение и высоту. При reduced motion новое
-состояние показывается сразу.
+Текущего участника отмечают подсветка плитки и номер на сцене. При передаче
+хода обе отметки меняются плавно, а строки сохраняют положение и высоту.
+При reduced motion новое состояние показывается сразу. Скринридер получает
+отметку текущего участника через `aria-current`.
 The chapter/scenario context is still retained for returning to the story and
 importing scenario combat blocks.
 
@@ -217,8 +217,8 @@ keeps live actors even while they participate in combat. Membership, HP and stat
 are shared. Home tiles use a sword watermark below the clipped selection
 paint instead of a membership caption. Selected watermarks increase contrast
 and retain their accessible state label. The watermark takes a muted red tint
-during an active encounter. Scene rows show the current-turn arrow and label
-only for the current actor.
+during an active encounter. The current actor has a highlighted row and order
+number on the scene.
 Dragging within a home group retains combat participation. Cross-view previews
 exclude an already present UID before insertion. Returning an actor from the
 scene keeps its home group and selection; deleting an NPC prunes its selection.

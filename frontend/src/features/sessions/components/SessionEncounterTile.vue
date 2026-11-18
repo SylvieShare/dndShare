@@ -5,7 +5,6 @@
                      :has-statuses="hasStatuses" :selectable="editable" :selected="selected" @select="$emit('select')" :surprised="combatant.surprised && (!enc.encounter.active || enc.encounter.round === 0)" :edit-health="editable" @health="enc.openHpCalc(combatant)">
     <template #name-suffix><span v-if="combatant.initiative != null" class="encounter-initiative" :aria-label="`Инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{combatant.initiative}}</span></template>
     <template v-if="combatant.position === 'dead' || (hp.current <= 0 && hp.max > 0)" #health><SessionPlayerDeathState :hp="hp" :editable="editable" :can-edit="editable && hp.current <= 0" :red="enc.isRed" @edit="enc.openHpCalc(combatant)" @revive="enc.requestRevive(combatant)" /></template>
-    <template #presence><SessionCombatPresence :combatant="combatant" :active="enc.encounter.active" :current="enc.currentTurnUid === combatant.uid" /></template>
     <template #statuses><ParticipantStatuses :participant="participant" :editable="editable" detailed /></template>
   </SessionPlayerTile>
 </template>
@@ -14,7 +13,6 @@ import { computed, defineAsyncComponent, inject } from 'vue'
 import { useTemplateStore } from '@/stores/template'
 import { settingAccessors } from '@/features/character-editor/settings'
 import { hasDndStatusSummary } from '@/features/character-editor/lib/dndStatusSummary'
-import SessionCombatPresence from './SessionCombatPresence.vue'
 import SessionNpcTile from './SessionNpcTile.vue'
 import SessionPlayerTile from './SessionPlayerTile.vue'
 import SessionPlayerDeathState from './SessionPlayerDeathState.vue'

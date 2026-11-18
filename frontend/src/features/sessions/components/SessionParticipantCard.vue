@@ -22,7 +22,6 @@
       <template #name-suffix>
         <span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span>
       </template>
-      <template #presence><SessionCombatPresence :combatant="combatant" :active="encounter?.encounter.active" :current="combatCurrent" /></template>
       <template v-if="isDead" #health><SessionPlayerDeathState :hp="hp" :editable="isDm" :can-edit="canCalculateHp && hp.current <= 0" :red="!!encounter?.isRed" @edit="encounter.openHpCalc(combatant)" @revive="$emit('revive')" /></template>
       <template #statuses><ParticipantStatuses :participant="participant" :editable="isDm" detailed /></template>
     </SessionPlayerTile>
@@ -85,7 +84,6 @@ import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
 import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
-import SessionCombatPresence from './SessionCombatPresence.vue'
 import SessionPlayerTile from './SessionPlayerTile.vue'
 import SessionPlayerDeathState from './SessionPlayerDeathState.vue'
 import WorkspaceRowDivider from '@/shared/ui/WorkspaceRowDivider.vue'

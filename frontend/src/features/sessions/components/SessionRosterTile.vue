@@ -1,5 +1,5 @@
 <template>
-  <BaseTile :outlined="false" :color="color || 'var(--text-muted)'" class="session-roster-tile"
+  <BaseTile :outlined="false" :color="color || 'var(--text-muted)'" class="session-roster-tile" :aria-current="current ? 'true' : undefined"
             :class="{'session-roster-tile--current':current,'session-roster-tile--on-scene':stageBackdrop,'session-roster-tile--compact':compact,'session-roster-tile--selectable':selectable && !compact,'session-roster-tile--selected':selected}"
             :style="{'--player-color':color || 'transparent','--roster-paint-default':defaultPaintClip,'--roster-ink-position':inkPosition}">
     <span v-if="color" class="roster-color-edge" aria-hidden="true" />
@@ -18,7 +18,6 @@
         <template #metrics><slot name="metrics" /></template>
         <template v-if="$slots.health" #health><slot name="health" /></template>
       </CharacterSummaryTile>
-      <slot v-if="!compact" name="presence" />
       <div v-if="hasStatuses && !compact" class="p-statuses-area"><slot name="statuses" /></div>
     </div>
   </BaseTile>
