@@ -1,6 +1,46 @@
 import { expect,test } from '@playwright/test'
 import { rosterSelectionFixture } from './fixtures/session-roster.js'
 
+test('selection captions and the following controls stay level as the selection changes', async ({ page }, info) => {
+  const api = await rosterSelectionFixture(page, 932)
+  const wolf = api.encounter().combatants.find(row => row.uid === 'wolf')
+  api.encounter().combatants.push({ ...structuredClone(wolf), uid: 'wolf-copy', markerLetter: 'B' })
+  await page.setViewportSize({ width: 932, height: 704 })
+  await page.reload()
+  await page.getByRole('button', { name: /Открыть бой/ }).click()
+  const sidebar = page.locator('aside.map-sidebar')
+  await sidebar.getByRole('navigation').getByRole('button', { name: 'Запас', exact: true }).click()
+  await expect(sidebar).not.toHaveClass(/map-sidebar--opening/)
+  const left = sidebar.locator('.session-sidebar-header-controls')
+  const right = page.locator('.enc-secondary .roster-selection')
+  const summary = root => root.getByRole('group', { name: 'Выбрано по видам', exact: true })
+  const controls = [left, right]
+  const geometry = root => summary(root).evaluate(node => {
+    const bounds = node.getBoundingClientRect()
+    const text = document.createRange()
+    text.selectNodeContents(node.firstElementChild)
+    return {
+      labelTop: text.getBoundingClientRect().top - bounds.top,
+      reserveHeight: bounds.height,
+      nextRowTop: node.nextElementSibling.getBoundingClientRect().top - bounds.top,
+    }
+  })
+  for (const root of controls) await expect(summary(root)).toHaveText('Никто не выбран')
+  const empty = await Promise.all(controls.map(geometry))
+  await info.attach('selection-empty-932', { body: await page.screenshot({ animations: 'disabled' }), contentType: 'image/png' })
+  const checkbox = uid => sidebar.locator(`[data-encounter-uid="${uid}"]`).getByRole('checkbox')
+  await checkbox('wolf').click()
+  for (const root of controls) await expect(summary(root).getByRole('img', { name: 'Волк', exact: true })).toHaveCount(1)
+  expect(await Promise.all(controls.map(geometry))).toEqual(empty)
+  await checkbox('wolf-copy').click()
+  for (const root of controls) await expect(summary(root).getByRole('img', { name: 'Волк: 2', exact: true })).toHaveCount(1)
+  expect(await Promise.all(controls.map(geometry))).toEqual(empty)
+  await info.attach('selection-grouped-932', { body: await page.screenshot({ animations: 'disabled' }), contentType: 'image/png' })
+  await left.getByRole('button', { name: 'Сбросить выбор', exact: true }).click()
+  for (const root of controls) await expect(summary(root)).toHaveText('Никто не выбран')
+  expect(await Promise.all(controls.map(geometry))).toEqual(empty)
+})
+
 test('sidebar tab motion preserves one mounted panel and respects reduced motion',async({page})=>{
   const api=await rosterSelectionFixture(page,834)
   api.encounter().reserveTabs=[{id:'watch',name:'Дозор'}]

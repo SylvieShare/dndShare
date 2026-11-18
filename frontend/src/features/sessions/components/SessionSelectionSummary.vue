@@ -97,7 +97,11 @@ const stackStyle = computed(() => ({
   background: var(--surface-active);
   color: var(--text-1);
 }
-.selection-summary-empty {align-self:center;font-size:var(--type-caption-size);color:var(--text-muted)}
-.selection-summary-caption {flex:none;font-size:var(--type-caption-size);color:var(--text-muted)}
-.selection-summary-caption {line-height: var(--layout-selection-summary-icon)}
+.selection-summary-empty,
+.selection-summary-caption {
+  flex: none;
+  font-size: var(--type-caption-size);
+  line-height: var(--layout-selection-summary-icon);
+  color: var(--text-muted);
+}
 </style>
