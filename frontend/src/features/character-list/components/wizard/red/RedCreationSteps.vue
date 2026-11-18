@@ -131,8 +131,8 @@
         Стоимость: {{ validation.skills?.spent || 0 }} / 86. Родной язык 4 не
         расходует очки.
       </p>
-      <details class="skills-step-specializations">
-        <summary>Начальные специализации</summary>
+      <section class="red-stack skills-step-specializations">
+        <h3>Начальные специализации</h3>
         <div class="red-form-grid">
           <FormField
             v-for="key in ['science', 'play-instrument']"
@@ -146,7 +146,7 @@
             />
           </FormField>
         </div>
-      </details>
+      </section>
       <RedSkills
         creation
         :values="skillValues"
@@ -299,8 +299,7 @@ const roleFields = {
 
 <style scoped>
 .skills-step-intro :deep(.creation-cover) { height: clamp(110px, 18vw, 165px); object-position: center top; }
-.skills-step-specializations summary { cursor: pointer; color: var(--text-2); }
-.skills-step-specializations[open] summary { margin-block-end: var(--spacing-small); }
+.skills-step-specializations h3 { margin: 0; font-size: var(--type-row-size); }
 @media (min-width: 1050px) {
   .method-stage :deep(.illustrated-choice-list--two-column) {
     grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -1,16 +1,16 @@
 <template>
   <div class="red-stack red-skills" :class="{ 'red-skills--compact': compact, 'red-skills--creation': creation }">
-    <section class="skill-section">
+    <section v-if="!creation" class="skill-section">
       <h2>Характеристики</h2>
       <div class="skill-stat-grid">
         <BaseTile v-for="stat in RED_STATS" :key="stat.key" :outlined="false">
           <div class="skill-stat-card" :title="stat.name" :aria-label="stat.name" role="group">
-            <ItemIcon :item="media.stat(stat.key)" :size="compact || creation ? 24 : 34" placeholder />
+            <ItemIcon :item="media.stat(stat.key)" :size="compact ? 24 : 34" placeholder />
             <div class="skill-stat-name">
               <span>{{ stat.name }}</span>
               <small>{{ stat.key }}</small>
             </div>
-            <div v-if="canAdjust && !creation" role="group" :aria-label="stat.name">
+            <div v-if="canAdjust" role="group" :aria-label="stat.name">
               <FormNumberInput
                 :value="values.stats[stat.key]"
                 :min="1"
@@ -28,7 +28,7 @@
       <h2 v-if="!creation">Навыки</h2>
       <p v-if="creation" class="skill-hint">База навыка складывается из характеристики и ранга. При проверке к ней прибавляется d10.</p>
       <div class="skill-toolbar skill-filters">
-        <FormTextInput v-model:value="query" placeholder="Название навыка…" aria-label="Найти навык" />
+        <FormTextInput v-if="!creation" v-model:value="query" placeholder="Название навыка…" aria-label="Найти навык" />
         <FormSelect v-if="!compact" v-model:value="groupFilter" aria-label="Группа навыков">
           <option value="">Все группы</option>
           <option v-for="(name, key) in RED_SKILL_GROUPS" :key="key" :value="key">{{ name }}</option>
@@ -36,6 +36,10 @@
       </div>
       <details v-if="canAdjust && specialized.length" class="skill-specialization-form">
         <summary>Добавить специализацию</summary>
+        <p class="skill-hint specialization-hint">
+          Например, «Язык — японский» или «Боевые искусства — дзюдо». У каждой специализации свой ранг.
+          В игре выбирай её карточку для проверки.
+        </p>
         <div class="skill-toolbar">
           <FormSelect :value="selectedSpecialSkill" aria-label="Навык для специализации" @update:value="specialSkill = $event">
             <option v-for="skill in specialized" :key="skill.key" :value="skill.key">{{ skill.name }}</option>
@@ -78,6 +82,7 @@ import {
   RED_STATS,
   RED_SKILLS,
   RED_SKILL_GROUPS,
+  RED_SKILLS_BY_KEY,
 } from "../../../settings/cyberpunk-red/catalogue";
 import { redEffectiveStats } from "../../../settings/cyberpunk-red/equipment";
 import ItemIcon from "@/features/items/components/ItemIcon.vue";
@@ -142,7 +147,7 @@ const groups = computed(() =>
 function rollSkill(row) {
   emit("roll", {
     kind: "check",
-    title: row.name,
+    title: row.specialization ? `${row.name} — ${row.specialization}` : row.name,
     skillKey: row.key,
     skillUid: row.savedUid || "",
     statKey: row.statKey,
@@ -189,6 +194,7 @@ function addSpecial() {
     ],
   });
   specialName.value = "";
+  if (props.creation && groupFilter.value) groupFilter.value = RED_SKILLS_BY_KEY[key].groupKey;
 }
 </script>
 
@@ -203,6 +209,7 @@ function addSpecial() {
 .skill-toolbar > :first-child { flex: 1 1 230px; min-width: 0; }
 .skill-specialization-form summary { color: var(--text-2); cursor: pointer; }
 .skill-specialization-form[open] summary { margin-block-end: var(--spacing-small); }
+.specialization-hint { margin-block-end: var(--spacing-small); }
 .skill-stat-grid, .skill-card-grid { display: grid; gap: var(--spacing-medium); }
 .skill-filters > :nth-child(2) { flex: 0 1 200px; width: auto; }
 .skill-stat-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); }
@@ -227,23 +234,11 @@ function addSpecial() {
 .skill-stat-card strong { font-size: var(--type-row-size); }
 .red-skills--compact .skill-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-small); }
 .red-skills--compact .skill-card-grid { grid-template-columns: minmax(0, 1fr); }
+.red-skills--creation .skill-card-grid { grid-template-columns: minmax(0, 1fr); gap: var(--spacing-small); }
 .red-skills--compact .skill-stat-card { grid-template-columns: auto 1fr; }
 .red-skills--compact .skill-stat-name { grid-column: 1 / -1; grid-row: 2; }
 .red-skills--compact .skill-stat-card strong { justify-self: end; }
 @media (max-width: 599px) {
   .skill-filters > :nth-child(2) { flex: 1 1 200px; }
-  .red-skills--creation .skill-stat-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
-  .red-skills--creation .skill-stat-card {
-    grid-template-columns: auto 1fr;
-    gap: 2px;
-    padding: 4px;
-  }
-  .red-skills--creation .skill-stat-name {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    text-align: center;
-  }
-  .red-skills--creation .skill-stat-name > span { display: none; }
-  .red-skills--creation .skill-stat-card strong { justify-self: end; }
 }
 </style>
