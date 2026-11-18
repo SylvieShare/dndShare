@@ -49,7 +49,7 @@ for(const width of [390,834,1440])test(`shared sidebar and scene summaries with 
   await nav.getByRole('button',{name:'Игроки',exact:true}).click()
   await players.getByRole('checkbox',{name:'Выбрать: Лира',exact:true}).click()
   await toolbar.getByRole('button',{name:/^Добавить на сцену:/}).click()
-  await toolbar.getByRole('button',{name:'Снять весь выбор',exact:true}).click()
+  await toolbar.getByRole('button',{name:'Сбросить выбор',exact:true}).click()
   const controls=page.locator('.enc-secondary')
   await heading.getByRole('button',{name:'Свернуть боковую панель',exact:true}).click()
   const workspace=page.locator('.enc-wrap--workspace'),scene=workspace.locator('.enc-content')
@@ -72,7 +72,7 @@ for(const width of [390,834,1440])test(`shared sidebar and scene summaries with 
   }
   await scene.getByRole('checkbox',{name:'Выбрать: Волк',exact:true}).click()
   await expect(npc.getByRole('checkbox')).toBeChecked()
-  await controls.getByRole('button',{name:'Снять весь выбор',exact:true}).click()
+  await controls.getByRole('button',{name:'Сбросить выбор',exact:true}).click()
   await info.attach(`scene-summary-${width}`,{body:await page.screenshot({animations:'disabled'}),contentType:'image/png'})
   if(width===834){
     api.participants[0].data.values.hp.current=0

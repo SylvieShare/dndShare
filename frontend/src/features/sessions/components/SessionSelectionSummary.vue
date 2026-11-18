@@ -8,15 +8,15 @@
           v-for="group in groups"
           :key="group.key"
           class="selection-summary-item"
-          :title="`${group.name} × ${group.count}`"
+          :title="group.count > 1 ? `${group.name} × ${group.count}` : group.name"
           role="img"
-          :aria-label="`${group.name}: ${group.count}`"
+          :aria-label="group.count > 1 ? `${group.name}: ${group.count}` : group.name"
         >
           <span class="selection-summary-portrait" aria-hidden="true">
             <CharacterAvatar v-if="group.player" :src="group.url" :name="group.name" size="var(--layout-selection-summary-icon)" />
             <SessionCreatureAvatar v-else :url="group.url" :svg="group.svg" :name="group.name" icon />
           </span>
-          <span class="selection-summary-quantity" aria-hidden="true">{{ group.count }}</span>
+          <span v-if="group.count > 1" class="selection-summary-quantity" aria-hidden="true">{{ group.count }}</span>
         </span>
       </div>
     </div>
@@ -79,9 +79,6 @@ const stackStyle = computed(() => ({
 }
 .selection-summary-portrait {
   display: flex;
-  border-radius: var(--radius-input);
-  background: var(--subheader);
-  box-shadow: -1px 0 0 var(--border);
 }
 .selection-summary-quantity {
   position: relative;

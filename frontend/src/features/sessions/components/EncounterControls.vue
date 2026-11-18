@@ -72,17 +72,6 @@
             <button type="button" class="enc-icon-btn" :disabled="!combatMoveCount" aria-label="Добавить выбранных на сцену" @click="enc.sendSelectedTo('combat')"><LogIn :size="18" /><span class="enc-control-label">На сцену</span><span v-if="combatMoveCount" class="enc-icon-count">{{combatMoveCount}}</span></button>
             <button
               type="button"
-              class="enc-icon-btn"
-              :disabled="reserveMoveCount === 0"
-              title="Вывести выбранных из боя"
-              aria-label="Вывести выбранных из боя"
-              @click="enc.sendSelectedTo('reserve')"
-            >
-              <ArchiveRestore :size="18" /><span class="enc-control-label">Из боя</span>
-              <span v-if="reserveMoveCount" class="enc-icon-count">{{ reserveMoveCount }}</span>
-            </button>
-            <button
-              type="button"
               class="enc-icon-btn enc-icon-btn--danger"
               :disabled="deadMoveCount === 0"
               title="Убить выбранных — переместить на кладбище"
@@ -121,7 +110,7 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { ArchiveRestore, ChevronLeft, ChevronRight, Dices, LogIn, Skull, Square, Swords, Trash2 } from '@lucide/vue'
+import { ChevronLeft, ChevronRight, Dices, LogIn, Skull, Square, Swords, Trash2 } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import EncounterBulkDamageMenu from './EncounterBulkDamageMenu.vue'
 import EncounterChallengeMenu from './EncounterChallengeMenu.vue'
@@ -136,7 +125,6 @@ const shortcutLabels=sessionShortcutLabels()
 const combatItems=computed(()=>enc.sortable.displayItems('combat'))
 const startSelectionCount=computed(()=>enc.inCombat.length)
 const combatMoveCount=computed(()=>enc.selectedToMoveTo('combat'))
-const reserveMoveCount=computed(()=>enc.selectedToMoveTo('reserve'))
 const deadMoveCount=computed(()=>enc.selectedToMoveTo('dead'))
 </script>
 <style scoped src="./styles/EncounterToolbar.css"></style>

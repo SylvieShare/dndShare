@@ -1,6 +1,34 @@
 import { expect,test } from '@playwright/test'
 import { rosterSelectionFixture } from './fixtures/session-roster.js'
 
+test('sidebar tab motion preserves one mounted panel and respects reduced motion',async({page})=>{
+  const api=await rosterSelectionFixture(page,834)
+  api.encounter().reserveTabs=[{id:'watch',name:'Дозор'}]
+  await page.reload()
+  const sidebar=page.locator('aside.map-sidebar')
+  const nav=sidebar.getByRole('navigation')
+  await nav.getByRole('button',{name:'Игроки',exact:true}).click()
+  await expect(sidebar).not.toHaveClass(/map-sidebar--opening/)
+  const panel=sidebar.locator('.map-sidebar-viewport > .map-sidebar-content')
+  const mountedPanel=await panel.elementHandle()
+  async function switchTab(name){
+    return nav.getByRole('button',{name,exact:true}).evaluate(async button=>{
+      button.click()
+      await new Promise(requestAnimationFrame)
+      const content=button.closest('aside').querySelector('.map-sidebar-viewport > .map-sidebar-content')
+      return content.getAnimations().some(animation=>animation.playState==='running')
+    })
+  }
+  expect(await switchTab('Запас')).toBe(true)
+  await expect(panel).toHaveAttribute('data-tab','reserves:default')
+  expect(await switchTab('Дозор')).toBe(true)
+  await expect(panel).toHaveAttribute('data-tab','reserves:watch')
+  expect(await mountedPanel.evaluate(node=>node.isConnected)).toBe(true)
+  await page.emulateMedia({reducedMotion:'reduce'})
+  expect(await switchTab('Игроки')).toBe(false)
+  await expect(panel).toHaveAttribute('data-tab','players')
+})
+
 for(const width of [390,834,1440])test(`combat selection icons and stage watermark at ${width}`,async({page},info)=>{
   const api=await rosterSelectionFixture(page,width)
   const wolf=api.encounter().combatants.find(row=>row.uid==='wolf')
@@ -11,11 +39,14 @@ for(const width of [390,834,1440])test(`combat selection icons and stage waterma
   await nav.getByRole('button',{name:'Запас',exact:true}).click()
   const first=sidebar.locator('[data-encounter-uid="wolf"]'),second=sidebar.locator('[data-encounter-uid="wolf2"]')
   await first.getByRole('checkbox').click();await second.getByRole('checkbox').click()
-  await expect(toolbar.locator('.roster-selection-summary')).toHaveCount(0)
-  await page.getByRole('button',{name:/Открыть бой/}).click()
   const summary=toolbar.locator('.roster-selection-summary')
   await expect(summary.getByRole('img',{name:'Волк: 2',exact:true})).toBeVisible()
+  await page.locator('.chapter-toolbar').getByRole('button',{name:'Хроника',exact:true}).click()
+  await expect(summary.getByRole('img',{name:'Волк: 2',exact:true})).toBeVisible()
+  await page.getByRole('button',{name:/Открыть бой/}).click()
+  await expect(summary.getByRole('img',{name:'Волк: 2',exact:true})).toBeVisible()
   await expect(summary.locator('.selection-summary-item')).toHaveCount(1)
+  await expect(summary.locator('.selection-summary-quantity')).toHaveText('2')
   await toolbar.getByRole('button',{name:'Добавить на сцену: 2',exact:true}).click()
   await expect(first.locator('.roster-stage-backdrop')).toHaveAccessibleName('На сцене')
   await expect(first.locator('.roster-presence')).toHaveCount(0)
@@ -25,7 +56,9 @@ for(const width of [390,834,1440])test(`combat selection icons and stage waterma
   expect(geometry.underClip).toBe(geometry.paintClip)
   await second.getByRole('checkbox').click()
   await expect(second.locator('.roster-stage-backdrop svg')).toHaveCSS('opacity','0.16')
-  await expect(summary.getByRole('img',{name:'Волк: 1',exact:true})).toBeVisible()
+  await expect(summary.getByRole('img',{name:'Волк',exact:true})).toBeVisible()
+  await expect(summary.locator('.selection-summary-quantity')).toHaveCount(0)
+  await expect(summary.locator('.selection-summary-portrait')).toHaveCSS('background-color','rgba(0, 0, 0, 0)')
   await info.attach(`stage-background-${width}`,{body:await sidebar.screenshot({animations:'disabled'}),contentType:'image/png'})
   await expect.poll(()=>api.encounter().combatants.filter(c=>c.position==='combat').length).toBe(2)
   expect(api.errors).toEqual([]);expect(api.warnings).toEqual([])
@@ -49,24 +82,21 @@ for(const width of [390,834,1440]) test(`selection stacks below the actions and 
   const actions=await toolbar.getByRole('group',{name:'Действия с выбранными'}).boundingBox()
   const checkbox=await selectAll.boundingBox()
   const summaryBox=await summary.boundingBox()
-  expect(checkbox.y).toBeGreaterThanOrEqual(actions.y+actions.height)
-  expect(summaryBox.y).toBeGreaterThanOrEqual(checkbox.y+checkbox.height-1)
+  expect(summaryBox.y).toBeGreaterThanOrEqual(actions.y+actions.height)
+  expect(checkbox.y).toBeGreaterThanOrEqual(summaryBox.y+summaryBox.height-1)
   const geometry=await summary.evaluate(node=>{
     const rect=element=>element.getBoundingClientRect()
     return {
       bounds:rect(node).toJSON(),
       portraits:[...node.querySelectorAll('.selection-summary-portrait')].map(rect).map(r=>r.toJSON()),
-      badges:[...node.querySelectorAll('.selection-summary-quantity')].map(rect).map(r=>r.toJSON()),
     }
   })
   expect(new Set(geometry.portraits.map(rect=>rect.top)).size).toBe(1)
   expect(geometry.portraits[1].left).toBeLessThan(geometry.portraits[0].right)
   expect(geometry.portraits.at(-1).right).toBeLessThanOrEqual(geometry.bounds.right)
-  for(let index=1;index<geometry.badges.length;index++){
-    expect(geometry.badges[index].left).toBeGreaterThanOrEqual(geometry.badges[index-1].right-1)
-  }
-  await expect(summary.getByRole('img',{name:'Лира: 1',exact:true})).toBeVisible()
-  await expect(toolbar.getByRole('button',{name:'Снять весь выбор',exact:true})).toBeVisible()
+  await expect(summary.locator('.selection-summary-quantity')).toHaveCount(0)
+  await expect(summary.getByRole('img',{name:'Лира',exact:true})).toBeVisible()
+  await expect(toolbar.getByRole('button',{name:'Сбросить выбор',exact:true})).toBeVisible()
   await info.attach(`selection-stack-${width}`,{body:await sidebar.screenshot({animations:'disabled'}),contentType:'image/png'})
   if(width===390){
     await page.setViewportSize({width:300,height:980})
@@ -77,7 +107,7 @@ for(const width of [390,834,1440]) test(`selection stacks below the actions and 
       return portraits.length===9 && new Set(portraits.map(rect=>rect.top)).size>1 && portraits.every(rect=>rect.right<=bounds.right)
     })).toBe(true)
   }
-  await toolbar.getByRole('button',{name:'Снять весь выбор',exact:true}).click()
+  await toolbar.getByRole('button',{name:'Сбросить выбор',exact:true}).click()
   await expect(summary).toHaveText('Никто не выбран')
   expect(api.errors).toEqual([]);expect(api.warnings).toEqual([])
 })

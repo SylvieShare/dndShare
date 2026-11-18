@@ -73,7 +73,7 @@
           @before-leave="leavePage"
           @before-enter="enterPage"
         >
-          <div :key="persistentContent ? 'workspace' : tab" class="map-sidebar-content" :class="{ 'map-sidebar-content--flush': !padded }" :data-tab="tab">
+          <div ref="content" :key="persistentContent ? 'workspace' : tab" class="map-sidebar-content" :class="{ 'map-sidebar-content--flush': !padded }" :data-tab="tab">
             <slot />
           </div>
         </Transition>
@@ -86,7 +86,7 @@ defineOptions({ inheritAttrs: false });
 import { inject, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { ActionButton, IconNavigation } from "@sylvieshare/share-ui";
 import { PanelLeftClose } from "@lucide/vue";
-import { layoutTokens } from "@/app/design-tokens";
+import { layoutTokens, motionTokens, spacingTokens } from "@/app/design-tokens";
 import { workspaceSidebarContext } from '@/shared/lib/workspaceSidebarContext';
 const props = defineProps({
   tabs: { type: Array, required: true },
@@ -115,6 +115,7 @@ if (hosted) {
   }, { immediate: true });
 }
 const element = ref(null);
+const content = ref(null);
 const navigation = ref(null);
 const collapsed = ref(
   window.matchMedia(`(max-width: ${props.collapseAt}px)`).matches,
@@ -132,6 +133,7 @@ function compactChanged(event) {
 let measuredParent = -1,
   measuredViewport = -1;
 let direction = 1;
+let pageAnimation;
 function measurePanel() {
   const node = element.value,
     parent = node?.parentElement;
@@ -170,6 +172,17 @@ watch(
   },
   { flush: "sync" },
 );
+watch(() => props.tab, () => {
+  pageAnimation?.cancel();
+  if (!props.persistentContent || collapsed.value || opening.value ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  // Animate the current content in place so switching tabs preserves hosted panels.
+  pageAnimation = content.value?.animate?.([
+    { opacity: 0.35, transform: `translateY(${direction * spacingTokens.medium}px)` },
+    { opacity: 1, transform: "none" },
+  ], { duration: motionTokens.navigation, easing: "cubic-bezier(0.2, 0.7, 0.2, 1)" });
+}, { flush: "post" });
 function leavePage(node) {
   node.inert = true;
   node.setAttribute("aria-hidden", "true");
@@ -199,6 +212,7 @@ function openTab(key) {
 }
 function collapse() {
   if (hosted) { host.collapse(); return; }
+  pageAnimation?.cancel();
   collapsed.value = true;
   opening.value = false;
   clearTimeout(revealTimer);
@@ -221,6 +235,7 @@ onMounted(() => {
   observer.observe(element.value.parentElement);
 });
 onBeforeUnmount(() => {
+  pageAnimation?.cancel();
   compactQuery?.removeEventListener("change", compactChanged);
   observer?.disconnect();
   clearTimeout(revealTimer);
@@ -380,7 +395,5 @@ defineExpose({
   border-top: 1px solid var(--border-strong);
 }
 .map-sidebar-content--flush {padding:0;gap:0}
-.map-sidebar-hosted-content {box-sizing:border-box;animation:hosted-sidebar-in var(--motion-enter) ease both}
-@keyframes hosted-sidebar-in {from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce) {.map-sidebar-hosted-content {animation:none}}
+.map-sidebar-hosted-content {box-sizing:border-box}
 </style>

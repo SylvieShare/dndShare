@@ -69,7 +69,7 @@ for(const width of [390,834,1440])test(`roster header, edge scrollbar and brush 
     await list.evaluate(n=>n.scrollTop=0)
     await info.attach(`roster-${tab}-${width}`,{body:await sidebar.screenshot({animations:'disabled'}),contentType:'image/png'})
   }
-  await header.getByRole('button',{name:'Снять весь выбор',exact:true}).click()
+  await header.getByRole('button',{name:'Сбросить выбор',exact:true}).click()
   await expect(sidebar.locator('[role=checkbox][aria-checked=true]')).toHaveCount(0)
   await page.setViewportSize({width,height:2600})
   await expect(sidebar.locator('.session-roster-list:visible')).not.toHaveAttribute('data-scrollable','true')

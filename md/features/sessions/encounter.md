@@ -17,8 +17,8 @@ load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 `useEncounter.js` composes them; row components remain presentation-only.
 
 The combat workspace is one responsive grid under the session header. Its left
-column contains the prepared/active roster; the right column contains all combat
-commands in `EncounterControls`, followed by the current-turn reference when the
+column contains the prepared/active roster and its scene command row; the right
+column contains `EncounterControls`, followed by the current-turn reference when the
 encounter is active. There is no current chapter title/cover card in this workspace.
 The chapter/scenario context is still retained for returning to the story and
 importing scenario combat blocks.
@@ -29,8 +29,9 @@ to ControlsMax (420); the composition is aligned with the left workspace padding
 columns scroll independently. Below that width, controls appear above the roster
 and scroll within a maximum 40dvh, leaving the roster usable in short windows.
 Resizing preserves the current turn and prepared roster. Controls stay in the
-same column before and after starting combat; section-select and move-to-scene
-commands are there too, rather than beside the roster title. All command buttons
+same column before and after starting combat. Section-select and add-to-scene
+commands remain in the control column. The right-aligned row beside the scene
+title holds «Со сцены» and counts only selected scene members. Command buttons
 have visible captions and accessible names.
 
 The sidebar remains available, while map canvas/inspector are hidden in combat.
@@ -179,15 +180,16 @@ by UID; a creature shown in two views receives damage or XP only once. Constant
 leading checkboxes separate selection from body menus. Checkbox targets are 48px
 with 22px glyphs; pointer/key events do not open menus or claim drag. Vertical
 touch movement scrolls both lists. HP and state controls stay interactive.
-The All checkbox below the sidebar actions selects the open tab and has a mixed
-state. Clear resets the global selection. In the left combat header, a separate
-row shows per-type icon quantities and individual player portraits. NPC
-templates group by itemId, simple creatures by name, and actors dedupe by UID.
-Portraits overlap as the row narrows, and quantities remain legible. A very
-large selection continues on another row. The numeric live status remains
-available to assistive technology and is visible in the other headers. Each group action
-shows its eligible count, including separate add-to-scene and remove-from-scene
-counts for mixed selections. The row remains visible with unavailable actions disabled.
+The sidebar shows selected actors across top-level tabs. A separate row above
+All shows bare per-type icons and individual player portraits, with quantities
+from two. All applies to the open roster, and «Сбросить выбор» clears the global
+selection. Map and world tools also show the summary and clear control.
+NPC templates group by itemId, simple creatures by name, and actors dedupe by UID.
+Portraits overlap as the row narrows, and a very large selection continues on
+another row. The numeric live status remains available to assistive technology.
+Every group action shows its eligible count. Adding to the scene is a sidebar
+action, and removal is next to the scene title. Tab changes animate the mounted
+sidebar body in the direction of navigation, respecting reduced motion.
 Damage captures explicit eligible targets for the idempotent authoritative impact
 command. D&D XP/IP targets characters only and retries only unconfirmed writes.
 Starting combat uses only prepared scene members. Selecting a reserve actor alone
