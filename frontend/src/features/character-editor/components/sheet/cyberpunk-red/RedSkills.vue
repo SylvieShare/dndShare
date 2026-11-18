@@ -234,7 +234,12 @@ function addSpecial() {
 .skill-stat-card strong { font-size: var(--type-row-size); }
 .red-skills--compact .skill-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-small); }
 .red-skills--compact .skill-card-grid { grid-template-columns: minmax(0, 1fr); }
-.red-skills--creation .skill-card-grid { grid-template-columns: minmax(0, 1fr); gap: var(--spacing-small); }
+.red-skills--creation .skill-card-grid {
+  grid-template-columns: repeat(auto-fit, minmax(
+    min(100%, max(420px, calc((100% - var(--spacing-small)) / 2))), 1fr
+  ));
+  gap: var(--spacing-small);
+}
 .red-skills--compact .skill-stat-card { grid-template-columns: auto 1fr; }
 .red-skills--compact .skill-stat-name { grid-column: 1 / -1; grid-row: 2; }
 .red-skills--compact .skill-stat-card strong { justify-self: end; }

@@ -127,10 +127,15 @@
       <div class="red-stack skills-step-intro">
         <RedCreationIntro title="Навыки" :cover="art.dictionaryCover('Навыки')" />
       </div>
-      <p>
-        Стоимость: {{ validation.skills?.spent || 0 }} / 86. Родной язык 4 не
-        расходует очки.
-      </p>
+      <section class="red-stack skills-step-budget">
+        <h3>
+          Очки навыков
+          <span :class="{ 'skills-budget-done': validation.skills?.remaining === 0 }">
+            {{ validation.skills?.spent || 0 }} / {{ RED_CORE_PROFILE.skillBudget }}
+          </span>
+        </h3>
+        <p>Ранг 4 для родного языка даётся бесплатно.</p>
+      </section>
       <section class="red-stack skills-step-specializations">
         <h3>Начальные специализации</h3>
         <div class="red-form-grid">
@@ -158,7 +163,7 @@
       />
       <p
         v-for="e in validation.errors.filter((e) =>
-          e.path.startsWith('skills'),
+          e.path.startsWith('skills') && e.code !== 'skill-budget',
         )"
         :key="JSON.stringify(e)"
         class="red-danger"
@@ -208,6 +213,7 @@ import {
   RED_ROLES,
 } from "@/features/character-editor/settings/cyberpunk-red/catalogue";
 import { RED_ROLE_SKILLS } from "@/features/character-editor/settings/cyberpunk-red/creationTables";
+import { RED_CORE_PROFILE } from "@/features/character-editor/settings/cyberpunk-red/creation";
 import {
   RED_LIFEPATH_FIELDS,
   RED_ROLE_LIFEPATH,
@@ -299,7 +305,11 @@ const roleFields = {
 
 <style scoped>
 .skills-step-intro :deep(.creation-cover) { height: clamp(110px, 18vw, 165px); object-position: center top; }
-.skills-step-specializations h3 { margin: 0; font-size: var(--type-row-size); }
+.skills-step-specializations h3, .skills-step-budget h3 { margin: 0; font-size: var(--type-row-size); }
+.skills-step-budget { gap: var(--spacing-small); }
+.skills-step-budget h3 > span { color: var(--text-muted); margin-inline-start: var(--spacing-small); }
+.skills-step-budget h3 > .skills-budget-done { color: var(--success); }
+.skills-step-budget p { margin: 0; color: var(--text-muted); font-size: var(--type-group-size); }
 @media (min-width: 1050px) {
   .method-stage :deep(.illustrated-choice-list--two-column) {
     grid-template-columns: repeat(3, minmax(0, 1fr));

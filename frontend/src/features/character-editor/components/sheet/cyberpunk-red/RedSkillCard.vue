@@ -4,7 +4,12 @@
       <div class="skill-identity">
         <ItemIcon :item="art.skill(row.key)" :size="40" placeholder />
         <div class="skill-name">
-          <h4>{{ row.name }}</h4>
+          <h4>
+            <FitContent v-if="creation" class="skill-title-fit" :min-scale="0.66" :title="row.name">
+              {{ row.name }}
+            </FitContent>
+            <template v-else>{{ row.name }}</template>
+          </h4>
           <span v-if="row.specialization" class="skill-specialization">{{ row.specialization }}</span>
           <span v-else-if="row.specializationKind" class="skill-specialization">Нужна специализация</span>
         </div>
@@ -16,26 +21,15 @@
           <div class="formula-value"><strong>{{ statValue }}</strong></div>
           <span class="formula-caption formula-stat">
             <ItemIcon :item="art.stat(row.statKey)" :size="16" />
-            <span>{{ statName }}</span>
+            <FitContent inline class="formula-stat-name" :min-scale="0.64" :title="statName">{{ statName }}</FitContent>
           </span>
         </div>
         <span class="formula-operator">+</span>
         <div class="formula-term">
           <div class="formula-value">
-            <FormTextInput
-              v-if="editableRank"
-              :value="rankText"
-              class="formula-rank-input"
-              type="number"
-              inputmode="numeric"
-              :min="0"
-              :max="6"
-              :step="1"
-              :aria-label="`Ранг навыка «${row.name}»`"
-              @update:value="inputRank"
-              @change="commitRank"
-              @enter="commitRank(rankText)"
-            />
+            <div v-if="editableRank" class="formula-rank" role="group" :aria-label="`Ранг навыка «${row.name}»`">
+              <FormNumberInput :value="row.rank" :min="0" :max="RED_CORE_PROFILE.skillMax" live @change="emit('rank', $event)" />
+            </div>
             <strong v-else>{{ row.rank }}</strong>
           </div>
           <span class="formula-caption">Ранг</span>
@@ -70,11 +64,12 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { Dices } from '@lucide/vue'
-import { ActionButton, BaseTile, FormNumberInput, FormTextInput } from '@sylvieshare/share-ui'
+import { ActionButton, BaseTile, FitContent, FormNumberInput } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { RED_STATS } from '../../../settings/cyberpunk-red/catalogue'
+import { RED_CORE_PROFILE } from '../../../settings/cyberpunk-red/creation'
 
 const props = defineProps({
   row: { type: Object, required: true },
@@ -88,20 +83,6 @@ const total = computed(() => props.statValue + props.row.rank)
 const statName = computed(() => RED_STATS.find(stat => stat.key === props.row.statKey)?.name || props.row.statKey)
 const rollLabel = computed(() => `Бросить ${props.row.name}${props.row.specialization ? ` — ${props.row.specialization}` : ''}`)
 const editableRank = computed(() => props.canAdjust && !props.row.outsideRole && (!props.row.specializationKind || props.row.specialization))
-const rankText = ref(String(props.row.rank))
-watch(() => props.row.rank, rank => { rankText.value = String(rank) })
-
-function inputRank(value) {
-  rankText.value = value
-  if (/^[0-6]$/.test(value) && Number(value) !== props.row.rank) emit('rank', Number(value))
-}
-
-function commitRank(value) {
-  const parsed = Number(value)
-  const rank = value && Number.isFinite(parsed) ? Math.max(0, Math.min(6, Math.trunc(parsed))) : props.row.rank
-  rankText.value = String(rank)
-  if (rank !== props.row.rank) emit('rank', rank)
-}
 </script>
 
 <style scoped>
@@ -117,7 +98,7 @@ function commitRank(value) {
 .skill-row-shell { container: skill-row / inline-size; }
 .red-skill-card--row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 260px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 240px);
   align-items: center;
 }
 .red-skill-card--row .skill-formula { margin-block-start: 0; }
@@ -137,7 +118,7 @@ function commitRank(value) {
 .skill-check { margin-inline-start: auto; }
 .skill-formula {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) auto 56px auto minmax(38px, .65fr);
+  grid-template-columns: minmax(0, 1fr) auto minmax(104px, max-content) auto minmax(35px, .42fr);
   column-gap: 4px;
   align-items: start;
   margin-block-start: auto;
@@ -154,16 +135,21 @@ function commitRank(value) {
   line-height: 1.2;
 }
 .formula-stat { display: flex; align-items: center; justify-content: center; gap: 3px; }
-.formula-stat > span { min-width: 0; overflow-wrap: anywhere; }
-.formula-rank-input { text-align: center; font-variant-numeric: tabular-nums; }
+.formula-stat-name { flex: 0 1 auto; min-width: 0; overflow-wrap: anywhere; }
 .skill-actions { flex-wrap: wrap; margin-block-start: auto; }
 .skill-actions:empty { display: none; }
-@container skill-row (max-width: 455px) {
+@container skill-row (max-width: 390px) {
   .red-skill-card--row { grid-template-columns: minmax(0, 1fr); }
   .red-skill-card--row .skill-formula {
     --skill-icon-inset: calc(40px + var(--spacing-small));
     width: min(calc(100% - var(--skill-icon-inset)), 260px);
     margin-inline-start: var(--skill-icon-inset);
+  }
+}
+@container skill-row (max-width: 331px) {
+  .red-skill-card--row .skill-formula {
+    width: min(100%, 260px);
+    margin-inline-start: 0;
   }
 }
 </style>
