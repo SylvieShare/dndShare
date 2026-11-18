@@ -31,23 +31,53 @@ for(const width of [390,834,1440])test(`combat selection icons and stage waterma
   expect(api.errors).toEqual([]);expect(api.warnings).toEqual([])
 })
 
-test('many selected portraits scroll within the header and leave clear selection reachable',async({page})=>{
-  const api=await rosterSelectionFixture(page,834)
+for(const width of [390,834,1440]) test(`selection stacks below the actions and fits the sidebar at ${width}`,async({page},info)=>{
+  const api=await rosterSelectionFixture(page,width)
   for(let i=2;i<9;i++){
     api.participants.push({...structuredClone(api.participants[0]),charId:i+1,charUuid:`player-${i}`,data:{values:{...structuredClone(api.participants[0].data.values),name:`Герой ${i}`}}})
     api.encounter().combatants.push({uid:`p-${i+1}`,type:'player',charId:i+1,position:'reserve'})
   }
   await page.reload()
   const sidebar=page.locator('aside.map-sidebar'),nav=sidebar.getByRole('navigation')
-  await nav.getByRole('button',{name:'Игроки',exact:true}).click()
+  if((await sidebar.getAttribute('class')).includes('map-sidebar--collapsed'))await nav.getByRole('button',{name:'Игроки',exact:true}).click()
   await page.getByRole('button',{name:/Открыть бой/}).click()
   const toolbar=sidebar.locator('.session-sidebar-header-controls')
-  await toolbar.getByRole('checkbox').click()
+  const selectAll=toolbar.getByRole('checkbox',{name:'Выбрать всех в этой вкладке',exact:true})
+  await selectAll.click()
   const summary=toolbar.locator('.roster-selection-summary')
   await expect(summary.locator('.selection-summary-item')).toHaveCount(9)
-  expect(await summary.evaluate(n=>n.scrollWidth>n.clientWidth)).toBe(true)
-  await summary.evaluate(n=>n.scrollLeft=n.scrollWidth)
+  const actions=await toolbar.getByRole('group',{name:'Действия с выбранными'}).boundingBox()
+  const checkbox=await selectAll.boundingBox()
+  const summaryBox=await summary.boundingBox()
+  expect(checkbox.y).toBeGreaterThanOrEqual(actions.y+actions.height)
+  expect(summaryBox.y).toBeGreaterThanOrEqual(checkbox.y+checkbox.height-1)
+  const geometry=await summary.evaluate(node=>{
+    const rect=element=>element.getBoundingClientRect()
+    return {
+      bounds:rect(node).toJSON(),
+      portraits:[...node.querySelectorAll('.selection-summary-portrait')].map(rect).map(r=>r.toJSON()),
+      badges:[...node.querySelectorAll('.selection-summary-quantity')].map(rect).map(r=>r.toJSON()),
+    }
+  })
+  expect(new Set(geometry.portraits.map(rect=>rect.top)).size).toBe(1)
+  expect(geometry.portraits[1].left).toBeLessThan(geometry.portraits[0].right)
+  expect(geometry.portraits.at(-1).right).toBeLessThanOrEqual(geometry.bounds.right)
+  for(let index=1;index<geometry.badges.length;index++){
+    expect(geometry.badges[index].left).toBeGreaterThanOrEqual(geometry.badges[index-1].right-1)
+  }
+  await expect(summary.getByRole('img',{name:'Лира: 1',exact:true})).toBeVisible()
   await expect(toolbar.getByRole('button',{name:'Снять весь выбор',exact:true})).toBeVisible()
+  await info.attach(`selection-stack-${width}`,{body:await sidebar.screenshot({animations:'disabled'}),contentType:'image/png'})
+  if(width===390){
+    await page.setViewportSize({width:300,height:980})
+    if((await sidebar.getAttribute('class')).includes('map-sidebar--collapsed'))await nav.getByRole('button',{name:'Игроки',exact:true}).click()
+    await expect.poll(()=>summary.evaluate(node=>{
+      const bounds=node.getBoundingClientRect()
+      const portraits=[...node.querySelectorAll('.selection-summary-portrait')].map(element=>element.getBoundingClientRect())
+      return portraits.length===9 && new Set(portraits.map(rect=>rect.top)).size>1 && portraits.every(rect=>rect.right<=bounds.right)
+    })).toBe(true)
+  }
   await toolbar.getByRole('button',{name:'Снять весь выбор',exact:true}).click()
   await expect(summary).toHaveText('Никто не выбран')
+  expect(api.errors).toEqual([]);expect(api.warnings).toEqual([])
 })

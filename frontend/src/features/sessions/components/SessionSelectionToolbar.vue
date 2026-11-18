@@ -1,12 +1,5 @@
 <template>
   <div class="roster-selection" :aria-label="label">
-    <div class="roster-selection-heading">
-      <label class="roster-all-check"><CompactCheckbox :model-value="allVisible" :indeterminate="someVisible && !allVisible" :size="layoutTokens['roster-checkbox-icon']" :hit-size="layoutTokens['touch-min']" :disabled="!encounter.canManageReserves || !visibleRows.length" :label="visibleLabel" @update:model-value="selection.setVisibleSelection(visibleRows,$event)" /><span>Все</span></label>
-      <span class="roster-selection-count" :class="{'roster-count-sr-only':groupedSummary}" role="status">Выбрано: {{ selection.selected.length }}</span>
-      <SessionSelectionSummary v-if="groupedSummary" :items="selection.selected" :encounter="encounter" />
-      <ActionButton variant="quiet" icon-only :disabled="!selection.selected.length" aria-label="Снять весь выбор" title="Снять весь выбор" @click="selection.clear"><template #icon><X :size="18" /></template></ActionButton>
-      <slot />
-    </div>
     <div v-if="actionsVisible" class="roster-actions-reveal roster-actions-reveal--open">
       <div class="roster-actions-clip"><div class="roster-selection-actions" role="group" aria-label="Действия с выбранными">
         <ActionButton variant="quiet" layout="stacked" :disabled="!selection.damageTargets.length" :aria-label="`Нанести урон: ${selection.damageTargets.length}`" @click="open('damage')"><template #icon><span class="roster-action-icon"><HeartCrack :size="20" /><span class="roster-action-count" aria-hidden="true">{{selection.damageTargets.length}}</span></span></template>Урон</ActionButton>
@@ -15,6 +8,13 @@
         <ActionButton variant="quiet" layout="stacked" :disabled="!selection.returnTargets.length" :aria-label="`${encounter.encounter.active?'Вывести из боя':'Убрать со сцены'}: ${selection.returnTargets.length}`" @click="encounter.sendCombatantsTo(selection.returnTargets,'reserve')"><template #icon><span class="roster-action-icon"><LogOut :size="20" /><span class="roster-action-count" aria-hidden="true">{{selection.returnTargets.length}}</span></span></template>{{encounter.encounter.active?'Из боя':'Со сцены'}}</ActionButton>
       </div></div>
     </div>
+    <div class="roster-selection-heading">
+      <label class="roster-all-check"><CompactCheckbox :model-value="allVisible" :indeterminate="someVisible && !allVisible" :size="layoutTokens['roster-checkbox-icon']" :hit-size="layoutTokens['touch-min']" :disabled="!encounter.canManageReserves || !visibleRows.length" :label="visibleLabel" @update:model-value="selection.setVisibleSelection(visibleRows,$event)" /><span>Все</span></label>
+      <span class="roster-selection-count" :class="{'roster-count-sr-only':groupedSummary}" role="status">Выбрано: {{ selection.selected.length }}</span>
+      <ActionButton class="roster-clear-selection" variant="quiet" icon-only :disabled="!selection.selected.length" aria-label="Снять весь выбор" title="Снять весь выбор" @click="selection.clear"><template #icon><X :size="18" /></template></ActionButton>
+      <slot />
+    </div>
+    <SessionSelectionSummary v-if="groupedSummary" :items="selection.selected" :encounter="encounter" />
   </div>
   <AppModalFrame v-if="action" :title="action === 'damage' ? 'Нанести урон' : 'Добавить опыт'" close-label="Закрыть" @close="!pending && (action = null)">
     <p class="roster-action-summary">{{ action === 'damage' ? 'Урон каждой выбранной цели' : 'Опыт каждому выбранному персонажу' }} · {{ targets.length }}</p>
@@ -66,6 +66,7 @@ async function apply() {
 .roster-action-summary {font-size:var(--type-caption-size);color:var(--text-muted)}
 .roster-all-check {display:inline-flex;align-items:center;gap:var(--spacing-small);min-height:var(--layout-touch-min);margin-inline-start:var(--spacing-medium);cursor:pointer}
 .roster-selection-count {margin-inline-start:auto;min-width:var(--spacing-large);padding-inline:var(--spacing-xs);border-radius:var(--radius-badge);background:var(--background);font-variant-numeric:tabular-nums}
+.roster-count-sr-only + .roster-clear-selection {margin-inline-start:auto}
 .roster-selection-actions {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:var(--spacing-xs);padding-top:var(--spacing-xs)}
 .roster-actions-reveal {display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows var(--motion-enter),opacity var(--motion-feedback)}
 .roster-actions-reveal--open {grid-template-rows:1fr;opacity:1}

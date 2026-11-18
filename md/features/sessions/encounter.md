@@ -179,12 +179,13 @@ by UID; a creature shown in two views receives damage or XP only once. Constant
 leading checkboxes separate selection from body menus. Checkbox targets are 48px
 with 22px glyphs; pointer/key events do not open menus or claim drag. Vertical
 touch movement scrolls both lists. HP and state controls stay interactive.
-There is no selection mode. The header shows a global count and clear action; the left combat header
-replaces the visible number with per-type icon quantities and individual player
-portraits. NPC templates group by itemId, simple creatures by name, actors dedupe
-by UID. A horizontal scroll handles long selections; the numeric live status
-stays available to assistive technology. Other headers retain the number,
-plus an All checkbox scoped to the open tab with a mixed state. Each group action
+The All checkbox below the sidebar actions selects the open tab and has a mixed
+state. Clear resets the global selection. In the left combat header, a separate
+row shows per-type icon quantities and individual player portraits. NPC
+templates group by itemId, simple creatures by name, and actors dedupe by UID.
+Portraits overlap as the row narrows, and quantities remain legible. A very
+large selection continues on another row. The numeric live status remains
+available to assistive technology and is visible in the other headers. Each group action
 shows its eligible count, including separate add-to-scene and remove-from-scene
 counts for mixed selections. The row remains visible with unavailable actions disabled.
 Damage captures explicit eligible targets for the idempotent authoritative impact
