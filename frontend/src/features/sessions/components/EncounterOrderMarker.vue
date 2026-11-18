@@ -1,18 +1,15 @@
 <template>
   <div class="enc-row-order" :class="{ 'enc-row-order--current': current }" aria-hidden="true">
-    <span>{{ label }}</span>
+    <span>{{ order }}</span>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-
-const props = defineProps({
+defineProps({
   order: { type: Number, required: true },
   current: { type: Boolean, default: false },
 })
 
-const label = computed(() => String(props.order).padStart(2, '0'))
 </script>
 
 <style scoped>
@@ -53,9 +50,11 @@ const label = computed(() => String(props.order).padStart(2, '0'))
   border-radius: 10px;
   background: color-mix(in srgb, var(--section-color) 12%, var(--surface));
   box-shadow: 0 0 14px color-mix(in srgb, var(--section-color) 12%, transparent);
-  font-size: 10px;
-  font-weight: 850;
-  letter-spacing: 0.05em;
+  font-family: var(--font-display);
+  font-size: var(--type-body-size);
+  font-weight: 700;
+  font-variant-numeric: oldstyle-nums;
+  line-height: 1;
   transition:
     color var(--motion-enter),
     background-color var(--motion-enter),

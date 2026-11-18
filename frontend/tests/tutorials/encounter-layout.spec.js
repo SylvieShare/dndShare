@@ -183,6 +183,7 @@ test.describe('compact combat on a touch screen', () => {
     await expect(start).toBeInViewport({ ratio: 1 })
     await expect(root).not.toHaveClass(/enc-wrap--columns/)
     await expect(roster.locator('.enc-row-shell')).toHaveCount(combatants.length)
+    await expect(roster.locator('.enc-row-order > span')).toHaveText(combatants.map((_, index) => String(index + 1)))
     const controlsTop = (await controls.boundingBox()).y
     const initial = await controls.boundingBox()
     const touch = await page.context().newCDPSession(page)
