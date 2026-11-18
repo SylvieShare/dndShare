@@ -1,6 +1,6 @@
 <template>
-  <div v-if="items.length || showAddAction" class="dsov" :class="{ 'dsov--icons-only': iconsOnly, 'dsov--header': header, 'dsov--stacked': stacked, 'dsov--compact': compact }" :style="iconsOnly ? { '--status-icon-size': `${iconSize}px` } : header ? { '--status-header-icon-size': `${headerIconSize}px` } : null">
-    <div ref="row" class="dsov-row" :class="{ 'dsov-row--scrollable': rowOverflows === true, 'dsov-row--fits': rowOverflows === false }" data-sheet-horizontal-scroll>
+  <div v-if="items.length || showAddAction" class="dsov" :class="{ 'dsov--icons-only': iconsOnly, 'dsov--header': header, 'dsov--wrap': wrap, 'dsov--compact': compact }" :style="iconsOnly ? { '--status-icon-size': `${iconSize}px` } : header ? { '--status-header-icon-size': `${headerIconSize}px` } : null">
+    <div ref="row" class="dsov-row" :class="{ 'dsov-row--scrollable': rowOverflows === true, 'dsov-row--fits': rowOverflows === false }" :data-sheet-horizontal-scroll="wrap ? undefined : ''">
       <RowActionMenu
         v-for="item in items"
         :key="item.id"
@@ -101,7 +101,7 @@ const props = defineProps({
   iconSize: { type: Number, default: 64 },
   context: { type: Object, default: null },
   header: Boolean,
-  stacked: Boolean,
+  wrap: Boolean,
   compact: Boolean,
 })
 const headerIconSize = computed(() => layoutTokens[props.compact ? 'status-compact-icon' : 'sheet-header-status-icon'])
@@ -109,7 +109,7 @@ const emit = defineEmits(['add', 'view', 'remove', 'edit-duration', 'increase-le
 const row = ref(null), rowOverflows = ref(null)
 let rowObserver, rowMeasureFrame
 function measureOverflow() {
-  rowOverflows.value = props.header && row.value ? row.value.scrollWidth > row.value.clientWidth + 1 : null
+  rowOverflows.value = props.header && !props.wrap && row.value ? row.value.scrollWidth > row.value.clientWidth + 1 : null
 }
 function scheduleOverflowMeasure() {
   cancelAnimationFrame(rowMeasureFrame)
@@ -118,13 +118,13 @@ function scheduleOverflowMeasure() {
 function observeRow() {
   rowObserver?.disconnect()
   cancelAnimationFrame(rowMeasureFrame)
-  if (!rowObserver || !props.header || !row.value) { rowOverflows.value = null; return }
+  if (!rowObserver || !props.header || props.wrap || !row.value) { rowOverflows.value = null; return }
   rowObserver.observe(row.value)
   for (const item of row.value.children) rowObserver.observe(item)
   measureOverflow()
 }
 onMounted(() => { rowObserver = new ResizeObserver(scheduleOverflowMeasure); observeRow() })
-watch([row, () => props.header, () => props.items, () => props.showAddAction], observeRow, { flush: 'post' })
+watch([row, () => props.header, () => props.wrap, () => props.items, () => props.showAddAction], observeRow, { flush: 'post' })
 onBeforeUnmount(() => { rowObserver?.disconnect(); cancelAnimationFrame(rowMeasureFrame) })
 
 function select(item, close, action) {
@@ -153,8 +153,8 @@ function monogram(value) {
 .dsov--header .dsov-duration {font-size:var(--type-context-size);line-height:var(--type-context-line-height)}
 .dsov--header .dsov-add {width:auto;height:var(--layout-touch-min);padding-inline:var(--spacing-small);font-size:var(--type-group-size);white-space:nowrap}
 .dsov--header {flex-wrap:nowrap}
-.dsov--stacked .dsov-row {flex:1;flex-direction:column;align-items:stretch;gap:var(--spacing-xs);overflow:visible;width:100%}
-.dsov--stacked .dsov-effect {width:100%}
+.dsov--header.dsov--wrap .dsov-row {flex:1;flex-wrap:wrap;align-items:flex-start;overflow:visible}
+.dsov--wrap .dsov-name {white-space:normal;overflow-wrap:anywhere}
 .dsov--compact .dsov-effect {min-height:var(--layout-touch-min);padding-inline:var(--spacing-small) var(--spacing-medium)}
 .dsov--compact .dsov-name {font-size:var(--type-caption-size);line-height:var(--type-caption-line-height)}
 .dsov--compact .dsov-heading {flex-direction:row;flex-wrap:wrap;align-items:center}

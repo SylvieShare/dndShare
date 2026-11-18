@@ -63,6 +63,12 @@ for(const width of [390,834,1440])test(`persistent checkboxes, shared groups and
   await page.getByRole('button',{name:'Начать бой',exact:true}).click();await expect.poll(()=>api.encounter().active).toBe(true)
   expect(api.encounter().combatants.find(c=>c.uid==='p-2').position).toBe('reserve')
   await open('Запас');await expect(card(sidebar,'Волк').locator('.roster-stage-backdrop')).toHaveAccessibleName('В бою')
+  const activeWatermark=card(sidebar,'Волк').locator('.roster-stage-backdrop--active svg')
+  await expect(activeWatermark).toBeVisible()
+  expect(await activeWatermark.evaluate(node=>{
+    const [red,green,blue]=getComputedStyle(node).color.match(/\d*\.?\d+/g).map(Number)
+    return red>green&&red>blue
+  })).toBe(true)
   await info.attach(`active-roster-${width}`,{body:await page.screenshot({animations:'disabled'}),contentType:'image/png'})
   await toolbar.getByRole('button',{name:'Сбросить выбор',exact:true}).click();await count(0)
   await check(sidebar,'Волк').click();await open('Игроки');await check(sidebar,'Тиф').click()

@@ -1,7 +1,7 @@
 <template>
   <div class="participant-statuses" :class="{ 'participant-statuses--detailed': detailed }" role="group" aria-label="Эффекты и состояния" @pointerdown.stop @click.stop @contextmenu.stop @keydown.stop>
     <DndStatusOverviewView
-      :items="items" :editable="context.ownerMode" :context="context" :icons-only="!detailed" :header="detailed" :icon-size="32" :stacked="detailed" :compact="detailed"
+      :items="items" :editable="context.ownerMode" :context="context" :icons-only="!detailed" :header="detailed" :icon-size="32" :wrap="detailed" :compact="detailed"
       @view="viewItem = $event.item"
       @remove="$emit('remove', $event)"
       @increase-level="$emit('change-level', $event, 1)"

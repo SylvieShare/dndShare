@@ -35,6 +35,12 @@ title holds «Со сцены» and counts only selected scene members. Command 
 have visible captions and accessible names.
 
 The sidebar remains available, while map canvas/inspector are hidden in combat.
+The command column groups fight flow, selection actions and scene composition
+into three panels. The phase panel shows the roster count and starts combat or
+provides round navigation and End. Selection uses the same summary as the left
+sidebar, with challenge, damage and initiative below it. Scene composition
+contains entry, scenario encounters and graveyard access. Send to graveyard and
+delete NPCs occupy a separate danger row.
 The workspace keeps Page padding on both sides and starts after the participant
 safe area, including the permanent rail on compact windows. The roster uses its
 own scroll gap; the current-turn reference keeps its existing NPC/player detail.
@@ -187,6 +193,8 @@ selection. Map and world tools also show the summary and clear control.
 NPC templates group by itemId, simple creatures by name, and actors dedupe by UID.
 Portraits overlap as the row narrows, and a very large selection continues on
 another row. The numeric live status remains available to assistive technology.
+The control column uses the same icon summary and global reset. Its All control
+applies to the scene roster.
 Every group action shows its eligible count. Adding to the scene is a sidebar
 action, and removal is next to the scene title. Tab changes animate the mounted
 sidebar body in the direction of navigation, respecting reduced motion.
@@ -197,8 +205,9 @@ never adds it to combat; unchecking a participant never removes it. A home group
 keeps live actors even while they participate in combat. Membership, HP and states
 are shared. Home tiles use a sword watermark below the clipped selection
 paint instead of a membership caption. Selected watermarks increase contrast
-and retain their accessible state label; scene captions remain visible. The current turn
-has its own arrow/text and warm tint, independent of purple selection.
+and retain their accessible state label. The watermark takes a muted red tint
+during an active encounter. Scene rows show the current-turn arrow and label
+only for the current actor.
 Dragging within a home group retains combat participation. Cross-view previews
 exclude an already present UID before insertion. Returning an actor from the
 scene keeps its home group and selection; graveyard/removal prunes selection.
@@ -441,7 +450,7 @@ compact encounter `ParticipantStats`; ready name and HP stay visible while numer
 mechanics show a skeleton. Passive skill math is shared with the sheet's menu table.
 
 Player summaries have transparent resting surfaces and separators between rows.
-Active character states below the summary use `DndStatusOverviewView(header, stacked, compact)`:
+States size to their content and wrap onto the next row as needed. Active states below the summary use `DndStatusOverviewView(header, wrap, compact)`:
 40px icons, a minimum 48px touch target, name, duration and polarity-colored parchment.
 States form a vertical list inside the scrolling player panel. Character-header
 states keep their existing 56px horizontal presentation. NPC reserves use the

@@ -13,7 +13,7 @@
       :class="{ 'p-card--combat': combatMode, 'p-card--statuses': hasStatuses, 'p-card--compact': compact, 'p-card--current': combatMode && combatCurrent, 'p-card--reorderable': reorderEnabled }"
       :participant="participant" :name="displayName" :avatar-url="avaUrl" :hp="hp" :health-visible="showHp" :show-stats="isDm && isDnd"
       :color="participant.color" :compact="compact" :current="!!encounter?.encounter.active && combatCurrent"
-      :stage-backdrop="combatant?.position === 'combat'" :stage-description="encounter?.encounter.active ? 'В бою' : 'На сцене'"
+      :stage-backdrop="combatant?.position === 'combat'" :stage-active="encounter?.encounter.active"
       :has-statuses="hasStatuses" :selectable="combatEditable && !!combatant && combatant.position !== 'dead'" :selected="combatSelected" :edit-health="canCalculateHp"
       role="group" tabindex="0" :aria-label="`Действия: ${displayName}`" aria-haspopup="menu"
       @click="onCardClick" @keydown.enter.self.prevent="openMenu" @keydown.space.self.prevent="openMenu"
@@ -22,7 +22,7 @@
       <template #name-suffix>
         <span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span>
       </template>
-      <template #presence><SessionCombatPresence :membership-visible="false" :combatant="combatant" :active="encounter?.encounter.active" :current="combatCurrent" /></template>
+      <template #presence><SessionCombatPresence :combatant="combatant" :active="encounter?.encounter.active" :current="combatCurrent" /></template>
       <template v-if="showHp && isDead" #health><SessionPlayerDeathState :hp="hp" :editable="isDm" @revive="$emit('revive')" /></template>
       <template #statuses><ParticipantStatuses :participant="participant" :editable="isDm" detailed /></template>
     </SessionPlayerTile>
