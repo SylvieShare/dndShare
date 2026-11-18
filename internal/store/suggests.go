@@ -229,13 +229,15 @@ func (s *Store) AddSuggest(ctx context.Context, typeID, userID int64, value stri
 
 // UpdateSuggest обновляет подсказку. isAdmin снимает проверку владельца (user_id).
 func (s *Store) UpdateSuggest(ctx context.Context, id, typeID, userID int64, isAdmin bool, value string, code, color, desc *string, svgID *int64) error {
-	where := `WHERE id = $6 AND type_id = $7 AND user_id = $8`
-	if isAdmin {
-		where = `WHERE id = $6 AND type_id = $7`
+	where := `WHERE id = $6 AND type_id = $7`
+	args := []any{value, code, color, desc, svgID, id, typeID}
+	if !isAdmin {
+		where += ` AND user_id = $8`
+		args = append(args, userID)
 	}
 	_, err := s.pool.Exec(ctx,
 		`UPDATE dndshare.suggest SET value = $1, code = $2, color = $3, "desc" = $4, svg_id = $5 `+where,
-		value, code, color, desc, svgID, id, typeID, userID)
+		args...)
 	return err
 }
 

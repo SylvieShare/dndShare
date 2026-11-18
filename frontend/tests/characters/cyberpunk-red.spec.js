@@ -38,6 +38,7 @@ async function fixture(page){
    '/api/items/by-ids':{items:[]},
    '/api/suggest/types':{items:[{id:36,name:'Методы создания'},{id:34,name:'Характеристики',coverImageUrl:cover}]},
    '/api/suggest/36':{items:[{code:'complete',coverImageUrl:cover}]},
+   '/api/suggest/34':{items:core.dictionaries['Характеристики'].map(stat=>({code:stat.key,value:stat.name,desc:stat.description,iconImageUrl:cover}))},
    '/api/suggest/batch':{items:{}},'/api/sessions/active':{sessions:[]},
    '/api/account/tutorials':{tutorials:['mobile','desktop'].map(device=>({flowId:'character',sourceKey:'edition:30',device,status:'completed',revision:58}))},[`/api/char/${uuid}/sessions`]:{sessions:[]},[`/api/char/${uuid}/history`]:{changes:[]},
   }[path]||{}})
@@ -122,6 +123,16 @@ for(const width of [390,840,1440]){
   await page.getByRole('button',{name:'Изменить',exact:true}).click()
   await next.click()
   await expect(page.locator('.creation-cover')).toHaveJSProperty('naturalWidth',50)
+  const stats=main.locator('.red-creation-stats')
+  await expect(stats.locator('.item-icon img')).toHaveCount(10)
+  await expect(stats.getByText(core.dictionaries['Характеристики'][0].description)).toBeVisible()
+  await expect(stats.locator('.system-die')).toHaveCount(0)
+  await expect(stats.locator('.stat-pending')).toHaveCount(10)
+  await expect(next).toBeDisabled()
+  await stats.getByRole('button',{name:'Бросить d10',exact:true}).click()
+  await expect(stats.getByRole('img',{name:/^d10: (?:10|[1-9])$/})).toHaveCount(1)
+  await expect(stats.locator('.stat-pending')).toHaveCount(0)
+  await expect(next).toBeEnabled()
   await rail.getByText('Киберимпланты',{exact:true}).click()
   await expect(page.getByRole('heading',{name:'Киберимпланты',exact:true})).toBeVisible()
   await expect(page.locator('.creation-cover')).toHaveJSProperty('naturalWidth',50)
@@ -159,7 +170,28 @@ test('RED restores the original screen of a saved wizard draft', async ({page}) 
   await expect(main.locator('input').filter({visible:true}).last()).toBeVisible()
   const saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)),storageKey)
   expect(saved.stepKey).toBe('lifepath')
-  expect(saved.draft).toMatchObject(draft)
+  expect(saved.draft).toMatchObject({...draft,schemaVersion:2})
   await page.reload()
   await expect(main.getByRole('heading',{name:'Жизненный путь',exact:true})).toBeVisible()
+})
+
+test('RED replaces legacy placeholder dice with ten explicit Edgerunner rolls', async ({page}) => {
+  await fixture(page)
+  const storageKey = 'dndshare.red-create.v1'
+  await page.addInitScript(key => {
+    if (!localStorage.getItem(key)) {
+      const draft = {schemaVersion:1,method:'edgerunner',role:'solo',statRolls:Array(10).fill(1)}
+      localStorage.setItem(key,JSON.stringify({draft,stepKey:'stats'}))
+    }
+  },storageKey)
+  await page.goto('/chars/new?system=cyberpunk-red')
+  const stats = page.locator('.red-creation-stats')
+  await expect(stats.getByText('Сделай бросок, чтобы получить характеристики.')).toBeVisible()
+  await expect(stats.locator('.system-die')).toHaveCount(0)
+  await stats.getByRole('button',{name:'Бросить 10d10',exact:true}).click()
+  await expect(stats.locator('.stat-card .system-die')).toHaveCount(10)
+  const results = await stats.locator('.stat-card .system-die').evaluateAll(dice=>dice.map(die=>die.getAttribute('aria-label')))
+  await page.reload()
+  await expect(stats.locator('.stat-card .system-die')).toHaveCount(10)
+  expect(await stats.locator('.stat-card .system-die').evaluateAll(dice=>dice.map(die=>die.getAttribute('aria-label')))).toEqual(results)
 })

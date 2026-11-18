@@ -113,37 +113,15 @@
             "
         /></FormField></div
     ></template>
-    <template v-else-if="step === 'stats'"
-      ><RedCreationIntro title="Характеристики" :cover="art.dictionaryCover('Характеристики')" />
-      <p v-if="draft.method === 'complete'">
-        Распределено {{ statTotal }} из 62. Каждое значение от 2 до 8.
-      </p>
-      <div v-else class="red-actions">
-        <ActionButton @click="emit('roll-stats')">{{
-          draft.method === "streetrat"
-            ? "Бросить d10 для набора"
-            : "Бросить 10d10 по характеристикам"
-        }}</ActionButton
-        ><small>Результаты: {{ draft.statRolls.join(", ") }}</small>
-      </div>
-      <div class="red-form-grid">
-        <FormField
-          v-for="s in RED_STATS"
-          :key="s.key"
-          :label="`${s.name} · ${s.key}`"
-          vertical
-          ><FormNumberInput
-            v-if="draft.method === 'complete'"
-            :value="draft.stats[s.key]"
-            :min="2"
-            :max="8"
-            @change="patch({ stats: { ...draft.stats, [s.key]: $event } })"
-          /><strong v-else class="red-metric">{{
-            draft.stats[s.key]
-          }}</strong></FormField
-        >
-      </div></template
-    >
+    <RedCreationStats
+      v-else-if="step === 'stats'"
+      :method="draft.method"
+      :stats="draft.stats"
+      :rolls="draft.statRolls"
+      :art="art"
+      @patch="patch"
+      @roll="emit('roll-stats')"
+    />
     <template v-else-if="step === 'skills'"
       ><RedCreationIntro title="Навыки" :cover="art.dictionaryCover('Навыки')" />
       <p>
@@ -227,7 +205,6 @@ import {
 } from "@sylvieshare/share-ui";
 import {
   RED_ROLES,
-  RED_STATS,
 } from "@/features/character-editor/settings/cyberpunk-red/catalogue";
 import {
   RED_LIFEPATH_FIELDS,
@@ -236,6 +213,7 @@ import {
 import RedSkills from "@/features/character-editor/components/sheet/cyberpunk-red/RedSkills.vue";
 import BackgroundSelectCard from "../BackgroundSelectCard.vue";
 import IllustratedChoiceStage from "../IllustratedChoiceStage.vue";
+import RedCreationStats from "./RedCreationStats.vue";
 import RedCreationIntro from "./RedCreationIntro.vue";
 import RedCreationShop from "./RedCreationShop.vue";
 const props = defineProps({
@@ -276,9 +254,6 @@ function toggleRecipe(key) {
     },
   });
 }
-const statTotal = computed(() =>
-  Object.values(props.draft.stats).reduce((a, b) => a + b, 0),
-);
 const methods = [
   {
     key: "streetrat",
@@ -323,6 +298,8 @@ const errors = {
   "recipe-budget": "Число рецептов превышает фармацевтическую специальность",
   "name-required": "Укажите имя",
   "native-language-required": "Выберите родной язык",
+  "stat-rolls-required": "Сделайте бросок на шаге «Характеристики»",
+  "stat-table-mismatch": "Перебросьте характеристики для выбранной роли",
   "stat-budget": "Распределите ровно 62 очка характеристик",
   "stat-range": "Значение характеристики должно быть от 2 до 8",
   "skill-budget": "Распределите ровно 86 очков навыков",

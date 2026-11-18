@@ -24,6 +24,7 @@ export const RED_CREATE_STEPS = [
   { key: "finish", title: "Завершение" },
 ];
 const legacyStepKeys = ["method", "role", "lifepath", "stats", "skills", "equipment", "cyberware", "finish"];
+const DRAFT_VERSION = 2;
 const initial = () => ({
   method: "complete",
   role: "solo",
@@ -47,18 +48,24 @@ export function useRedCreateWizard(items) {
     step = ref(0),
     storageError = ref("");
   const storageKey = "dndshare.red-create.v1";
-  let migratedStep = false;
+  let migratedDraft = false;
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
     if (
-      saved?.draft?.schemaVersion === 1 &&
+      [1, DRAFT_VERSION].includes(saved?.draft?.schemaVersion) &&
       RED_ROLES.some((r) => r.key === saved.draft.role) &&
       ["complete", "streetrat", "edgerunner"].includes(saved.draft.method)
     ) {
       draft.value = { ...initial(), ...saved.draft };
       const stepKey = saved.stepKey ?? legacyStepKeys[saved.step];
-      migratedStep = saved.stepKey == null && stepKey != null;
+      migratedDraft = saved.draft.schemaVersion === 1 || (saved.stepKey == null && stepKey != null);
       step.value = Math.max(0, RED_CREATE_STEPS.findIndex(entry => entry.key === stepKey));
+      if (!Array.isArray(draft.value.statRolls) || (
+        saved.draft.schemaVersion === 1 && draft.value.statRolls.every(die => die === 1)
+      )) {
+        // Version 1 wrote all ones before a roll. It did not record their origin.
+        draft.value.statRolls = [];
+      }
     }
   } catch {
     storageError.value = "Не удалось восстановить черновик";
@@ -88,16 +95,7 @@ export function useRedCreateWizard(items) {
       draft.value.method,
       draft.value,
     );
-    if (draft.value.method !== "complete") {
-      draft.value.statRolls = Array(
-        draft.value.method === "streetrat" ? 1 : 10,
-      ).fill(1);
-      draft.value.stats = redStatsFromRolls(
-        draft.value.role,
-        draft.value.method,
-        draft.value.statRolls,
-      );
-    }
+    draft.value.statRolls = [];
   }
   if (!draft.value.skills.length) resetRole();
   function saveDraft() {
@@ -105,7 +103,7 @@ export function useRedCreateWizard(items) {
       localStorage.setItem(
         storageKey,
         JSON.stringify({
-          draft: { ...draft.value, schemaVersion: 1 },
+          draft: { ...draft.value, schemaVersion: DRAFT_VERSION },
           stepKey: RED_CREATE_STEPS[step.value].key,
         }),
       );
@@ -114,7 +112,7 @@ export function useRedCreateWizard(items) {
       storageError.value = "Черновик не сохранён на устройстве. Не закрывайте страницу.";
     }
   }
-  if (migratedStep) saveDraft();
+  if (migratedDraft) saveDraft();
   watch([draft, step], saveDraft, { deep: true });
   const shopping = computed(() => redShoppingSummary(draft.value, items.value));
   const validation = computed(() => validateRedCreation(draft.value));
@@ -127,6 +125,7 @@ export function useRedCreateWizard(items) {
     resetMethodChoices();
   }
   function rollStats() {
+    if (draft.value.method === "complete") return;
     draft.value.statRolls = Array.from(
       { length: draft.value.method === "streetrat" ? 1 : 10 },
       () => 1 + Math.floor(Math.random() * 10),

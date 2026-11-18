@@ -39,6 +39,21 @@ func TestRedCatalogueAndRollPostgres(t *testing.T) {
 	if err != nil || len(items) != installed.Items {
 		t.Fatal(len(items), err)
 	}
+	var statTypeID int64
+	if err := pool.QueryRow(ctx, `SELECT id FROM dndshare.suggest_type WHERE source_id=$1 AND name='Характеристики'`, installed.SourceID).Scan(&statTypeID); err != nil {
+		t.Fatal(err)
+	}
+	stat, err := s.FindBaseSuggestByCode(ctx, statTypeID, "INT")
+	if err != nil || stat.Desc == nil || *stat.Desc == "INT" {
+		t.Fatal("stat description missing from catalogue", stat, err)
+	}
+	description := "Проверка редактора словаря"
+	if err := s.UpdateSuggest(ctx, stat.ID, statTypeID, 0, true, stat.Value, stat.Code, stat.Color, &description, stat.SvgID); err != nil {
+		t.Fatal(err)
+	}
+	if updated, err := s.GetEditableSuggest(ctx, stat.ID, statTypeID, 0, true); err != nil || updated.Desc == nil || *updated.Desc != description {
+		t.Fatal("base stat description was not updated", updated, err)
+	}
 	if _, err = pool.Exec(ctx, `INSERT INTO dndshare.users(id,login,password,source_version_id) VALUES(101,'red-owner','test',$1),(102,'red-other','test',$1)`, installed.VersionID); err != nil {
 		t.Fatal(err)
 	}

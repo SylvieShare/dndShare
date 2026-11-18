@@ -55,7 +55,7 @@
           <ActionButton v-if="step === lastStep" variant="quiet" :disabled="creating || !available" @click="preview">
             Предпросмотр листа
           </ActionButton>
-          <ActionButton :disabled="creating || !available" @click="step < lastStep ? step++ : create()">
+          <ActionButton :disabled="creating || !available || waitingForStatRoll" @click="step < lastStep ? step++ : create()">
             {{ creating ? "Создание…" : step < lastStep ? "Далее" : "Создать персонажа" }}
           </ActionButton>
         </div>
@@ -135,6 +135,9 @@ const mainRef = ref(null);
 const roleExpanded = ref(false);
 const lastStep = RED_CREATE_STEPS.length - 1;
 const stepKey = computed(() => RED_CREATE_STEPS[step.value].key);
+const waitingForStatRoll = computed(() =>
+  stepKey.value === "stats" && draft.value.method !== "complete" && draft.value.statRolls.length === 0,
+);
 const summaries = computed(() => ({
   method: "Cyberpunk RED · Core 1.25",
   role: RED_ROLES.find(role => role.key === draft.value.role)?.name,
