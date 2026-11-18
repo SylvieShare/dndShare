@@ -116,6 +116,7 @@
     <RedCreationStats
       v-else-if="step === 'stats'"
       :method="draft.method"
+      :role="draft.role"
       :stats="draft.stats"
       :rolls="draft.statRolls"
       :art="art"
