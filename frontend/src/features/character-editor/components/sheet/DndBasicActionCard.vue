@@ -20,14 +20,22 @@ const icons = { swords: Swords, footprints: Footprints, sparkles: Sparkles, zap:
 </script>
 <style scoped>
 .basic-action-tile { min-width: 0; display: flex; }
-.basic-action-button { width: 100%; display: grid; justify-content: stretch; text-align: left; padding: var(--spacing-large); border-radius: var(--radius-tile); }
+.basic-action-tile > .basic-action-button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  min-width: 0;
+  text-align: start;
+  padding: var(--spacing-large);
+  border-radius: var(--radius-tile);
+}
 .basic-action-content { display: flex; align-items: center; gap: var(--spacing-medium); }
 .basic-action-icon { display: grid; place-items: center; flex: 0 0 var(--layout-touch-min); height: var(--layout-touch-min); border-radius: var(--radius-input); background: color-mix(in srgb, currentColor 10%, transparent); }
 .basic-action-icon svg { width: var(--layout-workspace-navigation-icon); height: var(--layout-workspace-navigation-icon); }
 .basic-action-copy { display: grid; gap: var(--spacing-xs); min-width: 0; }
 .basic-action-copy strong { color: var(--text-1); font-size: var(--type-group-size); line-height: var(--type-group-line-height); }
 .basic-action-copy small { color: var(--text-muted); font-size: var(--type-group-size); line-height: 1.5; font-weight: 400; }
-.basic-action-chevron { flex: 0 0 var(--type-group-size); width: var(--type-group-size); color: var(--text-muted); margin-left: auto; }
+.basic-action-chevron { flex: 0 0 var(--type-group-size); width: var(--type-group-size); color: var(--text-muted); margin-inline-start: auto; }
 .basic-action-content--compact { align-items: flex-start; flex-direction: column; }
 .basic-action-content--compact .basic-action-icon { flex-basis: auto; height: var(--layout-workspace-navigation-icon); background: transparent; }
 </style>
