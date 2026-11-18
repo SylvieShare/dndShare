@@ -173,8 +173,9 @@ test('challenge results appear on sidebar player and NPC tiles before combat', a
   expect(requests).toHaveLength(2)
   expect(api.encounter().active).toBe(false)
   expect(api.encounter().combatants.every(row => row.position === 'reserve')).toBe(true)
+  await page.setViewportSize({ width: 300, height: 980 })
   const sizes = await toolbar.locator('.roster-selection-top').evaluate(row => {
-    const summary = row.querySelector('.roster-selection-summary').getBoundingClientRect()
+    const summary = row.querySelector('.roster-selection-summary')
     const rect = row.getBoundingClientRect()
     const buttons = [...row.querySelectorAll('.roster-actions button')].map(button => {
       const box = button.getBoundingClientRect()
@@ -183,10 +184,12 @@ test('challenge results appear on sidebar player and NPC tiles before combat', a
       return { label: button.getAttribute('aria-label') || button.textContent.trim(), x: box.x, y: box.y,
         right: box.right, iconAbove: icon.bottom <= caption.top }
     })
-    return { buttons, top: summary.top, right: rect.right }
+    return { buttons, top: summary.getBoundingClientRect().top, right: rect.right,
+      summaryOverflow: summary.scrollWidth - summary.clientWidth }
   })
   expect(sizes.buttons.map(button => button.label)).toEqual(['Сбросить выбор', 'Действия', 'Убрать испытание'])
   expect(sizes.buttons.every(button => button.iconAbove && Math.abs(button.y - sizes.top) < .5 && button.right <= sizes.right)).toBe(true)
+  expect(sizes.summaryOverflow).toBeLessThanOrEqual(1)
   expect(sizes.buttons[0].x).toBeLessThan(sizes.buttons[1].x)
   expect(sizes.buttons[1].x).toBeLessThan(sizes.buttons[2].x)
   await toolbar.getByRole('button', { name: 'Убрать испытание', exact: true }).click()
