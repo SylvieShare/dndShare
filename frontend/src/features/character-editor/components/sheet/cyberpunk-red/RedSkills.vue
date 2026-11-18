@@ -49,12 +49,12 @@
         </div>
       </details>
       <p v-if="!groups.length" class="skill-hint">Навыки не найдены.</p>
-      <section v-for="group in groups" :key="group.key" class="skill-group">
+      <component :is="creation ? WizardSectionPanel : 'section'" v-for="group in groups" :key="group.key" class="skill-group">
         <h3>{{ group.name }}</h3>
         <div class="skill-card-grid">
           <RedSkillCard
             v-for="row in group.rows"
-            :key="row.uid"
+            :key="row.cardKey"
             :row="row"
             :art="media"
             :stat-value="stats[row.statKey]"
@@ -65,7 +65,7 @@
             @roll="rollSkill(row)"
           />
         </div>
-      </section>
+      </component>
     </section>
   </div>
 </template>
@@ -86,6 +86,7 @@ import {
 } from "../../../settings/cyberpunk-red/catalogue";
 import { redEffectiveStats } from "../../../settings/cyberpunk-red/equipment";
 import ItemIcon from "@/features/items/components/ItemIcon.vue";
+import WizardSectionPanel from "@/shared/ui/WizardSectionPanel.vue";
 import { useRedSkillArt } from "../../../composables/useRedSkillArt";
 import RedSkillCard from "./RedSkillCard.vue";
 
@@ -122,9 +123,10 @@ const rows = computed(() =>
     const outsideRole = !isAllowed(skill.key);
     if (outsideRole && !owned.length) return [];
     return (owned.length ? owned : [{ uid: skill.key, rank: 0 }]).map(
-      (entry) => ({
+      (entry, index) => ({
         ...skill,
         ...entry,
+        cardKey: props.creation && !skill.specializationKind && index === 0 ? skill.key : entry.uid,
         savedUid: owned.length ? entry.uid : null,
         outsideRole,
       }),
@@ -202,7 +204,7 @@ function addSpecial() {
 .red-skills, .skill-section, .skill-group { display: grid; gap: var(--spacing-medium); min-width: 0; }
 .skill-section { gap: var(--spacing-large); }
 .skill-section h2, .skill-group h3 { margin: 0; }
-.skill-group { padding-block-start: var(--spacing-medium); border-top: 1px solid var(--border); }
+.red-skills:not(.red-skills--creation) .skill-group { padding-block-start: var(--spacing-medium); border-top: 1px solid var(--border); }
 .skill-group h3 { font-size: var(--type-row-size); color: var(--text-2); }
 .skill-hint { margin: 0; color: var(--text-muted); font-size: var(--type-group-size); }
 .skill-toolbar { display: flex; gap: var(--spacing-small); flex-wrap: wrap; align-items: center; }

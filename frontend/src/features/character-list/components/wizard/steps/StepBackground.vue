@@ -26,7 +26,7 @@
     </template>
 
     <template #details>
-      <section class="background-details">
+      <WizardSectionPanel>
         <OriginChoices />
         <div class="sheet-section-title">Что даёт предыстория</div>
         <ul class="facts">
@@ -132,7 +132,7 @@
             @toggle="toggleBgLang"
           />
         </div>
-      </section>
+      </WizardSectionPanel>
     </template>
     </IllustratedChoiceStage>
     <ItemViewModal
@@ -145,6 +145,7 @@
 </template>
 
 <script setup>
+import WizardSectionPanel from '@/shared/ui/WizardSectionPanel.vue'
 import OriginChoices from './OriginChoices.vue'
 import { computed, inject, ref } from 'vue'
 import BackgroundSelectCard from '@/features/character-list/components/wizard/BackgroundSelectCard.vue'
@@ -238,7 +239,6 @@ function selectBackground(background) {
 .hint { font-size: 12px; color: var(--text-muted); margin: 0; display: flex; align-items: center; gap: 8px; }
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); }
 .count.done { color: var(--success); }
-.background-details { display: flex; flex-direction: column; gap: 12px; padding: 16px; border: 1px solid color-mix(in srgb, var(--border) 82%, transparent); border-radius: calc(var(--r-md) + 2px); background: color-mix(in srgb, var(--surface) 54%, transparent); box-shadow: inset 3px 0 0 color-mix(in srgb, var(--accent) 22%, transparent); }
 
 .facts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .facts li { font-size: 13px; color: var(--text-2); line-height: 1.4; }
@@ -267,5 +267,5 @@ function selectBackground(background) {
 .grant-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 8px; }
 
 .pick { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
-@media (max-width: 640px) { .background-details { padding: 14px; } .grant-tiles, .background-choice-list { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .grant-tiles, .background-choice-list { grid-template-columns: 1fr; } }
 </style>

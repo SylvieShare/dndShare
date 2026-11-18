@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
     return route.fulfill({ json: { items: url.pathname === '/api/items/by-ids' ? fixture.spells.filter(spell => ids.has(spell.id)) : [] } })
   })
 })
-for (const width of [1280, 390]) {
+for (const width of [1280, 840, 390]) {
   test(`tiefling separates heritage and size and opens real spell entries (${width})`, async ({ page }) => {
     await page.setViewportSize({ width, height: 1000 })
     await page.goto('/tests/species/fixture.html?tiefling')
@@ -58,6 +58,13 @@ for (const width of [1280, 390]) {
   test(`dragonborn and human do not repeat their wizard choices (${width})`, async ({ page }) => {
     await page.setViewportSize({ width, height: 1000 })
     await page.goto('/tests/species/fixture.html?dragonborn')
+    const lorePanel = page.locator('.race-lore .wizard-section-panel')
+    const choicePanel = page.locator('.race-choices .wizard-section-panel')
+    await expect(lorePanel.locator('.tile-accent-strip')).toBeVisible()
+    await expect(choicePanel.locator('.tile-accent-strip')).toBeVisible()
+    await expect(choicePanel).toHaveCSS('background-color', await lorePanel.evaluate(panel => getComputedStyle(panel).backgroundColor))
+    await expect(choicePanel).toHaveCSS('box-shadow', 'none')
+    await expect(choicePanel.getByRole('region', { name: 'Вариант расы' })).toBeVisible()
     await expect(page.locator('.variant-card')).toHaveCount(10)
     await expect(page.locator('.variant-damage-icon')).toHaveCount(10)
     const red = page.locator('.variant-card').filter({ hasText: 'Красный' })

@@ -2,41 +2,45 @@
   <div class="red-stack red-creation-stats">
     <RedCreationIntro title="Характеристики" :cover="art.dictionaryCover('Характеристики')" />
 
-    <div class="stat-setup">
-      <div class="stat-instructions">
-        <h3>{{ modeName }}</h3>
-        <p v-if="manual" class="stat-help">
-          Распредели все {{ profile.statBudget }} очка. Значения могут быть от {{ profile.statMin }} до {{ profile.statMax }}.
-          Уменьши одну характеристику кнопкой «−», чтобы освободить очко для другой.
-        </p>
-        <p v-else-if="streetrat" class="stat-help">
-          Брось один d10 для всего набора. Если выпало 6, визард возьмёт все десять значений из строки 6 таблицы роли.
-        </p>
-        <p v-else class="stat-help">
-          Брось по d10 на каждую характеристику. Кубик указывает строку, а характеристика — столбец.
-          <template v-if="tableRows.length">Например, 6 на INT даёт значение {{ tableRows[5][0] }} из строки 6 столбца INT.</template>
-        </p>
-      </div>
-      <p v-if="manual" class="stat-budget" :class="{ 'red-danger': remaining < 0 }" role="status">
-        {{ remaining < 0 ? 'Сверх бюджета' : 'Осталось очков' }} <strong>{{ Math.abs(remaining) }}</strong>
-      </p>
-      <div v-else class="stat-roll-action">
-        <div v-if="streetrat && rolled" :key="rollSequence" class="stat-row-result" :class="{ 'stat-flash': rollSequence }" role="status">
-          <SystemDie :sides="10" :value="rolls[0]" :size="38" :animated="false" />
-          <span>Строка {{ rolls[0] }}</span>
+    <WizardSectionPanel>
+      <div class="stat-setup">
+        <div class="stat-instructions">
+          <h3>{{ modeName }}</h3>
+          <p v-if="manual" class="stat-help">
+            Распредели все {{ profile.statBudget }} очка. Значения могут быть от {{ profile.statMin }} до {{ profile.statMax }}.
+            Уменьши одну характеристику кнопкой «−», чтобы освободить очко для другой.
+          </p>
+          <p v-else-if="streetrat" class="stat-help">
+            Брось один d10 для всего набора. Если выпало 6, визард возьмёт все десять значений из строки 6 таблицы роли.
+          </p>
+          <p v-else class="stat-help">
+            Брось по d10 на каждую характеристику. Кубик указывает строку, а характеристика — столбец.
+            <template v-if="tableRows.length">Например, 6 на INT даёт значение {{ tableRows[5][0] }} из строки 6 столбца INT.</template>
+          </p>
         </div>
-        <ActionButton @click="requestRoll">
-          <template #icon><Dices :size="18" aria-hidden="true" /></template>
-          {{ rolled ? 'Перебросить' : streetrat ? 'Бросить d10' : 'Бросить 10d10' }}
-        </ActionButton>
+        <p v-if="manual" class="stat-budget" :class="{ 'red-danger': remaining < 0 }" role="status">
+          {{ remaining < 0 ? 'Сверх бюджета' : 'Осталось очков' }} <strong>{{ Math.abs(remaining) }}</strong>
+        </p>
+        <div v-else class="stat-roll-action">
+          <div v-if="streetrat && rolled" :key="rollSequence" class="stat-row-result" :class="{ 'stat-flash': rollSequence }" role="status">
+            <SystemDie :sides="10" :value="rolls[0]" :size="38" :animated="false" />
+            <span>Строка {{ rolls[0] }}</span>
+          </div>
+          <ActionButton @click="requestRoll">
+            <template #icon><Dices :size="18" aria-hidden="true" /></template>
+            {{ rolled ? 'Перебросить' : streetrat ? 'Бросить d10' : 'Бросить 10d10' }}
+          </ActionButton>
+        </div>
       </div>
-    </div>
-    <p v-if="!manual && !rolled" class="stat-help" role="status">Сделай бросок, чтобы получить характеристики.</p>
+      <p v-if="!manual && !rolled" class="stat-help" role="status">Сделай бросок, чтобы получить характеристики.</p>
+    </WizardSectionPanel>
 
-    <RedStatRollTable v-if="!manual" :rows="tableRows" :rolls="rolls" :whole-row="streetrat" :role-name="roleName" />
+    <WizardSectionPanel v-if="!manual && tableRows.length">
+      <RedStatRollTable :rows="tableRows" :rolls="rolls" :whole-row="streetrat" :role-name="roleName" />
+    </WizardSectionPanel>
 
     <div class="stat-grid">
-      <BaseTile v-for="(stat, index) in RED_STATS" :key="stat.key" :outlined="false">
+      <WizardSectionPanel v-for="(stat, index) in RED_STATS" :key="stat.key">
         <article class="stat-card">
           <div class="stat-identity">
             <ItemIcon v-if="art.stat(stat.key)?.iconImageUrl" :item="art.stat(stat.key)" :size="40" />
@@ -59,7 +63,7 @@
             </div>
           </div>
         </article>
-      </BaseTile>
+      </WizardSectionPanel>
     </div>
     <ConfirmDialog
       v-if="rerollOpen"
@@ -75,9 +79,10 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { Dices } from '@lucide/vue'
-import { ActionButton, BaseTile, ConfirmDialog, FormNumberInput } from '@sylvieshare/share-ui'
+import { ActionButton, ConfirmDialog, FormNumberInput } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import SystemDie from '@/shared/ui/SystemDie.vue'
+import WizardSectionPanel from '@/shared/ui/WizardSectionPanel.vue'
 import { RED_ROLES, RED_STATS } from '@/features/character-editor/settings/cyberpunk-red/catalogue'
 import { RED_CORE_PROFILE as profile } from '@/features/character-editor/settings/cyberpunk-red/creation'
 import { RED_STAT_TABLES } from '@/features/character-editor/settings/cyberpunk-red/creationTables'
@@ -152,7 +157,6 @@ function statDescription(key) {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-small);
-  padding: var(--spacing-medium);
   min-width: 0;
 }
 .stat-identity { justify-content: space-between; min-height: 40px; }

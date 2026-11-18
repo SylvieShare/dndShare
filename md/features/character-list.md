@@ -133,6 +133,8 @@ one column, while the navigation footer stays pinned to the visible bottom edge.
 карточку и детали в начале области прокрутки. Общий компонент меняет
 прозрачность панели за 180 мс и учитывает системное отключение анимаций.
 Возврат к выбору восстанавливает позицию списка и фокус на карточке.
+«О расе», «Выборы расы», описание и выборы класса, а также детали
+предыстории используют одну поверхность с акцентной полосой слева.
 
 Only the capped central column owns an opaque `--bg` surface across its header,
 work area and footer, with continuous side borders framing it on desktop. The

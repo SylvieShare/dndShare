@@ -4,12 +4,32 @@
       <div class="skill-identity">
         <ItemIcon :item="art.skill(row.key)" :size="40" placeholder />
         <div class="skill-name">
-          <h4>
-            <FitContent v-if="creation" class="skill-title-fit" :min-scale="0.66" :title="row.name">
+          <div class="skill-title">
+            <FitContent v-if="creation" tag="h4" inline class="skill-title-fit" :min-scale="0.66" :title="row.name">
               {{ row.name }}
             </FitContent>
-            <template v-else>{{ row.name }}</template>
-          </h4>
+            <h4 v-else>{{ row.name }}</h4>
+            <ActionButton
+              v-if="description"
+              class="skill-help"
+              variant="quiet"
+              icon-only
+              :aria-label="`Описание навыка «${row.name}»`"
+              aria-haspopup="dialog"
+              :aria-expanded="!!descriptionAnchor"
+              @click="descriptionAnchor = descriptionAnchor ? null : $event.currentTarget"
+            >
+              <template #icon><CircleHelp :size="16" aria-hidden="true" /></template>
+            </ActionButton>
+            <ItemTooltip
+              v-if="descriptionAnchor"
+              interactive
+              :anchor="descriptionAnchor"
+              :title="row.name"
+              :desc="description"
+              @close="descriptionAnchor = null"
+            />
+          </div>
           <span v-if="row.specialization" class="skill-specialization">{{ row.specialization }}</span>
           <span v-else-if="row.specializationKind" class="skill-specialization">Нужна специализация</span>
         </div>
@@ -49,6 +69,15 @@
         <span>Ранг <b>{{ row.rank }}</b></span>
       </div>
 
+      <RedSkillRankBar
+        v-if="creation"
+        class="skill-rank"
+        :rank="row.rank"
+        :editable="editableRank"
+        :label="`Шкала ранга навыка «${row.name}»`"
+        @select="emit('rank', $event)"
+      />
+
       <div v-if="!creation || (canAdjust && row.outsideRole)" class="skill-actions">
         <ActionButton v-if="canAdjust && row.outsideRole" variant="quiet" @click="emit('remove')">Убрать</ActionButton>
         <div v-else-if="editableRank" role="group" :aria-label="`Ранг навыка «${row.name}»`">
@@ -64,12 +93,15 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { Dices } from '@lucide/vue'
+import { computed, shallowRef } from 'vue'
+import { CircleHelp, Dices } from '@lucide/vue'
 import { ActionButton, BaseTile, FitContent, FormNumberInput } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 import { RED_STATS } from '../../../settings/cyberpunk-red/catalogue'
 import { RED_CORE_PROFILE } from '../../../settings/cyberpunk-red/creation'
+import { RED_SKILL_DESCRIPTIONS } from '../../../settings/cyberpunk-red/descriptions'
+import RedSkillRankBar from './RedSkillRankBar.vue'
 
 const props = defineProps({
   row: { type: Object, required: true },
@@ -81,8 +113,10 @@ const props = defineProps({
 const emit = defineEmits(['rank', 'remove', 'roll'])
 const total = computed(() => props.statValue + props.row.rank)
 const statName = computed(() => RED_STATS.find(stat => stat.key === props.row.statKey)?.name || props.row.statKey)
+const description = computed(() => RED_SKILL_DESCRIPTIONS[props.row.key])
+const descriptionAnchor = shallowRef(null)
 const rollLabel = computed(() => `Бросить ${props.row.name}${props.row.specialization ? ` — ${props.row.specialization}` : ''}`)
-const editableRank = computed(() => props.canAdjust && !props.row.outsideRole && (!props.row.specializationKind || props.row.specialization))
+const editableRank = computed(() => props.canAdjust && !props.row.outsideRole && (!props.row.specializationKind || !!props.row.specialization))
 </script>
 
 <style scoped>
@@ -95,21 +129,24 @@ const editableRank = computed(() => props.canAdjust && !props.row.outsideRole &&
   box-sizing: border-box;
   padding: var(--spacing-medium);
 }
-.skill-row-shell { container: skill-row / inline-size; }
+.skill-row-shell { container: skill-row / inline-size; --tile-surface: var(--bg); }
 .red-skill-card--row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 240px);
   align-items: center;
+  row-gap: var(--spacing-xs);
 }
 .red-skill-card--row .skill-formula { margin-block-start: 0; }
-.red-skill-card--row .skill-actions { grid-column: 1 / -1; }
+.red-skill-card--row .skill-actions, .skill-rank { grid-column: 1 / -1; }
 .skill-identity, .skill-values, .skill-actions, .skill-stat {
   display: flex;
   align-items: center;
   gap: var(--spacing-small);
 }
 .skill-name { flex: 1 1 auto; min-width: 0; }
-.skill-name h4 { margin: 0; font-size: var(--type-row-size); line-height: 1.3; overflow-wrap: anywhere; }
+.skill-title { display: flex; align-items: center; gap: 2px; min-width: 0; }
+.skill-name h4 { min-width: 0; margin: 0; font-size: var(--type-row-size); line-height: 1.3; overflow-wrap: anywhere; }
+.skill-help { --action-button-icon-size: 26px; }
 .skill-specialization { display: block; color: var(--text-muted); overflow-wrap: anywhere; }
 .skill-specialization, .skill-values, .skill-cost { font-size: var(--type-group-size); }
 .skill-cost { color: var(--accent-soft); }

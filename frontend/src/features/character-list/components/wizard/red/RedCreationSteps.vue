@@ -1,19 +1,21 @@
 <template>
   <div class="red-stack">
-    <IllustratedChoiceStage v-if="step === 'method'" class="method-stage" title="Способ создания" two-column>
+    <IllustratedChoiceStage v-if="step === 'method'" title="Способ создания">
       <template #cards>
-        <BackgroundSelectCard
-          v-for="method in methods"
-          :key="method.key"
-          :title="method.name"
-          :description="method.description"
-          :monogram="method.name[0]"
-          :image-url="art.methodCover(method.key)"
-          :selected="draft.method === method.key"
-          :expanded-selection="false"
-          panoramic
-          @select="emit('method', method.key)"
-        />
+        <WizardSectionPanel class="method-grid">
+          <BackgroundSelectCard
+            v-for="method in methods"
+            :key="method.key"
+            :title="method.name"
+            :description="method.description"
+            :monogram="method.name[0]"
+            :image-url="art.methodCover(method.key)"
+            :selected="draft.method === method.key"
+            :expanded-selection="false"
+            panoramic
+            @select="emit('method', method.key)"
+          />
+        </WizardSectionPanel>
       </template>
     </IllustratedChoiceStage>
     <IllustratedChoiceStage
@@ -29,18 +31,22 @@
         <BackgroundSelectCard
           v-for="role in visibleRoles"
           :key="role.key"
+          :class="{ 'expanded-role-card': roleExpanded }"
           :title="role.name"
-          :description="roleItem(role.key)?.description || role.originalName"
           :monogram="role.name[0]"
           :image-url="roleItem(role.key)?.coverImageUrl || art.collectionCover('Роли')"
           :selected="draft.role === role.key"
-          :expanded-selection="roleExpanded"
+          :expanded-selection="false"
           panoramic
           @select="emit('role', role.key)"
         />
       </template>
       <template #details>
-        <div v-if="roleFields[draft.role]" class="red-panel">
+        <WizardSectionPanel class="creation-copy role-description">
+          <h3>О роли</h3>
+          <p>{{ RED_ROLE_OVERVIEWS[draft.role] }}</p>
+        </WizardSectionPanel>
+        <WizardSectionPanel v-if="roleFields[draft.role]" class="creation-copy">
           <h3>Специальности роли</h3>
           <div class="red-form-grid">
             <FormField
@@ -58,8 +64,8 @@
             </FormField>
           </div>
           <small>Всего очков: {{ draft.role === "tech" ? 8 : 4 }}</small>
-        </div>
-        <div v-if="draft.role === 'medtech'" class="red-panel">
+        </WizardSectionPanel>
+        <WizardSectionPanel v-if="draft.role === 'medtech'" class="creation-copy">
           <h3>
             Рецепты · {{ draft.roleChoices.knownRecipes?.length || 0 }} /
             {{ draft.roleChoices.pharmaceuticals || 0 }}
@@ -77,42 +83,37 @@
               >{{ i.name }}</ActionButton
             >
           </div>
-        </div>
+        </WizardSectionPanel>
       </template>
     </IllustratedChoiceStage>
-    <template v-else-if="step === 'lifepath'"
-      ><RedCreationIntro title="Жизненный путь" :cover="art.dictionaryCover('Местности')" />
-      <div class="red-form-grid">
-        <FormField label="Родной язык · бесплатный ранг 4" vertical
-          ><FormTextInput
-            :value="draft.nativeLanguage"
-            @update:value="emit('native-language', $event)" /></FormField
-        ><FormField
-          v-for="[key, label] in RED_LIFEPATH_FIELDS"
-          :key="key"
-          :label="label"
-          vertical
-          ><FormTextInput
-            :value="draft.lifepath[key] || ''"
-            @update:value="
-              patch({ lifepath: { ...draft.lifepath, [key]: $event } })
-            "
-        /></FormField>
-      </div>
-      <h3>Путь роли</h3>
-      <div class="red-form-grid">
-        <FormField
-          v-for="[key, label] in RED_ROLE_LIFEPATH[draft.role]"
-          :key="key"
-          :label="label"
-          vertical
-          ><FormTextInput
-            :value="draft.roleLifepath[key] || ''"
-            @update:value="
-              patch({ roleLifepath: { ...draft.roleLifepath, [key]: $event } })
-            "
-        /></FormField></div
-    ></template>
+    <template v-else-if="step === 'lifepath'">
+      <RedCreationIntro title="Жизненный путь" :cover="art.dictionaryCover('Местности')" />
+      <WizardSectionPanel class="creation-copy">
+        <h3>Происхождение</h3>
+        <div class="red-form-grid">
+          <FormField label="Родной язык · бесплатный ранг 4" vertical>
+            <FormTextInput :value="draft.nativeLanguage" @update:value="emit('native-language', $event)" />
+          </FormField>
+          <FormField v-for="[key, label] in RED_LIFEPATH_FIELDS" :key="key" :label="label" vertical>
+            <FormTextInput
+              :value="draft.lifepath[key] || ''"
+              @update:value="patch({ lifepath: { ...draft.lifepath, [key]: $event } })"
+            />
+          </FormField>
+        </div>
+      </WizardSectionPanel>
+      <WizardSectionPanel class="creation-copy">
+        <h3>Путь роли</h3>
+        <div class="red-form-grid">
+          <FormField v-for="[key, label] in RED_ROLE_LIFEPATH[draft.role]" :key="key" :label="label" vertical>
+            <FormTextInput
+              :value="draft.roleLifepath[key] || ''"
+              @update:value="patch({ roleLifepath: { ...draft.roleLifepath, [key]: $event } })"
+            />
+          </FormField>
+        </div>
+      </WizardSectionPanel>
+    </template>
     <RedCreationStats
       v-else-if="step === 'stats'"
       :method="draft.method"
@@ -127,7 +128,7 @@
       <div class="red-stack skills-step-intro">
         <RedCreationIntro title="Навыки" :cover="art.dictionaryCover('Навыки')" />
       </div>
-      <section class="red-stack skills-step-budget">
+      <WizardSectionPanel class="creation-copy skills-step-budget">
         <h3>
           Очки навыков
           <span :class="{ 'skills-budget-done': validation.skills?.remaining === 0 }">
@@ -135,8 +136,8 @@
           </span>
         </h3>
         <p>Ранг 4 для родного языка даётся бесплатно.</p>
-      </section>
-      <section class="red-stack skills-step-specializations">
+      </WizardSectionPanel>
+      <WizardSectionPanel class="creation-copy skills-step-specializations">
         <h3>Начальные специализации</h3>
         <div class="red-form-grid">
           <FormField
@@ -151,7 +152,7 @@
             />
           </FormField>
         </div>
-      </section>
+      </WizardSectionPanel>
       <RedSkills
         creation
         :values="skillValues"
@@ -169,8 +170,8 @@
         class="red-danger"
       >
         {{ redCreationErrorText(e) }}
-      </p></template
-    >
+      </p>
+    </template>
     <RedCreationShop
       v-else-if="step === 'equipment' || step === 'cyberware'"
       :draft="draft"
@@ -180,25 +181,22 @@
       :cover="art.collectionCover(step === 'cyberware' ? 'Киберимпланты' : 'Снаряжение')"
       @patch="patch"
     />
-    <template v-else
-      ><RedCreationIntro
+    <template v-else>
+      <RedCreationIntro
         title="Готовность персонажа"
         :cover="roleItem(draft.role)?.coverImageUrl || art.collectionCover('Роли')"
       />
-      <FormField label="Имя / handle" vertical
-        ><FormTextInput
-          :value="draft.name"
-          @update:value="patch({ name: $event })"
-      /></FormField>
-      <p>
-        {{ RED_ROLES.find((r) => r.key === draft.role)?.name }} · ранг 4 ·
-        {{ methods.find(method => method.key === draft.method)?.name }}
-      </p>
-      <p>
-        Остаток денег: {{ shopping.cash }} eb. Неиспользованные деньги на одежду
-        не переносятся.
-      </p></template
-    >
+      <WizardSectionPanel class="creation-copy">
+        <FormField label="Имя / handle" vertical>
+          <FormTextInput :value="draft.name" @update:value="patch({ name: $event })" />
+        </FormField>
+        <p>
+          {{ RED_ROLES.find((r) => r.key === draft.role)?.name }} · ранг 4 ·
+          {{ methods.find(method => method.key === draft.method)?.name }}
+        </p>
+        <p>Остаток денег: {{ shopping.cash }} eb. Неиспользованные деньги на одежду не переносятся.</p>
+      </WizardSectionPanel>
+    </template>
   </div>
 </template>
 <script setup>
@@ -218,6 +216,8 @@ import {
   RED_LIFEPATH_FIELDS,
   RED_ROLE_LIFEPATH,
 } from "@/features/character-editor/settings/cyberpunk-red/lifepath";
+import { RED_ROLE_OVERVIEWS } from "@/features/character-editor/settings/cyberpunk-red/descriptions";
+import WizardSectionPanel from "@/shared/ui/WizardSectionPanel.vue";
 import RedSkills from "@/features/character-editor/components/sheet/cyberpunk-red/RedSkills.vue";
 import BackgroundSelectCard from "../BackgroundSelectCard.vue";
 import IllustratedChoiceStage from "../IllustratedChoiceStage.vue";
@@ -305,14 +305,16 @@ const roleFields = {
 
 <style scoped>
 .skills-step-intro :deep(.creation-cover) { height: clamp(110px, 18vw, 165px); object-position: center top; }
-.skills-step-specializations h3, .skills-step-budget h3 { margin: 0; font-size: var(--type-row-size); }
+.creation-copy h3 { margin: 0; font-size: var(--type-row-size); }
+.creation-copy p { margin: 0; color: var(--text-2); }
+.creation-copy small { color: var(--text-muted); }
+.role-description p { line-height: 1.55; }
+.expanded-role-card :deep(.background-card-visual) { height: clamp(148px, 25vw, 270px); aspect-ratio: auto; }
 .skills-step-budget { gap: var(--spacing-small); }
 .skills-step-budget h3 > span { color: var(--text-muted); margin-inline-start: var(--spacing-small); }
 .skills-step-budget h3 > .skills-budget-done { color: var(--success); }
 .skills-step-budget p { margin: 0; color: var(--text-muted); font-size: var(--type-group-size); }
-@media (min-width: 1050px) {
-  .method-stage :deep(.illustrated-choice-list--two-column) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
+.method-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 1050px) { .method-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .method-grid { grid-template-columns: minmax(0, 1fr); } }
 </style>

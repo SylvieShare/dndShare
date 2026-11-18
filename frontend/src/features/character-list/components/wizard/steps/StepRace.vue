@@ -33,64 +33,66 @@
           <p v-if="sizeDescription && !grants.raceVariants" class="choice-description">{{ sizeDescription }}</p>
           <section v-if="raceDesc" class="race-lore">
             <div class="sheet-section-title">О расе</div>
-            <RichContent class="step-desc" :html="raceDesc" />
+            <WizardSectionPanel class="step-desc">
+              <RichContent :html="raceDesc" />
+            </WizardSectionPanel>
           </section>
 
-        <section v-if="hasRaceChoices" class="race-choices">
-          <div class="choices-title">Выборы расы</div>
-          <div class="choice-stack">
-            <RaceSubracePicker v-if="subraces.length" v-model="state.subrace" :options="subraces" :race-id="state.race?.id" :abilities="raceAbilities" />
+          <section v-if="hasRaceChoices" class="race-choices">
+            <div class="choices-title">Выборы расы</div>
+            <WizardSectionPanel>
+              <RaceSubracePicker v-if="subraces.length" v-model="state.subrace" :options="subraces" :race-id="state.race?.id" :abilities="raceAbilities" />
 
-            <RaceVariantPicker v-if="grants.raceVariants" v-model="state.raceVariant" :options="grants.raceVariants" :size-description="sizeDescription" />
+              <RaceVariantPicker v-if="grants.raceVariants" v-model="state.raceVariant" :options="grants.raceVariants" :size-description="sizeDescription" />
 
-            <AbilityBonusPicker
-              v-if="grants.asiChoice"
-              :model-value="raceAsiSelection"
-              :patterns="[Array(grants.asiChoice.count).fill(grants.asiChoice.bonus)]"
-              title="Характеристики"
-              @update:model-value="state.asiChoice = Object.keys($event)"
-            />
-
-            <StepSkills v-if="grants.raceSkillChoice" source="race" class="choice-block" />
-
-            <section v-if="grants.langChoice" class="choice-block">
-              <div class="choice-heading">
-                <div class="choice-label">Дополнительный язык</div>
-                <span class="choice-count" :class="{ done: raceLangsComplete }">{{ state.raceLangIds.length }} / {{ raceLangLimit }}</span>
-              </div>
-              <MultiSearchSelect
-                :options="raceLangOptions"
-                :selected="state.raceLangIds"
-                :limit="raceLangLimit"
-                :suggest-type-id="6"
-                allow-create
-                placeholder="Найти язык…"
-                @toggle="toggleRaceLang"
+              <AbilityBonusPicker
+                v-if="grants.asiChoice"
+                :model-value="raceAsiSelection"
+                :patterns="[Array(grants.asiChoice.count).fill(grants.asiChoice.bonus)]"
+                title="Характеристики"
+                @update:model-value="state.asiChoice = Object.keys($event)"
               />
-            </section>
 
-            <section v-if="grants.featChoice" class="choice-block">
-              <div class="choice-heading">
-                <div class="choice-label">Черта на выбор</div>
-                <span class="choice-count" :class="{ done: featComplete }">{{ state.featIds.length }} / {{ featLimit }}</span>
-              </div>
-              <div v-if="state.featIds.length" class="feat-tags">
-                <div v-for="id in state.featIds" :key="id" class="feat-tag">
-                  <span class="feat-tag-name">{{ featName(id) }}</span>
-                  <button class="feat-x" title="Убрать" @click="toggleFeat(id)">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
-                  </button>
+              <StepSkills v-if="grants.raceSkillChoice" source="race" />
+
+              <section v-if="grants.langChoice" class="race-choice-fields">
+                <div class="choice-heading">
+                  <div class="choice-label">Дополнительный язык</div>
+                  <span class="choice-count" :class="{ done: raceLangsComplete }">{{ state.raceLangIds.length }} / {{ raceLangLimit }}</span>
                 </div>
-              </div>
-              <button v-if="state.featIds.length < featLimit" class="feat-add" @click="pickerOpen = true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14" /></svg>
-                Выбрать черту
-              </button>
-            </section>
+                <MultiSearchSelect
+                  :options="raceLangOptions"
+                  :selected="state.raceLangIds"
+                  :limit="raceLangLimit"
+                  :suggest-type-id="6"
+                  allow-create
+                  placeholder="Найти язык…"
+                  @toggle="toggleRaceLang"
+                />
+              </section>
 
-            <StepChoices v-if="raceFeatureChoices.length" scope="race" class="choice-block" />
-          </div>
-        </section>
+              <section v-if="grants.featChoice" class="race-choice-fields">
+                <div class="choice-heading">
+                  <div class="choice-label">Черта на выбор</div>
+                  <span class="choice-count" :class="{ done: featComplete }">{{ state.featIds.length }} / {{ featLimit }}</span>
+                </div>
+                <div v-if="state.featIds.length" class="feat-tags">
+                  <div v-for="id in state.featIds" :key="id" class="feat-tag">
+                    <span class="feat-tag-name">{{ featName(id) }}</span>
+                    <button class="feat-x" title="Убрать" @click="toggleFeat(id)">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                    </button>
+                  </div>
+                </div>
+                <button v-if="state.featIds.length < featLimit" class="feat-add" @click="pickerOpen = true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14" /></svg>
+                  Выбрать черту
+                </button>
+              </section>
+
+              <StepChoices v-if="raceFeatureChoices.length" scope="race" />
+            </WizardSectionPanel>
+          </section>
         </div>
       </template>
     </IllustratedChoiceStage>
@@ -129,6 +131,7 @@ import MultiSearchSelect from '@/features/character-list/components/wizard/Multi
 import IllustratedChoiceStage from '@/features/character-list/components/wizard/IllustratedChoiceStage.vue'
 import RaceSelectCard from '@/features/character-list/components/wizard/RaceSelectCard.vue'
 import { raceCardSummary } from '@/features/character-list/components/wizard/raceCardSummary'
+import WizardSectionPanel from '@/shared/ui/WizardSectionPanel.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import RaceSubracePicker from '../RaceSubracePicker.vue'
 import { raceCoverFor } from '@/features/character-list/components/wizard/raceVisuals'
@@ -187,17 +190,7 @@ function onFeatChoicesConfirm(choices) {
 .step { position: relative; display: flex; flex-direction: column; gap: 12px; }
 .race-details { display: flex; flex-direction: column; gap: 16px; }
 .race-lore { display: flex; flex-direction: column; gap: 7px; }
-.step-gap { margin-top: 8px; }
-.step-desc {
-  font-size: 13px; color: var(--text-2); line-height: 1.5;
-  background: var(--surface); border-radius: var(--r-md);
-  border-left: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
-  padding: 11px 14px;
-}
-.hint { font-size: 12px; color: var(--text-muted); margin: 0; display: flex; align-items: center; gap: 8px; }
-.count { font-size: 12px; font-weight: 600; color: var(--text-muted); }
-.count.done { color: var(--success); }
-
+.step-desc { font-size: 13px; color: var(--text-2); line-height: 1.5; }
 .race-choices { display: flex; flex-direction: column; gap: 11px; margin-top: 8px; }
 .choices-title {
   color: var(--text-1);
@@ -206,17 +199,7 @@ function onFeatChoicesConfirm(choices) {
   font-weight: 700;
   line-height: 1.15;
 }
-.choice-stack { display: flex; flex-direction: column; gap: 10px; }
-.choice-block {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
-  border-radius: calc(var(--r-md) + 2px);
-  background: color-mix(in srgb, var(--surface) 54%, transparent);
-  box-shadow: inset 3px 0 0 color-mix(in srgb, var(--accent) 22%, transparent);
-}
+.race-choice-fields { display: grid; gap: var(--spacing-medium); }
 
 .choice-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 .choice-label {
@@ -269,9 +252,5 @@ function onFeatChoicesConfirm(choices) {
 }
 .feat-add:hover { background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
 .feat-add svg { width: 16px; height: 16px; }
-
-@media (max-width: 430px) {
-  .choice-block { padding: 14px; }
-}
 
 </style>
