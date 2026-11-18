@@ -44,7 +44,7 @@ test('manual NPC damage changes HP before the response and defeated rows survive
   await controls.getByRole('button', { name: 'Отметить выбранных погибшими' }).click()
   await expect(wolf.getByRole('img', { name: 'Существо повержено' })).toBeVisible()
   await expect(wolf.getByRole('checkbox')).toBeChecked()
-  await expect(controls.getByRole('button', { name: 'Нанести урон выбранным' })).toBeDisabled()
+  await expect(controls.getByRole('button', { name: 'Нанести урон: 0' })).toBeDisabled()
   await expect.poll(() => api.encounter().combatants.find(row => row.uid === 'wolf').defeatedOnScene).toBe(true)
 
   await page.reload()

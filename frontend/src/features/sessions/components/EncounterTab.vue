@@ -15,7 +15,16 @@
       <Transition name="enc-combat-scene">
         <div class="enc-combat-scene">
           <div class="enc-block enc-block--combat">
-            <h2 class="enc-section-title"><span class="enc-section-dot" />БОЕВАЯ СЦЕНА</h2>
+            <div class="enc-scene-heading">
+              <h2 class="enc-section-title"><span class="enc-section-dot" />БОЕВАЯ СЦЕНА</h2>
+              <label v-if="isDm" class="enc-scene-select-all">
+                <CompactCheckbox :model-value="allOnScene" :indeterminate="selectedOnScene > 0 && !allOnScene"
+                  :size="layoutTokens['roster-checkbox-icon']" :hit-size="layoutTokens['touch-min']"
+                  :disabled="!enc.canManageReserves || !combatItems.length" label="Выбрать всех на сцене"
+                  @update:model-value="enc.selectAllInGroup('combat')" />
+                <span>Все на сцене</span>
+              </label>
+            </div>
             <div class="enc-section">
               <div
                 v-if="combatItems.length === 0"
@@ -52,16 +61,18 @@
 
     </div>
     <aside class="enc-secondary" aria-label="Управление боем">
-      <EncounterControls :session-uuid="sessionUuid" :encounter="enc" :selection="sceneSelection" :is-dm="isDm" :scene="scene" :show-shortcut-hints="showShortcutHints"
+      <EncounterControls :session-uuid="sessionUuid" :encounter="enc" :is-dm="isDm" :scene="scene" :show-shortcut-hints="showShortcutHints"
                          @toggle-combat="toggleCombat" @import-combat-block="$emit('import-combat-block',$event)" />
+      <slot name="selection-panel" />
     </aside>
 
   </div>
 </template>
 
 <script setup>
-import { computed, provide, reactive, ref } from 'vue'
-import { useRosterSelection } from '../composables/useRosterSelection'
+import { computed, provide, ref } from 'vue'
+import { CompactCheckbox } from '@sylvieshare/share-ui'
+import { layoutTokens } from '@/app/design-tokens'
 import EncounterControls from './EncounterControls.vue'
 import EncounterRow from '@/features/sessions/components/EncounterRow'
 import { useEncounterWorkspaceLayout } from '@/features/sessions/composables/useEncounterWorkspaceLayout'
@@ -85,7 +96,8 @@ const toggleCombat = enc.toggleCombat
 provide('encounter', enc)
 
 const combatItems = computed(() => enc.sortable.displayItems('combat'))
-const sceneSelection=reactive(useRosterSelection(enc,()=>enc.encounter.combatants))
+const selectedOnScene = computed(() => enc.selectedCountInGroup('combat'))
+const allOnScene = computed(() => selectedOnScene.value > 0 && selectedOnScene.value === combatItems.value.length)
 
 const currentTurnUid = computed(() => enc.currentTurnUid)
 

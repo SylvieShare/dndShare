@@ -1,15 +1,13 @@
 import { encounterEventData } from '../lib/encounterEventData'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { charactersApi } from '@/shared/api/charactersApi'
 import { pvHp, pvHpPath } from '@/features/sessions/lib/participantView'
 import { useDiceStore } from '@/stores/dice'
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 
 export function useEncounterHp({
-  encounter,
   applyCombatDamage,
   previewHp = () => null,
-  selectedUids,
   getCombatant,
   mutate,
   canEditPlayers,
@@ -25,14 +23,6 @@ export function useEncounterHp({
   const hpCalcNpc = ref(null)
   const hpEditNpc = ref(null)
   const hpCalcPlayer = ref(null)
-
-  const selectedDamageTargets = computed(() => encounter.value.combatants.filter(combatant => {
-    if (!selectedUids.value.has(combatant.uid) || combatant.position === 'dead') return false
-    if (combatant.type === 'npc') return true
-    const participant = findParticipant(combatant.charId)
-    return canEditPlayerHp() && !!participant && !!pvHpPath(participant)
-  }))
-  const selectedDamageCount = computed(() => selectedDamageTargets.value.length)
 
   function displayAc(c) {
     if (c.type === 'player') return getPlayerAc(c.charId) ?? '—'
@@ -198,11 +188,6 @@ export function useEncounterHp({
     if (result?.version > p.version) p.version = result.version
   }
 
-  async function applyDamageToSelected(rawAmount) {
-    const amount = Math.max(0, Math.floor(Number(rawAmount) || 0))
-    if (amount && selectedDamageTargets.value.length) await applyCombatDamage([...selectedDamageTargets.value], amount)
-  }
-
   async function applyDamageToCombatant(combatant, amount) {
     if (!combatant || !Number.isSafeInteger(amount) || amount < 1) return
     await applyCombatDamage([combatant], amount)
@@ -270,8 +255,6 @@ export function useEncounterHp({
     hpCalcNpc,
     hpEditNpc,
     hpCalcPlayer,
-    selectedDamageCount,
-    applyDamageToSelected,
     applyDamageToCombatant,
     displayAc,
     hpParts,

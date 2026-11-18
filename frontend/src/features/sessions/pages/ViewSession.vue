@@ -143,7 +143,14 @@
           :show-shortcut-hints="showShortcutHints"
           @view-participant="openParticipant"
           @import-combat-block="importCombatBlock"
-        />
+        >
+          <template #selection-panel>
+            <BaseTile v-show="!selectionInSidebar" class="combat-selection-panel" :outlined="false"
+              role="group" aria-label="Действия с выбранными участниками">
+              <div ref="combatSelectionHost" />
+            </BaseTile>
+          </template>
+        </SessionCenterWorkspace>
         <SessionTimerStack v-if="isDm" :session-uuid="sessionUuid" :timers="sessionTimers" />
       </ChapterGraphTab>
 
@@ -158,16 +165,7 @@
         <template #reserve-title><EncounterReserveHeader :encounter="encounter" :ui="reserveSidebar" /></template>
         <template #reserve-actions><EncounterReserveHeader :encounter="encounter" :ui="reserveSidebar" actions /></template>
         <template #panels><EncounterReservePanel :encounter="encounter" :ui="reserveSidebar" /></template>
-        <template #selection-header="{ rosterTab }">
-          <SessionSelectionToolbar
-            :encounter="encounter"
-            :selection="sidebarSelection"
-            grouped-summary
-            :actions-visible="rosterTab"
-            :show-select-all="rosterTab"
-            :visible-items="sidebar.selected.value === 'players' ? encounterPlayers : encounter.reserveNpcs"
-          />
-        </template>
+        <template #selection-header><div ref="sidebarSelectionHost" /></template>
         <template #players-actions>
           <SessionPlayersMenu :live-status="liveStatus" :sync-status="syncStatus" :syncing="syncRunning || liveCatchingUp"
                               @join="openJoinOwn" @create="openCreate" @copy-code="copyCode" @copy-link="copyLink" />
@@ -204,6 +202,15 @@
           </div>
         </SessionRosterList>
       </SessionWorkspaceSidebar>
+
+      <Teleport v-if="sidebarSelectionHost" :to="selectionHost">
+        <SessionSelectionToolbar :encounter="encounter" :selection="rosterSelection"
+          :actions-visible="rosterTab || selectionInCombat"
+          :show-select-all="rosterTab && !selectionInCombat"
+          :visible-items="sidebar.selected.value === 'players' ? encounterPlayers : encounter.reserveNpcs"
+          :combat-workspace="combatWorkspaceVisible"
+          :show-shortcut-hints="showShortcutHints" />
+      </Teleport>
 
       <EncounterNpcDialogs :encounter="encounter" />
       <DndHpCalcModal
@@ -253,7 +260,7 @@ import { computed, defineAsyncComponent, provide, reactive, watch } from 'vue'
 import { onBeforeRouteLeave, useRoute } from 'vue-router'
 import { ref } from 'vue'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
-import { ActionButton, LoadingState } from '@sylvieshare/share-ui'
+import { ActionButton, BaseTile, LoadingState } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import CharacterCreateWizardModal from '@/features/character-list/components/CharacterCreateWizardModal.vue'
 import CharacterSheetModal from '@/features/character-editor/components/CharacterSheetModal.vue'
@@ -309,8 +316,15 @@ const {
   updateSessionSetting, updateWorkspaceContext, workspaceChapter, workspaceClosing, workspaceLevel,
   workspaceMode, workspaceMotionMode, workspaceScene, worldLayer,
 } = useSessionPage()
-const sidebarSelection = reactive(useRosterSelection(encounter,()=>encounter.encounter.combatants))
+const rosterSelection = reactive(useRosterSelection(encounter, () => encounter.encounter.combatants))
 const sidebar = useSessionSidebar(primaryView)
+const sidebarSelectionHost = ref(null)
+const combatSelectionHost = ref(null)
+const rosterTab = computed(() => sidebar.selected.value === 'players' || sidebar.selected.value.startsWith('reserves:'))
+const selectionInSidebar = computed(() => rosterTab.value && sidebar.sidebar.value?.collapsed === false)
+const combatWorkspaceVisible = computed(() => primaryView.value === 'story' && workspaceMode.value === 'combat' && workspaceMotionMode.value === 'combat' && !workspaceClosing.value)
+const selectionInCombat = computed(() => combatWorkspaceVisible.value && !selectionInSidebar.value && !!combatSelectionHost.value)
+const selectionHost = computed(() => selectionInCombat.value ? combatSelectionHost.value : sidebarSelectionHost.value)
 const reserveSidebar = reactive(useEncounterReserveSidebar(encounter,sidebar))
 const route = useRoute()
 const requestedOccurrenceId = computed(() => Number(route.query.occurrence) || null)

@@ -10,10 +10,10 @@ vi.mock('@/features/sessions/lib/participantView', () => ({
 
 import { useEncounterHp } from './useEncounterHp'
 
-describe('encounter bulk damage', () => {
+describe('encounter damage calculator', () => {
   beforeEach(() => patchData.mockReset().mockResolvedValue(undefined))
 
-  it('submits selected NPC and player damage together without changing HP optimistically', async () => {
+  it('delegates calculator damage to the impact handler', async () => {
     const participant = { charId: 7, charUuid: 'char-7', hp: { current: 10, max: 12, temp: 3 } }
     const encounter = ref({ combatants: [
       { uid: 'npc', type: 'npc', position: 'combat', hpCurrent: 8, hpTemp: 2 },
@@ -21,8 +21,7 @@ describe('encounter bulk damage', () => {
     ] })
     const applyLocalPatches = vi.fn(), applyCombatDamage = vi.fn()
     const hp = useEncounterHp({
-      encounter, applyCombatDamage,
-      selectedUids: ref(new Set(['npc', 'player'])),
+      applyCombatDamage,
       getCombatant: uid => encounter.value.combatants.find(item => item.uid === uid),
       mutate: callback => callback(),
       canEditPlayers: ref(true),
@@ -36,13 +35,13 @@ describe('encounter bulk damage', () => {
       npcHpFormula: () => '',
     })
 
-    expect(hp.selectedDamageCount.value).toBe(2)
-    await hp.applyDamageToSelected(5)
-    expect(applyCombatDamage).toHaveBeenCalledWith(encounter.value.combatants, 5)
+    const npc = encounter.value.combatants[0]
+    await hp.applyDamageToCombatant(npc, 5)
+    expect(applyCombatDamage).toHaveBeenCalledWith([npc], 5)
     expect(encounter.value.combatants[0]).toMatchObject({ hpCurrent: 8, hpTemp: 2 })
     expect(patchData).not.toHaveBeenCalled()
     expect(applyLocalPatches).not.toHaveBeenCalled()
     applyCombatDamage.mockRejectedValueOnce(new Error('Offline'))
-    await expect(hp.applyDamageToSelected(5)).rejects.toThrow('Offline')
+    await expect(hp.applyDamageToCombatant(npc, 5)).rejects.toThrow('Offline')
   })
 })

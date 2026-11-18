@@ -22,6 +22,12 @@
   width: 100%;
 }
 
+.combat-selection-panel.base-tile {
+  margin-block-start: var(--spacing-small);
+  padding: var(--spacing-medium);
+  background: var(--surface);
+}
+
 .combat-import-error {
   position: absolute;
   z-index: 80;

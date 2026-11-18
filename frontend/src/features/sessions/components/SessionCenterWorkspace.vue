@@ -14,7 +14,9 @@
       :show-shortcut-hints="showShortcutHints"
       @view-participant="$emit('view-participant', $event)"
       @import-combat-block="$emit('import-combat-block', $event)"
-    />
+    >
+      <template #selection-panel><slot name="selection-panel" /></template>
+    </EncounterTab>
   </section>
 </template>
 

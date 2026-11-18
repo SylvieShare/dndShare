@@ -34,21 +34,17 @@ ControlsMin (280) and Large (16). The roster grows to RosterWidth (480), control
 to ControlsMax (420); the composition is aligned with the left workspace padding. The two
 columns scroll independently. Below that width, controls appear above the roster
 and scroll with it in a single column in both preparation and active combat.
-Resizing preserves the current turn and prepared roster. The controls contain
-section selection and both scene commands. «Со сцены» counts only selected
-scene members. Command buttons have visible captions and accessible names.
+Resizing preserves the current turn and prepared roster. The scene heading has
+a separate checkbox, «Все на сцене». «Со сцены» counts only selected scene
+members. Command buttons have visible captions and accessible names.
 
 The sidebar remains available, while map canvas/inspector are hidden in combat.
-The command column groups fight flow, selection actions and scene composition
-into two panels. During combat, the header places the round beside the phase and
-roster count. The phase actions pair the turn arrows and label the forward action
-«Следующий». «Закончить бой» is a one-line outlined action that wraps below the
-turn controls when the panel is narrow. Selection uses the same summary as the left
-sidebar and reserves the same height for empty and single-row states. Challenge,
-damage, adding and removing scene members, scenario encounters, marking defeated
-and NPC deletion share a grid
-under this summary. Two-word command labels use two lines. Initiative remains in
-row menus and shortcut handling.
+During combat, the phase header places the round beside the phase and roster
+count. The turn arrows are paired and the forward action is labelled «Следующий».
+«Закончить бой» is an outlined one-line action. «Бои сценария» belongs to the
+combat controls. A single toolbar holds the selection and its actions. It is
+shown in the Players or Reserve header when that list is open, and moves below
+the combat controls when that list is hidden.
 A combatant marked defeated keeps the home group and leaves the turn order. The
 persisted `defeatedOnScene` flag keeps their row on the scene and restores scene
 membership when revived. Older defeated records without the flag appear in their
@@ -206,11 +202,10 @@ selection. Map and world tools also show the summary and clear control.
 NPC templates group by itemId, simple creatures by name, and actors dedupe by UID.
 Portraits overlap as the row narrows, and a very large selection continues on
 another row. The numeric live status remains available to assistive technology.
-The control column uses the same icon summary and global reset. Its All control
-applies to the scene roster.
-Every group action shows its eligible count. The sidebar can add to the scene,
-and the combat control column can add or remove selected scene members. Tab changes animate the mounted
-sidebar body in the direction of navigation, respecting reduced motion.
+«Все на сцене» applies to the scene roster. The same selection toolbar supports
+challenges, damage, XP/IP, scene entry and deleting NPCs. The combat workspace
+also shows scene exit and marking defeated in that toolbar. Tab changes animate
+the mounted sidebar body, respecting reduced motion.
 Damage captures explicit eligible targets for the idempotent authoritative impact
 command. D&D XP/IP targets characters only and retries only unconfirmed writes.
 Starting combat uses only prepared scene members. Selecting a reserve actor alone

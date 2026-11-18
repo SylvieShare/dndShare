@@ -55,13 +55,9 @@
 
 .enc-status--active { background: var(--success); }
 
-.enc-action-grid {
-  --action-cell-min: calc(var(--layout-touch-min) + var(--spacing-medium));
-  --action-cell-third: calc((100% - 2 * var(--spacing-xs)) / 3);
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, max(var(--action-cell-min), var(--action-cell-third))), 1fr));
-  gap: var(--spacing-xs);
-  min-width: 0;
+.enc-scenario-action {
+  justify-self: start;
+  min-width: calc(var(--layout-touch-min) + var(--spacing-large));
 }
 
 .enc-toolbar :deep(.enc-icon-btn) {
@@ -95,11 +91,6 @@
 .enc-toolbar :deep(.enc-icon-btn:hover:not(:disabled)) { background: var(--surface-active); color: var(--text-1); }
 .enc-toolbar :deep(.enc-icon-btn:focus-visible) { outline: 2px solid var(--accent-soft); outline-offset: 2px; }
 .enc-toolbar :deep(.enc-icon-btn:disabled) { opacity: .48; cursor: default; }
-.enc-toolbar :deep(.enc-icon-btn--danger) { color: var(--danger); }
-.enc-toolbar :deep(.enc-icon-btn--challenge-active) {
-  background: color-mix(in srgb, var(--accent) 18%, var(--surface-raised));
-  color: var(--accent-soft);
-}
 
 .enc-toolbar .enc-battle-toggle {
   flex-direction: row;
@@ -183,7 +174,6 @@
 .enc-round-label { color: var(--text-2); font-size: var(--type-caption-size); }
 .enc-round-num { font-size: var(--type-sheet-header-size); font-variant-numeric: tabular-nums; }
 
-.enc-toolbar :deep(.enc-icon-count),
 .enc-toolbar :deep(.enc-scenario-combats-count) {
   position: absolute;
   top: var(--spacing-xs);

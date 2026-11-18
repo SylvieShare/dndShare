@@ -37,7 +37,26 @@
 .enc-wrap--columns > .enc-secondary { padding-inline-end: var(--spacing-xs); }
 .enc-combat-primary,.enc-combat-scene,.enc-block,.enc-section {min-width:0}
 .enc-wrap--compact-roster .enc-combat-primary {--creature-avatar-size:var(--layout-touch-min);--encounter-avatar-size:var(--layout-touch-min);--participant-card-gap:var(--spacing-xs);--creature-tile-padding:var(--spacing-xs) var(--spacing-small) var(--spacing-xs) var(--spacing-xs)}
-.enc-section-title {margin:0 0 var(--spacing-small);min-height:var(--layout-touch-min);display:flex;align-items:center;gap:var(--spacing-small);color:var(--text-muted);font:600 var(--type-caption-size)/var(--type-caption-line-height) var(--font-ui)}
+.enc-scene-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs) var(--spacing-medium);
+  min-height: var(--layout-touch-min);
+  margin-block-end: var(--spacing-small);
+}
+.enc-scene-select-all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-small);
+  padding-inline: var(--spacing-medium);
+  min-height: var(--layout-touch-min);
+  color: var(--text-2);
+  font-size: var(--type-caption-size);
+  cursor: pointer;
+}
+.enc-section-title {margin:0;display:flex;align-items:center;gap:var(--spacing-small);color:var(--text-muted);font:600 var(--type-caption-size)/var(--type-caption-line-height) var(--font-ui)}
 .enc-section-dot {width:var(--spacing-xs);height:var(--spacing-xs);border-radius:50%;background:var(--accent)}
 .enc-rows {display:flex;flex-direction:column;gap:0}
 .enc-empty {padding:var(--spacing-page) var(--spacing-small);color:var(--text-muted);font-size:var(--type-caption-size);line-height:var(--type-caption-line-height)}

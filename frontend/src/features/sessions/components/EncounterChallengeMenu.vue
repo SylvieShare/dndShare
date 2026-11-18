@@ -1,21 +1,19 @@
 <template>
-  <button
-    ref="anchorEl"
-    type="button"
-    class="enc-icon-btn"
-    :class="{ 'enc-icon-btn--challenge-active': enc.challengeActive }"
+  <SessionRosterAction
+    ref="anchorButton"
+    :icon="Target"
+    :count="enc.selectedChallengeCount"
+    :active="enc.challengeActive"
     :disabled="enc.challengeBusy || (!enc.challengeActive && enc.selectedChallengeCount === 0)"
     :title="enc.challengeActive ? 'Сбросить результаты испытания' : 'Провести испытание'"
     :aria-label="enc.challengeActive ? 'Сбросить результаты испытания' : 'Провести испытание'"
     :aria-expanded="open"
     @click="onButtonClick"
-  >
-    <Target :size="18" /><span v-if="label" class="enc-control-label">{{ label }}</span>
-  </button>
+  >Испытание</SessionRosterAction>
 
   <BasePopover
     v-model:open="open"
-    :anchor="anchorEl"
+    :anchor="anchorButton?.$el"
     placement="bottom-end"
     :min-width="274"
     transition-preset="action-menu"
@@ -47,16 +45,18 @@
 </template>
 
 <script setup>
-import { computed, inject, reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { Dices, Target } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormSelect } from '@sylvieshare/share-ui'
 import { ToggleSwitch } from '@sylvieshare/share-ui'
 
-defineProps({label:String})
-const enc = inject('encounter')
-const anchorEl = ref(null)
+import SessionRosterAction from './SessionRosterAction.vue'
+
+const props = defineProps({ encounter: { type: Object, required: true } })
+const enc = props.encounter
+const anchorButton = ref(null)
 const open = ref(false)
 const draft = reactive({ ability: 'DEX', savingThrow: false })
 

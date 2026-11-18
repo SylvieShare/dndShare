@@ -1,26 +1,47 @@
 <template>
-  <div class="roster-selection" :aria-label="label">
-    <div v-if="actionsVisible" class="roster-actions-reveal roster-actions-reveal--open">
-      <div class="roster-actions-clip"><div class="roster-selection-actions" role="group" aria-label="Действия с выбранными">
-        <ActionButton variant="quiet" layout="stacked" :disabled="!selection.damageTargets.length" :aria-label="`Нанести урон: ${selection.damageTargets.length}`" @click="open('damage')"><template #icon><span class="roster-action-icon"><HeartCrack :size="20" /><span class="roster-action-count" aria-hidden="true">{{selection.damageTargets.length}}</span></span></template>Урон</ActionButton>
-        <ActionButton v-if="selection.supportsExperience" variant="quiet" layout="stacked" :disabled="!selection.experienceTargets.length" :aria-label="`${encounter.isRed?'Добавить IP':'Добавить опыт'}: ${selection.experienceTargets.length}`" @click="open('experience')"><template #icon><span class="roster-action-icon"><Sparkles :size="20" /><span class="roster-action-count" aria-hidden="true">{{selection.experienceTargets.length}}</span></span></template>{{encounter.isRed?'IP':'Опыт'}}</ActionButton>
-        <ActionButton variant="quiet" layout="stacked" :disabled="!selection.moveTargets.length" :aria-label="`${encounter.encounter.active?'Ввести в бой':'Добавить на сцену'}: ${selection.moveTargets.length}`" @click="encounter.sendCombatantsTo(selection.moveTargets,'combat')"><template #icon><span class="roster-action-icon"><Swords :size="20" /><span class="roster-action-count" aria-hidden="true">{{selection.moveTargets.length}}</span></span></template>{{encounter.encounter.active?'В бой':'На сцену'}}</ActionButton>
-        <ActionButton variant="quiet" layout="stacked" :disabled="!encounter.selectedNpcCount"
-                      :aria-label="`Удалить НПС: ${encounter.selectedNpcCount}`" @click="encounter.removeSelectedNpcs">
-          <template #icon>
-            <span class="roster-action-icon roster-remove-icon"><Trash2 :size="20" /><span class="roster-action-count" aria-hidden="true">{{ encounter.selectedNpcCount }}</span></span>
-          </template>
-          Удалить
-        </ActionButton>
-      </div></div>
+  <div class="roster-selection" aria-label="Выбор участников">
+    <div v-if="actionsVisible" class="roster-selection-actions" role="group" aria-label="Действия с выбранными">
+      <EncounterChallengeMenu :encounter="encounter" />
+      <SessionRosterAction :icon="HeartCrack" :count="selection.damageTargets.length"
+        :disabled="!selection.damageTargets.length" :aria-label="`Нанести урон: ${selection.damageTargets.length}`" @click="open('damage')">
+        Урон
+      </SessionRosterAction>
+      <SessionRosterAction v-if="selection.supportsExperience" :icon="Sparkles" :count="selection.experienceTargets.length"
+        :disabled="!selection.experienceTargets.length"
+        :aria-label="`${encounter.isRed ? 'Добавить IP' : 'Добавить опыт'}: ${selection.experienceTargets.length}`" @click="open('experience')">
+        {{ encounter.isRed ? 'IP' : 'Опыт' }}
+      </SessionRosterAction>
+      <SessionRosterAction :icon="Swords" :count="selection.moveTargets.length" :disabled="!selection.moveTargets.length"
+        :aria-label="`${encounter.encounter.active ? 'Ввести в бой' : 'Добавить на сцену'}: ${selection.moveTargets.length}`"
+        @click="encounter.sendCombatantsTo(selection.moveTargets, 'combat')">
+        <template v-if="encounter.encounter.active">В бой</template>
+        <template v-else>На сцену</template>
+      </SessionRosterAction>
+      <SessionRosterAction v-if="combatWorkspace" :icon="LogOut" :count="selection.returnTargets.length" :disabled="!selection.returnTargets.length"
+        :aria-label="`Убрать со сцены: ${selection.returnTargets.length}`" @click="encounter.sendCombatantsTo(selection.returnTargets, 'reserve')">
+        Со сцены
+      </SessionRosterAction>
+      <SessionRosterAction v-if="combatWorkspace" :icon="Skull" :count="deadMoveCount" danger :disabled="!deadMoveCount || encounter.impactBusy"
+        title="Отметить выбранных погибшими" aria-label="Отметить выбранных погибшими" @click="encounter.sendSelectedTo('dead')">
+        Отметить<br />гибель
+      </SessionRosterAction>
+      <SessionRosterAction :icon="Trash2" :count="encounter.selectedNpcCount" danger :disabled="!encounter.selectedNpcCount"
+        :aria-label="`Удалить НПС: ${encounter.selectedNpcCount}`" aria-keyshortcuts="Backspace"
+        :shortcut="showShortcutHints ? '⌫' : undefined" @click="encounter.removeSelectedNpcs">
+        Удалить
+      </SessionRosterAction>
     </div>
-    <span v-if="groupedSummary" class="roster-count-sr-only" role="status">Выбрано: {{ selection.selected.length }}</span>
-    <SessionSelectionSummary v-if="groupedSummary" :items="selection.selected" :encounter="encounter" />
-    <div v-if="showSelectAll || selection.selected.length" class="roster-selection-heading">
-      <label v-if="showSelectAll" class="roster-all-check"><CompactCheckbox :model-value="allVisible" :indeterminate="someVisible && !allVisible" :size="layoutTokens['roster-checkbox-icon']" :hit-size="layoutTokens['touch-min']" :disabled="!encounter.canManageReserves || !visibleRows.length" :label="visibleLabel" @update:model-value="selection.setVisibleSelection(visibleRows,$event)" /><span>Все</span></label>
-      <span v-if="!groupedSummary" class="roster-selection-count" role="status">Выбрано: {{ selection.selected.length }}</span>
-      <ActionButton class="roster-clear-selection" variant="quiet" :disabled="!selection.selected.length" aria-label="Сбросить выбор" @click="selection.clear"><slot name="clear-label">Сбросить выбор</slot></ActionButton>
-      <slot />
+    <span class="roster-count-sr-only" role="status">Выбрано: {{ selection.selected.length }}</span>
+    <SessionSelectionSummary :items="selection.selected" :encounter="encounter" />
+    <div v-if="actionsVisible || showSelectAll || selection.selected.length" class="roster-selection-heading">
+      <label v-if="showSelectAll" class="roster-all-check">
+        <CompactCheckbox :model-value="allVisible" :indeterminate="someVisible && !allVisible"
+          :size="layoutTokens['roster-checkbox-icon']" :hit-size="layoutTokens['touch-min']"
+          :disabled="!encounter.canManageReserves || !visibleRows.length" label="Выбрать всех в этой вкладке"
+          @update:model-value="selection.setVisibleSelection(visibleRows, $event)" />
+        <span>Все</span>
+      </label>
+      <ActionButton class="roster-clear-selection" variant="quiet" :disabled="!selection.selected.length" @click="selection.clear">Сбросить выбор</ActionButton>
     </div>
   </div>
   <AppModalFrame v-if="action" :title="action === 'damage' ? 'Нанести урон' : 'Добавить опыт'" close-label="Закрыть" @close="!pending && (action = null)">
@@ -36,7 +57,9 @@
 <script setup>
 import { computed, ref, shallowRef } from 'vue'
 import { ActionButton, AppModalFrame, CompactCheckbox, FormActionButtons, FormField, FormNumberInput } from '@sylvieshare/share-ui'
-import { HeartCrack, Sparkles, Swords, Trash2 } from '@lucide/vue'
+import { HeartCrack, LogOut, Skull, Sparkles, Swords, Trash2 } from '@lucide/vue'
+import EncounterChallengeMenu from './EncounterChallengeMenu.vue'
+import SessionRosterAction from './SessionRosterAction.vue'
 import SessionSelectionSummary from './SessionSelectionSummary.vue'
 import { layoutTokens } from '@/app/design-tokens'
 import { charactersApi } from '@/shared/api/charactersApi'
@@ -46,12 +69,12 @@ const props = defineProps({
   encounter: { type: Object, required: true },
   selection: { type: Object, required: true },
   visibleItems: { type: Array, default: () => [] },
-  visibleLabel: { type: String, default: 'Выбрать всех в этой вкладке' },
-  groupedSummary: Boolean,
   actionsVisible: { type: Boolean, default: true },
   showSelectAll: { type: Boolean, default: true },
-  label: { type: String, default: 'Выбор участников' },
+  combatWorkspace: Boolean,
+  showShortcutHints: Boolean,
 })
+const deadMoveCount = computed(() => props.encounter.selectedToMoveTo('dead'))
 const visibleRows=computed(()=>{const ids=new Set(props.selection.items.map(row=>row.uid));return [...new Map(props.visibleItems.filter(row=>ids.has(row.uid)).map(row=>[row.uid,row])).values()]})
 const allVisible=computed(()=>visibleRows.value.length>0&&visibleRows.value.every(row=>props.encounter.isSelected(row)))
 const someVisible=computed(()=>visibleRows.value.some(row=>props.encounter.isSelected(row)))
@@ -81,15 +104,14 @@ async function apply() {
 .roster-count-sr-only {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .roster-action-summary {font-size:var(--type-caption-size);color:var(--text-muted)}
 .roster-all-check {display:inline-flex;align-items:center;gap:var(--spacing-small);min-height:var(--layout-touch-min);margin-inline-start:var(--spacing-medium);cursor:pointer}
-.roster-selection-count {margin-inline-start:auto;min-width:var(--spacing-large);padding-inline:var(--spacing-xs);border-radius:var(--radius-badge);background:var(--background);font-variant-numeric:tabular-nums}
-.roster-clear-selection {margin-inline-start:auto}
-.roster-selection-actions {display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);align-items:stretch;gap:var(--spacing-xs);padding-top:var(--spacing-xs)}
-.roster-actions-reveal {display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows var(--motion-enter),opacity var(--motion-feedback)}
-.roster-actions-reveal--open {grid-template-rows:1fr;opacity:1}
-.roster-actions-clip {overflow:hidden;min-height:0}
-.roster-action-icon {position:relative;display:inline-flex}
-.roster-remove-icon {color:var(--danger)}
-.roster-action-count {position:absolute;left:calc(100% - var(--spacing-xs));top:calc(var(--spacing-xs) * -1);min-width:var(--spacing-large);height:var(--spacing-large);box-sizing:border-box;padding-inline:var(--spacing-xs);border-radius:var(--radius-small);background:var(--surface-active);color:var(--text-1);font:600 var(--type-context-size)/var(--spacing-large) var(--font-ui)}
-.roster-action-error {color:var(--danger)}
-@media(prefers-reduced-motion:reduce){.roster-actions-reveal{transition:none}}
+.roster-clear-selection { margin-inline-start: auto; }
+.roster-selection-actions {
+  --action-min: calc(var(--layout-touch-min) + var(--spacing-large));
+  --action-fourth: calc((100% - 3 * var(--spacing-xs)) / 4);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, max(var(--action-min), var(--action-fourth))), 1fr));
+  gap: var(--spacing-xs);
+  padding-block-start: var(--spacing-xs);
+}
+.roster-action-error { color: var(--danger); }
 </style>

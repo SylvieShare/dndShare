@@ -186,8 +186,6 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   const hp = useEncounterHp({
     applyCombatDamage: impacts.applyCombatDamage,
     previewHp: impacts.previewHp,
-    encounter,
-    selectedUids: selection.selectedUids,
     getCombatant,
     mutate,
     canEditPlayers,
@@ -394,8 +392,6 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     hpEditNpc:              hp.hpEditNpc,
     hpCalcPlayer:           hp.hpCalcPlayer,
     redHpParticipant:computed(()=>{const c=hp.hpCalcPlayer.value;const p=c?findParticipant(c.charId):null;return p?.data?.system==='cyberpunk-red'?p:null}),
-    selectedDamageCount:    hp.selectedDamageCount,
-    applyDamageToSelected:  hp.applyDamageToSelected,
     applyDamageToCombatant: hp.applyDamageToCombatant,
     applyDamageToCombatants: impacts.applyCombatDamage,
     displayAc:              hp.displayAc,
