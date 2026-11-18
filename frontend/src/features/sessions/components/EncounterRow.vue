@@ -9,7 +9,7 @@
   >
     <div class="enc-row-main">
       <EncounterOrderMarker v-if="order != null" :order="order" :current="isCurrent" />
-      <div class="enc-row-tile" :class="{ 'enc-row-tile--rough-edges': section === 'combat' }" :style="roughRowPaintStyle(idx, section === 'combat')">
+      <div class="enc-row-tile" :class="{ 'enc-row-tile--rough-edges': section === 'combat' }" :style="roughRowPaintStyle(idx, paintVariant)">
         <WorkspaceRowDivider v-if="divided" rough :rough-variant="idx" class="roster-divider" />
         <component :is="section === 'reserve-npc' ? SessionNpcTile : section === 'combat' ? SessionEncounterTile : SessionCombatantTile"
           class="enc-row" :class="rowClasses" :combatant="combatant" :section="section" :current="isCurrent"
@@ -105,6 +105,10 @@ const props = defineProps({
 defineEmits(['view-participant'])
 
 const enc = inject('encounter')
+const paintVariant = computed(() => {
+  if (props.section === 'combat') return 'scene'
+  return props.section === 'reserve-npc' && !props.divided ? 'flatTop' : 'seam'
+})
 
 const isPlayer = computed(() => props.combatant.type === 'player')
 const displayName = computed(() =>

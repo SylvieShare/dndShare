@@ -25,6 +25,11 @@ for(const width of [390,834,1440])test(`shared sidebar and scene summaries with 
   await expect(toolbar.getByRole('button',{name:/^Нанести урон:/})).toBeVisible()
   await expect(toolbar.getByRole('button',{name:/^Нанести урон:/})).toBeDisabled()
   await expect(reserve.getByRole('button',{name:'Создать упрощённое существо',exact:true})).toHaveCount(0)
+  const topEdge = 'polygon(0% calc(var(--spacing-small) * 0.5),100% calc(var(--spacing-small) * 0.5),'
+  const paint = row => row.evaluate(node => node.style.getPropertyValue('--roster-paint-clip'))
+  const reserveTiles = reserve.locator('.enc-row-tile')
+  expect(await paint(reserveTiles.first())).toContain(topEdge)
+  expect(await paint(reserveTiles.nth(1))).not.toContain(topEdge)
   await expect(reserve.locator('.enc-row-shell').nth(1).locator('.workspace-row-divider')).toHaveCount(1)
   await expect(reserve.locator('.enc-row-shell').nth(1)).toHaveCSS('border-top-width','0px')
   const marker=reserve.locator('.npc-marker').first()
@@ -49,6 +54,7 @@ for(const width of [390,834,1440])test(`shared sidebar and scene summaries with 
   await page.getByRole('button',{name:/Открыть бой/}).click()
   await toolbar.getByRole('button',{name:/^Добавить на сцену:/}).click()
   await nav.getByRole('button',{name:'Игроки',exact:true}).click()
+  expect(await paint(players.locator('.p-card-menu').first())).toContain(topEdge)
   await players.getByRole('checkbox',{name:'Выбрать: Лира',exact:true}).click()
   await toolbar.getByRole('button',{name:/^Добавить на сцену:/}).click()
   const controls=page.locator('.enc-secondary')
@@ -72,7 +78,7 @@ for(const width of [390,834,1440])test(`shared sidebar and scene summaries with 
     const blessing=row.getByRole('button',{name:'Благословение',exact:true})
     const poison=row.getByRole('button',{name:'Отравление',exact:true})
     await expect(blessing).toContainText('2 раунда')
-    await expect(row.locator('.item-icon').first()).toHaveCSS('width','40px')
+    await expect(row.locator('.item-icon').first()).toHaveCSS('width','56px')
     await expect(row.locator('.roster-presence')).toHaveCount(0)
     const statusArea=row.getByRole('group',{name:'Эффекты и состояния'})
     await expect(statusArea.locator('.dsov-row')).toHaveCSS('flex-wrap','wrap')
@@ -81,10 +87,9 @@ for(const width of [390,834,1440])test(`shared sidebar and scene summaries with 
     expect(second.width).toBeLessThanOrEqual(area.width)
     expect(second.x+second.width).toBeLessThanOrEqual(area.x+area.width+1)
     if(width===390)expect(second.y).toBeGreaterThan(first.y)
-    if(width===1440){
-      expect(first.width+second.width).toBeLessThan(area.width)
-      expect(second.y).toBeCloseTo(first.y,0)
-    }
+    const gap = await statusArea.locator('.dsov-row').evaluate(node => parseFloat(getComputedStyle(node).columnGap))
+    if (first.width + second.width + gap <= area.width + .5) expect(second.y).toBeCloseTo(first.y, 0)
+    else expect(second.y).toBeGreaterThanOrEqual(first.y + first.height - .5)
   }
   const positions=await scene.evaluate((n,pad)=>({left:n.getBoundingClientRect().left,expected:n.closest('.enc-wrap').getBoundingClientRect().left+pad}),spacingTokens.page)
   expect(positions.left).toBeCloseTo(positions.expected,0)
@@ -100,7 +105,7 @@ for(const width of [390,834,1440])test(`shared sidebar and scene summaries with 
   if(width===834){
     api.participants[0].data.values.hp.current=0
     await page.reload()
-    await expect(page.locator('.enc-content [data-encounter-uid="p-1"] .ds-row')).toContainText('При смерти')
+    await expect(page.locator('.enc-content [data-encounter-uid="p-1"] .ds-row')).toContainText('Спасброски')
     await expect(page.locator('.enc-content [data-encounter-uid="p-1"]').getByRole('button',{name:'Воскресить игрока',exact:true})).toBeVisible()
   }
   expect(api.errors).toEqual([]);expect(api.warnings).toEqual([])

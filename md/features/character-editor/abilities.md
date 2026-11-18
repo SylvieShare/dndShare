@@ -174,13 +174,13 @@ description, optional presentation level, stacking policy, default duration, con
 `uid`, `effect_id`, source identity, bound `params`, duration and concentration.
 This keeps a temporary spell or ability effect removable with its source and
 allows the same catalogue effect to be added manually from the status block.
-The same `DndStatusOverviewView` renders the session participant's 32px icon-only
-strip and retains the sheet's status action menu. Its optional `context` supplies
-the participant's mechanics; ordinary sheet presentation remains 64px with text.
+The sheet header and the session roster share the 56px detailed style from
+`DndStatusOverviewView`. Maps and catalogues use its 32px icon-only strip. Its
+optional `context` supplies the participant's mechanics and status action menu.
 The common status tiles tint their backgrounds by catalogue polarity: green for
 positive, red for negative and blue for neutral or unspecified effects. Inspiration
 is positive and exhaustion negative. The tint is retained while the action menu
-is open; duration and level use readable neutral text.
+is open. Levels above one appear as an accent-colored `xN` beside the name.
 
 `derived_effects.kind=ability_bonus` временно прибавляет `value` к значениям
 характеристик из `ability_ids`. Прибавки складываются с исходным значением и

@@ -5,7 +5,7 @@ test('status cards retain semantic fills and readable captions while their menu 
   const errors=[];page.on('pageerror',error=>errors.push(error.message))
   await page.setViewportSize({width:834,height:700})
   const api=await fixture(page)
-  api.document().values.states=[951,952,953,954].map((id,index)=>({uid:`effect-${id}`,effect_id:id,duration:{kind:'minutes',value:index+1}}))
+  api.document().values.states=[951,952,953,954].map((id,index)=>({uid:`effect-${id}`,effect_id:id,params:{level:index === 0 ? 1 : 2},duration:{kind:'minutes',value:index+1}}))
   api.document().values.inspiration=true
   api.document().values.exhaustion={level:2}
   await page.route(url=>url.pathname==='/api/items/by-ids',route=>route.fulfill({json:{items:[
@@ -36,7 +36,16 @@ test('status cards retain semantic fills and readable captions while their menu 
   expect((await color('Вдохновение')).bg).toEqual(positive.bg)
   expect((await color('Истощение')).bg).toEqual(negative.bg)
   for(const name of ['Благословение','Отравление','Метка','Без типа','Истощение'])expect((await color(name)).contrast,name).toBeGreaterThanOrEqual(4.5)
+  const exhaustion=header.getByRole('button',{name:'Истощение',exact:true})
+  await expect(exhaustion.locator('.dsov-level')).toHaveText('x2')
+  const levelPosition=await exhaustion.locator('.dsov-heading').evaluate(node=>{
+    const name=node.querySelector('.dsov-name').getBoundingClientRect()
+    const level=node.querySelector('.dsov-level').getBoundingClientRect()
+    return level.left>=name.right && level.top<name.bottom && level.bottom>name.top
+  })
+  expect(levelPosition).toBe(true)
   const button=header.getByRole('button',{name:'Благословение',exact:true})
+  await expect(button.locator('.dsov-level')).toHaveCount(0)
   await expect(button).toHaveAttribute('aria-description',/Положительный/)
   await button.click();await expect(button).toHaveClass(/action-menu-source--open/)
   await expect.poll(async()=>{const {bg}=await color('Благословение');return bg[1]-bg[0]}).toBeGreaterThan(positive.bg[1]-positive.bg[0])
@@ -51,7 +60,8 @@ test('status cards retain semantic fills and readable captions while their menu 
   await page.setViewportSize({width:390,height:700})
   await expect(row).toHaveClass(/dsov-row--scrollable/)
   await expect(row).toHaveCSS('overflow-x','auto')
-  await expect(row).toHaveCSS('padding-bottom','4px')
+  await expect(row).toHaveCSS('padding-bottom','0px')
+  await expect(row).toHaveCSS('scrollbar-width','none')
   expect(api.writes).toEqual([])
   expect(errors).toEqual([])
   await info.attach('semantic-status-cards',{body:await page.screenshot(),contentType:'image/png'})

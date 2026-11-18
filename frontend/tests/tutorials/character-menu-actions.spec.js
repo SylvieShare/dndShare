@@ -26,8 +26,22 @@ async function checkBar(menu,labels){
     const icon = await button.locator('svg').boundingBox(), caption = await button.locator('.character-menu-action-label').boundingBox()
     expect(caption.y).toBeGreaterThanOrEqual(icon.y + icon.height)
     const box=await button.boundingBox()
-    expect(box.width).toBeGreaterThanOrEqual(56)
-    expect(box.height).toBeGreaterThanOrEqual(64)
+    expect(box.width).toBeCloseTo(64, 0)
+    expect(box.height).toBeCloseTo(64, 0)
+    expect(icon.width).toBeCloseTo(24, 0)
+    await expect.poll(() => button.locator('.character-menu-action-label').evaluate(element => {
+      const text = element.firstChild
+      const tops = new Set()
+      for (const word of text.data.matchAll(/\S+/g)) {
+        const range = document.createRange()
+        range.setStart(text, word.index)
+        range.setEnd(text, word.index + word[0].length)
+        const positions = [...range.getClientRects()].map(rect => rect.top)
+        if (new Set(positions).size !== 1) return false
+        tops.add(positions[0])
+      }
+      return tops.size <= 2 && element.scrollWidth <= element.clientWidth
+    })).toBe(true)
     expect(await button.evaluate(node => node.scrollWidth <= node.clientWidth && node.scrollHeight <= node.clientHeight)).toBe(true)
   }
   const geometry=await bar.evaluate(node=>({right:node.getBoundingClientRect().right,last:node.lastElementChild.getBoundingClientRect().right}))

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="items.length || showAddAction" class="dsov" :class="{ 'dsov--icons-only': iconsOnly, 'dsov--header': header, 'dsov--wrap': wrap, 'dsov--compact': compact }" :style="iconsOnly ? { '--status-icon-size': `${iconSize}px` } : header ? { '--status-header-icon-size': `${headerIconSize}px` } : null">
+  <div v-if="items.length || showAddAction" class="dsov" :class="{ 'dsov--icons-only': iconsOnly, 'dsov--header': header, 'dsov--wrap': wrap }" :style="iconsOnly ? { '--status-icon-size': `${iconSize}px` } : header ? { '--status-header-icon-size': `${headerIconSize}px` } : null">
     <div ref="row" class="dsov-row" :class="{ 'dsov-row--scrollable': rowOverflows === true, 'dsov-row--fits': rowOverflows === false }" :data-sheet-horizontal-scroll="wrap ? undefined : ''">
       <RowActionMenu
         v-for="item in items"
@@ -15,7 +15,7 @@
             :data-polarity="item.polarity === 'positive' ? 'positive' : item.polarity === 'negative' ? 'negative' : 'neutral'"
             type="button"
             :aria-label="iconsOnly || header ? item.value : undefined"
-            :aria-description="[statusPolarity(item.polarity).label, item.duration ? `Длительность: ${item.duration}` : ''].filter(Boolean).join(' · ')"
+            :aria-description="[statusPolarity(item.polarity).label, item.duration ? `Длительность: ${item.duration}` : '', item.level > 1 ? `Уровень ${item.level}` : ''].filter(Boolean).join(' · ')"
             @click="$emit('hide-tooltip')"
             @mouseenter="$emit('show-tooltip', $event, item)"
             @mouseleave="$emit('hide-tooltip')"
@@ -40,7 +40,7 @@
             <span v-if="!iconsOnly" class="dsov-copy">
               <span class="dsov-heading">
                 <span class="dsov-name" :title="item.value">{{ item.value }}</span>
-                <span v-if="item.level" class="dsov-level">Уровень {{ item.level }}</span>
+                <span v-if="item.level > 1" class="dsov-level" aria-hidden="true">x{{ item.level }}</span>
               </span>
               <span v-if="item.duration" class="dsov-duration" :title="`Длительность: ${item.duration}`">
                 <Hourglass :size="12" aria-hidden="true" />{{ item.duration }}
@@ -83,7 +83,7 @@
 <script setup>
 import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
 import StatusMechanicsMenu from './StatusMechanicsMenu.vue'
-import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { BatteryLow, Hourglass, Minus, Plus, Sparkles } from '@lucide/vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
@@ -102,9 +102,8 @@ const props = defineProps({
   context: { type: Object, default: null },
   header: Boolean,
   wrap: Boolean,
-  compact: Boolean,
 })
-const headerIconSize = computed(() => layoutTokens[props.compact ? 'status-compact-icon' : 'sheet-header-status-icon'])
+const headerIconSize = layoutTokens['sheet-header-status-icon']
 const emit = defineEmits(['add', 'view', 'remove', 'edit-duration', 'increase-level', 'decrease-level', 'show-tooltip', 'hide-tooltip'])
 const row = ref(null), rowOverflows = ref(null)
 let rowObserver, rowMeasureFrame
@@ -147,18 +146,12 @@ function monogram(value) {
 .dsov--header .dsov-item-icon {width:var(--status-header-icon-size,var(--layout-sheet-header-status-icon));height:var(--status-header-icon-size,var(--layout-sheet-header-status-icon))}
 .dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:100%;height:100%}
 .dsov--header .dsov-copy {gap:calc(var(--spacing-xs) / 2)}
-.dsov--header .dsov-heading {flex-direction:column;align-items:stretch;gap:calc(var(--spacing-xs) / 2)}
-.dsov--header .dsov-level {white-space:nowrap}
 .dsov--header .dsov-name {font-size:var(--type-group-size);line-height:var(--type-group-line-height)}
 .dsov--header .dsov-duration {font-size:var(--type-context-size);line-height:var(--type-context-line-height)}
 .dsov--header .dsov-add {width:auto;height:var(--layout-touch-min);padding-inline:var(--spacing-small);font-size:var(--type-group-size);white-space:nowrap}
 .dsov--header {flex-wrap:nowrap}
 .dsov--header.dsov--wrap .dsov-row {flex:1;flex-wrap:wrap;align-items:flex-start;overflow:visible}
 .dsov--wrap .dsov-name {white-space:normal;overflow-wrap:anywhere}
-.dsov--compact .dsov-effect {min-height:var(--layout-touch-min);padding-inline:var(--spacing-small) var(--spacing-medium)}
-.dsov--compact .dsov-name {font-size:var(--type-caption-size);line-height:var(--type-caption-line-height)}
-.dsov--compact .dsov-heading {flex-direction:row;flex-wrap:wrap;align-items:center}
-.dsov--compact .dsov-level {font-size:var(--type-context-size);line-height:var(--type-context-line-height)}
 .dsov-add:disabled {opacity:.45;cursor:not-allowed}
 .dsov { display: flex; min-width: 0; align-items: center; gap: 13px; padding: 0 0 15px 15px; }
 .dsov-row {
@@ -249,11 +242,19 @@ function monogram(value) {
   flex-direction: column;
   gap: 5px;
 }
-.dsov-heading { display: flex; min-width: 0; align-items: center; gap: 5px; }
+.dsov-heading { display: flex; min-width: 0; align-items: baseline; gap: var(--spacing-xs); }
 .dsov-duration { display: flex; align-items: center; gap: 4px; color: var(--status-secondary); font-size: 10px; line-height: 1.3; overflow-wrap: anywhere; }
 .dsov-duration svg { flex-shrink: 0; }
 .dsov-name { min-width: 0; overflow: hidden; font-size: 11px; font-weight: 750; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
-.dsov-level { flex: 0 0 auto; color: var(--status-secondary); font-size: 8px; font-weight: 700; line-height: 1; }
+.dsov-level {
+  flex: none;
+  color: var(--accent-soft);
+  font-size: var(--type-context-size);
+  font-weight: 700;
+  line-height: var(--type-context-line-height);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
 .dsov-thesis {
   color: var(--status-secondary);
   font-size: 9px;

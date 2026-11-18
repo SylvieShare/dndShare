@@ -49,9 +49,8 @@ RollModeMarker (28) и RollModeMarkerCompact (32) задают размер ме
 SheetStatsColumn (340) с минимумом SheetStatsColumnMin (320).
 WorkspaceRowDividerHeight (3)
 задаёт высоту декоративной складки между строками шапки.
-StatusCompactIcon (40) используется в вертикальных состояниях игрока сессии;
-интерактивная строка сохраняет минимум TouchMin (48). Состояния шапки листа
-сохраняют SheetHeaderStatusIcon (56). JS экспортирует `spacingTokens` из того же
+Состояния шапки листа и плиток сессии используют SheetHeaderStatusIcon (56).
+Верхние плитки меню используют MenuActionSize (64) и размер иконок кнопок шапки SheetHeaderActionIcon (24). JS экспортирует `spacingTokens` из того же
 источника, что CSS: динамический safe-left холста использует Page без разбора calc().
 
 Бой использует EncounterRosterWidth (480), EncounterScrollGap (12) и

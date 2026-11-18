@@ -456,12 +456,10 @@ compact encounter `ParticipantStats`; ready name and HP stay visible while numer
 mechanics show a skeleton. Passive skill math is shared with the sheet's menu table.
 
 Player summaries have transparent resting surfaces and separators between rows.
-States size to their content and wrap onto the next row as needed. Active states below the summary use `DndStatusOverviewView(header, wrap, compact)`:
-40px icons, a minimum 48px touch target, name, duration and polarity-colored parchment.
-States form a vertical list inside the scrolling player panel. Character-header
-states keep their existing 56px horizontal presentation. NPC reserves use the
-same detailed 40px vertical states in the sidebar and combat; map/catalogue
-icon-only states remain 32px.
+States below participant and NPC summaries use the character header's 56px
+icons, name, duration and polarity-colored parchment via `DndStatusOverviewView`.
+Levels above one show an accent-colored `xN` beside the name. Tiles wrap to the
+next row when space is limited. Map and catalogue strips use 32px icons.
 They use the same handbook tooltip and action menu as the sheet: viewing, duration,
 levels, removal and effect-specific mechanics. The menu follows its source during
 panel scrolling and closes when the source leaves that panel's viewport.

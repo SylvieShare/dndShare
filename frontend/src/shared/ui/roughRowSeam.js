@@ -38,9 +38,13 @@ function paintStyle(points, i, roughSides) {
   })
 }
 
-const paintStyles=contours.map((points,i)=>paintStyle(points,i,false))
-const combatPaintStyles=contours.map((points,i)=>paintStyle(points,i,true))
+const flatEdge=[[0,0],[1000,0]]
+const paintStyles={
+  seam:contours.map((points,i)=>paintStyle(points,i,false)),
+  scene:contours.map((points,i)=>paintStyle(points,i,true)),
+  flatTop:contours.map((_,i)=>paintStyle(flatEdge,i,false)),
+}
 
 export const roughRowSeamPath=variant=>paths[index(variant)]
 // The lower edge uses the next boundary, shared with the following row's upper edge.
-export const roughRowPaintStyle=(rowIndex,roughSides=false)=>(roughSides?combatPaintStyles:paintStyles)[index(rowIndex)]
+export const roughRowPaintStyle=(rowIndex,variant='seam')=>paintStyles[variant][index(rowIndex)]

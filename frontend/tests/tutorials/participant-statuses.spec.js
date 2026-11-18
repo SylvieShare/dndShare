@@ -15,7 +15,9 @@ test('participant lists intrinsic and applied statuses with confirmed edits',asy
     const values=window.controls.participant.data.values
     values.inspiration=false;values.exhaustion={level:1}
   })
-  await expect(statuses.getByRole('button',{name:'Истощение',exact:true})).toBeVisible()
+  const firstLevel = statuses.getByRole('button',{name:'Истощение',exact:true})
+  await expect(firstLevel).toBeVisible()
+  await expect(firstLevel.locator('.dsov-level')).toHaveCount(0)
   await expect(statuses.locator('.dsov-effect')).toHaveCount(1)
   await page.evaluate(()=>{
     const values=window.controls.participant.data.values
@@ -26,6 +28,9 @@ test('participant lists intrinsic and applied statuses with confirmed edits',asy
   for(const width of [390,704,1440]) {
     await page.setViewportSize({width,height:932})
     await expect(statuses.locator('.dsov-effect')).toHaveCount(3)
+    const exhaustion = statuses.getByRole('button',{name:'Истощение',exact:true})
+    await expect(exhaustion.locator('.dsov-level')).toHaveText('x2')
+    await expect(exhaustion).toHaveAttribute('aria-description',/Уровень 2/)
     const boxes=await statuses.locator('.dsov-effect').evaluateAll(nodes=>nodes.map(node=>node.getBoundingClientRect().toJSON()))
     for(let i=1;i<boxes.length;i++)expect(boxes[i].top).toBeGreaterThanOrEqual(boxes[i-1].bottom-.5)
     await info.attach(`all-statuses-${width}`,{body:await card.screenshot({animations:'disabled'}),contentType:'image/png'})
@@ -76,7 +81,7 @@ for (const mobile of [false, true]) test(`participant status icons ${mobile ? 'm
   await expect(statuses).toContainText('Благословение')
   await expect(statuses).toContainText('1 минута')
   await expect(statuses.locator('.item-icon')).toHaveCount(2)
-  expect((await blessing.locator('.item-icon').boundingBox()).width).toBe(40)
+  expect((await blessing.locator('.item-icon').boundingBox()).width).toBe(56)
   const tile = await card.boundingBox(), health = await card.locator('.heading-health').boundingBox()
   const icons = await statuses.boundingBox()
   expect(icons.y).toBeGreaterThanOrEqual(health.y + health.height)
@@ -124,6 +129,7 @@ for (const mobile of [false, true]) test(`participant status icons ${mobile ? 'm
   menu = page.getByRole('menu', { name: 'Действия: Благословение', exact: true })
   await menu.getByText('Повысить уровень', { exact: true }).click()
   await expect.poll(() => page.evaluate(() => window.controls.participant.data.values.states.find(row => row.uid === 'bless').params.level)).toBe(2)
+  await expect(blessing.locator('.dsov-level')).toHaveText('x2')
   await blessing.click()
   await menu.getByText('Понизить уровень', { exact: true }).click()
   await expect.poll(() => page.evaluate(() => window.controls.participant.data.values.states.find(row => row.uid === 'bless').params.level)).toBe(1)

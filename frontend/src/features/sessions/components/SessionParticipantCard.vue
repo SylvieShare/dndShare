@@ -1,7 +1,7 @@
 <template>
   <div
     class="p-card-menu"
-    :style="roughRowPaintStyle(seamIndex)"
+    :style="roughRowPaintStyle(seamIndex, divided ? 'seam' : 'flatTop')"
     :class="{ 'p-card-menu--placeholder': reorderPlaceholder }"
     @pointerdown="startReorder"
     @click.capture="suppressReorderClick"

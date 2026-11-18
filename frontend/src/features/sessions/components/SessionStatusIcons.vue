@@ -1,7 +1,7 @@
 <template>
   <div class="participant-statuses" :class="{ 'participant-statuses--detailed': detailed }" role="group" aria-label="Эффекты и состояния" @pointerdown.stop @click.stop @contextmenu.stop @keydown.stop>
     <DndStatusOverviewView
-      :items="items" :editable="context.ownerMode" :context="context" :icons-only="!detailed" :header="detailed" :icon-size="32" :wrap="detailed" :compact="detailed"
+      :items="items" :editable="context.ownerMode" :context="context" :icons-only="!detailed" :header="detailed" :icon-size="32" :wrap="detailed"
       @view="viewItem = $event.item"
       @remove="$emit('remove', $event)"
       @increase-level="$emit('change-level', $event, 1)"
@@ -13,8 +13,8 @@
   </div>
   <ItemTooltip v-if="tooltip" :anchor="tooltip.anchor" :title="tooltip.value" :desc="tooltip.desc" :width="300" :z-index="9500">
     <template #details>
-      <span>{{ tooltip.duration }}</span>
-      <span v-if="tooltip.level">Уровень {{ tooltip.level }}</span>
+      <span v-if="tooltip.duration">{{ tooltip.duration }}</span>
+      <span v-if="tooltip.level > 1" class="participant-status-level" :aria-label="`Уровень ${tooltip.level}`">x{{ tooltip.level }}</span>
     </template>
   </ItemTooltip>
   <ItemViewModal v-if="viewItem" :item="viewItem" :item-id="Number(viewItem.id)" :item-type-id="15" :z-index="9600" @close="viewItem = null" />
@@ -32,4 +32,5 @@ function showTooltip(event, item) { tooltip.value = { ...item, anchor: event.cur
 <style scoped>
 .participant-statuses { min-width: 0; height: 36px; }
 .participant-statuses--detailed {height:auto;--status-scroll-inset-start:0px;--status-scroll-inset-end:0px}
+.participant-status-level { color: var(--accent-soft); }
 </style>

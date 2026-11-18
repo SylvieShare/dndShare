@@ -42,7 +42,8 @@ describe('desktop status overview', () => {
     expect(viewSource).toMatch(/\.dsov-thesis \{[\s\S]*?white-space: pre-line;/)
     expect(schemaFieldSource).toContain("field.type === 'textarea'")
     expect(viewSource).toContain('{{ item.value }}')
-    expect(viewSource).toContain('Уровень {{ item.level }}')
+    expect(viewSource).toContain('v-if="item.level > 1" class="dsov-level"')
+    expect(viewSource).toContain('x{{ item.level }}')
     expect(dndStatusSummary({statuses:[{uid:'effect',params:{level:3},item:{data:{level:1}}}]} )[0].level).toBe(3)
   })
 
