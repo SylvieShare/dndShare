@@ -40,8 +40,10 @@ scene members. Command buttons have visible captions and accessible names.
 
 The sidebar remains available, while map canvas/inspector are hidden in combat.
 The command column groups fight flow, selection actions and scene composition
-into two panels. The phase panel shows the roster count and starts combat or
-provides round navigation and End. Selection uses the same summary as the left
+into two panels. During combat, the header places the round beside the phase and
+roster count. The phase actions pair the turn arrows and label the forward action
+«Следующий». «Закончить бой» is a one-line outlined action that wraps below the
+turn controls when the panel is narrow. Selection uses the same summary as the left
 sidebar and reserves the same height for empty and single-row states. Challenge,
 damage, adding and removing scene members, scenario encounters, marking defeated
 and NPC deletion share a grid

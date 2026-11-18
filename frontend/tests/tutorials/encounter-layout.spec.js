@@ -112,6 +112,14 @@ test('combat commands occupy their own column and both columns scroll independen
   const root=page.locator('.enc-wrap--workspace'),roster=root.locator('.enc-content'),controls=root.locator('.enc-secondary')
   const preview=page.getByRole('complementary',{name:'Текущий ход'})
   await expect(root.locator('.enc-context-art')).toHaveCount(0)
+  const phase = controls.getByRole('group', { name: 'Управление боем', exact: true })
+  const nextTurn = phase.getByRole('button', { name: 'Следующий ход', exact: true })
+  const endCombat = phase.getByRole('button', { name: 'Закончить бой', exact: true })
+  await expect(phase.locator('header .enc-round-label')).toHaveText('Раунд')
+  await expect(phase.locator('header .enc-round-num')).toHaveText('1')
+  await expect(nextTurn.locator('span')).toHaveText('Следующий')
+  await expect(endCombat).toHaveCSS('border-top-style', 'solid')
+  await expect(endCombat).toHaveCSS('border-top-width', '1px')
   const actions = controls.getByRole('group', { name: 'Действия с выбранными участниками' })
   await expect(actions.getByRole('button', { name: 'Бои сценария', exact: true })).toBeVisible()
   await expect(actions.getByRole('button', { name: 'Отметить выбранных погибшими' })).toBeVisible()
@@ -128,6 +136,25 @@ test('combat commands occupy their own column and both columns scroll independen
     const columns=await root.evaluate((n,min)=>n.offsetWidth>=min,encounterColumnsMinWidth+2*spacingTokens.page)
     expect(columns).toBe(width>=834)
     await expect(preview).toHaveCount(0)
+    const phaseLayout = await phase.evaluate(panel => {
+      const turn = panel.querySelector('.enc-turn-group').getBoundingClientRect()
+      const next = panel.querySelector('.enc-icon-btn--next')
+      const end = panel.querySelector('.enc-battle-toggle--end')
+      const countLines = button => {
+        const range = document.createRange()
+        range.selectNodeContents(button.querySelector('span'))
+        return new Set([...range.getClientRects()].filter(rect => rect.width > 0).map(rect => rect.top)).size
+      }
+      return {
+        nextLines: countLines(next),
+        endLines: countLines(end),
+        sameRow: Math.abs(turn.top - end.getBoundingClientRect().top) < .5,
+      }
+    })
+    expect(phaseLayout.nextLines).toBe(1)
+    expect(phaseLayout.endLines).toBe(1)
+    if (width === 390) expect(phaseLayout.sameRow).toBe(false)
+    if (width === 1440) expect(phaseLayout.sameRow).toBe(true)
     for (const name of ['Убрать со сцены: 0', 'Бои сценария', 'Отметить выбранных погибшими', 'Удалить выбранных НПС']) {
       const caption = actions.getByRole('button', { name, exact: true }).locator('.enc-control-label')
       const lines = await caption.evaluate(label => {
