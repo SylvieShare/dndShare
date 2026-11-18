@@ -300,6 +300,7 @@ export function useEncounterChallenge({
     challengeBusy,
     challengeActive,
     selectedChallengeCount,
+    selectedChallengeTargets: selectedChallengeCombatants,
     challengeAbilities: abilities,
     challengeSupportsSaves:computed(()=>!isRed.value),
     challengeAbilityMeta: abilityMeta,

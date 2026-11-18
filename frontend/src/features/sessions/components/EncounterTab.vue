@@ -62,8 +62,9 @@
     </div>
     <aside class="enc-secondary" aria-label="Управление боем">
       <EncounterControls :session-uuid="sessionUuid" :encounter="enc" :is-dm="isDm" :scene="scene" :show-shortcut-hints="showShortcutHints"
-                         @toggle-combat="toggleCombat" @import-combat-block="$emit('import-combat-block',$event)" />
-      <slot name="selection-panel" />
+                         @toggle-combat="toggleCombat" @import-combat-block="$emit('import-combat-block',$event)">
+        <template #selection-panel><slot name="selection-panel" /></template>
+      </EncounterControls>
     </aside>
 
   </div>

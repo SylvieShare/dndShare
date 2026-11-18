@@ -1,6 +1,12 @@
 import { sessionLayout } from './session-layout.js'
 import { applyDocumentPatches } from '../../../src/shared/lib/documentPatch.js'
 
+export async function openRosterActions(page, toolbar) {
+  const menu = page.getByRole('menu', { name: 'Действия с выбранными', exact: true })
+  if (!await menu.isVisible()) await toolbar.getByRole('button', { name: 'Действия', exact: true }).click()
+  return menu
+}
+
 export async function rosterSelectionFixture(page,width,{url='/sessions/test',beforeImpact}={}) {
   await page.setViewportSize({width,height:980})
   const errors=[],warnings=[]

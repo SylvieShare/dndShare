@@ -25,6 +25,8 @@
       <template v-if="isDead" #health><SessionPlayerDeathState :hp="hp" :editable="isDm" :can-edit="canCalculateHp && hp.current <= 0" :red="!!encounter?.isRed" @edit="encounter.openHpCalc(combatant)" @revive="$emit('revive')" /></template>
       <template #statuses><ParticipantStatuses :participant="participant" :editable="isDm" detailed /></template>
     </SessionPlayerTile>
+    <EncounterChallengeOverlay v-if="isDm && encounter && combatant && !compact" :combatant="combatant"
+      :encounter="encounter" :placeholder="reorderPlaceholder" />
     <RowActionMenu ref="menuRef" :anchor="menuAnchor" :trigger-attrs="{style:{display:'none'}}">
       <template #default="{ close }">
         <EncounterInitiativeMenu v-if="isDm && combatant?.position === 'reserve' && encounter?.encounter.active" enter-combat :combatant="combatant" :encounter="encounter" @joined="close" />
@@ -83,6 +85,7 @@ import { ColorPresetPicker } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
+import EncounterChallengeOverlay from './EncounterChallengeOverlay.vue'
 import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
 import SessionPlayerTile from './SessionPlayerTile.vue'
 import SessionPlayerDeathState from './SessionPlayerDeathState.vue'
@@ -133,7 +136,7 @@ function onCardClick(event){
   openMenu(event)
 }
 function suppressReorderClick(event) {
-  if(event.target.closest('.roster-select-zone,.p-statuses-area'))return
+  if(event.target.closest('.roster-select-zone,.p-statuses-area,[data-challenge-result]'))return
   if(handleCtrlSelection(event,props.combatEditable && !!props.combatant,()=>emit('update:combat-selected',!props.combatSelected)))return
   if(props.shouldSuppressReorderClick?.()){event.preventDefault();event.stopPropagation()}
 }

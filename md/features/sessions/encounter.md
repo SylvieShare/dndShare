@@ -42,9 +42,10 @@ The sidebar remains available, while map canvas/inspector are hidden in combat.
 During combat, the phase header places the round beside the phase and roster
 count. The turn arrows are paired and the forward action is labelled «Следующий».
 «Закончить бой» is an outlined one-line action. «Бои сценария» belongs to the
-combat controls. A single toolbar holds the selection and its actions. It is
-shown in the Players or Reserve header when that list is open, and moves below
-the combat controls when that list is hidden.
+combat controls. The shared selection toolbar uses the available-actions menu
+and shows eligible target icons and totals per action. It stays in the sidebar
+header until the collapse transition finishes. The combat card then reveals it
+below a divider. «Убрать испытание» appears beside the menu after a challenge.
 A combatant marked defeated keeps the home group and leaves the turn order. The
 persisted `defeatedOnScene` flag keeps their row on the scene and restores scene
 membership when revived. Older defeated records without the flag appear in their
@@ -69,10 +70,11 @@ visual, including advantage and disadvantage rolls.
 
 Before and during combat, the DM header has a group-challenge action. It opens a
 compact setup popover with one of the six D&D abilities and a saving-throw
-toggle, then rolls a d20 for selected creatures on the scene or in reserve, excluding defeated combatants. The action is disabled until at least one eligible creature is selected. A
+toggle, then rolls a d20 for selected creatures on the scene or in reserve, excluding defeated combatants. The action appears when at least one eligible creature is selected. A
 normal check uses that creature's ability modifier. A saving throw also uses a
 player's save proficiency and extra save bonuses, or the explicit bestiary save
-bonus for an NPC; an NPC without one falls back to its ability modifier. Each result is a drawer over the right side of its creature tile, sliding in from the right and clipped to that tile's bounds on desktop and mobile. It remains an `EncounterRow` layer rather than part of the common tile content. Width is capped at 248px and leaves the selection strip visible; neither the tile nor the 480px roster changes size. A corner button hides the result and becomes a reopen button; new results reveal the drawer again.
+bonus for an NPC; an NPC without one falls back to its ability modifier. The shared `EncounterChallengeOverlay` slides over the right side of tiles on
+the scene and in both sidebar rosters, including actors kept in reserve. Width is capped at 248px and leaves the selection strip visible; neither the tile nor the 480px roster changes size. A corner button hides the result and becomes a reopen button; new results reveal the drawer again.
 It reuses `SystemDie` and the shared roll-settle animation to show the d20 face,
 numeric modifier and total without a textual formula. The drawer uses the tile surface with a subtle shadow so underlying text does not show through. Its reroll and hide controls do not open the tile menu, reorder or select the combatant. The slide respects reduced motion. The full check/save event
 title wraps inside the embedded result. Its up/down controls keep the existing

@@ -83,7 +83,7 @@
 </template>
 <script setup>
 defineOptions({ inheritAttrs: false });
-import { inject, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { ActionButton, IconNavigation } from "@sylvieshare/share-ui";
 import { PanelLeftClose } from "@lucide/vue";
 import { layoutTokens, motionTokens, spacingTokens } from "@/app/design-tokens";
@@ -121,6 +121,8 @@ const collapsed = ref(
   window.matchMedia(`(max-width: ${props.collapseAt}px)`).matches,
 );
 const opening = ref(false);
+const closing = ref(false);
+let closeMotionId = 0;
 const moving = ref(false);
 function trackMotion(event, active) { if (event.target === element.value && event.propertyName === 'width') moving.value = active; }
 const panelWidth = ref(null);
@@ -199,6 +201,8 @@ function openTab(key) {
   if (props.tabs.find(tab => tab.key === key)?.action) { emit('action', key); return; }
   if (hosted) { host.select(props.workspaceKey, key); return; }
   const reveal = collapsed.value;
+  closeMotionId += 1;
+  closing.value = false;
   if (reveal) {
     opening.value = true;
     clearTimeout(revealTimer);
@@ -212,10 +216,21 @@ function openTab(key) {
 }
 function collapse() {
   if (hosted) { host.collapse(); return; }
+  if (collapsed.value) return;
   pageAnimation?.cancel();
+  const id = ++closeMotionId;
+  closing.value = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   collapsed.value = true;
   opening.value = false;
   clearTimeout(revealTimer);
+  if (closing.value) void finishCollapse(id);
+}
+async function finishCollapse(id) {
+  await nextTick();
+  if (id !== closeMotionId) return;
+  const widthTransition = element.value?.getAnimations?.().find(animation => animation.transitionProperty === "width");
+  await widthTransition?.finished.catch(() => {});
+  if (id === closeMotionId) closing.value = false;
 }
 onMounted(() => {
   if (hosted) return;
@@ -235,6 +250,7 @@ onMounted(() => {
   observer.observe(element.value.parentElement);
 });
 onBeforeUnmount(() => {
+  closeMotionId += 1;
   pageAnimation?.cancel();
   compactQuery?.removeEventListener("change", compactChanged);
   observer?.disconnect();
@@ -242,6 +258,7 @@ onBeforeUnmount(() => {
 });
 defineExpose({
   collapsed,
+  closing,
   moving,
   openTab,
   collapse,

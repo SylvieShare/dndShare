@@ -22,10 +22,28 @@
   width: 100%;
 }
 
-.combat-selection-panel.base-tile {
+.combat-selection-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows var(--motion-enter), opacity var(--motion-feedback);
+}
+.combat-selection-panel--open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.combat-selection-clip {
+  min-block-size: 0;
+  overflow: hidden;
+}
+.combat-selection-footer {
+  box-sizing: border-box;
   margin-block-start: var(--spacing-small);
-  padding: var(--spacing-medium);
-  background: var(--surface);
+  padding-block-start: var(--spacing-xs);
+  border-block-start: var(--layout-border) solid var(--border);
+}
+@media (prefers-reduced-motion: reduce) {
+  .combat-selection-panel { transition: none; }
 }
 
 .combat-import-error {

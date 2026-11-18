@@ -425,6 +425,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     challengeBusy:           challenge.challengeBusy,
     challengeActive:         challenge.challengeActive,
     selectedChallengeCount:  challenge.selectedChallengeCount,
+    selectedChallengeTargets: challenge.selectedChallengeTargets,
     challengeAbilities:      challenge.challengeAbilities,
     challengeSupportsSaves: challenge.challengeSupportsSaves,
     challengeAbilityMeta:    challenge.challengeAbilityMeta,

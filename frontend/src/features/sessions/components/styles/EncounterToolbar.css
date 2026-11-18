@@ -5,11 +5,14 @@
 }
 
 .enc-control-panel.base-tile {
-  display: grid;
   min-width: 0;
-  gap: var(--spacing-small);
   padding: var(--spacing-medium);
   background: var(--surface);
+}
+
+.enc-phase-main {
+  display: grid;
+  gap: var(--spacing-small);
 }
 
 .enc-toolbar-heading,

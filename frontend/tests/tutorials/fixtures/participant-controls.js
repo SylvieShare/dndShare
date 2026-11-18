@@ -28,7 +28,7 @@ const encounter = reactive({
   setSide: (c, value) => { if (value) c.side = value; else delete c.side },
   findParticipant: () => participant,
   canEditPlayerHp: () => true, participantColor: () => null, tileColor: () => null,
-  npcName: () => 'Гоблин', subtitle: () => '', challenge: { ability: 'DEX', savingThrow: true }, challengeResult: () => state.challenge ? { roll: 12, bonus: 2, total: 14 } : null, challengeAbilityMeta: () => ({ value: 'DEX', label: 'Ловкость' }),
+  npcName: () => 'Гоблин', subtitle: () => '', challenge: { ability: 'DEX', savingThrow: true }, challengeResult: actor => state.challenge && actor.uid === npc.uid ? { roll: 12, bonus: 2, total: 14 } : null, challengeAbilityMeta: () => ({ value: 'DEX', label: 'Ловкость' }),
   rerollChallenge: (_, mode) => { state.rerolls.push(mode) },
   statesBlock: () => null, statesValue: c => c.states || [], setStates: (c, ids) => { c.states = ids }, displayAc: () => 13, badgeClass: () => '', badgeLabel: () => 'ВРАГ',
   npcItem: () => null, avatarStyle: () => ({}), npcHpFormula: () => null,

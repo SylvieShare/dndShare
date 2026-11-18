@@ -1,5 +1,6 @@
 import {test,expect} from '@playwright/test'
 import {sessionLayout} from './fixtures/session-layout.js'
+import {openRosterActions} from './fixtures/session-roster.js'
 import {encounterColumnsMinWidth} from '../../src/features/sessions/lib/encounterLayout.js'
 import {spacingTokens} from '../../src/app/design-tokens.js'
 
@@ -124,14 +125,17 @@ test('combat commands occupy their own column and both columns scroll independen
   if (!(await sidebar.getAttribute('class')).includes('map-sidebar--collapsed')) {
     await sidebar.getByRole('button', { name: 'Свернуть боковую панель' }).click()
   }
-  const actions = controls.getByRole('group', { name: 'Действия с выбранными участниками' })
   await expect(phase.getByRole('button', { name: 'Бои сценария', exact: true })).toBeVisible()
-  await expect(actions.getByRole('button', { name: 'Провести испытание' })).toBeVisible()
   await expect(roster.getByRole('checkbox', { name: 'Выбрать всех на сцене', exact: true })).toBeVisible()
-  await expect(actions.getByRole('checkbox', { name: 'Выбрать всех на сцене', exact: true })).toHaveCount(0)
-  await expect(actions.getByRole('button', { name: 'Отметить выбранных погибшими' })).toBeVisible()
-  await expect(actions.getByRole('button', { name: 'Убрать со сцены: 0', exact: true })).toBeDisabled()
-  await expect(actions).toBeVisible()
+  await expect(phase.getByRole('button', { name: 'Действия', exact: true })).toBeDisabled()
+  await roster.locator('[data-encounter-uid="goblin"]').getByRole('checkbox').click()
+  const actions = await openRosterActions(page, phase)
+  await expect(actions.getByRole('menuitem', { name: 'Провести испытание' })).toBeVisible()
+  await expect(actions.getByRole('menuitem', { name: 'Отметить выбранных погибшими' })).toBeVisible()
+  await expect(actions.getByRole('menuitem', { name: 'Убрать со сцены: 1', exact: true })).toBeVisible()
+  await expect(actions.getByRole('menuitem', { name: /Добавить на сцену/ })).toHaveCount(0)
+  await page.keyboard.press('Escape')
+  await phase.getByRole('button', { name: 'Сбросить выбор' }).click()
   await expect(roster.locator('.enc-icon-btn,.enc-section-icon-btn')).toHaveCount(0)
   await controls.getByRole('button',{name:'Следующий ход',exact:true}).click()
   await expect(root.locator('.enc-row--current')).toContainText('Орк')
@@ -162,8 +166,7 @@ test('combat commands occupy their own column and both columns scroll independen
     expect(phaseLayout.endLines).toBe(1)
     if (width === 390) expect(phaseLayout.sameRow).toBe(false)
     if (width === 1440) expect(phaseLayout.sameRow).toBe(true)
-    await expect(actions.getByRole('button', { name: 'Убрать со сцены: 0', exact: true })).toBeVisible()
-    await expect(actions.getByRole('button', { name: 'Удалить НПС: 0', exact: true })).toBeVisible()
+    await expect(controls.getByRole('button', { name: 'Действия', exact: true })).toBeVisible()
     await expect.poll(async()=>{
       const a=await roster.boundingBox(),b=await controls.boundingBox()
       return columns?b.x>=a.x+a.width+spacingTokens.large-.5:a.y>=b.y+b.height+spacingTokens.large-.5

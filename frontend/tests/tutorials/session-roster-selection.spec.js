@@ -1,5 +1,5 @@
 import { expect,test } from '@playwright/test'
-import { rosterSelectionFixture } from './fixtures/session-roster.js'
+import { openRosterActions, rosterSelectionFixture } from './fixtures/session-roster.js'
 
 for(const width of [390,834,1440])test(`persistent checkboxes, shared groups and combat actions at ${width}`,async({page},info)=>{
   test.setTimeout(90000)
@@ -32,11 +32,11 @@ for(const width of [390,834,1440])test(`persistent checkboxes, shared groups and
   await card(sidebar,'Лира').locator('.heading-health').click()
   await expect(page.getByRole('dialog',{name:'Хиты',exact:true})).toBeVisible();await page.keyboard.press('Escape')
   await open('Дозор');await check(sidebar,'Сова').click();await count(3)
-  await toolbar.getByRole('button',{name:/^Добавить опыт:/}).click()
+  await (await openRosterActions(page, toolbar)).getByRole('menuitem',{name:/^Добавить опыт:/}).click()
   const xp=page.getByRole('dialog',{name:'Добавить опыт',exact:true})
   await xp.getByRole('spinbutton').fill('25');await xp.getByRole('button',{name:'Добавить опыт',exact:true}).click();await expect(xp).toHaveCount(0)
   expect(api.participants.map(p=>p.data.values.lvl.exp)).toEqual([725,700]);expect(api.writes).toHaveLength(1)
-  await toolbar.getByRole('button',{name:'Добавить на сцену: 3',exact:true}).click()
+  await (await openRosterActions(page, toolbar)).getByRole('menuitem',{name:'Добавить на сцену: 3',exact:true}).click()
   await expect.poll(()=>api.encounter().combatants.filter(c=>c.position==='combat').length).toBe(3)
   await expect(card(sidebar,'Сова').locator('.roster-stage-backdrop')).toHaveAccessibleName('На сцене')
   await open('Запас');await expect(check(sidebar,'Волк')).toBeChecked();await expect(card(sidebar,'Волк').locator('.roster-stage-backdrop')).toHaveAccessibleName('На сцене')
@@ -45,21 +45,32 @@ for(const width of [390,834,1440])test(`persistent checkboxes, shared groups and
   await expect(scene.locator('[data-encounter-uid="wolf"]')).toHaveCount(1)
   await expect(page.locator('[data-encounter-uid="wolf"]')).toHaveCount(2)
   await sidebar.getByRole('button',{name:'Свернуть боковую панель',exact:true}).click()
+  const footer = page.locator('.combat-selection-panel')
+  await expect(footer).toHaveClass(/combat-selection-panel--open/)
+  await footer.evaluate(async panel => {
+    await Promise.allSettled(panel.getAnimations().map(animation => animation.finished))
+  })
   const wolfTile=card(scene,'Волк'),wolfCheck=check(scene,'Волк')
-  await wolfTile.scrollIntoViewIfNeeded()
-  const tileBox=await wolfTile.boundingBox(),checkBox=await wolfCheck.boundingBox()
-  await page.mouse.click(checkBox.x+2,tileBox.y+5)
+  async function clickLane(edge, inset, horizontal) {
+    await wolfTile.scrollIntoViewIfNeeded()
+    const tileBox = await wolfTile.boundingBox(), checkBox = await wolfCheck.boundingBox()
+    const x = horizontal === 'left' ? checkBox.x + 2
+      : horizontal === 'right' ? checkBox.x + checkBox.width - 2 : checkBox.x + checkBox.width / 2
+    const y = edge === 'top' ? tileBox.y + inset : tileBox.y + tileBox.height - inset
+    await page.mouse.click(x, y)
+  }
+  await clickLane('top', 5, 'left')
   await expect(wolfCheck).not.toBeChecked()
   await expect(page.getByRole('menu')).toHaveCount(0)
-  await page.mouse.click(checkBox.x+checkBox.width-2,tileBox.y+tileBox.height-5)
+  await clickLane('bottom', 5, 'right')
   await expect(wolfCheck).toBeChecked()
   await expect(page.getByRole('menu')).toHaveCount(0)
   expect(api.encounter().combatants.find(c=>c.uid==='wolf').position).toBe('combat')
   await wolfCheck.focus();await page.keyboard.press('Space');await expect(wolfCheck).not.toBeChecked()
   await page.keyboard.press('Space');await expect(wolfCheck).toBeChecked()
   const rowMenu=page.getByRole('menu',{name:'Действия существа',exact:true})
-  for (const edge of [tileBox.y+1,tileBox.y+tileBox.height-1]) {
-    await page.mouse.click(checkBox.x+checkBox.width/2,edge)
+  for (const edge of ['top', 'bottom']) {
+    await clickLane(edge, 1, 'center')
     await expect(rowMenu).toBeVisible()
     await expect(wolfCheck).toBeChecked()
     await page.keyboard.press('Escape')
@@ -68,7 +79,7 @@ for(const width of [390,834,1440])test(`persistent checkboxes, shared groups and
   await expect(rowMenu).toBeVisible()
   await page.keyboard.press('Escape')
   await open('Дозор');await count(3)
-  await toolbar.getByRole('button',{name:'Нанести урон: 3',exact:true}).click()
+  await (await openRosterActions(page, toolbar)).getByRole('menuitem',{name:'Нанести урон: 3',exact:true}).click()
   const damage=page.getByRole('dialog',{name:'Нанести урон',exact:true})
   await damage.getByRole('spinbutton').fill('5');await damage.getByRole('button',{name:'Нанести урон',exact:true}).click();await expect(damage).toHaveCount(0)
   expect(api.impacts).toHaveLength(1)
@@ -90,15 +101,17 @@ for(const width of [390,834,1440])test(`persistent checkboxes, shared groups and
   await info.attach(`active-roster-${width}`,{body:await page.screenshot({animations:'disabled'}),contentType:'image/png'})
   await toolbar.getByRole('button',{name:'Сбросить выбор',exact:true}).click();await count(0)
   await check(sidebar,'Волк').click();await open('Игроки');await check(sidebar,'Тиф').click()
-  await expect(toolbar.getByRole('button',{name:'Ввести в бой: 1',exact:true})).toBeEnabled()
-  await expect(toolbar.getByRole('button',{name:'Убрать со сцены: 1',exact:true})).toBeEnabled()
+  const sidebarActions = await openRosterActions(page, toolbar)
+  await expect(sidebarActions.getByRole('menuitem',{name:'Ввести в бой: 1',exact:true})).toBeEnabled()
+  await expect(sidebarActions.getByRole('menuitem',{name:'Убрать со сцены: 1',exact:true})).toBeEnabled()
+  await page.keyboard.press('Escape')
   await expect(page.locator('.enc-secondary .roster-selection')).toHaveCount(0)
   await sidebar.getByRole('button',{name:'Свернуть боковую панель',exact:true}).click()
   await expect(scene.getByRole('button',{name:/^Убрать со сцены:/})).toHaveCount(0)
-  const combatActions=page.locator('.enc-secondary').getByRole('group',{name:'Действия с выбранными',exact:true})
-  const removeFromScene=combatActions.getByRole('button',{name:'Убрать со сцены: 1',exact:true})
+  const combatActions=await openRosterActions(page, page.locator('.enc-secondary'))
+  const removeFromScene=combatActions.getByRole('menuitem',{name:'Убрать со сцены: 1',exact:true})
   await expect(removeFromScene).toBeEnabled()
-  await expect(combatActions.getByRole('button',{name:'Ввести в бой: 1',exact:true})).toBeEnabled()
+  await expect(combatActions.getByRole('menuitem',{name:'Ввести в бой: 1',exact:true})).toBeEnabled()
   await removeFromScene.click()
   await expect.poll(()=>api.encounter().combatants.find(c=>c.uid==='wolf').position).toBe('reserve')
   expect(api.encounter().combatants.find(c=>c.uid==='p-2').position).toBe('reserve')

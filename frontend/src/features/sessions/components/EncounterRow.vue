@@ -1,7 +1,7 @@
 <template>
   <div
     class="enc-row-shell"
-    :class="{ 'enc-row-shell--placeholder': enc.sortable.isSource(combatant), 'enc-row-shell--challenge': !!challengeResult }"
+    :class="{ 'enc-row-shell--placeholder': enc.sortable.isSource(combatant) }"
     :data-sortable-key="combatant.uid"
     :data-encounter-uid="combatant.uid"
     :data-encounter-section="section"
@@ -19,21 +19,7 @@
           @keydown.enter.self="onRowClick" @keydown.space.self.prevent="onRowClick"
           @click="onRowClick"
         />
-        <Transition name="enc-row-roll" appear>
-          <div v-if="challengeResult && !resultHidden" class="enc-row-roll-overlay" @pointerdown.stop @click.stop @contextmenu.stop @keydown.esc.stop.prevent="hideResult">
-            <EncounterChallengeResult
-              class="enc-row-result" :challenge="enc.challenge" :busy="enc.challengeBusy"
-              :ability="challengeAbility" :result="challengeResult"
-              @reroll="enc.rerollChallenge(combatant, $event)"
-            />
-          </div>
-        </Transition>
-        <button v-if="challengeResult" ref="resultToggle" class="enc-row-roll-toggle" type="button"
-          :title="resultHidden ? 'Показать результат броска' : 'Скрыть результат броска'"
-          :aria-label="resultHidden ? 'Показать результат броска' : 'Скрыть результат броска'"
-          @pointerdown.stop @click.stop="resultHidden = !resultHidden">
-          <Dices v-if="resultHidden" :size="14" /><ChevronRight v-else :size="14" />
-        </button>
+        <EncounterChallengeOverlay :encounter="enc" :combatant="combatant" :placeholder="enc.sortable.isSource(combatant)" />
       </div>
     </div>
 
@@ -78,15 +64,14 @@
 
 <script setup>
 import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
-import { computed, inject, nextTick, ref, watch } from 'vue'
-import { ChevronRight, Dices } from '@lucide/vue'
+import { computed, inject, ref } from 'vue'
 import SessionCombatantTile from './SessionCombatantTile.vue'
 import SessionNpcTile from './SessionNpcTile.vue'
 import SessionEncounterTile from './SessionEncounterTile.vue'
 import WorkspaceRowDivider from '@/shared/ui/WorkspaceRowDivider.vue'
 import { roughRowPaintStyle } from '@/shared/ui/roughRowSeam'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
-import EncounterChallengeResult from '@/features/sessions/components/EncounterChallengeResult.vue'
+import EncounterChallengeOverlay from './EncounterChallengeOverlay.vue'
 import EncounterOrderMarker from '@/features/sessions/components/EncounterOrderMarker.vue'
 import EncounterRowMenu from '@/features/sessions/components/EncounterRowMenu.vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
@@ -115,21 +100,12 @@ const displayName = computed(() =>
   isPlayer.value ? enc.playerDisplayName(props.combatant) : enc.npcName(props.combatant)
 )
 
-const challengeResult = computed(() =>
-  props.combatant.position !== 'dead' ? enc.challengeResult(props.combatant) : null
-)
-const resultHidden = ref(false), resultToggle = ref(null)
-function hideResult() { resultHidden.value = true; nextTick(() => resultToggle.value?.focus()) }
-watch(challengeResult, () => { resultHidden.value = false })
-const challengeAbility = computed(() => enc.challengeAbilityMeta(enc.challenge?.ability))
-
 const skippedInTurn = computed(() =>
   props.section === 'combat' && enc.encounter.active && !enc.isActiveInTurn(props.combatant)
 )
 
 const rowClasses = computed(() => ({
   'enc-row--current': props.isCurrent,
-  'enc-row--challenge': !!challengeResult.value,
   'enc-row--placeholder': enc.sortable.isSource(props.combatant),
   'enc-row--skipped': skippedInTurn.value && props.combatant.position !== 'dead',
   'enc-row--defeated': props.combatant.position === 'dead',
@@ -155,7 +131,7 @@ const rowMenuVisible = computed(() => canEdit.value)
 const rowMenuRef = ref(null)
 
 function onSelectionClick(event) {
-  if (event.target.closest('.p-statuses-area,.roster-select-zone')) return
+  if (event.target.closest('.p-statuses-area,.roster-select-zone,[data-challenge-result]')) return
   handleCtrlSelection(event, showCheckbox.value, () => enc.toggleSelected(props.combatant))
 }
 
@@ -199,22 +175,10 @@ function commitNoteEdit() {
 .roster-divider {z-index:2}
 .enc-row-main { display: flex; align-items: stretch; gap: 10px; min-width: 0; flex: 1; max-width: var(--enc-roster-width, 480px); }
 .enc-row-tile { position: relative; flex: 1; min-width: 0; overflow: hidden; border-radius: var(--r-lg); }
-.enc-row-roll-overlay { position: absolute; z-index: 2; inset: 2px 2px 2px auto; width: min(248px, calc(100% - 40px)); display: flex; align-items: center; overflow: hidden; border-radius: 0 calc(var(--r-lg) - 2px) calc(var(--r-lg) - 2px) 0; background: var(--surface); box-shadow: -8px 0 16px color-mix(in srgb, var(--scrim) 20%, transparent); }
-.enc-row-result { width: 100%; }
 .enc-row-tile:has(:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
 .enc-row-shell[data-encounter-section="combat"] .enc-row-tile,.enc-row-shell[data-encounter-section="reserve-npc"] .enc-row-tile {border-radius:0;overflow:visible}
 .enc-row-tile--rough-edges :deep(.session-roster-tile.base-tile) {box-shadow:none}
 .enc-row-tile--rough-edges :deep(.roster-color-edge) {display:block}
-.enc-row-shell--placeholder .enc-row-roll-overlay, .enc-row-shell--placeholder .enc-row-roll-toggle { visibility: hidden; }
-.enc-row-roll-toggle { position: absolute; right: 4px; bottom: 3px; z-index: 3; display: grid; place-items: center; width: 22px; height: 18px; padding: 0; border: 0; border-radius: var(--r-sm); background: var(--surface-raised); color: var(--text-muted); cursor: pointer; transition: color .16s, background .16s; }
-.enc-row-roll-toggle:hover { color: var(--accent); background: var(--surface-active); }
-.enc-row-roll-enter-active, .enc-row-roll-leave-active { transition: transform .26s cubic-bezier(.22,1,.36,1), opacity .18s; }
-.enc-row-roll-enter-from, .enc-row-roll-leave-to { transform: translateX(105%); opacity: 0; }
-.enc-row-roll-leave-active { pointer-events: none; }
-@media (prefers-reduced-motion: reduce) {
-  .enc-row-roll-enter-active, .enc-row-roll-leave-active, .enc-row-roll-toggle { transition: none; }
-  .enc-row-roll-enter-from, .enc-row-roll-leave-to { transform: none; opacity: 1; }
-}
 .enc-row-shell[data-encounter-section="combat"] { width: 100%; max-width: 100%; }
 .enc-row-shell--placeholder :deep(.enc-row-order) { opacity: .25; }
 .enc-row { flex: 1; cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }

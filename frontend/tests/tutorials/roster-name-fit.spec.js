@@ -1,5 +1,5 @@
 import { test,expect } from '@playwright/test'
-import { rosterSelectionFixture } from './fixtures/session-roster.js'
+import { openRosterActions, rosterSelectionFixture } from './fixtures/session-roster.js'
 
 async function fits(text, wrapper) {
   await expect.poll(async()=>{
@@ -77,7 +77,7 @@ test('avatar marker remains editable and follows the creature into combat',async
   await expect.poll(()=>api.encounter().combatants.find(row=>row.uid==='wolf').markerLetter).toBe('C')
   await page.getByRole('button',{name:/Открыть бой/}).click()
   await reserve.getByRole('checkbox',{name:'Выбрать: Волк',exact:true}).click()
-  await sidebar.getByRole('button',{name:/^Добавить на сцену:/}).click()
+  await (await openRosterActions(page, sidebar)).getByRole('menuitem',{name:/^Добавить на сцену:/}).click()
   await page.getByRole('button',{name:'Начать бой',exact:true}).click()
   const row=page.locator('.enc-row--current')
   await markerOnAvatar(row.getByRole('button',{name:'Метка существа C',exact:true}),row.locator('.enc-avatar'))

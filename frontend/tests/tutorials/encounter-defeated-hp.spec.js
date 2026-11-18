@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { rosterSelectionFixture } from './fixtures/session-roster.js'
+import { openRosterActions, rosterSelectionFixture } from './fixtures/session-roster.js'
 
 test('manual NPC damage changes HP before the response and defeated rows survive reload', async ({ page }, info) => {
   let releaseImpact
@@ -41,10 +41,12 @@ test('manual NPC damage changes HP before the response and defeated rows survive
   }
   await expect.poll(() => api.encounter().combatants.find(row => row.uid === 'wolf').hpCurrent).toBe(6)
   await wolf.getByRole('checkbox').click()
-  await controls.getByRole('button', { name: 'Отметить выбранных погибшими' }).click()
+  await (await openRosterActions(page, controls)).getByRole('menuitem', { name: 'Отметить выбранных погибшими' }).click()
   await expect(wolf.getByRole('img', { name: 'Существо повержено' })).toBeVisible()
   await expect(wolf.getByRole('checkbox')).toBeChecked()
-  await expect(controls.getByRole('button', { name: 'Нанести урон: 0' })).toBeDisabled()
+  const defeatedActions = await openRosterActions(page, controls)
+  await expect(defeatedActions.getByRole('menuitem', { name: /^Нанести урон:/ })).toHaveCount(0)
+  await page.keyboard.press('Escape')
   await expect.poll(() => api.encounter().combatants.find(row => row.uid === 'wolf').defeatedOnScene).toBe(true)
 
   await page.reload()
@@ -59,7 +61,7 @@ test('manual NPC damage changes HP before the response and defeated rows survive
   const homeWolf = sidebar.locator('[data-encounter-uid="wolf"]')
   await homeWolf.getByRole('checkbox').click()
   await expect(wolf.getByRole('checkbox')).toBeChecked()
-  const deleteNpc = sidebar.getByRole('button', { name: 'Удалить НПС: 1', exact: true })
+  const deleteNpc = (await openRosterActions(page, sidebar)).getByRole('menuitem', { name: 'Удалить НПС: 1', exact: true })
   await deleteNpc.click()
   await expect(homeWolf).toHaveCount(0)
   await expect(wolf).toHaveCount(0)

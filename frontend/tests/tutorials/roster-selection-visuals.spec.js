@@ -1,5 +1,5 @@
 import { expect,test } from '@playwright/test'
-import { rosterSelectionFixture } from './fixtures/session-roster.js'
+import { openRosterActions, rosterSelectionFixture } from './fixtures/session-roster.js'
 
 test('deselecting the active creature fades its tint, brush and swords together', async ({ page }, info) => {
   const api = await rosterSelectionFixture(page, 932)
@@ -91,7 +91,7 @@ test('selection captions and the following controls stay level as the selection 
     return {
       labelTop: text.getBoundingClientRect().top - bounds.top,
       reserveHeight: bounds.height,
-      nextRowTop: node.nextElementSibling.getBoundingClientRect().top - bounds.top,
+      nextRowTop: node.parentElement.nextElementSibling.getBoundingClientRect().top - bounds.top,
     }
   })
   await expect(summary(left)).toHaveText('Никто не выбран')
@@ -160,7 +160,7 @@ for(const width of [390,834,1440])test(`combat selection icons and stage waterma
   await expect(summary.getByRole('img',{name:'Волк: 2',exact:true})).toBeVisible()
   await expect(summary.locator('.selection-summary-item')).toHaveCount(1)
   await expect(summary.locator('.selection-summary-quantity')).toHaveText('2')
-  await toolbar.getByRole('button',{name:'Добавить на сцену: 2',exact:true}).click()
+  await (await openRosterActions(page, toolbar)).getByRole('menuitem',{name:'Добавить на сцену: 2',exact:true}).click()
   await expect(first.locator('.roster-stage-backdrop')).toHaveAccessibleName('На сцене')
   await expect(first.locator('.session-roster-tile[aria-current="true"]')).toHaveCount(0)
   await expect(first.locator('.roster-stage-backdrop svg')).toHaveCSS('opacity','0.28')
@@ -177,7 +177,7 @@ for(const width of [390,834,1440])test(`combat selection icons and stage waterma
   expect(api.errors).toEqual([]);expect(api.warnings).toEqual([])
 })
 
-for(const width of [390,834,1440]) test(`selection stacks below the actions and fits the sidebar at ${width}`,async({page},info)=>{
+for(const width of [390,834,1440]) test(`selection stacks beside the actions menu and fits the sidebar at ${width}`,async({page},info)=>{
   const api=await rosterSelectionFixture(page,width)
   for(let i=2;i<9;i++){
     api.participants.push({...structuredClone(api.participants[0]),charId:i+1,charUuid:`player-${i}`,data:{values:{...structuredClone(api.participants[0].data.values),name:`Герой ${i}`}}})
@@ -192,10 +192,10 @@ for(const width of [390,834,1440]) test(`selection stacks below the actions and 
   await selectAll.click()
   const summary=toolbar.locator('.roster-selection-summary')
   await expect(summary.locator('.selection-summary-item')).toHaveCount(9)
-  const actions=await toolbar.getByRole('group',{name:'Действия с выбранными'}).boundingBox()
+  const actions=await toolbar.getByRole('button',{name:'Действия',exact:true}).boundingBox()
   const checkbox=await selectAll.boundingBox()
   const summaryBox=await summary.boundingBox()
-  expect(summaryBox.y).toBeGreaterThanOrEqual(actions.y+actions.height)
+  expect(actions.x).toBeGreaterThanOrEqual(summaryBox.x+summaryBox.width-.5)
   expect(checkbox.y).toBeGreaterThanOrEqual(summaryBox.y+summaryBox.height-1)
   const geometry=await summary.evaluate(node=>{
     const rect=element=>element.getBoundingClientRect()
@@ -204,7 +204,7 @@ for(const width of [390,834,1440]) test(`selection stacks below the actions and 
       portraits:[...node.querySelectorAll('.selection-summary-portrait')].map(rect).map(r=>r.toJSON()),
     }
   })
-  expect(new Set(geometry.portraits.map(rect=>rect.top)).size).toBe(1)
+  expect(geometry.portraits.every(rect=>rect.right<=geometry.bounds.right)).toBe(true)
   expect(geometry.portraits[1].left).toBeLessThan(geometry.portraits[0].right)
   expect(geometry.portraits.at(-1).right).toBeLessThanOrEqual(geometry.bounds.right)
   await expect(summary.locator('.selection-summary-quantity')).toHaveCount(0)
@@ -223,4 +223,47 @@ for(const width of [390,834,1440]) test(`selection stacks below the actions and 
   await toolbar.getByRole('button',{name:'Сбросить выбор',exact:true}).click()
   await expect(summary).toHaveText('Никто не выбран')
   expect(api.errors).toEqual([]);expect(api.warnings).toEqual([])
+})
+
+test('closing the sidebar keeps its header in place until the combat footer can open', async ({ page }) => {
+  await rosterSelectionFixture(page, 932)
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.getByRole('button', { name: /Открыть бой/ }).click()
+  const sidebar = page.locator('aside.map-sidebar')
+  await sidebar.getByRole('navigation').getByRole('button', { name: 'Запас', exact: true }).click()
+  await expect(sidebar).not.toHaveClass(/map-sidebar--opening/)
+  const motion = await page.evaluate(async () => {
+    const sidebar = document.querySelector('aside.map-sidebar')
+    const header = sidebar.querySelector('.map-sidebar-header')
+    const panel = document.querySelector('.combat-selection-panel')
+    const animations = sidebar.getAnimations({ subtree: true }).filter(a => Number.isFinite(a.effect?.getComputedTiming().endTime))
+    await Promise.allSettled(animations.map(animation => animation.finished))
+    const sample = () => ({
+      width: sidebar.getBoundingClientRect().width,
+      header: header.getBoundingClientRect().height,
+      left: !!header.querySelector('.roster-selection'),
+      height: panel.getBoundingClientRect().height,
+      alpha: Number(getComputedStyle(panel).opacity),
+    })
+    const before = sample()
+    header.querySelector('button[aria-label="Свернуть боковую панель"]').click()
+    const frames = []
+    const until = performance.now() + 850
+    do {
+      await new Promise(requestAnimationFrame)
+      frames.push(sample())
+    } while (performance.now() < until)
+    return { before, frames, after: frames.at(-1) }
+  })
+  expect(motion.before.height).toBe(0)
+  expect(motion.before.left).toBe(true)
+  const closing = motion.frames.filter(frame => frame.width > motion.after.width + 1 && frame.width < motion.before.width - 1)
+  expect(closing.length).toBeGreaterThan(0)
+  expect(closing.every(frame => frame.left && Math.abs(frame.header - motion.before.header) < .05)).toBe(true)
+  expect(motion.after.left).toBe(false)
+  expect(motion.after.height).toBeGreaterThan(0)
+  expect(motion.frames.some(frame => frame.height > 0 && frame.height < motion.after.height && frame.alpha > 0 && frame.alpha < 1)).toBe(true)
+  const phase = page.locator('.enc-secondary .enc-control-panel')
+  await expect(phase.locator('.combat-selection-footer .roster-selection')).toBeVisible()
+  await expect(phase.locator('.combat-selection-footer')).toHaveCSS('border-top-width', '1px')
 })

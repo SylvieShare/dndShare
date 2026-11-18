@@ -145,10 +145,14 @@
           @import-combat-block="importCombatBlock"
         >
           <template #selection-panel>
-            <BaseTile v-show="!selectionInSidebar" class="combat-selection-panel" :outlined="false"
-              role="group" aria-label="Действия с выбранными участниками">
-              <div ref="combatSelectionHost" />
-            </BaseTile>
+            <div class="combat-selection-panel" :class="{ 'combat-selection-panel--open': selectionInCombat }"
+              :inert="!selectionInCombat" :aria-hidden="!selectionInCombat || undefined">
+              <div class="combat-selection-clip">
+                <div ref="combatSelectionHost" class="combat-selection-footer"
+                  :style="{ minBlockSize: !selectionInCombat && closingCombatSelectionHeight ? `${closingCombatSelectionHeight}px` : undefined }"
+                  role="group" aria-label="Действия с выбранными участниками" />
+              </div>
+            </div>
           </template>
         </SessionCenterWorkspace>
         <SessionTimerStack v-if="isDm" :session-uuid="sessionUuid" :timers="sessionTimers" />
@@ -260,7 +264,7 @@ import { computed, defineAsyncComponent, provide, reactive, watch } from 'vue'
 import { onBeforeRouteLeave, useRoute } from 'vue-router'
 import { ref } from 'vue'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
-import { ActionButton, BaseTile, LoadingState } from '@sylvieshare/share-ui'
+import { ActionButton, LoadingState } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import CharacterCreateWizardModal from '@/features/character-list/components/CharacterCreateWizardModal.vue'
 import CharacterSheetModal from '@/features/character-editor/components/CharacterSheetModal.vue'
@@ -321,10 +325,15 @@ const sidebar = useSessionSidebar(primaryView)
 const sidebarSelectionHost = ref(null)
 const combatSelectionHost = ref(null)
 const rosterTab = computed(() => sidebar.selected.value === 'players' || sidebar.selected.value.startsWith('reserves:'))
-const selectionInSidebar = computed(() => rosterTab.value && sidebar.sidebar.value?.collapsed === false)
+const selectionInSidebar = computed(() => rosterTab.value &&
+  (sidebar.sidebar.value?.collapsed === false || sidebar.sidebar.value?.closing === true))
 const combatWorkspaceVisible = computed(() => primaryView.value === 'story' && workspaceMode.value === 'combat' && workspaceMotionMode.value === 'combat' && !workspaceClosing.value)
 const selectionInCombat = computed(() => combatWorkspaceVisible.value && !selectionInSidebar.value && !!combatSelectionHost.value)
 const selectionHost = computed(() => selectionInCombat.value ? combatSelectionHost.value : sidebarSelectionHost.value)
+const closingCombatSelectionHeight = ref(0)
+watch(selectionInCombat, visible => {
+  closingCombatSelectionHeight.value = visible ? 0 : combatSelectionHost.value?.offsetHeight || 0
+}, { flush: 'sync' })
 const reserveSidebar = reactive(useEncounterReserveSidebar(encounter,sidebar))
 const route = useRoute()
 const requestedOccurrenceId = computed(() => Number(route.query.occurrence) || null)
