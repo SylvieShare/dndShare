@@ -47,6 +47,61 @@ async function fixture(page){
  })
  return {getData:()=>data,getRolls:()=>rolls}
 }
+
+test('D&D and RED use the same responsive creation rail', async ({ page }, info) => {
+  await fixture(page)
+  await page.route('**/api/sources', route => route.fulfill({ json: { sources: [
+    { id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }, { id: 2, version: '2024' }] },
+    { id: 3, name: 'Cyberpunk', versions: [{ id: 30, version: 'RED' }] },
+  ] } }))
+  await page.route('**/api/handbook/sync?**', route => route.fulfill({ json: { protocol: 1, entries: [], hasMore: false, cursor: 'empty', visibleIds: [], metadata: { types: [], suggests: {}, suggestTypes: [], books: [] } } }))
+  await page.setViewportSize({ width: 475, height: 751 })
+  const rail = page.getByRole('navigation', { name: 'Шаги создания персонажа' })
+  const current = rail.locator('[aria-current="step"]')
+  const step = name => rail.getByRole('button', { name: new RegExp(name) })
+  for (const [system, active, locked] of [['dnd5e', 'Версия', 'Класс'], ['cyberpunk-red', 'Роль', 'Завершение']]) {
+    await page.goto(`/chars/new?system=${system}`)
+    await expect(current).toContainText(active)
+    await expect(step(locked)).toBeDisabled()
+    for (const width of [475, 834, 1440]) {
+      await page.setViewportSize({ width, height: 751 })
+      await expect(rail).toBeVisible()
+      await expect(rail).toHaveCSS('flex-direction', width < 921 ? 'row' : 'column')
+      await expect(page.getByRole('button', { name: 'Создать неполноценного', exact: true })).toHaveCount(1)
+      await expect.poll(() => page.evaluate(() => {
+        const stepRail = document.querySelector('.cc-rail').getBoundingClientRect()
+        const main = document.querySelector('.cc-main').getBoundingClientRect()
+        return { vertical: stepRail.bottom <= main.top + 1, withinWindow: document.documentElement.scrollWidth <= innerWidth }
+      })).toEqual({ vertical: width < 921, withinWindow: true })
+      await info.attach(`${system}-steps-${width}`, { body: await page.screenshot({ animations: 'disabled' }), contentType: 'image/png' })
+    }
+    await page.setViewportSize({ width: 475, height: 751 })
+    if (system === 'dnd5e') {
+      for (const edition of ['2024', '2014']) {
+        await page.getByRole('button', { name: new RegExp(`^${edition}`) }).click()
+        await step('Раса').click()
+        await expect(current).toContainText('Раса')
+        await expect(step('Класс')).toBeDisabled()
+        await page.reload()
+        await expect(current).toContainText('Раса')
+        await step('Версия').click()
+        await expect(page.locator('.ver.on')).toContainText(edition)
+      }
+    } else {
+      await step('Жизненный путь').click()
+      await step('Способ создания').click()
+      await step('Характеристики').click()
+      await expect(current).toContainText('Характеристики')
+      await page.setViewportSize({ width: 390, height: 751 })
+      await expect.poll(() => rail.evaluate(node => {
+        const viewport = node.getBoundingClientRect()
+        const button = node.querySelector('[aria-current="step"]').getBoundingClientRect()
+        return button.left >= viewport.left - 1 && button.right <= viewport.right + 1
+      })).toBe(true)
+    }
+  }
+})
+
 for(const width of [390,840,1440]){
  test(`RED sheet, editing and creation at ${width}`,async({page},testInfo)=>{
   test.setTimeout(120000)

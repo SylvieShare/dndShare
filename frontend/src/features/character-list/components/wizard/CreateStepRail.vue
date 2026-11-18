@@ -1,5 +1,5 @@
 <template>
-  <nav ref="rail" class="rail" :class="{ 'rail--with-action': showIncomplete, 'rail--compact': compact }" aria-label="Шаги создания персонажа">
+  <nav ref="rail" class="rail" :class="{ 'rail--with-action': showIncomplete }" aria-label="Шаги создания персонажа">
     <div class="rail-head">
       <div class="rail-caption">Создание</div>
       <button type="button" class="rail-reset" title="Начать создание сначала" @click="$emit('reset')">
@@ -44,30 +44,34 @@
 
 <script setup>
 import { LoadingIndicator } from '@sylvieshare/share-ui'
-import { onMounted, ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 const props = defineProps({
   steps: { type: Array, required: true },
   current: { type: Number, default: 0 },
   reachable: { type: Number, default: 0 },
   showIncomplete: { type: Boolean, default: false },
   creating: { type: Boolean, default: false },
-  compact: { type: Boolean, default: false },
   sequential: { type: Boolean, default: true },
 })
 defineEmits(['go', 'reset', 'create-incomplete'])
 const rail = ref(null)
+let observer
 function revealCurrentStep() {
-  if (!props.compact || !rail.value) return
   const nav = rail.value
+  if (!nav || nav.scrollWidth <= nav.clientWidth || getComputedStyle(nav).flexDirection !== 'row') return
   const active = nav.querySelector('[aria-current="step"]')
-  if (!active || nav.scrollWidth <= nav.clientWidth) return
+  if (!active) return
   const viewport = nav.getBoundingClientRect()
   const button = active.getBoundingClientRect()
   nav.scrollLeft += Math.min(0, button.left - viewport.left) +
     Math.max(0, button.right - viewport.right)
 }
-onMounted(revealCurrentStep)
-watch(() => props.current, revealCurrentStep, { flush: 'post' })
+onMounted(() => {
+  observer = new ResizeObserver(revealCurrentStep)
+  observer.observe(rail.value)
+})
+onBeforeUnmount(() => observer?.disconnect())
+watch(() => props.steps[props.current]?.key, revealCurrentStep, { flush: 'post' })
 </script>
 
 <style scoped>
@@ -160,21 +164,21 @@ watch(() => props.current, revealCurrentStep, { flush: 'post' })
 .rail-incomplete:disabled { opacity: .5; cursor: default; }
 .rail-incomplete svg { width: 13px; height: 13px; }
 @media (max-width: 920px) {
-  .rail--compact {
+  .rail {
     flex-direction: row;
     justify-content: flex-start;
     gap: var(--spacing-small);
     padding: 4px var(--spacing-page);
     overflow-x: auto;
+    overflow-y: hidden;
     overscroll-behavior-x: contain;
     border: 0;
     border-radius: 0;
     background: transparent;
   }
-  .rail--compact::before, .rail--compact .rail-head { display: none; }
-  .rail--compact .rail-incomplete { display: none; }
-  .rail--compact .rail-step { flex: 0 0 auto; align-items: center; }
-  .rail--compact .rail-copy { padding-top: 0; }
-  .rail--compact .rail-summary, .rail--compact .rail-jump { display: none; }
+  .rail::before, .rail-head, .rail-incomplete { display: none; }
+  .rail-step { flex: 0 0 auto; align-items: center; }
+  .rail-copy { padding-top: 0; }
+  .rail-summary, .rail-jump { display: none; }
 }
 </style>

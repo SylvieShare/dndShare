@@ -27,7 +27,7 @@
     <footer class="cc-foot">
       <div class="cc-foot-main">
         <button class="btn ghost" @click="back">{{ current === 0 ? 'Отмена' : 'Назад' }}</button>
-        <button v-if="!isFullyValid" class="btn incomplete-mobile" :disabled="creating || initializing || !!bootstrapError" @click="createIncomplete">Создать неполноценного</button>
+        <button v-if="!isFullyValid" class="btn cc-incomplete-compact" :disabled="creating || initializing || !!bootstrapError" @click="createIncomplete">Создать неполноценного</button>
         <span v-if="error" class="cc-error" role="alert">{{ error }}</span>
         <span v-else-if="blockReason && !isLast" class="cc-reason">{{ blockReason }}</span>
         <div class="cc-actions">
@@ -382,8 +382,8 @@ onMounted(() => initialize())
 @keyframes cc-invalid { 0%, 100% { box-shadow: none; } 35% { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--danger) 72%, transparent); } }
 .btn.ghost { background: transparent; color: var(--text-2); box-shadow: inset 0 0 0 1px var(--border-strong); }
 .btn.ghost:hover { color: var(--text-1); }
-.btn.incomplete-mobile { display: none; background: transparent; color: var(--text-muted); padding-inline: 8px; font-size: 10px; font-weight: 500; }
-.btn.incomplete-mobile:hover:not(:disabled) { color: var(--text-2); }
+.btn.cc-incomplete-compact { background: transparent; color: var(--text-muted); padding-inline: 8px; font-size: 10px; font-weight: 500; }
+.btn.cc-incomplete-compact:hover:not(:disabled) { color: var(--text-2); }
 .btn.soft { background: transparent; color: var(--text-muted); padding-inline: 14px; font-size: 13px; }
 .btn.soft:hover:not(:disabled) { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); color: var(--text-1); }
 .btn.next { background: var(--accent); color: var(--text-on-accent); }
@@ -397,7 +397,6 @@ onMounted(() => initialize())
   .cc-main, .cc-foot-main { border-inline: none; }
   .cc-error { order: -1; flex: 0 0 100%; max-width: none; }
   .btn { padding: 10px 18px; }
-  .btn.incomplete-mobile { display: inline-flex; }
   .btn.soft { padding-inline: 10px; }
 }
 </style>

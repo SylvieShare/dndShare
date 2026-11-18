@@ -7,10 +7,9 @@
       @close="exit"
       @reset="resetOpen = true"
     />
-    <div class="cc-body cc-body--compact-steps">
+    <div class="cc-body">
       <CreateStepRail
         class="cc-rail"
-        compact
         :steps="steps"
         :current="step"
         :reachable="reachableStep"
@@ -62,7 +61,7 @@
             {{ creating ? "Создание…" : step < lastStep ? "Далее" : "Создать персонажа" }}
           </ActionButton>
         </div>
-        <div v-if="!fullyValid" class="red-incomplete-compact">
+        <div v-if="!fullyValid" class="cc-incomplete-compact red-incomplete-compact">
           <ActionButton
             variant="quiet"
             :disabled="creating || !available"
@@ -335,8 +334,5 @@ defineExpose({ clearDraft: wizard.clearDraft });
   color: var(--text-muted);
   font-size: var(--type-group-size);
 }
-.red-incomplete-compact { display: none; }
-@media (max-width: 920px) {
-  .red-incomplete-compact { display: inline-flex; margin-inline: auto; }
-}
+.red-incomplete-compact { margin-inline: auto; }
 </style>

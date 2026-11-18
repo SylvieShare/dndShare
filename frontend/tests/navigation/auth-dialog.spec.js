@@ -21,7 +21,7 @@ for (const width of [390, 1024]) {
     await page.setViewportSize({ width, height: 900 })
     await page.goto('/chars/new')
     await expect(page.getByRole('dialog', { name: 'Меню приложения' })).toHaveCount(0)
-    const create = page.locator('.rail-incomplete:visible, .incomplete-mobile:visible')
+    const create = page.getByRole('button', { name: 'Создать неполноценного', exact: true })
     await expect(create).toBeEnabled({ timeout: 20000 })
     await create.click()
     const login = page.getByRole('dialog', { name: 'Вход', exact: true })

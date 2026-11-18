@@ -87,8 +87,9 @@ default-version fallback.
 
 В полноразмерном визарде боковой список шагов отделён верхним отступом от
 общей шапки создания. D&D и RED используют одну раскладку области шагов и
-нижних действий. В компактном формате RED сохраняет горизонтальный список
-из восьми шагов.
+нижних действий. При ширине до 920 px шаги обеих систем располагаются в
+горизонтальной прокручиваемой строке. При переходе текущий шаг остаётся видимым,
+а возможность перейти к следующему шагу определяется правилами выбранной системы.
 
 `/chars/new` is public. An anonymous visitor can complete every wizard step;
 authentication is requested only by the final create action, after which the
@@ -112,9 +113,8 @@ details. Reset sits in the rail heading opposite “Создание”; the cen
 contains only ordinary step navigation. When at least one required choice is
 still missing, a deliberately quiet “Создать неполноценного” action appears below
 the step list and opens the shared confirmation before building the partial sheet.
-It disappears once every step validates. Because the rail is hidden in the
-single-column layout, compact reset and partial-create equivalents remain in the
-mobile header and footer. There is no duplicate numeric step counter.
+It disappears once every step validates. In the single-column layout, reset
+and partial creation are available in the header and footer, respectively.
 Личность — последний шаг: рядом с созданием доступен необязательный
 «Предпросмотр листа». Он собирает текущий черновик тем же `buildPayload`, открывает
 настоящий полноэкранный лист с его вкладками в `ownerMode=false` и ничего не
