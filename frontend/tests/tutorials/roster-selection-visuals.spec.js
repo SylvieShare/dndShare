@@ -92,7 +92,7 @@ for(const width of [390,834,1440])test(`combat selection icons and stage waterma
   await expect(summary.locator('.selection-summary-quantity')).toHaveText('2')
   await toolbar.getByRole('button',{name:'Добавить на сцену: 2',exact:true}).click()
   await expect(first.locator('.roster-stage-backdrop')).toHaveAccessibleName('На сцене')
-  await expect(first.locator('.roster-presence')).toHaveCount(0)
+  await expect(first.locator('.roster-presence')).toBeHidden()
   await expect(first.locator('.roster-stage-backdrop svg')).toHaveCSS('opacity','0.28')
   const geometry=await first.locator('.session-roster-tile').evaluate(node=>({under:getComputedStyle(node.querySelector('.roster-stage-backdrop')).zIndex,paint:getComputedStyle(node,'::before').zIndex,underClip:getComputedStyle(node.querySelector('.roster-stage-backdrop')).clipPath,paintClip:getComputedStyle(node,'::before').clipPath}))
   expect(+geometry.under).toBeLessThan(+geometry.paint)

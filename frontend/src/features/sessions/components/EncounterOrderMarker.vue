@@ -56,7 +56,12 @@ const label = computed(() => String(props.order).padStart(2, '0'))
   font-size: 10px;
   font-weight: 850;
   letter-spacing: 0.05em;
-  transition: color 0.15s, background 0.15s, border-color 0.15s, transform 0.15s;
+  transition:
+    color var(--motion-enter),
+    background-color var(--motion-enter),
+    border-color var(--motion-enter),
+    box-shadow var(--motion-enter),
+    transform var(--motion-enter);
 }
 
 .enc-row-order--current span {

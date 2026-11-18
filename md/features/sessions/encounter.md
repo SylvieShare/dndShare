@@ -20,6 +20,9 @@ The combat workspace is one responsive grid under the session header. Its left
 column contains the prepared or active roster. The right column contains
 `EncounterControls`. The current turn is highlighted on the
 participant's row, and the participant menu opens the character sheet or bestiary card.
+При передаче хода подпись «Сейчас ход», её место в плитке и подсветка
+плавно переходят между участниками. При reduced motion итоговое состояние
+показывается сразу.
 The chapter/scenario context is still retained for returning to the story and
 importing scenario combat blocks.
 

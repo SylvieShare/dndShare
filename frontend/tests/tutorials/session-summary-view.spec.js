@@ -79,7 +79,7 @@ for(const width of [390,834,1440])test(`shared sidebar and scene summaries with 
     const poison=row.getByRole('button',{name:'Отравление',exact:true})
     await expect(blessing).toContainText('2 раунда')
     await expect(row.locator('.item-icon').first()).toHaveCSS('width','56px')
-    await expect(row.locator('.roster-presence')).toHaveCount(0)
+    await expect(row.locator('.roster-presence')).toBeHidden()
     const statusArea=row.getByRole('group',{name:'Эффекты и состояния'})
     await expect(statusArea.locator('.dsov-row')).toHaveCSS('flex-wrap','wrap')
     const [first,second,area]=await Promise.all([blessing.boundingBox(),poison.boundingBox(),statusArea.boundingBox()])

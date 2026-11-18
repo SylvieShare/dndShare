@@ -67,7 +67,11 @@ defineEmits(['health','select'])
 .session-roster-tile--selected .roster-stage-backdrop svg {opacity:.28}
 @media(--ui-phone){.session-roster-tile--selectable {--summary-avatar-size:var(--layout-touch-min);--creature-avatar-size:var(--layout-touch-min)}}
 .session-roster-tile.base-tile::before,.session-roster-tile.base-tile::after {content:'';position:absolute;inset:calc(var(--spacing-small) / -2) 0;z-index:-1;pointer-events:none;background:var(--accent);opacity:0;clip-path:var(--roster-paint-clip,var(--roster-paint-default));transition:opacity var(--motion-feedback)}
-.session-roster-tile.base-tile::before {background:var(--roster-state-color);opacity:var(--roster-state-opacity)}
+.session-roster-tile.base-tile::before {
+  background-color: var(--roster-state-color);
+  opacity: var(--roster-state-opacity);
+  transition: background-color var(--motion-enter), opacity var(--motion-enter);
+}
 .session-roster-tile.base-tile::after {background:linear-gradient(to right,var(--accent),color-mix(in srgb,var(--accent) 25%,transparent) 32%,color-mix(in srgb,var(--accent) 25%,transparent) 86%,var(--accent));mask:url('@/assets/ui/roster-selection-stroke.svg') var(--roster-ink-position)/145% 165% no-repeat;-webkit-mask:url('@/assets/ui/roster-selection-stroke.svg') var(--roster-ink-position)/145% 165% no-repeat}
 @media(hover:hover){.session-roster-tile.base-tile:hover {--roster-state-color:var(--tile-color);--roster-state-opacity:.11}.session-roster-tile--current.base-tile:hover {--roster-state-color:var(--warning);--roster-state-opacity:.1}}
 .session-roster-tile--selected.session-roster-tile.base-tile {--roster-state-color:var(--accent);--roster-state-opacity:.13}
