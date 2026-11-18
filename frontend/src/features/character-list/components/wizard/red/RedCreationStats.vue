@@ -83,7 +83,10 @@ function statDescription(key) {
 </script>
 
 <style scoped>
-.red-creation-stats :deep(.creation-cover) { height: clamp(110px, 19vw, 175px); }
+.red-creation-stats :deep(.creation-cover) {
+  height: clamp(110px, 19vw, 175px);
+  object-position: center top;
+}
 .stat-setup, .stat-roll-action, .stat-row-result, .stat-identity, .stat-value {
   display: flex;
   align-items: center;
