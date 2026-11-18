@@ -149,8 +149,7 @@ for (const mobile of [false, true])
     await expect(page.locator(".map-tile-sidebar")).not.toBeVisible();
     await expect(page.locator(".enc-wrap--workspace")).toBeVisible();
     await expect(page.getByRole("navigation",{name:"Боковые вкладки сессии"}).getByRole("button",{name:"Запас",exact:true})).toBeVisible();
-    if(mobile)await expect(page.getByRole("complementary", { name: "Текущий ход" })).toHaveCount(0);
-    else await expect(page.getByRole("complementary", { name: "Текущий ход" })).toContainText("Гоблин");
+    await expect(page.getByRole("complementary", { name: "Текущий ход" })).toHaveCount(0);
     await expect(page.locator('.enc-row--current')).toContainText('Гоблин');
     expect(await before.evaluate((element) => element.isConnected)).toBe(true);
     const nextTurn = page.getByRole("button", {
@@ -162,7 +161,6 @@ for (const mobile of [false, true])
       await nextTurn.press("Enter");
     } else await nextTurn.click();
     await expect(page.locator('.enc-row--current')).toContainText('Орк');
-    if(!mobile)await expect(page.getByRole("complementary", { name: "Текущий ход" })).toContainText("Орк");
     await page.getByRole("button", { name: "Карта", exact: true }).click();
     await expect(page.locator(".session-center-workspace")).not.toBeVisible();
     expect(await before.evaluate((element) => element.isConnected)).toBe(true);

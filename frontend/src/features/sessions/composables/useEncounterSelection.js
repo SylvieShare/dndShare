@@ -8,7 +8,6 @@ export function useEncounterSelection({ encounter, listForGroup }) {
   }
 
   function toggleSelected(c) {
-    if (c.position === 'dead') return
     const next = new Set(selectedUids.value)
     if (next.has(c.uid)) next.delete(c.uid)
     else next.add(c.uid)
@@ -27,7 +26,7 @@ export function useEncounterSelection({ encounter, listForGroup }) {
   }
 
   function selectAllInGroup(group) {
-    const list = listForGroup(group).filter(c => c.position !== 'dead')
+    const list = listForGroup(group)
     const next = new Set(selectedUids.value)
     const allSelected = list.length > 0 && list.every(c => next.has(c.uid))
     if (allSelected) {

@@ -485,30 +485,16 @@ canvas falls back to the current chapter. Chapter and scenario ids are saved wit
 the active narrative level in workspace state and restored after reload. Closing
 combat returns to that saved scenario or block canvas instead of resetting the
 user to chapters. Chapter and scenario editing stays on the narrative canvas;
-the encounter must be closed before using those controls. The player rail adds
-combat-only “select all” and “move selected to combat” actions above its cards;
-both operate only on players and preserve any NPC selection. With or without a
-scenario context, the combat header uses the full center width;
-combatants remain independent tiles below it rather than being wrapped in one
-central card. The combat workspace uses the
-width between the participant safe area and the right tool rail. The header uses one enlarged,
-labelled primary action, “Начать бой” or “Закончить бой”, while turn navigation
-remains compact and icon-only. The header has one stable composition at every
-width: its scenario image keeps its native aspect ratio, scales to the width of
-the complete left column and falls back to the chapter image when no scenario is
-selected. The chapter and scenario names are overlaid on that image. The right
-side keeps combat flow above and grouped actions below, with all controls aligned
-to the left. It never hides the primary-action text or group labels. When a
+the encounter must be closed before using those controls. Player and NPC selections are shared with the sidebar. The combat workspace uses
+the width between the participant safe area and the right tool rail. Its controls
+start or end the fight with a labelled primary action and show icon-only turn
+navigation. The phase controls sit above the selection and scene commands. When a
 scenario is selected, `Бои сценария` lazily loads its combat blocks in a popover;
 choosing one imports the complete configured creature counts through the same
-encounter importer without leaving the combat workspace. Secondary actions are
-grouped as `Выбранные` (challenges and damage) and `Состав сцены` (scenario import, reserve, death, NPC deletion and graveyard). Initiative rerolls sit beside start/finish and turn navigation.
-The combat header has no separate close control; starting and ending combat stays
-with the labelled primary action. During active combat the initiative column and
-the current-turn reference panel each scroll inside the same bounded workspace
-height, so scrolling one column never shifts the other.
-`Выбранные` contains challenges and shared damage; roster management stays in `Состав сцены`. Shared damage consumes temporary HP first, updates NPC
-encounter state and persists each player character through the character API.
+encounter importer without leaving the combat workspace. Challenge, damage and
+scene commands share a grid beneath the selection summary. The two-word labels
+use two lines. The encounter roster and commands scroll independently within the
+workspace height. The current turn is highlighted on the roster row.
 Nested action components use the same icon-button geometry and interaction
 states as direct toolbar buttons.
 

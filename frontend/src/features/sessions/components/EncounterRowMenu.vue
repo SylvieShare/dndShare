@@ -15,6 +15,11 @@
         @click="enc.openNpcDetail(combatant); close()"
       >Открыть карточку</RowActionItem>
       <RowActionItem
+        v-if="canOpenSheet"
+        action="view"
+        @click="$emit('view-participant', combatant.charId); close()"
+      >Открыть лист</RowActionItem>
+      <RowActionItem
         v-if="statesBlock"
         :icon="Activity"
         @click="$emit('edit-states'); close()"
@@ -89,12 +94,13 @@ const props = defineProps({
   section:     { type: String, required: true },
   statesBlock: { type: Object, default: null },
 })
-defineEmits(['edit-states', 'edit-note'])
+defineEmits(['edit-states', 'edit-note', 'view-participant'])
 
 const enc = inject('encounter')
 
 const isNpc = computed(() => props.combatant.type === 'npc')
 const canOpenCard = computed(() => isNpc.value && props.combatant.itemId != null)
+const canOpenSheet = computed(() => props.section === 'combat' && props.combatant.type === 'player' && !!enc.findParticipant(props.combatant.charId))
 const canReserve = computed(() => props.combatant.position === 'combat')
 const canRerollHp = computed(() =>
   isNpc.value && props.combatant.position === 'reserve' && !!enc.npcHpFormula(props.combatant)

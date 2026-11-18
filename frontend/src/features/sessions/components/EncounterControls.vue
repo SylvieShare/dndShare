@@ -1,5 +1,5 @@
 <template>
-  <div class="enc-toolbar" :inert="transitioning">
+  <div class="enc-toolbar">
     <BaseTile class="enc-control-panel" :outlined="false" role="group" aria-label="Управление боем">
       <header class="enc-toolbar-heading">
         <h2>{{ enc.encounter.active ? 'Бой' : 'Подготовка' }}</h2>
@@ -28,14 +28,14 @@
         type="button"
         class="enc-icon-btn enc-battle-toggle"
         :class="enc.encounter.active ? 'enc-battle-toggle--end' : 'enc-battle-toggle--start'"
-        :disabled="transitioning || (!enc.encounter.active && startSelectionCount === 0)"
+        :disabled="!enc.encounter.active && enc.inCombat.length === 0"
         :aria-label="enc.encounter.active ? 'Закончить бой' : 'Начать бой'"
         aria-keyshortcuts="Shift+Enter"
         @click="$emit('toggle-combat')"
       >
         <Square v-if="enc.encounter.active" :size="16" />
         <Swords v-else :size="20" />
-        <span>{{ enc.encounter.active ? 'Закончить бой' : 'Начать бой' }}</span>
+        <span>{{ enc.encounter.active ? 'Закончить' : 'Начать' }}<br />бой</span>
         <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+Enter</kbd>
       </button>
     </BaseTile>
@@ -49,24 +49,18 @@
         :visible-items="combatItems"
         visible-label="Выбрать всех на сцене"
         label="Выбор на боевой сцене"
-      />
-      <div class="enc-action-row">
+      >
+        <template #clear-label><span>Сбросить<br />выбор</span></template>
+      </SessionSelectionToolbar>
+      <div class="enc-action-grid" role="group" aria-label="Команды боя и сцены">
         <EncounterChallengeMenu label="Испытание" />
         <EncounterBulkDamageMenu label="Урон" />
-      </div>
-    </BaseTile>
-
-    <BaseTile v-if="isDm" class="enc-control-panel" :outlined="false" role="group" aria-label="Состав сцены">
-      <h3 class="enc-action-group-label">Состав сцены</h3>
-      <div class="enc-action-row">
         <button type="button" class="enc-icon-btn" :disabled="!combatMoveCount" aria-label="Добавить выбранных на сцену" @click="enc.sendSelectedTo('combat')">
           <LogIn :size="18" />
-          <span class="enc-control-label">На сцену</span>
+          <span class="enc-control-label">На<br />сцену</span>
           <span v-if="combatMoveCount" class="enc-icon-count">{{ combatMoveCount }}</span>
         </button>
         <EncounterScenarioCombatMenu v-if="scene" :session-uuid="sessionUuid" :scene="scene" @pick="$emit('import-combat-block', $event)" />
-      </div>
-      <div class="enc-action-row enc-danger-row" role="group" aria-label="Поражение и удаление">
         <button
           type="button"
           class="enc-icon-btn enc-icon-btn--danger"
@@ -76,7 +70,7 @@
           @click="enc.sendSelectedTo('dead')"
         >
           <Skull :size="18" />
-          <span class="enc-control-label">Отметить погибшими</span>
+          <span class="enc-control-label">Отметить<br />погибшими</span>
           <span v-if="deadMoveCount" class="enc-icon-count">{{ deadMoveCount }}</span>
         </button>
         <button
@@ -89,7 +83,7 @@
           @click="enc.removeSelectedNpcs"
         >
           <Trash2 :size="18" />
-          <span class="enc-control-label">Удалить НПС</span>
+          <span class="enc-control-label">Удалить<br />НПС</span>
           <span v-if="enc.selectedNpcCount" class="enc-icon-count">{{ enc.selectedNpcCount }}</span>
           <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">⌫</kbd>
         </button>
@@ -106,12 +100,11 @@ import EncounterChallengeMenu from './EncounterChallengeMenu.vue'
 import EncounterScenarioCombatMenu from './EncounterScenarioCombatMenu.vue'
 import SessionSelectionToolbar from './SessionSelectionToolbar.vue'
 import { sessionShortcutLabels } from '../lib/sessionShortcuts'
-const props=defineProps({sessionUuid:String,isDm:Boolean,encounter:{type:Object,required:true},selection:{type:Object,required:true},scene:Object,showShortcutHints:Boolean,transitioning:Boolean})
+const props=defineProps({sessionUuid:String,isDm:Boolean,encounter:{type:Object,required:true},selection:{type:Object,required:true},scene:Object,showShortcutHints:Boolean})
 defineEmits(['toggle-combat','import-combat-block'])
 const enc=props.encounter
 const shortcutLabels=sessionShortcutLabels()
 const combatItems=computed(()=>enc.sortable.displayItems('combat'))
-const startSelectionCount=computed(()=>enc.inCombat.length)
 const combatMoveCount=computed(()=>enc.selectedToMoveTo('combat'))
 const deadMoveCount=computed(()=>enc.selectedToMoveTo('dead'))
 </script>

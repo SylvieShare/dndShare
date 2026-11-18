@@ -7,11 +7,14 @@ describe('adjoining roster paint contours',()=>{
     expect(roughRowSeamPath(5)).toBe(roughRowSeamPath(0))
     expect(roughRowSeamPath(-1)).toBe(roughRowSeamPath(4))
     expect(roughRowPaintStyle(5)).toBe(roughRowPaintStyle(0))
+    expect(roughRowPaintStyle(5,true)).toBe(roughRowPaintStyle(0,true))
+    expect(roughRowPaintStyle(0,true)['--roster-paint-clip']).not.toBe(roughRowPaintStyle(0)['--roster-paint-clip'])
+    expect(roughRowPaintStyle(0,true)['--roster-color-edge-clip']).toContain('3 * var(--layout-border)')
   })
 
   it('docks both paint edges onto their visible separator at different row heights',()=>{
-    for(let i=0;i<5;i++)for(const height of [72,133,247]){
-      const clip=roughRowPaintStyle(i)['--roster-paint-clip']
+    for(const roughSides of [false,true])for(let i=0;i<5;i++)for(const height of [72,133,247]){
+      const clip=roughRowPaintStyle(i,roughSides)['--roster-paint-clip']
       const top=[...clip.matchAll(/([\d.]+)% calc\(var\(--spacing-small\) \* ([\d.]+)\)/g)].map(m=>[+m[1],-4+8*+m[2]])
       const bottom=[...clip.matchAll(/([\d.]+)% calc\(100% - var\(--spacing-small\) \* ([\d.]+)\)/g)].reverse().map(m=>[+m[1],height+4-8*+m[2]])
       for(const [actual,variant,offset] of [[top,i,0],[bottom,i+1,height]]){

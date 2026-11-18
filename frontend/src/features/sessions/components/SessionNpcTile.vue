@@ -3,7 +3,7 @@
     :stage-backdrop="section === 'reserve-npc' && combatant.position === 'combat'" :stage-active="enc.encounter.active"
     :hp="enc.npcDsHp(combatant)" health-visible :edit-health="editable" :has-statuses="hasStatuses"
     :data-relation="SIDE_COLOR[combatant.side] ? combatant.side : undefined" :aria-description="SIDE_LABEL[combatant.side] ? `Отношение: ${SIDE_LABEL[combatant.side]}` : undefined"
-    :selectable="editable && combatant.position !== 'dead'" :selected="selected" :current="current || (enc.encounter.active && combatant.position === 'combat' && enc.currentTurnUid === combatant.uid)" :surprised="combatant.surprised && (!enc.encounter.active || enc.encounter.round === 0)" @select="$emit('select')" @health="combatant.position === 'combat' ? enc.openHpCalc(combatant) : enc.openNpcHpEdit(combatant)">
+    :selectable="editable" :selected="selected" :current="current || (enc.encounter.active && combatant.position === 'combat' && enc.currentTurnUid === combatant.uid)" :surprised="combatant.surprised && (!enc.encounter.active || enc.encounter.round === 0)" @select="$emit('select')" @health="combatant.position === 'combat' ? enc.openHpCalc(combatant) : enc.openNpcHpEdit(combatant)">
     <template #portrait><EncounterAvatar :combatant="combatant" /></template>
     <template #portrait-overlay><EncounterMarkerMenu :combatant="combatant" :editable="editable" overlay /></template>
     <template #name-suffix><span v-if="combatant.initiative != null" class="reserve-initiative" :aria-label="`Инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span></template>

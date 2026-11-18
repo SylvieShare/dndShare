@@ -45,25 +45,13 @@
 
 .enc-status--active { background: var(--success); }
 
-.enc-action-group-label {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: var(--type-caption-size);
-  line-height: var(--type-caption-line-height);
-  font-weight: 600;
-}
-
-.enc-action-row {
+.enc-action-grid {
+  --action-cell-min: calc(var(--layout-touch-min) + var(--spacing-medium));
+  --action-cell-third: calc((100% - 2 * var(--spacing-xs)) / 3);
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, max(var(--action-cell-min), var(--action-cell-third))), 1fr));
   gap: var(--spacing-xs);
   min-width: 0;
-}
-
-.enc-danger-row {
-  padding-top: var(--spacing-xs);
-  border-top: var(--layout-border) solid var(--border);
 }
 
 .enc-toolbar :deep(.enc-icon-btn) {
@@ -89,6 +77,7 @@
 
 .enc-toolbar :deep(.enc-control-label) {
   font: 500 var(--type-context-size) / var(--type-context-line-height) var(--font-ui);
+  min-block-size: calc(2 * var(--type-context-line-height));
   text-align: center;
   overflow-wrap: anywhere;
 }
@@ -160,12 +149,6 @@
 .enc-round-label { color: var(--text-muted); font-size: var(--type-caption-size); }
 .enc-round-num { font-size: var(--type-sheet-header-size); font-variant-numeric: tabular-nums; }
 
-.enc-toolbar :deep(.enc-scenario-combats-trigger) {
-  font-size: var(--type-context-size);
-  line-height: var(--type-context-line-height);
-  text-align: center;
-  overflow-wrap: anywhere;
-}
 .enc-toolbar :deep(.enc-icon-count),
 .enc-toolbar :deep(.enc-scenario-combats-count) {
   position: absolute;

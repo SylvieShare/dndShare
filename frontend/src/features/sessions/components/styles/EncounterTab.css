@@ -2,9 +2,8 @@
 .enc-wrap--workspace {position:absolute;inset:0}
 .enc-wrap--columns {grid-template-areas:"roster controls";grid-template-columns:minmax(calc(var(--layout-encounter-roster-min-width) + var(--layout-encounter-scroll-gap)),calc(var(--layout-encounter-roster-width) + var(--layout-encounter-scroll-gap))) minmax(var(--layout-encounter-controls-min-width),var(--layout-encounter-controls-max-width));grid-template-rows:minmax(0,1fr);justify-content:start}
 .enc-content {grid-area:roster;min-height:0;min-width:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-inline-end:var(--layout-encounter-scroll-gap)}
-.enc-secondary {grid-area:controls;display:flex;flex-direction:column;gap:var(--spacing-large);min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-inline-end:var(--spacing-xs)}
-.enc-secondary > :deep(.enc-toolbar),.enc-secondary > :deep(.turn-preview) {flex:none}
-.enc-secondary :deep(.turn-preview) {height:auto;overflow:hidden}
+.enc-secondary {grid-area:controls;display:flex;flex-direction:column;min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-inline-end:var(--spacing-xs)}
+.enc-secondary > :deep(.enc-toolbar) {flex:none}
 .enc-wrap:not(.enc-wrap--columns) .enc-secondary {max-height:40dvh}
 .enc-combat-primary,.enc-combat-scene,.enc-block,.enc-section {min-width:0}
 .enc-wrap--compact-roster .enc-combat-primary {--creature-avatar-size:var(--layout-touch-min);--encounter-avatar-size:var(--layout-touch-min);--participant-card-gap:var(--spacing-xs);--creature-tile-padding:var(--spacing-xs) var(--spacing-small) var(--spacing-xs) var(--spacing-xs)}
@@ -16,8 +15,7 @@
 .enc-rows {display:flex;flex-direction:column;gap:0}
 .enc-empty {padding:var(--spacing-page) var(--spacing-small);color:var(--text-muted);font-size:var(--type-caption-size);line-height:var(--type-caption-line-height)}
 .enc-combat-scene {opacity:1;transform:translateY(0);transition:opacity var(--motion-enter),transform var(--motion-enter)}
-.enc-wrap--combat-ending :deep(.turn-preview) {opacity:0;transform:translateY(var(--spacing-small));pointer-events:none}
-.enc-combat-scene-enter-active,.enc-combat-scene-leave-active,.enc-turn-preview-enter-active,.enc-turn-preview-leave-active {transition:opacity var(--motion-enter),transform var(--motion-enter)}
-.enc-combat-scene-enter-from,.enc-combat-scene-leave-to,.enc-turn-preview-enter-from,.enc-turn-preview-leave-to {opacity:0;transform:translateY(var(--spacing-small))}
-.enc-combat-scene-leave-active,.enc-turn-preview-leave-active {pointer-events:none}
-@media(prefers-reduced-motion:reduce){.enc-combat-scene,.enc-combat-scene-enter-active,.enc-combat-scene-leave-active,.enc-turn-preview-enter-active,.enc-turn-preview-leave-active{transition:none}}
+.enc-combat-scene-enter-active,.enc-combat-scene-leave-active {transition:opacity var(--motion-enter),transform var(--motion-enter)}
+.enc-combat-scene-enter-from,.enc-combat-scene-leave-to {opacity:0;transform:translateY(var(--spacing-small))}
+.enc-combat-scene-leave-active {pointer-events:none}
+@media(prefers-reduced-motion:reduce){.enc-combat-scene,.enc-combat-scene-enter-active,.enc-combat-scene-leave-active{transition:none}}

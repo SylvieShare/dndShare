@@ -6,8 +6,6 @@
       'enc-wrap--workspace': workspace,
       'enc-wrap--columns': hasColumns,
       'enc-wrap--compact-roster': compactRoster,
-      'enc-wrap--combat-starting': combatTransitionPhase === 'starting',
-      'enc-wrap--combat-ending': combatTransitionPhase === 'ending',
     }"
   >
 
@@ -26,12 +24,12 @@
               <div v-if="isDm" class="enc-scene-actions" role="group" aria-label="Действия на боевой сцене">
                 <ActionButton
                   variant="quiet"
-                  :disabled="combatTransitioning || !sceneSelection.returnTargets.length"
+                  :disabled="!sceneSelection.returnTargets.length"
                   :aria-label="`Убрать со сцены: ${sceneSelection.returnTargets.length}`"
                   @click="enc.sendCombatantsTo(sceneSelection.returnTargets, 'reserve')"
                 >
                   <template #icon><LogOut :size="18" aria-hidden="true" /></template>
-                  Со сцены
+                  <span>Со<br />сцены</span>
                   <span v-if="sceneSelection.returnTargets.length" class="enc-scene-action-count" aria-hidden="true">{{ sceneSelection.returnTargets.length }}</span>
                 </ActionButton>
               </div>
@@ -60,7 +58,7 @@
                   :divided="idx > 0"
                   :order="idx + 1"
                   :is-current="enc.encounter.active && c.uid === currentTurnUid"
-
+                  @view-participant="$emit('view-participant', $event)"
                 />
               </div>
             </div>
@@ -72,9 +70,8 @@
 
     </div>
     <aside class="enc-secondary" aria-label="Управление боем">
-      <EncounterControls :session-uuid="sessionUuid" :encounter="enc" :selection="sceneSelection" :is-dm="isDm" :scene="scene" :show-shortcut-hints="showShortcutHints" :transitioning="combatTransitioning"
+      <EncounterControls :session-uuid="sessionUuid" :encounter="enc" :selection="sceneSelection" :is-dm="isDm" :scene="scene" :show-shortcut-hints="showShortcutHints"
                          @toggle-combat="toggleCombat" @import-combat-block="$emit('import-combat-block',$event)" />
-      <Transition name="enc-turn-preview"><EncounterTurnPreview v-if="enc.encounter.active && hasColumns" :combatant="currentTurnCombatant" @view-participant="$emit('view-participant',$event)" /></Transition>
     </aside>
 
   </div>
@@ -87,8 +84,6 @@ import { LogOut } from '@lucide/vue'
 import { useRosterSelection } from '../composables/useRosterSelection'
 import EncounterControls from './EncounterControls.vue'
 import EncounterRow from '@/features/sessions/components/EncounterRow'
-import EncounterTurnPreview from '@/features/sessions/components/EncounterTurnPreview.vue'
-import { useEncounterCombatTransition } from '@/features/sessions/composables/useEncounterCombatTransition'
 import { useEncounterWorkspaceLayout } from '@/features/sessions/composables/useEncounterWorkspaceLayout'
 
 const props = defineProps({
@@ -105,11 +100,7 @@ const enc = props.encounter
 const encounterRoot = ref(null)
 const { hasColumns, compactRoster } = useEncounterWorkspaceLayout(encounterRoot)
 
-const {
-  transitioning: combatTransitioning,
-  phase: combatTransitionPhase,
-  toggleCombat,
-} = useEncounterCombatTransition(enc)
+const toggleCombat = enc.toggleCombat
 
 provide('encounter', enc)
 
@@ -117,7 +108,6 @@ const combatItems = computed(() => enc.sortable.displayItems('combat'))
 const sceneSelection=reactive(useRosterSelection(enc,()=>enc.encounter.combatants))
 
 const currentTurnUid = computed(() => enc.currentTurnUid)
-const currentTurnCombatant = computed(() => enc.inCombat.find(combatant => combatant.uid === currentTurnUid.value) ?? null)
 
 defineExpose({ toggleCombat })
 </script>

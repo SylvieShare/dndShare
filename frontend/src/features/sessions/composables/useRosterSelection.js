@@ -2,12 +2,13 @@ import { computed, watch } from 'vue'
 import { pvExperiencePath, pvHpPath } from '../lib/participantView'
 
 export function useRosterSelection(encounter, getItems) {
-  const items=computed(()=>[...new Map(getItems().filter(row=>row?.uid && row.position!=='dead').map(row=>[row.uid,row])).values()])
+  const items=computed(()=>[...new Map(getItems().filter(row=>row?.uid).map(row=>[row.uid,row])).values()])
   const selected=computed(()=>items.value.filter(row=>encounter.isSelected(row)))
-  const damageTargets=computed(()=>selected.value.filter(row=>row.type==='npc'||pvHpPath(encounter.findParticipant(row.charId))))
-  const experienceTargets=computed(()=>selected.value.filter(row=>row.type==='player'&&pvExperiencePath(encounter.findParticipant(row.charId))))
+  const activeSelected=computed(()=>selected.value.filter(row=>row.position!=='dead'))
+  const damageTargets=computed(()=>activeSelected.value.filter(row=>row.type==='npc'||pvHpPath(encounter.findParticipant(row.charId))))
+  const experienceTargets=computed(()=>activeSelected.value.filter(row=>row.type==='player'&&pvExperiencePath(encounter.findParticipant(row.charId))))
   const supportsExperience=computed(()=>items.value.some(row=>row.type==='player'&&pvExperiencePath(encounter.findParticipant(row.charId))))
-  const moveTargets=computed(()=>selected.value.filter(row=>encounter.willMoveToGroup(row,'combat')))
+  const moveTargets=computed(()=>activeSelected.value.filter(row=>encounter.willMoveToGroup(row,'combat')))
   const returnTargets=computed(()=>selected.value.filter(row=>row.position==='combat'))
   function clear(){encounter.clearSelection()}
   function setVisibleSelection(rows,checked){

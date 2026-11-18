@@ -14,7 +14,7 @@
       :participant="participant" :name="displayName" :avatar-url="avaUrl" :hp="hp" :health-visible="showHp" :show-stats="isDm && isDnd"
       :color="participant.color" :compact="compact" :current="!!encounter?.encounter.active && combatCurrent"
       :stage-backdrop="combatant?.position === 'combat'" :stage-active="encounter?.encounter.active"
-      :has-statuses="hasStatuses" :selectable="combatEditable && !!combatant && combatant.position !== 'dead'" :selected="combatSelected" :edit-health="canCalculateHp"
+      :has-statuses="hasStatuses" :selectable="combatEditable && !!combatant" :selected="combatSelected" :edit-health="canCalculateHp"
       role="group" tabindex="0" :aria-label="`Действия: ${displayName}`" aria-haspopup="menu"
       @click="onCardClick" @keydown.enter.self.prevent="openMenu" @keydown.space.self.prevent="openMenu"
       @select="$emit('update:combat-selected', !combatSelected)" @health="encounter.openHpCalc(combatant)"
@@ -136,7 +136,7 @@ function onCardClick(event){
 }
 function suppressReorderClick(event) {
   if(event.target.closest('.roster-select-zone,.p-statuses-area'))return
-  if(handleCtrlSelection(event,props.combatEditable && !!props.combatant && props.combatant.position !== 'dead',()=>emit('update:combat-selected',!props.combatSelected)))return
+  if(handleCtrlSelection(event,props.combatEditable && !!props.combatant,()=>emit('update:combat-selected',!props.combatSelected)))return
   if(props.shouldSuppressReorderClick?.()){event.preventDefault();event.stopPropagation()}
 }
 

@@ -1,5 +1,5 @@
 import { ensureCombatantLetters, nextTieBreak, setDeep } from '@/features/sessions/lib/encounterHelpers'
-import { pvAc, pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
+import { pvAc, pvAvatar, pvHp, pvName } from '@/features/sessions/lib/participantView'
 
 export function useEncounterPlayers({ participants }) {
   function findParticipant(charId) {
@@ -32,11 +32,6 @@ export function useEncounterPlayers({ participants }) {
   function getPlayerHp(charId) {
     const p = findParticipant(charId)
     return p ? pvHp(p) : null
-  }
-
-  function participantSubtitle(charId) {
-    const p = findParticipant(charId)
-    return p ? pvSubtitle(p) : ''
   }
 
   function participantColor(charId) {
@@ -101,7 +96,6 @@ export function useEncounterPlayers({ participants }) {
     playerDisplayName,
     getPlayerAc,
     getPlayerHp,
-    participantSubtitle,
     participantColor,
     reconcileParticipants,
   }

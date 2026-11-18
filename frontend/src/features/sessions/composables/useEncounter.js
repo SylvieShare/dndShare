@@ -19,21 +19,16 @@ import {
   ENCOUNTER_LETTERS,
   SAVE_DEBOUNCE_MS,
   SIDE_COLOR,
-  SIDE_LABEL,
   SIDE_OPTIONS,
-  bestiaryTypeRef,
-  ensureBestiaryType,
   initRank,
   isSceneMember,
   hpAfterDamage,
   normalizeEncounterPosition,
   sideOf,
 } from '@/features/sessions/lib/encounterHelpers'
-import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import { getEncounter, saveEncounter, getEncounterChanges } from '@/shared/api/sessionsApi'
 import { useSortable } from '@sylvieshare/share-ui'
 import { motionTokens } from '@/app/design-tokens'
-import { useSuggestStore } from '@/stores/suggest'
 
 export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRollNpcHp, systemName }) {
   const isRed=computed(()=>String(systemName?.value||systemName||'').toLowerCase()==='cyberpunk')
@@ -59,7 +54,6 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     playerDisplayName,
     getPlayerAc,
     getPlayerHp,
-    participantSubtitle,
     participantColor,
     reconcileParticipants,
   } = players
@@ -167,7 +161,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   )
 
   function listForGroup(group) {
-    if (group === 'combat') return inCombat.value
+    if (group === 'combat') return sceneRows.value
     if (group === 'reserve-npc') return reserveNpcs.value
     if (group === 'reserve-player') return reservePlayers.value
     return []
@@ -251,7 +245,6 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     sceneRows,
     turnOrder,
     selectedUids: selection.selectedUids,
-    unselect: selection.unselect,
     rollInitiativeFor,
     reserveTabMatches: c => reserves.reserveIdFor(c) === reserves.activeReserveId.value,
     onReserveDrop: reserves.stampActiveReserve,
@@ -323,40 +316,6 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
 
   const npcReserveCollapsed = computed(() => sortable.sourceItem.value?.type === 'player')
 
-  ensureBestiaryType()
-  const suggestStore = useSuggestStore()
-
-  const creatureTypeSuggestId = computed(() => {
-    const f = (bestiaryTypeRef.value?.fields || []).find(x => x.key === 'creature_type')
-    return f ? getSuggestId(f) : null
-  })
-
-  watch(creatureTypeSuggestId, sid => {
-    if (sid != null) suggestStore.ensure(sid)
-  }, { immediate: true })
-
-  function resolveCreatureType(raw) {
-    if (raw == null || raw === '') return null
-    if (typeof raw === 'string' && !/^\d+$/.test(raw)) return raw
-    const id = Number(raw)
-    const sid = creatureTypeSuggestId.value
-    if (sid == null) return null
-    const items = suggestStore.items(sid) || []
-    const found = items.find(i => Number(i.id) === id)
-    if (found) return found.value
-    if (suggestStore.loaded(sid)) suggestStore.ensureItems(sid, [id])
-    return null
-  }
-
-  function subtitle(c) {
-    if (c.type === 'player') return participantSubtitle(c.charId)
-    const data = npcData.npcData(c)
-    const parts = []
-    const ct = resolveCreatureType(data.creature_type)
-    if (ct) parts.push(ct)
-    return parts.join(' · ')
-  }
-
   function avatarStyle(c) {
     if (c.type === 'player') {
       if (c.iconColor) return { borderColor: c.iconColor, color: c.iconColor }
@@ -369,14 +328,6 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   function tileColor(c) {
     if (c.type === 'player') return participantColor(c.charId) || null
     return c.iconColor || null
-  }
-
-  function badgeClass(c) {
-    return SIDE_LABEL[c.side] ? 'badge--' + c.side : ''
-  }
-
-  function badgeLabel(c) {
-    return SIDE_LABEL[c.side] || ''
   }
 
   function flushWhenBackgrounded() {
@@ -426,11 +377,8 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     playerDisplayName,
     getPlayerAva,
     participantColor,
-    subtitle,
     avatarStyle,
     tileColor,
-    badgeClass,
-    badgeLabel,
     // selection
     selectedUids:           selection.selectedUids,
     isSelected:             selection.isSelected,

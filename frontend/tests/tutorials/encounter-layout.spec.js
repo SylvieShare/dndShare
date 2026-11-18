@@ -18,15 +18,30 @@ test('combat commands occupy their own column and both columns scroll independen
   const root=page.locator('.enc-wrap--workspace'),roster=root.locator('.enc-content'),controls=root.locator('.enc-secondary')
   const preview=page.getByRole('complementary',{name:'Текущий ход'})
   await expect(root.locator('.enc-context-art')).toHaveCount(0)
-  await expect(controls.getByRole('button',{name:'Бои сценария',exact:true})).toBeVisible()
+  const actions = controls.getByRole('group', { name: 'Действия с выбранными участниками' })
+  await expect(actions.getByRole('button', { name: 'Бои сценария', exact: true })).toBeVisible()
+  await expect(actions.getByRole('button', { name: 'Отметить выбранных погибшими' })).toBeVisible()
+  await expect(controls.locator('.enc-control-panel')).toHaveCount(2)
   await expect(roster.locator('.enc-icon-btn,.enc-section-icon-btn')).toHaveCount(0)
   await controls.getByRole('button',{name:'Следующий ход',exact:true}).click()
   await expect(root.locator('.enc-row--current')).toContainText('Орк')
+  const roughRow = root.locator('.enc-row--current')
+  await expect(roughRow.locator('..')).toHaveClass(/enc-row-tile--rough-edges/)
+  expect(await roughRow.evaluate(row => getComputedStyle(row, '::before').clipPath)).toMatch(/polygon\(.+calc\(100% - /)
   for(const width of [390,704,834,1440,704]) {
     await page.setViewportSize({width,height:932})
     const columns=await root.evaluate((n,gap)=>n.clientWidth-2*gap>=628,spacingTokens.page)
     expect(columns).toBe(width>=834)
-    await expect(preview).toHaveCount(columns?1:0)
+    await expect(preview).toHaveCount(0)
+    for (const name of ['Бои сценария', 'Отметить выбранных погибшими', 'Удалить выбранных НПС']) {
+      const caption = actions.getByRole('button', { name, exact: true }).locator('.enc-control-label')
+      const lines = await caption.evaluate(label => {
+        const range = document.createRange()
+        range.selectNodeContents(label)
+        return new Set([...range.getClientRects()].filter(rect => rect.width > 0).map(rect => rect.top)).size
+      })
+      expect(lines).toBe(2)
+    }
     await expect.poll(async()=>{
       const a=await roster.boundingBox(),b=await controls.boundingBox()
       return columns?b.x>=a.x+a.width+spacingTokens.large-.5:a.y>=b.y+b.height+spacingTokens.large-.5

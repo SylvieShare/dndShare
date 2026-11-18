@@ -8,7 +8,6 @@ export function useEncounterFlow({
   sceneRows = inCombat,
   turnOrder,
   selectedUids,
-  unselect,
   rollInitiativeFor,
   reserveTabMatches,
   onReserveDrop,
@@ -146,7 +145,6 @@ export function useEncounterFlow({
       }
       restoreTurn(turn)
     })
-    if (group === 'dead') for (const uid of targetIds) unselect(uid)
   }
 
   function sendSelectedTo(group) {

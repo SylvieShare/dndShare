@@ -5,6 +5,13 @@
         <ActionButton variant="quiet" layout="stacked" :disabled="!selection.damageTargets.length" :aria-label="`Нанести урон: ${selection.damageTargets.length}`" @click="open('damage')"><template #icon><span class="roster-action-icon"><HeartCrack :size="20" /><span class="roster-action-count" aria-hidden="true">{{selection.damageTargets.length}}</span></span></template>Урон</ActionButton>
         <ActionButton v-if="selection.supportsExperience" variant="quiet" layout="stacked" :disabled="!selection.experienceTargets.length" :aria-label="`${encounter.isRed?'Добавить IP':'Добавить опыт'}: ${selection.experienceTargets.length}`" @click="open('experience')"><template #icon><span class="roster-action-icon"><Sparkles :size="20" /><span class="roster-action-count" aria-hidden="true">{{selection.experienceTargets.length}}</span></span></template>{{encounter.isRed?'IP':'Опыт'}}</ActionButton>
         <ActionButton variant="quiet" layout="stacked" :disabled="!selection.moveTargets.length" :aria-label="`${encounter.encounter.active?'Ввести в бой':'Добавить на сцену'}: ${selection.moveTargets.length}`" @click="encounter.sendCombatantsTo(selection.moveTargets,'combat')"><template #icon><span class="roster-action-icon"><Swords :size="20" /><span class="roster-action-count" aria-hidden="true">{{selection.moveTargets.length}}</span></span></template>{{encounter.encounter.active?'В бой':'На сцену'}}</ActionButton>
+        <ActionButton variant="quiet" layout="stacked" :disabled="!encounter.selectedNpcCount"
+                      :aria-label="`Удалить НПС: ${encounter.selectedNpcCount}`" @click="encounter.removeSelectedNpcs">
+          <template #icon>
+            <span class="roster-action-icon roster-remove-icon"><Trash2 :size="20" /><span class="roster-action-count" aria-hidden="true">{{ encounter.selectedNpcCount }}</span></span>
+          </template>
+          Удалить
+        </ActionButton>
       </div></div>
     </div>
     <span v-if="groupedSummary" class="roster-count-sr-only" role="status">Выбрано: {{ selection.selected.length }}</span>
@@ -12,7 +19,7 @@
     <div v-if="showSelectAll || selection.selected.length" class="roster-selection-heading">
       <label v-if="showSelectAll" class="roster-all-check"><CompactCheckbox :model-value="allVisible" :indeterminate="someVisible && !allVisible" :size="layoutTokens['roster-checkbox-icon']" :hit-size="layoutTokens['touch-min']" :disabled="!encounter.canManageReserves || !visibleRows.length" :label="visibleLabel" @update:model-value="selection.setVisibleSelection(visibleRows,$event)" /><span>Все</span></label>
       <span v-if="!groupedSummary" class="roster-selection-count" role="status">Выбрано: {{ selection.selected.length }}</span>
-      <ActionButton class="roster-clear-selection" variant="quiet" :disabled="!selection.selected.length" @click="selection.clear">Сбросить выбор</ActionButton>
+      <ActionButton class="roster-clear-selection" variant="quiet" :disabled="!selection.selected.length" aria-label="Сбросить выбор" @click="selection.clear"><slot name="clear-label">Сбросить выбор</slot></ActionButton>
       <slot />
     </div>
   </div>
@@ -29,7 +36,7 @@
 <script setup>
 import { computed, ref, shallowRef } from 'vue'
 import { ActionButton, AppModalFrame, CompactCheckbox, FormActionButtons, FormField, FormNumberInput } from '@sylvieshare/share-ui'
-import { HeartCrack, Sparkles, Swords } from '@lucide/vue'
+import { HeartCrack, Sparkles, Swords, Trash2 } from '@lucide/vue'
 import SessionSelectionSummary from './SessionSelectionSummary.vue'
 import { layoutTokens } from '@/app/design-tokens'
 import { charactersApi } from '@/shared/api/charactersApi'
@@ -81,6 +88,7 @@ async function apply() {
 .roster-actions-reveal--open {grid-template-rows:1fr;opacity:1}
 .roster-actions-clip {overflow:hidden;min-height:0}
 .roster-action-icon {position:relative;display:inline-flex}
+.roster-remove-icon {color:var(--danger)}
 .roster-action-count {position:absolute;left:calc(100% - var(--spacing-xs));top:calc(var(--spacing-xs) * -1);min-width:var(--spacing-large);height:var(--spacing-large);box-sizing:border-box;padding-inline:var(--spacing-xs);border-radius:var(--radius-small);background:var(--surface-active);color:var(--text-1);font:600 var(--type-context-size)/var(--spacing-large) var(--font-ui)}
 .roster-action-error {color:var(--danger)}
 @media(prefers-reduced-motion:reduce){.roster-actions-reveal{transition:none}}

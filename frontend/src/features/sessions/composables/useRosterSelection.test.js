@@ -20,6 +20,11 @@ describe('sidebar roster selection', () => {
       await nextTick()
       expect(selection.returnTargets.map(row=>row.uid)).toEqual(['wolf'])
       expect(selected.value.has('wolf')).toBe(true)
+      reserves.value[0].position='dead'
+      await nextTick()
+      expect(selection.selected.map(row=>row.uid)).toContain('wolf')
+      expect(selection.damageTargets.map(row=>row.uid)).not.toContain('wolf')
+      expect(selection.moveTargets.map(row=>row.uid)).not.toContain('wolf')
       selection.setVisibleSelection([players.value[0]],false)
       expect(selected.value.has('player')).toBe(false)
       expect(selected.value.has('owl')).toBe(true)

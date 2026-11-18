@@ -9,7 +9,7 @@
     @click="open = !open"
   >
     <ListPlus :size="18" />
-    <span>Бои сценария</span>
+    <span class="enc-control-label">Бои<br />сценария</span>
     <span v-if="loaded && combats.length" class="enc-scenario-combats-count">{{ combats.length }}</span>
   </button>
 

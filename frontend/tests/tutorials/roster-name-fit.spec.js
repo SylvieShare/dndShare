@@ -65,7 +65,7 @@ for(const width of [390,834,1440])test(`full player and NPC names fit dynamicall
   await expect.poll(()=>combatText.evaluate(n=>parseFloat(getComputedStyle(n).fontSize))).toBe(base)
 })
 
-test('avatar marker remains editable and is shared with combat and turn preview',async({page})=>{
+test('avatar marker remains editable and follows the creature into combat',async({page})=>{
   const api=await rosterSelectionFixture(page,1440)
   const sidebar=page.locator('aside.map-sidebar'),nav=page.getByRole('navigation',{name:'Боковые вкладки сессии'})
   await nav.getByRole('button',{name:'Запас',exact:true}).click()
@@ -79,9 +79,8 @@ test('avatar marker remains editable and is shared with combat and turn preview'
   await reserve.getByRole('checkbox',{name:'Выбрать: Волк',exact:true}).click()
   await sidebar.getByRole('button',{name:/^Добавить на сцену:/}).click()
   await page.getByRole('button',{name:'Начать бой',exact:true}).click()
-  const preview=page.getByRole('complementary',{name:'Текущий ход'})
-  await expect(preview).toBeVisible()
-  await markerOnAvatar(preview.locator('.turn-preview-avatar-marker'),preview.locator('.enc-avatar'))
-  await expect(preview.locator('.turn-preview-name .npc-marker')).toHaveCount(0)
+  const row=page.locator('.enc-row--current')
+  await markerOnAvatar(row.getByRole('button',{name:'Метка существа C',exact:true}),row.locator('.enc-avatar'))
+  await expect(row.locator('.identity-name-text .npc-marker')).toHaveCount(0)
   expect(api.errors).toEqual([]);expect(api.warnings).toEqual([])
 })

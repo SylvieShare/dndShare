@@ -9,7 +9,7 @@
   >
     <div class="enc-row-main">
       <EncounterOrderMarker v-if="order != null" :order="order" :current="isCurrent" />
-      <div class="enc-row-tile" :style="roughRowPaintStyle(idx)">
+      <div class="enc-row-tile" :class="{ 'enc-row-tile--rough-edges': section === 'combat' }" :style="roughRowPaintStyle(idx, section === 'combat')">
         <WorkspaceRowDivider v-if="divided" rough :rough-variant="idx" class="roster-divider" />
         <component :is="section === 'reserve-npc' ? SessionNpcTile : section === 'combat' ? SessionEncounterTile : SessionCombatantTile"
           class="enc-row" :class="rowClasses" :combatant="combatant" :section="section" :current="isCurrent"
@@ -45,6 +45,7 @@
       :states-block="statesBlock"
       @edit-states="openStatesEditor"
       @edit-note="openNoteEditor"
+      @view-participant="$emit('view-participant', $event)"
     />
   </div>
 
@@ -101,6 +102,8 @@ const props = defineProps({
   divided: Boolean,
 })
 
+defineEmits(['view-participant'])
+
 const enc = inject('encounter')
 
 const isPlayer = computed(() => props.combatant.type === 'player')
@@ -138,7 +141,7 @@ function onRowPointerDown(e) {
   enc.sortable.startDrag(e, props.combatant, props.section, props.idx)
 }
 
-const showCheckbox = computed(() => props.combatant.position !== 'dead' && !!enc.canEditPlayerHp())
+const showCheckbox = computed(() => !!enc.canEditPlayerHp())
 
 const statesBlock = computed(() => enc.statesBlock(props.combatant))
 const statesValue = computed(() => enc.statesValue(props.combatant))
@@ -196,6 +199,8 @@ function commitNoteEdit() {
 .enc-row-result { width: 100%; }
 .enc-row-tile:has(:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
 .enc-row-shell[data-encounter-section="combat"] .enc-row-tile,.enc-row-shell[data-encounter-section="reserve-npc"] .enc-row-tile {border-radius:0;overflow:visible}
+.enc-row-tile--rough-edges :deep(.session-roster-tile.base-tile) {box-shadow:none}
+.enc-row-tile--rough-edges :deep(.roster-color-edge) {display:block}
 .enc-row-shell--placeholder .enc-row-roll-overlay, .enc-row-shell--placeholder .enc-row-roll-toggle { visibility: hidden; }
 .enc-row-roll-toggle { position: absolute; right: 4px; bottom: 3px; z-index: 3; display: grid; place-items: center; width: 22px; height: 18px; padding: 0; border: 0; border-radius: var(--r-sm); background: var(--surface-raised); color: var(--text-muted); cursor: pointer; transition: color .16s, background .16s; }
 .enc-row-roll-toggle:hover { color: var(--accent); background: var(--surface-active); }

@@ -2,6 +2,7 @@
   <BaseTile :outlined="false" :color="color || 'var(--text-muted)'" class="session-roster-tile"
             :class="{'session-roster-tile--current':current,'session-roster-tile--on-scene':stageBackdrop,'session-roster-tile--compact':compact,'session-roster-tile--selectable':selectable && !compact,'session-roster-tile--selected':selected}"
             :style="{'--player-color':color || 'transparent','--roster-paint-default':defaultPaintClip,'--roster-ink-position':inkPosition}">
+    <span v-if="color" class="roster-color-edge" aria-hidden="true" />
     <span v-if="stageBackdrop" class="roster-stage-backdrop" :class="{'roster-stage-backdrop--active':stageActive}" role="img" :aria-label="stageActive ? 'В бою' : 'На сцене'"><Swords aria-hidden="true" :stroke-width="1.25" /></span>
     <div v-if="selectable && !compact" class="roster-select-zone" @click.stop="$emit('select')" @pointerdown.stop @keydown.stop>
       <CompactCheckbox :model-value="selected" :size="layoutTokens['roster-checkbox-icon']" :hit-size="layoutTokens['touch-min']" :label="`Выбрать: ${name}`" @update:model-value="$emit('select')" />
@@ -46,6 +47,7 @@ defineEmits(['health','select'])
 .session-roster-tile--selectable.base-tile {grid-template-columns:var(--layout-touch-min) minmax(0,1fr)}
 .roster-select-zone {box-sizing:border-box;display:flex;justify-content:center;align-items:flex-start;min-height:var(--layout-touch-min);padding-top:calc((var(--summary-avatar-size,var(--layout-sheet-header-icon)) - var(--layout-roster-checkbox-icon)) / 2);touch-action:pan-y}
 .roster-content {min-width:0}
+.roster-color-edge {display:none;position:absolute;inset:calc(var(--spacing-small) / -2) 0;z-index:-1;pointer-events:none;background:var(--player-color);clip-path:var(--roster-color-edge-clip)}
 .roster-stage-backdrop {position:absolute;inset:calc(var(--spacing-small) / -2) 0;z-index:-2;pointer-events:none;overflow:hidden;clip-path:var(--roster-paint-clip,var(--roster-paint-default))}
 .roster-stage-backdrop svg {position:absolute;inset-inline-end:var(--spacing-small);top:50%;transform:translateY(-50%);width:var(--layout-roster-stage-watermark);height:100%;max-height:var(--layout-roster-stage-watermark);color:var(--text-2);opacity:.16;transition:opacity var(--motion-feedback)}
 .roster-stage-backdrop--active svg {color:color-mix(in srgb,var(--text-2) 64%,var(--danger))}

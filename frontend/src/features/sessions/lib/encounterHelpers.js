@@ -1,22 +1,9 @@
-import { ref } from 'vue'
 import { getByPath, setDeep } from '@/shared/lib/objectPath'
-import { useItemTypesStore } from '@/stores/itemTypes'
 
 export { getByPath, setDeep }
 
 export const BESTIARY_TYPE_ID = 6
 export const SAVE_DEBOUNCE_MS = 500
-
-export const bestiaryTypeRef = ref(null)
-let bestiaryTypePromise = null
-
-export function ensureBestiaryType() {
-  if (bestiaryTypeRef.value) return
-  if (bestiaryTypePromise) return
-  bestiaryTypePromise = useItemTypesStore().ensureType(BESTIARY_TYPE_ID)
-    .then(t => { bestiaryTypeRef.value = t || null })
-    .catch(() => {})
-}
 
 export function makeUid() {
   return Math.random().toString(36).slice(2) + Date.now().toString(36)

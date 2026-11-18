@@ -18,8 +18,8 @@ load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 
 The combat workspace is one responsive grid under the session header. Its left
 column contains the prepared/active roster and its scene command row; the right
-column contains `EncounterControls`, followed by the current-turn reference when the
-encounter is active. There is no current chapter title/cover card in this workspace.
+column contains `EncounterControls`. The current turn is highlighted on the
+participant's row, and the participant menu opens the character sheet or bestiary card.
 The chapter/scenario context is still retained for returning to the story and
 importing scenario combat blocks.
 
@@ -36,11 +36,12 @@ have visible captions and accessible names.
 
 The sidebar remains available, while map canvas/inspector are hidden in combat.
 The command column groups fight flow, selection actions and scene composition
-into three panels. The phase panel shows the roster count and starts combat or
+into two panels. The phase panel shows the roster count and starts combat or
 provides round navigation and End. Selection uses the same summary as the left
-sidebar and reserves the same height for empty and single-row states. Challenge
-and damage appear below it. Initiative remains in row menus and shortcut handling.
-Scene composition contains entry, scenario encounters, marking defeated and removing NPCs.
+sidebar and reserves the same height for empty and single-row states. Challenge,
+damage, entry, scenario encounters, marking defeated and NPC deletion share a grid
+under this summary. Two-word command labels use two lines. Initiative remains in
+row menus and shortcut handling.
 A combatant marked defeated keeps the home group and leaves the turn order. The
 persisted `defeatedOnScene` flag keeps their row on the scene and restores scene
 membership when revived. Older defeated records without the flag appear in their
@@ -48,10 +49,12 @@ home group. At 0 HP, NPC rows display crossed bones and a skull, and D&D player
 rows link their death-save counters to the HP calculator.
 The workspace keeps Page padding on both sides and starts after the participant
 safe area, including the permanent rail on compact windows. The roster uses its
-own scroll gap; the current-turn reference keeps its existing NPC/player detail.
+own scroll gap.
 Row strips use the
 explicitly selected participant color for players or `iconColor` for NPCs; rows
-without an assigned color have no strip in either combat or the NPC reserve.
+without an assigned color have no strip in either combat or the NPC reserve. The
+scene uses jagged side edges for highlight paint and its color strip. Top and
+bottom remain aligned with the shared row seams.
 NPC artwork normally uses 64×64 geometry and is centered vertically. If the
 roster has less than its preferred 492px, avatars use TouchMin (48px), smaller
 gaps and padding, retaining names beside initiative. Player
@@ -95,8 +98,8 @@ preference is used.
 NPC relations are optional. Reserve and combat summaries have no visible enemy/ally/minion/neutral caption; the relation stays in the row menu and accessible description. Map/catalogue tiles show relations as subtle diagonal `/` stripes tiled over the entire tile (7px colored stripe followed by a 14px transparent gap, a 1:2 rhythm), with separate colors for enemy, ally, minion and neutral. There is no relation chip. Clearing the relation removes the stripes; `aria-description` retains the relation label for assistive technology. The row menu’s «Отношение» submenu sets enemy, ally, minion or neutral and offers «Убрать тег». The tile background is not a separate picker; newly added NPCs have no relation tag. The map roster uses the same submenu. Surprised status is changed from the row menu.
 
 Each NPC also receives the nearest free Latin marker from `A` through `Z`.
-The marker sits inside the avatar’s upper-right corner in reserves, combat rows
-and the turn preview, with a dark text shadow and a translucent backing with
+The marker sits inside the avatar’s upper-right corner in reserves and combat
+rows, with a dark text shadow and a translucent backing with
 Badge-radius corners and 4px backdrop blur. `backdropBlurStyle` supplies both
 filter properties inline so the effect survives minification. Inline markers in the timeline
 retain their plain text presentation. Its
@@ -141,20 +144,18 @@ status overview), so the same condition list is available for players and NPCs.
 Starting and ending combat update scene state while home rows remain
 visible. Ending keeps the complete scene roster, HP, effects and group refs,
 resets turn/initiative/surprise, and returns to preparation. The scene does not
-fade out during completion; removal is an explicit command. Neither player nor NPC home rows fade out or move between groups. Controls stay locked for the short transition, while
-reduced-motion users get the direct state change.
+fade out during completion; removal is an explicit command. Player and NPC home
+rows stay in their groups.
 
 When the combat rail changes the canvas safe-left inset, `NarrativeGraphCanvas`
 re-measures that inherited layout value after the parent DOM update. The
 spotlight chapter therefore animates to the new combat boundary instead of the
 normal-width player-rail position.
 
-The graveyard is not a separate workspace section. Two icon-only actions live
-directly in the combat header: the skull moves the current selection to the
-graveyard, while the bone opens a `BasePopover` with dead combatants. Both keep
-their text descriptions in browser tooltips and accessible labels.
-Selecting a combatant reveals view, restore and (for NPCs) delete actions. The
-popover can also delete all dead NPCs after a `ConfirmDialog` confirmation.
+The skull command marks selected combatants defeated in place. They retain their
+selection and can be selected again from either view. Defeated combatants are
+excluded from damage, XP and entry to the scene. Both control panels can delete
+selected NPCs, including defeated NPCs. Players can be revived from their rows.
 
 `useSessionWorkspace.js` stores the open workspace per session in local
 storage. Reloading the session restores combat against the current chapter or
@@ -185,7 +186,7 @@ the normal encounter save queue.
 
 ### Sidebar selection and prepared scene
 
-`useRosterSelection` derives one selection from canonical live combatant UIDs,
+`useRosterSelection` derives one selection from canonical combatant UIDs,
 shared across Players, every reserve group and the scene. Its input is deduplicated
 by UID; a creature shown in two views receives damage or XP only once. Constant
 leading checkboxes separate selection from body menus. Checkbox targets are 48px
@@ -215,7 +216,7 @@ during an active encounter. Scene rows show the current-turn arrow and label
 only for the current actor.
 Dragging within a home group retains combat participation. Cross-view previews
 exclude an already present UID before insertion. Returning an actor from the
-scene keeps its home group and selection; graveyard/removal prunes selection.
+scene keeps its home group and selection; deleting an NPC prunes its selection.
 
 ### Reserve tabs
 
@@ -449,7 +450,7 @@ It remeasures width, sibling indicators, name updates and loaded fonts, and rest
 the base size when the name becomes shorter or more room appears. Names use
 the shared ParticipantName role: locally packaged Cormorant Garamond, 22/26 px,
 weight 500, rather than bold interface text. No ellipsis is
-used. The same fitter serves the combat roster and turn preview; metrics wrap as a group.
+used. The same fitter serves the combat roster and the sidebar lists. Metrics wrap as a group.
 `useParticipantDefenses` owns asynchronous hydration for both this card and the
 compact encounter `ParticipantStats`; ready name and HP stay visible while numeric
 mechanics show a skeleton. Passive skill math is shared with the sheet's menu table.
