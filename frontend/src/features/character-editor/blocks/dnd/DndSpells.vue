@@ -224,6 +224,7 @@ import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { spellDescriptionContext } from './lib/spellDescriptionContext'
 import { useSuggestStore } from '@/stores/suggest'
+import { useItemTypesStore } from '@/stores/itemTypes'
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 import { spellcastingRulesAt } from '@/features/character-editor/blocks/dnd/lib/spellcastingRules'
 import { maximumSpellLevelForEntry } from '@/features/character-editor/blocks/dnd/lib/multiclassSpellcasting'
@@ -555,7 +556,7 @@ onMounted(async () => {
   const ensures = [school_suggest_id, stat_suggest_type_id, damageTypeSuggestTypeId.value]
     .filter(Boolean)
     .map(id => useSuggestStore().ensure(id))
-  await Promise.allSettled([details, classes, syncExternalAbilitySpells(), ...ensures])
+  await Promise.allSettled([details, classes, syncExternalAbilitySpells(), useItemTypesStore().ensureAll(), ...ensures])
 })
 
 watch(

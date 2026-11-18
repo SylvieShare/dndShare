@@ -5,8 +5,8 @@
     "build": 11
   },
   "frontend": {
-    "version": "0.3.185",
-    "build": 186
+    "version": "0.3.186",
+    "build": 187
   },
   "android": {
     "version": "0.3.8",
@@ -18,7 +18,7 @@
   },
   "fingerprints": {
     "backend": "3d0db6476c4f66502c54c646bd47ce5e455a6bc4a5fa06b7abad25267755cab6",
-    "frontend": "22759f66622c40d3439045d90cf1e668f73d5f828da4673d2eb62f3e1fa6d1e4",
+    "frontend": "70979d911b770c3f788d4c7fc2bd7df4b8ec0acc486b1fb363432d41a8a4f681",
     "android": "5b1f6135ccccba076cc16844d21b2774fdb93030936e8529d4fd3f946b95131e"
   }
 }

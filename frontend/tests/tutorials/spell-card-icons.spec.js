@@ -1,17 +1,20 @@
 import {test,expect} from '@playwright/test'
 
-for(const width of [320,390,834,1440])test(`quiet spell covers and component overlay at ${width}`,async({page},info)=>{
+for(const width of [320,390,834,1440])test(`spell icons sit left of both names at ${width}px`,async({page},info)=>{
  await page.setViewportSize({width,height:1000})
  await page.emulateMedia({reducedMotion:'reduce'})
  const errors=[];page.on('pageerror',error=>errors.push(error.message))
- await page.route('**/missing-spell-cover.webp',route=>route.fulfill({status:404,body:''}))
+ const coverRequests = []
+ page.on('request', request => {
+  if (/spell-covers\/|missing-spell-cover/.test(request.url())) coverRequests.push(request.url())
+ })
  await page.goto('/tests/tutorials/fixtures/spell-rolls.html?presentation&covers')
  const custom=page.locator('.spell-row').filter({hasText:'Божественное оружие'})
  await custom.scrollIntoViewIfNeeded()
- const image=custom.locator('.spell-card-cover-image')
- await expect(image).toHaveAttribute('src','/tests/tutorials/fixtures/spell-covers/custom.webp')
- await expect(image).toHaveClass(/image--ready/)
- await expect(custom.locator('.sp-item-icon')).toHaveCount(0)
+ const icon=custom.locator('.sp-card-main .item-icon__image')
+ await expect(icon).toHaveAttribute('src','/static/spell-range.svg')
+ await expect.poll(() => icon.evaluate(image => image.naturalWidth)).toBeGreaterThan(0)
+ await expect(custom.locator('.sp-prepared')).toHaveText('[Подготовлено]')
  await expect(custom.locator('.sp-school')).toHaveCount(0)
  await expect(custom.locator('.spell-components')).toHaveCount(0)
  await expect(custom.locator('.spell-component-letters')).toHaveText('ВСМ')
@@ -29,30 +32,38 @@ for(const width of [320,390,834,1440])test(`quiet spell covers and component ove
  await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0)
  const fallback=page.locator('.spell-row').filter({hasText:'Свет'})
  await fallback.scrollIntoViewIfNeeded()
- await expect(fallback.locator('.spell-card-cover-image')).toHaveAttribute('src','/tests/tutorials/fixtures/spell-covers/default.webp')
+ await expect(fallback.locator('.item-icon--type img')).toHaveAttribute('src','/static/tab-magic.svg')
  const broken=page.locator('.spell-row').filter({hasText:/^Лечение/})
  await broken.scrollIntoViewIfNeeded()
- await expect(broken.locator('.spell-card-cover-image')).toHaveAttribute('src','/tests/tutorials/fixtures/spell-covers/default.webp')
- await expect(broken.locator('.spell-card-cover-image')).toHaveClass(/image--ready/)
+ await expect(broken.locator('.item-icon--type img')).toHaveAttribute('src','/static/tab-magic.svg')
+ await expect(page.locator('.spell-row img[src*="spell-cover"]')).toHaveCount(0)
+ expect(coverRequests).toEqual([])
  await custom.scrollIntoViewIfNeeded();await page.evaluate(()=>document.fonts.ready)
  const boxes=await custom.evaluate(row=>{
   const b=selector=>row.querySelector(selector).getBoundingClientRect().toJSON()
-  return{row:row.getBoundingClientRect().toJSON(),name:b('.sp-name'),components:b('.spell-component-badge'),metrics:b('.sp-metrics')}
+  return { row: row.getBoundingClientRect().toJSON(), name: b('.sp-name'), english: b('.sp-name-en'),
+    icon: b('.item-icon'), prepared: b('.sp-prepared'), components: b('.spell-component-badge'), metrics: b('.sp-metrics') }
  })
- expect(boxes.name.bottom).toBeLessThanOrEqual(boxes.components.top+1)
+ expect(boxes.icon.right).toBeLessThanOrEqual(boxes.name.left)
+ expect(boxes.icon.right).toBeLessThanOrEqual(boxes.english.left)
+ expect(boxes.name.bottom).toBeLessThanOrEqual(boxes.english.top+1)
+ expect(boxes.english.bottom).toBeLessThanOrEqual(boxes.components.top+1)
+ for (const label of [boxes.name, boxes.english, boxes.prepared]) expect(label.right).toBeLessThanOrEqual(boxes.row.right)
+ expect(boxes.prepared.height).toBeLessThanOrEqual(16)
  expect(boxes.metrics.right).toBeLessThanOrEqual(boxes.row.right)
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
  expect(await page.evaluate(()=>window.writes)).toEqual([])
  expect(errors).toEqual([])
- await info.attach(`quiet-spell-${width}`,{body:await custom.screenshot(),contentType:'image/png'})
+ await custom.screenshot({path:info.outputPath(`spell-card-${width}.png`)})
 })
 
-test('a failed default cover leaves usable content without a loading placeholder',async({page})=>{
- await page.route('**/spell-covers/default.webp',route=>route.fulfill({status:404,body:''}))
- await page.goto('/tests/tutorials/fixtures/spell-rolls.html?presentation')
- const row=page.locator('.spell-row').filter({hasText:'Свет'});await row.scrollIntoViewIfNeeded()
- await expect(row.locator('.spell-card-cover-image')).toHaveCount(0)
- await expect(row.locator('.spell-card-cover-skeleton')).toHaveCount(0)
+test('opening the full spell description loads its cover',async({page})=>{
+ await page.goto('/tests/tutorials/fixtures/spell-rolls.html?presentation&covers')
+ const row=page.locator('.spell-row').filter({hasText:'Божественное оружие'})
+ await row.scrollIntoViewIfNeeded()
+ await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
  await row.locator('.sp-name').click()
- await expect(page.getByRole('button',{name:'Открыть описание',exact:true})).toBeVisible()
+ await page.getByRole('button',{name:'Открыть описание',exact:true}).click()
+ const dialog = page.getByRole('dialog', { name: 'Божественное оружие', exact: true })
+ await expect(dialog.locator('img[src="/tests/tutorials/fixtures/spell-covers/custom.webp"]')).toBeVisible()
 })

@@ -17,7 +17,8 @@ document.body.style.cssText = 'margin:0;background:var(--bg);color:var(--text-1)
 
 const pinia = createPinia()
 if (new URLSearchParams(location.search).has('session')) useSessionEventsStore(pinia).sessionUuid = 'spell-roll-test-session'
-useItemTypesStore(pinia).types = [{ id: 5, name: 'Заклинания', coverImageUrl: '/tests/tutorials/fixtures/spell-covers/default.webp' }]
+useItemTypesStore(pinia).types = [{ id: 5, name: 'Заклинания',
+  iconImageUrl: '/static/tab-magic.svg', coverImageUrl: '/tests/tutorials/fixtures/spell-covers/default.webp' }]
 useSuggestStore(pinia).set(16, [{ id: 4, value: 'Интеллект' }])
 useSuggestStore(pinia).set(12, [{ id: 10, value: new URLSearchParams(location.search).has('long-type') ? 'Некротической энергией древнего проклятия' : 'Некротический' }])
 if (new URLSearchParams(location.search).has('eldritch')) useSuggestStore(pinia).set(12, [{ id: 12, value: 'Силовое поле' }])
@@ -46,7 +47,9 @@ if (new URLSearchParams(location.search).has('presentation')) {
 }
 if (new URLSearchParams(location.search).has('long-name')) items.find(item => item.id === 8).name += ' — заклинание с очень длинным названием, которое должно полностью переноситься на следующие строки'
 if (new URLSearchParams(location.search).has('covers')) {
-  Object.assign(items.find(item => item.id === 8), { coverImageUrl: '/tests/tutorials/fixtures/spell-covers/custom.webp' })
+  Object.assign(items.find(item => item.id === 8), {
+    typeId: 5, iconImageUrl: '/static/spell-range.svg', coverImageUrl: '/tests/tutorials/fixtures/spell-covers/custom.webp',
+  })
   Object.assign(items.find(item => item.id === 8).data, { concentration: true, ritual: true, duration: 'Концентрация, вплоть до 1 минуты', components: { v: true, s: true, m: 'Крошечный серебряный молот' } })
   items.find(item => item.id === 3).coverImageUrl = '/missing-spell-cover.webp'
 }
