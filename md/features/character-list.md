@@ -130,6 +130,12 @@ the selected illustrated card already contains the base result and dependent
 choices remain visible in their own sections. Ability descriptions remain
 available from the illustrated cards on hover. On narrow screens the workspace becomes
 one column, while the navigation footer stays pinned to the visible bottom edge.
+
+Раскрытие расы, класса, предыстории и роли RED сразу размещает выбранную
+карточку и детали в начале области прокрутки. Общий компонент меняет
+прозрачность панели за 180 мс и учитывает системное отключение анимаций.
+Возврат к выбору восстанавливает позицию списка и фокус на карточке.
+
 Only the capped central column owns an opaque `--bg` surface across its header,
 work area and footer, with continuous side borders framing it on desktop. The
 floating step rail and the space outside that column remain on the global dotted

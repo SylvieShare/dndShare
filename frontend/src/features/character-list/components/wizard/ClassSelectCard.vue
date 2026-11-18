@@ -90,7 +90,7 @@ function hideAbilityTooltip() { tooltip.visible = false }
   display: grid; grid-template-columns: minmax(280px, .92fr) minmax(0, 1.7fr);
   text-align: left; color: inherit; font: inherit; background: var(--surface);
   border: 1px solid var(--border); border-radius: var(--r-lg); cursor: pointer;
-  transition: transform .18s cubic-bezier(.22,1,.36,1), border-color .15s, box-shadow .18s, min-height .42s cubic-bezier(.22,1,.36,1), grid-template-columns .42s cubic-bezier(.22,1,.36,1);
+  transition: transform .18s cubic-bezier(.22,1,.36,1), border-color .15s, box-shadow .18s;
 }
 .class-card:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent) 44%, var(--border)); box-shadow: var(--shadow-md); }
 .class-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }

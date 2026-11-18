@@ -121,7 +121,7 @@ function hideAbilityTooltip() { tooltip.visible = false }
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   cursor: pointer;
-  transition: transform .18s cubic-bezier(.22, 1, .36, 1), border-color .15s, box-shadow .18s, min-height .42s cubic-bezier(.22, 1, .36, 1), grid-template-columns .42s cubic-bezier(.22, 1, .36, 1);
+  transition: transform .18s cubic-bezier(.22, 1, .36, 1), border-color .15s, box-shadow .18s;
 }
 .race-card:hover {
   transform: translateY(-2px);

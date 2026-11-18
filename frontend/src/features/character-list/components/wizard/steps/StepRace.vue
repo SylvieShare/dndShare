@@ -28,7 +28,7 @@
       </template>
 
       <template #details>
-        <div ref="detailsRef" class="race-details">
+        <div class="race-details">
           <RaceAbilityList :abilities="selectedAbilities" hide-choice-only />
           <p v-if="sizeDescription && !grants.raceVariants" class="choice-description">{{ sizeDescription }}</p>
           <section v-if="raceDesc" class="race-lore">
@@ -117,7 +117,7 @@
 </template>
 
 <script setup>
-import { computed, inject, nextTick, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import RaceAbilityList from '@/features/items/components/RaceAbilityList.vue'
 import RaceVariantPicker from '../RaceVariantPicker.vue'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
@@ -154,7 +154,6 @@ const hasRaceChoices = computed(() => {
 
 const pickerOpen = ref(false)
 const featConfigItem = ref(null)
-const detailsRef = ref(null)
 
 function summaryFor(race) {
   return raceCardSummary({
@@ -170,9 +169,6 @@ function summaryFor(race) {
 function selectRace(race) {
   if (state.race?.id === race.id) return
   state.race = race
-  if (window.matchMedia?.('(max-width: 640px)').matches) {
-    nextTick(() => detailsRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
-  }
 }
 function featName(id) { return featPool.value.find((f) => f.id === id)?.name || `#${id}` }
 function onFeatPick(item) {
@@ -189,7 +185,7 @@ function onFeatChoicesConfirm(choices) {
 
 <style scoped>
 .step { position: relative; display: flex; flex-direction: column; gap: 12px; }
-.race-details { display: flex; flex-direction: column; scroll-margin-top: 12px; gap: 16px; }
+.race-details { display: flex; flex-direction: column; gap: 16px; }
 .race-lore { display: flex; flex-direction: column; gap: 7px; }
 .step-gap { margin-top: 8px; }
 .step-desc {

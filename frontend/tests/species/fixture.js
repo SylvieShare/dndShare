@@ -20,7 +20,8 @@ const app = createApp({ setup() {
     featPool: ref([]), featLimit: ref(1), toggleFeat: () => {}, setFeatSelection: () => {}, featEligibility: () => true, featComplete: ref(true), raceFeatureChoices: ref([]),
   })
   const selected = ref(true)
-  return () => h('main', { style: 'max-width:1000px;margin:auto;padding:16px' }, params.has('stage')
+  const style = 'max-width:1000px;margin:auto;padding:16px' + (params.has('scrolling') ? ';height:70vh;overflow:auto' : '')
+  return () => h('main', { class: 'cc-main', style }, params.has('stage')
     ? h(IllustratedChoiceStage, { title: params.get('stage'), selected: selected.value, selectionKey: 1, backText: 'К выбору', onClear: () => { selected.value = false } }, {
       cards: () => h('div', { class: 'fixture-cover', style: 'height:220px;background:var(--surface)' }, 'Обложка'),
     }) : h(StepRace))
