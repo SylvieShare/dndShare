@@ -129,8 +129,11 @@ test('challenge results appear on sidebar player and NPC tiles before combat', a
   const api = await rosterSelectionFixture(page, 390)
   await page.emulateMedia({ reducedMotion: 'reduce' })
   const requests = []
+  let release
+  const holdRolls = new Promise(resolve => { release = resolve })
   await page.route('**/api/sessions/test/d20', async route => {
     requests.push(route.request().postDataJSON())
+    await holdRolls
     await route.fulfill({ json: { rolls: [12], karmic: false } })
   })
   const sidebar = page.locator('aside.map-sidebar')
@@ -152,6 +155,13 @@ test('challenge results appear on sidebar player and NPC tiles before combat', a
   await actions.getByRole('menuitem', { name: 'Провести испытание' }).click()
   await page.getByRole('button', { name: 'Бросить выбранным', exact: true }).click()
   await expect(actions).toHaveCount(0)
+  try {
+    await expect.poll(() => requests.length).toBe(2)
+    await expect(player.locator('.enc-row-result')).toHaveAttribute('aria-busy', 'true')
+    await expect(wolf.locator('.enc-row-result')).toHaveAttribute('aria-busy', 'true')
+  } finally {
+    release()
+  }
   await expect(player.locator('.enc-row-result .ecr-total')).toHaveText('14')
   await player.getByRole('button', { name: 'Скрыть результат броска', exact: true }).click({ modifiers: ['Control'] })
   await expect(player.locator('.enc-row-result')).toHaveCount(0)
@@ -163,6 +173,22 @@ test('challenge results appear on sidebar player and NPC tiles before combat', a
   expect(requests).toHaveLength(2)
   expect(api.encounter().active).toBe(false)
   expect(api.encounter().combatants.every(row => row.position === 'reserve')).toBe(true)
+  const sizes = await toolbar.locator('.roster-selection-top').evaluate(row => {
+    const summary = row.querySelector('.roster-selection-summary').getBoundingClientRect()
+    const rect = row.getBoundingClientRect()
+    const buttons = [...row.querySelectorAll('.roster-actions button')].map(button => {
+      const box = button.getBoundingClientRect()
+      const icon = button.querySelector('svg').getBoundingClientRect()
+      const caption = button.lastElementChild.getBoundingClientRect()
+      return { label: button.getAttribute('aria-label') || button.textContent.trim(), x: box.x, y: box.y,
+        right: box.right, iconAbove: icon.bottom <= caption.top }
+    })
+    return { buttons, top: summary.top, right: rect.right }
+  })
+  expect(sizes.buttons.map(button => button.label)).toEqual(['Сбросить выбор', 'Действия', 'Убрать испытание'])
+  expect(sizes.buttons.every(button => button.iconAbove && Math.abs(button.y - sizes.top) < .5 && button.right <= sizes.right)).toBe(true)
+  expect(sizes.buttons[0].x).toBeLessThan(sizes.buttons[1].x)
+  expect(sizes.buttons[1].x).toBeLessThan(sizes.buttons[2].x)
   await toolbar.getByRole('button', { name: 'Убрать испытание', exact: true }).click()
   await expect(sidebar.locator('.enc-row-result')).toHaveCount(0)
   await expect(toolbar.getByRole('button', { name: 'Убрать испытание', exact: true })).toHaveCount(0)

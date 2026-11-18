@@ -10,33 +10,40 @@ import {
 } from '@/features/sessions/composables/useEncounterChallenge'
 
 describe('encounter challenge bonuses', () => {
-  it('presents pending checks and extra dice locally without saving unknown faces', async () => {
+  it('starts group checks together and saves the successful results together', async () => {
     setActivePinia(createPinia())
     const events = useSessionEventsStore()
     events.sessionUuid = 'game'
     vi.spyOn(events, 'publish').mockResolvedValue(null)
-    let finish
-    const server = vi.spyOn(api, 'rollSessionD20').mockImplementation(() => new Promise(resolve => { finish = resolve }))
+    const finish = new Map()
+    const server = vi.spyOn(api, 'rollSessionD20').mockImplementation((_uuid, request) => new Promise(resolve => { finish.set(request.npcUid, resolve) }))
     const npc = { uid: 'goblin', type: 'npc' }
-    const encounter = ref({ combatants: [npc] })
-    const challenge = useEncounterChallenge({ encounter, selectedUids: ref(new Set(['goblin'])),
+    const wolf = { uid: 'wolf', type: 'npc' }
+    const encounter = ref({ combatants: [npc, wolf] })
+    const challenge = useEncounterChallenge({ encounter, selectedUids: ref(new Set(['goblin', 'wolf'])),
       findParticipant: () => null, playerDisplayName: () => '', npcName: () => 'Гоблин',
       npcAbilityScore: () => 14, npcSavingThrow: () => null })
     try {
       const pending = challenge.runChallenge({ ability: 'DEX' })
-      await vi.waitFor(() => expect(server).toHaveBeenCalledTimes(1))
+      await vi.waitFor(() => expect(server).toHaveBeenCalledTimes(2))
       expect(challenge.challengeResult(npc)).toMatchObject({ pending: true, rolls: [null] })
+      expect(challenge.challengeResult(wolf)).toMatchObject({ pending: true, rolls: [null] })
       expect(encounter.value.challenge).toBeUndefined()
-      finish({ rolls: [12] })
+      finish.get('goblin')({ rolls: [12] })
+      await vi.waitFor(() => expect(events.publish).toHaveBeenCalledTimes(1))
+      expect(challenge.challengeResult(npc)).toMatchObject({ pending: true })
+      expect(encounter.value.challenge).toBeUndefined()
+      finish.get('wolf')(null)
       await pending
       expect(challenge.challengeResult(npc)).toMatchObject({ roll: 12, total: 14 })
+      expect(challenge.challengeResult(wolf)).toBeNull()
       expect(encounter.value.challenge.results.goblin.pending).toBeUndefined()
 
       const extra = challenge.rerollChallenge(npc, 'advantage')
-      await vi.waitFor(() => expect(server).toHaveBeenCalledTimes(2))
+      await vi.waitFor(() => expect(server).toHaveBeenCalledTimes(3))
       expect(challenge.challengeResult(npc)).toMatchObject({ pending: true, rolls: [12, null] })
       expect(encounter.value.challenge.results.goblin).toMatchObject({ roll: 12, total: 14 })
-      finish({ rolls: [20] })
+      finish.get('goblin')({ rolls: [20] })
       await extra
       expect(challenge.challengeResult(npc)).toMatchObject({ rolls: [12, 20], total: 22 })
       expect(challenge.challengeResult(npc).pending).toBeUndefined()

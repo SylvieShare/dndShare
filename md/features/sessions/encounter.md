@@ -45,7 +45,8 @@ count. The turn arrows are paired and the forward action is labelled «След�
 combat controls. The shared selection toolbar uses the available-actions menu
 and shows eligible target icons and totals per action. It stays in the sidebar
 header until the collapse transition finishes. The combat card then reveals it
-below a divider. «Убрать испытание» appears beside the menu after a challenge.
+below a divider. The summary row contains three stacked icon actions in order:
+«Сбросить выбор», «Действия» and, after a challenge, «Убрать испытание».
 A combatant marked defeated keeps the home group and leaves the turn order. The
 persisted `defeatedOnScene` flag keeps their row on the scene and restores scene
 membership when revived. Older defeated records without the flag appear in their
@@ -70,7 +71,9 @@ visual, including advantage and disadvantage rolls.
 
 Before and during combat, the DM header has a group-challenge action. It opens a
 compact setup popover with one of the six D&D abilities and a saving-throw
-toggle, then rolls a d20 for selected creatures on the scene or in reserve, excluding defeated combatants. The action appears when at least one eligible creature is selected. A
+toggle, then starts the d20 animation together for all eligible selected
+creatures. The results appear together when the group completes, retaining
+successful rolls if another fails. A
 normal check uses that creature's ability modifier. A saving throw also uses a
 player's save proficiency and extra save bonuses, or the explicit bestiary save
 bonus for an NPC; an NPC without one falls back to its ability modifier. The shared `EncounterChallengeOverlay` slides over the right side of tiles on

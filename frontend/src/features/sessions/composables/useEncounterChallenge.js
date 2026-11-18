@@ -10,6 +10,7 @@ import {
   sumBonuses,
 } from '@/shared/lib/dnd'
 import { useDiceStore } from '@/stores/dice'
+import { d20Expression, pendingDiceResult } from '@/shared/lib/pendingDice'
 
 export const ENCOUNTER_CHALLENGE_ABILITIES = [
   { id: 1, value: 'STR', label: 'Сила', short: 'СИЛ' },
@@ -132,52 +133,63 @@ export function useEncounterChallenge({
       }
       const key = normalizedAbility(ability)
       const meta = abilityMeta(key)
-      const results = {}
-      const diceStore = useDiceStore()
-
-      for (const combatant of combatants) {
+      const kind = savingThrow ? 'спасбросок' : 'проверка'
+      const rollKind = savingThrow ? 'saving_throw' : 'ability_check'
+      const setup = { ability: key, savingThrow: !!savingThrow }
+      const targets = combatants.map(combatant => {
         const bonus = bonusFor(combatant, key, savingThrow)
-        const kind = savingThrow ? 'спасбросок' : 'проверка'
         const participant = combatant.type === 'player' ? findParticipant(combatant.charId) : null
-        const effects = combatant.type === 'npc' ? npcRollEffects(combatant, { kind: savingThrow ? 'saving_throw' : 'ability_check', abilitySuggestId: meta.id }) : {}
-        const roll = await diceStore.rollD20(
-          `${meta.label}, ${kind}`,
-          bonus, effects.mode || 'normal',
-          {
-            roll_kind: savingThrow ? 'saving_throw' : 'ability_check',
-            bonus_formula: effects.formula,
-            eventData: { ...encounterEventData(combatant, displayName(combatant)), ability: { id: meta.id, typeId: 16, name: meta.label } },
-            crit_mode: true,
-            popup: false,
-            onPending: result => {
-              if (result) pendingChallenge.value = { ability: key, savingThrow: !!savingThrow, results: {
-                ...results, [combatant.uid]: { pending: true, roll: null, bonus, total: null,
-                  rolls: result.parts[0].rolls },
-              } }
-            },
-            actor: {
-              name: displayName(combatant),
-              charUuid: participant?.charUuid || null,
-              itemId: combatant.type === 'npc' ? combatant.itemId || null : null,
-            },
-          },
-        )
-        if (!roll) break
-        const natural = roll?.parts
-          ?.find(part => part.kind === 'dice' && part.sides === 20)
-          ?.sum
-        results[combatant.uid] = {
-          roll: Number(natural) || 0,
+        const effects = combatant.type === 'npc' ? npcRollEffects(combatant, { kind: rollKind, abilitySuggestId: meta.id }) : {}
+        const mode = effects.mode || 'normal'
+        return {
+          uid: combatant.uid,
           bonus,
-          extraTotal: (Number(roll?.total) || 0) - (Number(natural) || 0) - bonus,
-          extraParts: (roll?.parts || []).filter(part => !(part.kind === 'dice' && part.sides === 20) && part.kind !== 'flat'),
-          total: Number(roll?.total) || 0,
+          mode,
+          formula: effects.formula,
+          eventData: { ...encounterEventData(combatant, displayName(combatant)), ability: { id: meta.id, typeId: 16, name: meta.label } },
+          actor: {
+            name: displayName(combatant),
+            charUuid: participant?.charUuid || null,
+            itemId: combatant.type === 'npc' ? combatant.itemId || null : null,
+          },
         }
-        // Preserve completed dice when a later participant's request fails.
-        encounter.value = { ...encounter.value, challenge: { ability: key, savingThrow: !!savingThrow, results: { ...results } } }
-        pendingChallenge.value = encounter.value.challenge
+      })
+      pendingChallenge.value = {
+        ...setup,
+        results: Object.fromEntries(targets.map(({ uid, bonus, mode, formula }) => [
+          uid,
+          { pending: true, roll: null, bonus, total: null, rolls: pendingDiceResult(d20Expression(bonus, mode, formula)).parts[0].rolls },
+        ])),
       }
 
+      const diceStore = useDiceStore()
+      const results = {}
+      // The server locks the session during each receipt transaction.
+      const batchSize = 4
+      for (let offset = 0; offset < targets.length; offset += batchSize) {
+        const batch = targets.slice(offset, offset + batchSize)
+        const rolls = await Promise.allSettled(batch.map(async ({ bonus, mode, formula, eventData, actor }) =>
+          diceStore.rollD20(`${meta.label}, ${kind}`, bonus, mode, {
+            roll_kind: rollKind, bonus_formula: formula, eventData, actor, crit_mode: true, popup: false,
+          }),
+        ))
+        for (const [index, outcome] of rolls.entries()) {
+          if (outcome.status !== 'fulfilled' || !outcome.value) continue
+          const roll = outcome.value
+          const natural = Number(roll.parts.find(part => part.kind === 'dice' && part.sides === 20)?.sum) || 0
+          const { uid, bonus } = batch[index]
+          results[uid] = {
+            roll: natural,
+            bonus,
+            extraTotal: (Number(roll.total) || 0) - natural - bonus,
+            extraParts: roll.parts.filter(part => !(part.kind === 'dice' && part.sides === 20) && part.kind !== 'flat'),
+            total: Number(roll.total) || 0,
+          }
+        }
+      }
+      if (Object.keys(results).length) {
+        encounter.value = { ...encounter.value, challenge: { ...setup, results } }
+      }
     } finally { pendingChallenge.value = null; challengeBusy.value = false }
   }
 

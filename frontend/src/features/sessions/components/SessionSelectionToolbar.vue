@@ -3,10 +3,16 @@
     <span class="roster-count-sr-only" role="status">Выбрано: {{ selection.selected.length }}</span>
     <div class="roster-selection-top">
       <SessionSelectionSummary :items="selection.selected" :encounter="encounter" />
-      <div v-if="actionsVisible" class="roster-actions">
-        <RowActionMenu ref="menu" title="Действия с выбранными" follow-anchor :disabled="!hasActions">
+      <div v-if="actionsVisible || selection.selected.length" class="roster-actions">
+        <ActionButton class="roster-actions-trigger" variant="quiet" layout="stacked" :disabled="!selection.selected.length"
+          aria-label="Сбросить выбор" title="Сбросить выбор" @click="selection.clear">
+          <template #icon><ListX :size="16" aria-hidden="true" /></template>
+          <span class="roster-action-label">Сбросить<br />выбор</span>
+          <span class="roster-action-label-short">Сброс</span>
+        </ActionButton>
+        <RowActionMenu v-if="actionsVisible" ref="menu" title="Действия с выбранными" follow-anchor :disabled="!hasActions">
           <template #trigger="{ open }">
-            <ActionButton class="roster-actions-trigger" variant="secondary" :disabled="!hasActions" aria-haspopup="menu" :aria-expanded="open">
+            <ActionButton class="roster-actions-trigger" variant="secondary" layout="stacked" :disabled="!hasActions" aria-haspopup="menu" :aria-expanded="open">
               <template #icon><ListFilter :size="16" aria-hidden="true" /></template>
               Действия
             </ActionButton>
@@ -46,19 +52,22 @@
             </RowActionItem>
           </template>
         </RowActionMenu>
-        <ActionButton v-if="encounter.challengeActive && !encounter.challengeBusy" class="roster-actions-trigger"
-          variant="quiet" @click="encounter.resetChallenge()">Убрать испытание</ActionButton>
+        <ActionButton v-if="actionsVisible && encounter.challengeActive && !encounter.challengeBusy" class="roster-actions-trigger"
+          variant="quiet" layout="stacked" aria-label="Убрать испытание" title="Убрать испытание" @click="encounter.resetChallenge()">
+          <template #icon><Eraser :size="16" aria-hidden="true" /></template>
+          <span class="roster-action-label">Убрать<br />испытание</span>
+          <span class="roster-action-label-short">Убрать</span>
+        </ActionButton>
       </div>
     </div>
-    <div v-if="actionsVisible || showSelectAll || selection.selected.length" class="roster-selection-heading">
-      <label v-if="showSelectAll" class="roster-all-check">
+    <div v-if="showSelectAll" class="roster-selection-heading">
+      <label class="roster-all-check">
         <CompactCheckbox :model-value="allVisible" :indeterminate="someVisible && !allVisible"
           :size="layoutTokens['roster-checkbox-icon']" :hit-size="layoutTokens['touch-min']"
           :disabled="!encounter.canManageReserves || !visibleRows.length" label="Выбрать всех в этой вкладке"
           @update:model-value="selection.setVisibleSelection(visibleRows, $event)" />
         <span>Все</span>
       </label>
-      <ActionButton class="roster-clear-selection" variant="quiet" :disabled="!selection.selected.length" @click="selection.clear">Сбросить выбор</ActionButton>
     </div>
   </div>
   <AppModalFrame v-if="action" :title="action === 'damage' ? 'Нанести урон' : 'Добавить опыт'" close-label="Закрыть" @close="!pending && (action = null)">
@@ -74,7 +83,7 @@
 <script setup>
 import { computed, ref, shallowRef, watch } from 'vue'
 import { ActionButton, AppModalFrame, CompactCheckbox, FormActionButtons, FormField, FormNumberInput, RowActionMenu } from '@sylvieshare/share-ui'
-import { HeartCrack, ListFilter, LogOut, Skull, Sparkles, Swords } from '@lucide/vue'
+import { Eraser, HeartCrack, ListFilter, ListX, LogOut, Skull, Sparkles, Swords } from '@lucide/vue'
 import EncounterChallengeMenu from './EncounterChallengeMenu.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import SessionActionTargets from './SessionActionTargets.vue'
@@ -127,32 +136,35 @@ async function apply() {
 }
 </script>
 <style scoped>
-.roster-selection {min-width:0}
+.roster-selection {min-width:0;container-type:inline-size}
 .roster-selection-heading {display:flex;align-items:center;flex-wrap:wrap;gap:var(--spacing-xs)}
 .roster-count-sr-only {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .roster-action-summary {font-size:var(--type-caption-size);color:var(--text-muted)}
 .roster-all-check {display:inline-flex;align-items:center;gap:var(--spacing-small);min-height:var(--layout-touch-min);margin-inline-start:var(--spacing-medium);cursor:pointer}
-.roster-clear-selection { margin-inline-start: auto; }
 .roster-selection-top {
   display: flex;
-  flex-wrap: wrap;
   align-items: flex-start;
   gap: var(--spacing-xs);
 }
-.roster-selection-top .roster-selection-summary { flex: 1 1 112px; }
+.roster-selection-top .roster-selection-summary { flex: 1 1 0; }
 .roster-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex: none;
   align-items: center;
-  justify-content: flex-end;
   gap: var(--spacing-xs);
-  max-inline-size: 100%;
   margin-inline-start: auto;
 }
-.roster-actions-trigger {
-  margin-block-start: var(--spacing-xs);
-  padding-inline: var(--spacing-small);
+.roster-actions .roster-actions-trigger {
+  --action-button-height: calc(var(--layout-touch-min) + var(--spacing-xs));
+  min-inline-size: var(--layout-touch-min);
+  padding-inline: calc(var(--spacing-xs) / 2);
+  text-align: center;
   white-space: nowrap;
+}
+.roster-action-label-short { display: none; }
+@container (max-width: 240px) {
+  .roster-action-label { display: none; }
+  .roster-action-label-short { display: inline; }
 }
 .roster-action-error { color: var(--danger); }
 </style>

@@ -41,7 +41,8 @@ const stackStyle = computed(() => ({
 .roster-selection-summary {
   display: flex;
   align-items: start;
-  gap: var(--spacing-small);
+  flex-wrap: wrap;
+  column-gap: var(--spacing-small);
   min-width: 0;
   box-sizing: border-box;
   min-block-size: calc(var(--layout-selection-summary-icon) + var(--spacing-large) + var(--spacing-xs));
@@ -49,7 +50,7 @@ const stackStyle = computed(() => ({
 }
 .selection-summary-icons {
   container-type: inline-size;
-  flex: 1;
+  flex: 1 1 var(--layout-selection-summary-icon);
   min-width: 0;
 }
 .selection-summary-stack {
@@ -100,6 +101,7 @@ const stackStyle = computed(() => ({
 .selection-summary-empty,
 .selection-summary-caption {
   flex: none;
+  max-inline-size: 100%;
   font-size: var(--type-caption-size);
   line-height: var(--layout-selection-summary-icon);
   color: var(--text-muted);
