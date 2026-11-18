@@ -1,20 +1,19 @@
 import { shallowRef } from 'vue'
 import { fetchGet } from '@/shared/api/http'
+import { useRedSkillArt } from '@/features/character-editor/composables/useRedSkillArt'
 
 export function useRedCreationArt() {
   const dictionaryTypes = shallowRef([])
   const collectionTypes = shallowRef([])
   const methods = shallowRef([])
-  const stats = shallowRef(new Map())
+  const skillArt = useRedSkillArt()
 
   async function loadDictionaries(sourceId) {
     const response = await fetchGet(`/suggest/types?sourceId=${sourceId}`)
     dictionaryTypes.value = response.items || []
     await Promise.allSettled([
       loadDictionary('Методы создания', rows => { methods.value = rows }),
-      loadDictionary('Характеристики', rows => {
-        stats.value = new Map(rows.map(row => [row.code, row]))
-      }),
+      skillArt.load(dictionaryTypes.value),
     ])
   }
 
@@ -37,7 +36,8 @@ export function useRedCreationArt() {
     load: sourceId => Promise.allSettled([loadDictionaries(sourceId), loadCollections(sourceId)]),
     dictionaryCover,
     collectionCover,
-    stat: key => stats.value.get(key),
+    stat: skillArt.stat,
+    skill: skillArt.skill,
     methodCover: key => methods.value.find(row => row.code === key)?.coverImageUrl || dictionaryCover('Методы создания'),
   }
 }

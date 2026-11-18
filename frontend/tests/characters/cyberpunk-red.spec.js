@@ -36,10 +36,12 @@ async function fixture(page){
    '/api/chars':{chars:[response()],sessionsByChar:{}},
    '/api/item-types':{types:[{name:'Киберимпланты',coverImageUrl:cover}]},
    '/api/items/by-ids':{items:[]},
-   '/api/suggest/types':{items:[{id:36,name:'Методы создания'},{id:34,name:'Характеристики',coverImageUrl:cover}]},
+   '/api/suggest/types':{items:[{id:36,name:'Методы создания'},{id:34,name:'Характеристики',coverImageUrl:cover},{id:38,name:'Навыки',coverImageUrl:cover}]},
    '/api/suggest/36':{items:[{code:'complete',coverImageUrl:cover}]},
-   '/api/suggest/34':{items:core.dictionaries['Характеристики'].map(stat=>({code:stat.key,value:stat.name,desc:stat.description,iconImageUrl:cover}))},
-   '/api/suggest/batch':{items:{}},'/api/sessions/active':{sessions:[]},
+   '/api/suggest/batch':{items:{
+    34:core.dictionaries['Характеристики'].map(stat=>({code:stat.key,value:stat.name,desc:stat.description,iconImageUrl:cover})),
+    38:core.dictionaries['Навыки'].map(skill=>({code:skill.key,value:skill.name,desc:skill.description,iconImageUrl:cover})),
+   }},'/api/sessions/active':{sessions:[]},
    '/api/account/tutorials':{tutorials:['mobile','desktop'].map(device=>({flowId:'character',sourceKey:'edition:30',device,status:'completed',revision:58}))},[`/api/char/${uuid}/sessions`]:{sessions:[]},[`/api/char/${uuid}/history`]:{changes:[]},
   }[path]||{}})
  })
@@ -177,6 +179,19 @@ for(const width of [390,840,1440]){
   expect(columns).toBeGreaterThan(1)
   expect(columns).toBeLessThanOrEqual(width===390?2:width===840?3:4)
   await testInfo.attach(`stats-${width}`,{body:await page.screenshot({animations:'disabled'}),contentType:'image/png'})
+  await railStep('Навыки').click()
+  const skills=main.locator('.red-skills')
+  await expect(skills.locator('.skill-stat-card img')).toHaveCount(10)
+  const skillCards=skills.locator('.red-skill-card')
+  await expect(skillCards).toHaveCount(67)
+  await expect(skillCards.locator('.skill-identity img')).toHaveCount(67)
+  await expect(skillCards.first().getByText(/База/)).toBeVisible()
+  const skillColumns=await skills.locator('.skill-card-grid').first().evaluate(grid=>getComputedStyle(grid).gridTemplateColumns.split(' ').filter(col=>col!=='0px').length)
+  expect(skillColumns).toBe(width===390?1:3)
+  await skills.getByRole('textbox',{name:'Найти навык'}).fill('Тактика')
+  await expect(skillCards).toHaveCount(1)
+  await expect(skillCards.first()).toContainText('Тактика')
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
   await rail.getByText('Киберимпланты',{exact:true}).click()
   await expect(page.getByRole('heading',{name:'Киберимпланты',exact:true})).toBeVisible()
   await expect(page.locator('.creation-cover')).toHaveJSProperty('naturalWidth',50)

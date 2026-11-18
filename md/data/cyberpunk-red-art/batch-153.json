@@ -1,0 +1,340 @@
+{
+  "batch": 153,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-153",
+  "sourceAudit": "All 66 own skill icon slots checked empty. Existing skill panora­mas from 110–118 already reviewed; new compact icons retain semantic subjects and use the established transparent cel-shaded language. Covers preserved.",
+  "assets": [
+    {
+      "key": "skill-demolitions-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 38,
+        "id": 479,
+        "name": "Взрывотехника"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. ONE compact original game UI icon for a fictional 2045 cyberpunk RPG. Polished graphic 2D CEL SHADING with thick continuous deep-plum contour, finer sparse inner lines, broad clean color planes and two-step matte shading. Restrained teal, burgundy, graphite, cream and amber palettes. Complete bold silhouette legible at 48 px. Center on square, even 10% safe margins. GENUINE transparent alpha outside subject. No text, logos, background, tile, frame, cast shadow, glowing halo or detached particles, no photorealism or 3D. Subject: one sealed graphite industrial shipping crate with bold amber handling corners and no readable markings or exposed objects.",
+      "original": "originals/skill-demolitions-icon-v1.png",
+      "final": "final/skill-demolitions-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9907d31d-839c-4506-bb6f-5ea76b5a313d.png",
+      "originalSha256": "8e2c3e4443518b445fd3c66f3b24f2c0765899966d3213ec964fdb1bbcb89203",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sha256": "5ddad73fab495433ea7a308e841a4accc97318da2cf504d2ad46e78acc098760",
+      "bytes": 15240,
+      "mimeType": "image/webp",
+      "exportRecipe": "Alpha bounds above 8/255 (ignore near-invisible generator edge specks), original alpha preserved, Lanczos3 contain in 112 px plus 8 px transparent safe margin, lossless RGBA WebP; no creative edits",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "alphaReview": {
+        "sourceTransparentPixels": 675526,
+        "sourceOpaquePixels": 1901,
+        "boundsThreshold": 8,
+        "bounds": {
+          "left": 110,
+          "top": 129,
+          "right": 1144,
+          "bottom": 1145
+        }
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Reviewed the 128/64 px dark/light exports: clear skill silhouette, cel shading, true alpha, complete subject and no labels.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50562,
+        "objectKey": "system-item-media/v1/suggests/38/479/icon/5ddad73fab495433ea7a308e841a4accc97318da2cf504d2ad46e78acc098760.webp",
+        "fileSize": 15240
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/479/icon/5ddad73fab495433ea7a308e841a4accc97318da2cf504d2ad46e78acc098760.webp"
+    },
+    {
+      "key": "skill-electronics-security-tech-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 38,
+        "id": 480,
+        "name": "Электроника и безопасность"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. ONE compact original game UI icon for a fictional 2045 cyberpunk RPG. Polished graphic 2D CEL SHADING with thick continuous deep-plum contour, finer sparse inner lines, broad clean color planes and two-step matte shading. Restrained teal, burgundy, graphite, cream and amber palettes. Complete bold silhouette legible at 48 px. Center on square, even 10% safe margins. GENUINE transparent alpha outside subject. No text, logos, background, tile, frame, cast shadow, glowing halo or detached particles, no photorealism or 3D. Subject: one solid compact electronic security module with an abstract teal padlock inset and gold connectors, no wiring, procedure or instructions.",
+      "original": "originals/skill-electronics-security-tech-icon-v1.png",
+      "final": "final/skill-electronics-security-tech-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b956ac14-afab-4e98-ad95-43b78bd3572c.png",
+      "originalSha256": "d5c257b429de0ecd2db443913e3da337b4e8bafa0f87a62d69b1bc711462e096",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sha256": "3e4b6d671dddb518b1912f81a49ed10b46736300c88a49d2008a8c5dc3618c0b",
+      "bytes": 13764,
+      "mimeType": "image/webp",
+      "exportRecipe": "Alpha bounds above 8/255 (ignore near-invisible generator edge specks), original alpha preserved, Lanczos3 contain in 112 px plus 8 px transparent safe margin, lossless RGBA WebP; no creative edits",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "alphaReview": {
+        "sourceTransparentPixels": 883667,
+        "sourceOpaquePixels": 1122,
+        "boundsThreshold": 8,
+        "bounds": {
+          "left": 197,
+          "top": 164,
+          "right": 1056,
+          "bottom": 1101
+        }
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Reviewed the 128/64 px dark/light exports: clear skill silhouette, cel shading, true alpha, complete subject and no labels.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50563,
+        "objectKey": "system-item-media/v1/suggests/38/480/icon/3e4b6d671dddb518b1912f81a49ed10b46736300c88a49d2008a8c5dc3618c0b.webp",
+        "fileSize": 13764
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/480/icon/3e4b6d671dddb518b1912f81a49ed10b46736300c88a49d2008a8c5dc3618c0b.webp"
+    },
+    {
+      "key": "skill-first-aid-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 38,
+        "id": 481,
+        "name": "Первая помощь"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. ONE compact original game UI icon for a fictional 2045 cyberpunk RPG. Polished graphic 2D CEL SHADING with thick continuous deep-plum contour, finer sparse inner lines, broad clean color planes and two-step matte shading. Restrained teal, burgundy, graphite, cream and amber palettes. Complete bold silhouette legible at 48 px. Center on square, even 10% safe margins. GENUINE transparent alpha outside subject. No text, logos, background, tile, frame, cast shadow, glowing halo or detached particles, no photorealism or 3D. Subject: one closed cream first-aid pouch with a teal strap and a broad white medical cross patch, no branding.",
+      "original": "originals/skill-first-aid-icon-v1.png",
+      "final": "final/skill-first-aid-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-02d6a42c-398a-4d7d-8d82-b91dfbecd5bd.png",
+      "originalSha256": "681c9de35642d1e53af3faaa9c0e01ce014410cda611c289bdd4af18bccfd9fd",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sha256": "4d378b526525d46d213b4ef74b02217814906dacbcc5312df180fc7b0aac7c6f",
+      "bytes": 16458,
+      "mimeType": "image/webp",
+      "exportRecipe": "Alpha bounds above 8/255 (ignore near-invisible generator edge specks), original alpha preserved, Lanczos3 contain in 112 px plus 8 px transparent safe margin, lossless RGBA WebP; no creative edits",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "alphaReview": {
+        "sourceTransparentPixels": 768936,
+        "sourceOpaquePixels": 1382,
+        "boundsThreshold": 8,
+        "bounds": {
+          "left": 147,
+          "top": 162,
+          "right": 1095,
+          "bottom": 1123
+        }
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Reviewed the 128/64 px dark/light exports: clear skill silhouette, cel shading, true alpha, complete subject and no labels.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50564,
+        "objectKey": "system-item-media/v1/suggests/38/481/icon/4d378b526525d46d213b4ef74b02217814906dacbcc5312df180fc7b0aac7c6f.webp",
+        "fileSize": 16458
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/481/icon/4d378b526525d46d213b4ef74b02217814906dacbcc5312df180fc7b0aac7c6f.webp"
+    },
+    {
+      "key": "skill-forgery-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 38,
+        "id": 482,
+        "name": "Подделка"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. ONE compact original game UI icon for a fictional 2045 cyberpunk RPG. Polished graphic 2D CEL SHADING with thick continuous deep-plum contour, finer sparse inner lines, broad clean color planes and two-step matte shading. Restrained teal, burgundy, graphite, cream and amber palettes. Complete bold silhouette legible at 48 px. Center on square, even 10% safe margins. GENUINE transparent alpha outside subject. No text, logos, background, tile, frame, cast shadow, glowing halo or detached particles, no photorealism or 3D. Subject: two compact credential cards, one with an abstract violet geometric watermark, one plain charcoal; no symbols resembling real IDs, text or process.",
+      "original": "originals/skill-forgery-icon-v1.png",
+      "final": "final/skill-forgery-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-65573c6f-2d3e-420f-ad97-94b99420d21d.png",
+      "originalSha256": "956b2c77d7ce9e7be5c5556af79552487ec0f2a6642f55d8d2faeb7f8655f837",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sha256": "3c1692bb86e844639c897b8d89fb1c44cca59a7cb69ef9725c899ca54e141947",
+      "bytes": 12064,
+      "mimeType": "image/webp",
+      "exportRecipe": "Alpha bounds above 8/255 (ignore near-invisible generator edge specks), original alpha preserved, Lanczos3 contain in 112 px plus 8 px transparent safe margin, lossless RGBA WebP; no creative edits",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "alphaReview": {
+        "sourceTransparentPixels": 916109,
+        "sourceOpaquePixels": 1774,
+        "boundsThreshold": 8,
+        "bounds": {
+          "left": 120,
+          "top": 252,
+          "right": 1124,
+          "bottom": 1010
+        }
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Reviewed the 128/64 px dark/light exports: clear skill silhouette, cel shading, true alpha, complete subject and no labels.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50565,
+        "objectKey": "system-item-media/v1/suggests/38/482/icon/3c1692bb86e844639c897b8d89fb1c44cca59a7cb69ef9725c899ca54e141947.webp",
+        "fileSize": 12064
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/482/icon/3c1692bb86e844639c897b8d89fb1c44cca59a7cb69ef9725c899ca54e141947.webp"
+    },
+    {
+      "key": "skill-land-vehicle-tech-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 38,
+        "id": 483,
+        "name": "Наземная техника"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. ONE compact original game UI icon for a fictional 2045 cyberpunk RPG. Polished graphic 2D CEL SHADING with thick continuous deep-plum contour, finer sparse inner lines, broad clean color planes and two-step matte shading. Restrained teal, burgundy, graphite, cream and amber palettes. Complete bold silhouette legible at 48 px. Center on square, even 10% safe margins. GENUINE transparent alpha outside subject. No text, logos, background, tile, frame, cast shadow, glowing halo or detached particles, no photorealism or 3D. Subject: one chunky graphite vehicle wheel and an amber socket-wrench shape, one compact automobile-maintenance emblem.",
+      "original": "originals/skill-land-vehicle-tech-icon-v1.png",
+      "final": "final/skill-land-vehicle-tech-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9df8a042-befc-426a-a196-fea0623b0810.png",
+      "originalSha256": "e77e8677af4a92aedb0e19db6d244175f803c5363199a1d35a5899aa1584c7bd",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sha256": "88e7cd8d56db476df45cd3da6b737179212a921a9f27a313e598d8e2010860a5",
+      "bytes": 18178,
+      "mimeType": "image/webp",
+      "exportRecipe": "Alpha bounds above 8/255 (ignore near-invisible generator edge specks), original alpha preserved, Lanczos3 contain in 112 px plus 8 px transparent safe margin, lossless RGBA WebP; no creative edits",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "alphaReview": {
+        "sourceTransparentPixels": 727007,
+        "sourceOpaquePixels": 1591,
+        "boundsThreshold": 8,
+        "bounds": {
+          "left": 85,
+          "top": 117,
+          "right": 1167,
+          "bottom": 1174
+        }
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Reviewed the 128/64 px dark/light exports: clear skill silhouette, cel shading, true alpha, complete subject and no labels.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50566,
+        "objectKey": "system-item-media/v1/suggests/38/483/icon/88e7cd8d56db476df45cd3da6b737179212a921a9f27a313e598d8e2010860a5.webp",
+        "fileSize": 18178
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/483/icon/88e7cd8d56db476df45cd3da6b737179212a921a9f27a313e598d8e2010860a5.webp"
+    },
+    {
+      "key": "skill-paint-draw-sculpt-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 38,
+        "id": 484,
+        "name": "Изобразительное искусство"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. ONE compact original game UI icon for a fictional 2045 cyberpunk RPG. Polished graphic 2D CEL SHADING with thick continuous deep-plum contour, finer sparse inner lines, broad clean color planes and two-step matte shading. Restrained teal, burgundy, graphite, cream and amber palettes. Complete bold silhouette legible at 48 px. Center on square, even 10% safe margins. GENUINE transparent alpha outside subject. No text, logos, background, tile, frame, cast shadow, glowing halo or detached particles, no photorealism or 3D. Subject: one small teal drawing tablet and warm red stylus with three large abstract pigment swatches on its screen, no lettering.",
+      "original": "originals/skill-paint-draw-sculpt-icon-v1.png",
+      "final": "final/skill-paint-draw-sculpt-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-86fd5a30-6a0d-429d-9213-2ae003f3e61b.png",
+      "originalSha256": "adb8c4d36ec4fc361b054fd73a86d1cb9a8a2815d9f4f6c0729f100e67a237a0",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sha256": "50a7cdbf6a040ee983932bfa19179bb77cfcda1f80a8fa43a7ffa1f73ab1a056",
+      "bytes": 14972,
+      "mimeType": "image/webp",
+      "exportRecipe": "Alpha bounds above 8/255 (ignore near-invisible generator edge specks), original alpha preserved, Lanczos3 contain in 112 px plus 8 px transparent safe margin, lossless RGBA WebP; no creative edits",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "alphaReview": {
+        "sourceTransparentPixels": 842962,
+        "sourceOpaquePixels": 1824,
+        "boundsThreshold": 8,
+        "bounds": {
+          "left": 64,
+          "top": 207,
+          "right": 1175,
+          "bottom": 1053
+        }
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Reviewed the 128/64 px dark/light exports: clear skill silhouette, cel shading, true alpha, complete subject and no labels.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50567,
+        "objectKey": "system-item-media/v1/suggests/38/484/icon/50a7cdbf6a040ee983932bfa19179bb77cfcda1f80a8fa43a7ffa1f73ab1a056.webp",
+        "fileSize": 14972
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/484/icon/50a7cdbf6a040ee983932bfa19179bb77cfcda1f80a8fa43a7ffa1f73ab1a056.webp"
+    }
+  ]
+}

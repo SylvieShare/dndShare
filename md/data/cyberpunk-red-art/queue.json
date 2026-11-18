@@ -14257,8 +14257,11 @@
       "name": "Авиационная техника",
       "code": "air-vehicle-tech",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 152,
+      "sha256": "45de5eed31a13c20f06268c70d10783ae291a8f715fdf4df01efccd237eeb2e0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/476/icon/45de5eed31a13c20f06268c70d10783ae291a8f715fdf4df01efccd237eeb2e0.webp"
     },
     {
       "kind": "suggest",
@@ -14280,8 +14283,11 @@
       "name": "Автоматический огонь",
       "code": "autofire",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 150,
+      "sha256": "18b108d456b8dc55945dc79c50e2986758b613538fb36dea54f2ef4040ce8ea6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/463/icon/18b108d456b8dc55945dc79c50e2986758b613538fb36dea54f2ef4040ce8ea6.webp"
     },
     {
       "kind": "suggest",
@@ -14303,8 +14309,11 @@
       "name": "Азартные игры",
       "code": "gamble",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 148,
+      "sha256": "7bc958e29862307a2e2daeb3848c8db77bcfc56d417feb341985f47293c0075c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/449/icon/7bc958e29862307a2e2daeb3848c8db77bcfc56d417feb341985f47293c0075c.webp"
     },
     {
       "kind": "suggest",
@@ -14326,8 +14335,11 @@
       "name": "Актёрское мастерство",
       "code": "acting",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 149,
+      "sha256": "a3c03adcb9862ca20bec70f7ea1d73b1d103fc723ab4b80c653ea42a0baf160b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/460/icon/a3c03adcb9862ca20bec70f7ea1d73b1d103fc723ab4b80c653ea42a0baf160b.webp"
     },
     {
       "kind": "suggest",
@@ -14349,8 +14361,11 @@
       "name": "Атлетика",
       "code": "athletics",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 144,
+      "sha256": "5ec161dd9bb11f65eab5bb41eba49754dcb066a7c6c35de3133373d6f12d6b37",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/430/icon/5ec161dd9bb11f65eab5bb41eba49754dcb066a7c6c35de3133373d6f12d6b37.webp"
     },
     {
       "kind": "suggest",
@@ -14372,8 +14387,11 @@
       "name": "Базовая техника",
       "code": "basic-tech",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 152,
+      "sha256": "22fc6352cf2ea479afcc952d0d94f34c556001d7e6ab896bc939c4d63c002e92",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/477/icon/22fc6352cf2ea479afcc952d0d94f34c556001d7e6ab896bc939c4d63c002e92.webp"
     },
     {
       "kind": "suggest",
@@ -14395,8 +14413,11 @@
       "name": "Беседа",
       "code": "conversation",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 151,
+      "sha256": "7c6ae15aee99c8f8481999e1d4e9d85bbc1b149e63ccb632d2f6e05d9f8524e9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/468/icon/7c6ae15aee99c8f8481999e1d4e9d85bbc1b149e63ccb632d2f6e05d9f8524e9.webp"
     },
     {
       "kind": "suggest",
@@ -14418,8 +14439,11 @@
       "name": "Бизнес",
       "code": "business",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 147,
+      "sha256": "e2152227ecf2b788de8ecce6ba09f2ffdf40fe66b7c664e1cc6ce1c8e380330a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/443/icon/e2152227ecf2b788de8ecce6ba09f2ffdf40fe66b7c664e1cc6ce1c8e380330a.webp"
     },
     {
       "kind": "suggest",
@@ -14441,8 +14465,11 @@
       "name": "Боевые искусства",
       "code": "martial-arts",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 149,
+      "sha256": "fe358f2a4f3db656d3ed6f8c0bd4c9895a065ae463ce6ff69cee77fdc7321b9c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/458/icon/fe358f2a4f3db656d3ed6f8c0bd4c9895a065ae463ce6ff69cee77fdc7321b9c.webp"
     },
     {
       "kind": "suggest",
@@ -14464,8 +14491,11 @@
       "name": "Бухгалтерия",
       "code": "accounting",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 146,
+      "sha256": "34f6650e1c2f920c5d2066cb31c1e2bafad6027853006a55c7961e89f68915fb",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/440/icon/34f6650e1c2f920c5d2066cb31c1e2bafad6027853006a55c7961e89f68915fb.webp"
     },
     {
       "kind": "suggest",
@@ -14487,8 +14517,11 @@
       "name": "Бюрократия",
       "code": "bureaucracy",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 146,
+      "sha256": "a67fad5969e9ca345e60bc5f8807530baa94fbc3ebffd42c9a942d834109fcdc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/442/icon/a67fad5969e9ca345e60bc5f8807530baa94fbc3ebffd42c9a942d834109fcdc.webp"
     },
     {
       "kind": "suggest",
@@ -14510,8 +14543,11 @@
       "name": "Верховая езда",
       "code": "riding",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 146,
+      "sha256": "1af75f822dceaacf4e721d5844d166f8b687b26adb58689d85b94bc33c325f78",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/439/icon/1af75f822dceaacf4e721d5844d166f8b687b26adb58689d85b94bc33c325f78.webp"
     },
     {
       "kind": "suggest",
@@ -14533,8 +14569,11 @@
       "name": "Взлом замков",
       "code": "pick-lock",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 154,
+      "sha256": "567ace953430fbdbbc53f91a60a9f8b13eef44866d2370b84e8e90f5af3639f0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/487/icon/567ace953430fbdbbc53f91a60a9f8b13eef44866d2370b84e8e90f5af3639f0.webp"
     },
     {
       "kind": "suggest",
@@ -14556,8 +14595,11 @@
       "name": "Взрывотехника",
       "code": "demolitions",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 153,
+      "sha256": "5ddad73fab495433ea7a308e841a4accc97318da2cf504d2ad46e78acc098760",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/479/icon/5ddad73fab495433ea7a308e841a4accc97318da2cf504d2ad46e78acc098760.webp"
     },
     {
       "kind": "suggest",
@@ -14579,8 +14621,11 @@
       "name": "Внимательность",
       "code": "perception",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 144,
+      "sha256": "57a9c496776b290f7660a1a8819bc15a249045cb5bbc35af15ca86ccb2e0564f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/428/icon/57a9c496776b290f7660a1a8819bc15a249045cb5bbc35af15ca86ccb2e0564f.webp"
     },
     {
       "kind": "suggest",
@@ -14602,8 +14647,11 @@
       "name": "Вождение наземного транспорта",
       "code": "drive-land-vehicle",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 145,
+      "sha256": "3aef2303095e553113b7a2d59164b072f41714e6a7550ab08bd4c77aeb04dc83",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/436/icon/3aef2303095e553113b7a2d59164b072f41714e6a7550ab08bd4c77aeb04dc83.webp"
     },
     {
       "kind": "suggest",
@@ -14625,8 +14673,11 @@
       "name": "Выживание",
       "code": "wilderness-survival",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 149,
+      "sha256": "9adbfd85f775434431eed816fc84436dbb9fe5b5f11702b7d3f488aa16e6aa00",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/455/icon/9adbfd85f775434431eed816fc84436dbb9fe5b5f11702b7d3f488aa16e6aa00.webp"
     },
     {
       "kind": "suggest",
@@ -14648,8 +14699,11 @@
       "name": "Выносливость",
       "code": "endurance",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 145,
+      "sha256": "f0c21ccbcbb52c009c9dc3323c95a0e6af77ae5b44192173b5a5f62fcf884e66",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/433/icon/f0c21ccbcbb52c009c9dc3323c95a0e6af77ae5b44192173b5a5f62fcf884e66.webp"
     },
     {
       "kind": "suggest",
@@ -14671,8 +14725,11 @@
       "name": "Выслеживание",
       "code": "tracking",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 144,
+      "sha256": "d6d74fadc04a69cc949a9fe4af5f71c0fc147ad3fe822d0e2c5a3eceb2fb01ce",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/429/icon/d6d74fadc04a69cc949a9fe4af5f71c0fc147ad3fe822d0e2c5a3eceb2fb01ce.webp"
     },
     {
       "kind": "suggest",
@@ -14694,8 +14751,11 @@
       "name": "Гардероб и стиль",
       "code": "wardrobe-style",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 152,
+      "sha256": "7acb7ad9a1d77503237732d28e1244148b5c07be3ecb9942bd5e8f985e96b3de",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/475/icon/7acb7ad9a1d77503237732d28e1244148b5c07be3ecb9942bd5e8f985e96b3de.webp"
     },
     {
       "kind": "suggest",
@@ -14717,8 +14777,11 @@
       "name": "Гибкость",
       "code": "contortionist",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 145,
+      "sha256": "584c68aa4f9a98676a2b4dbe345b752c7a06fc0cb58e8c5c7f60a2d53c7deb7f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/431/icon/584c68aa4f9a98676a2b4dbe345b752c7a06fc0cb58e8c5c7f60a2d53c7deb7f.webp"
     },
     {
       "kind": "suggest",
@@ -14740,8 +14803,11 @@
       "name": "Дедукция",
       "code": "deduction",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 147,
+      "sha256": "7e79b36a76b841aa3d5ef44fa5dd0e8103e72dbf3307122196132815b8c796ed",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/447/icon/7e79b36a76b841aa3d5ef44fa5dd0e8103e72dbf3307122196132815b8c796ed.webp"
     },
     {
       "kind": "suggest",
@@ -14763,8 +14829,11 @@
       "name": "Длинноствольное оружие",
       "code": "shoulder-arms",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 150,
+      "sha256": "9b6e86e9f2268ba883301fe94641d1bf0cf70da5d7dc17292ddc62c6ad1404ca",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/466/icon/9b6e86e9f2268ba883301fe94641d1bf0cf70da5d7dc17292ddc62c6ad1404ca.webp"
     },
     {
       "kind": "suggest",
@@ -14786,8 +14855,11 @@
       "name": "Допрос",
       "code": "interrogation",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 151,
+      "sha256": "43204ef56775c3d7b1ae3210806cd21a684537f01652dcc7b2ad178fb5c6a208",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/470/icon/43204ef56775c3d7b1ae3210806cd21a684537f01652dcc7b2ad178fb5c6a208.webp"
     },
     {
       "kind": "suggest",
@@ -14809,8 +14881,11 @@
       "name": "Знание местности",
       "code": "local-expert",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 148,
+      "sha256": "d5966ff958141b8f00acabb4d47dbf49e91085b7b97167dd765e20571dffd366",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/452/icon/d5966ff958141b8f00acabb4d47dbf49e91085b7b97167dd765e20571dffd366.webp"
     },
     {
       "kind": "suggest",
@@ -14832,8 +14907,11 @@
       "name": "Знание улиц",
       "code": "streetwise",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 152,
+      "sha256": "1729af1ed73eddae7706fb88745656deb076d3e91fe1c4e4458ffd3d18dbcb56",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/473/icon/1729af1ed73eddae7706fb88745656deb076d3e91fe1c4e4458ffd3d18dbcb56.webp"
     },
     {
       "kind": "suggest",
@@ -14855,8 +14933,11 @@
       "name": "Игра на инструменте",
       "code": "play-instrument",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 150,
+      "sha256": "3c1644e4f8e11f9d7dcad482049f440b1c0c60579e57f919463cf268fa877175",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/461/icon/3c1644e4f8e11f9d7dcad482049f440b1c0c60579e57f919463cf268fa877175.webp"
     },
     {
       "kind": "suggest",
@@ -14878,8 +14959,11 @@
       "name": "Изобразительное искусство",
       "code": "paint-draw-sculpt",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 153,
+      "sha256": "50a7cdbf6a040ee983932bfa19179bb77cfcda1f80a8fa43a7ffa1f73ab1a056",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/484/icon/50a7cdbf6a040ee983932bfa19179bb77cfcda1f80a8fa43a7ffa1f73ab1a056.webp"
     },
     {
       "kind": "suggest",
@@ -14901,8 +14985,11 @@
       "name": "Карманная кража",
       "code": "pick-pocket",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 154,
+      "sha256": "9a5f7819bf0b3c87734489cf724de3a7f41b50882e301eac0ee7ea4620417fae",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/488/icon/9a5f7819bf0b3c87734489cf724de3a7f41b50882e301eac0ee7ea4620417fae.webp"
     },
     {
       "kind": "suggest",
@@ -14924,8 +15011,11 @@
       "name": "Кибертехника",
       "code": "cybertech",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 152,
+      "sha256": "a47d40651c15298b8570a7dfdb719136c93a1b5b3a0a8eadb3137cb6da575612",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/478/icon/a47d40651c15298b8570a7dfdb719136c93a1b5b3a0a8eadb3137cb6da575612.webp"
     },
     {
       "kind": "suggest",
@@ -14947,8 +15037,11 @@
       "name": "Криминология",
       "code": "criminology",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 147,
+      "sha256": "656c3aeb08d23cd88c231bd026b1a9b7282ae7253ac090c18ea97b2b912cf668",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/445/icon/656c3aeb08d23cd88c231bd026b1a9b7282ae7253ac090c18ea97b2b912cf668.webp"
     },
     {
       "kind": "suggest",
@@ -14970,8 +15063,11 @@
       "name": "Криптография",
       "code": "cryptography",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 147,
+      "sha256": "ddb8d605ebdc4a21fc15c54646fcd6a174ec27f87d7073c1ee877b38875fa4d4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/446/icon/ddb8d605ebdc4a21fc15c54646fcd6a174ec27f87d7073c1ee877b38875fa4d4.webp"
     },
     {
       "kind": "suggest",
@@ -14993,8 +15089,11 @@
       "name": "Наземная техника",
       "code": "land-vehicle-tech",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 153,
+      "sha256": "88e7cd8d56db476df45cd3da6b737179212a921a9f27a313e598d8e2010860a5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/483/icon/88e7cd8d56db476df45cd3da6b737179212a921a9f27a313e598d8e2010860a5.webp"
     },
     {
       "kind": "suggest",
@@ -15016,8 +15115,11 @@
       "name": "Наука",
       "code": "science",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 148,
+      "sha256": "fdfc09114c2f469ef92a1ad2a8635a8400b092f253e2931a6c1d6e18cf517547",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/453/icon/fdfc09114c2f469ef92a1ad2a8635a8400b092f253e2931a6c1d6e18cf517547.webp"
     },
     {
       "kind": "suggest",
@@ -15039,8 +15141,11 @@
       "name": "Образование",
       "code": "education",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 147,
+      "sha256": "4f0452094df3dd14ed28101606f39db6508e6b604581643e59b0e48baf68a1b0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/448/icon/4f0452094df3dd14ed28101606f39db6508e6b604581643e59b0e48baf68a1b0.webp"
     },
     {
       "kind": "suggest",
@@ -15062,8 +15167,11 @@
       "name": "Обращение с животными",
       "code": "animal-handling",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 146,
+      "sha256": "11b5e5868f2d255d572832ec1ccf9965b5e3c75b262b01b9eadc46b5e7625768",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/441/icon/11b5e5868f2d255d572832ec1ccf9965b5e3c75b262b01b9eadc46b5e7625768.webp"
     },
     {
       "kind": "suggest",
@@ -15085,8 +15193,11 @@
       "name": "Оружейная техника",
       "code": "weaponstech",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 154,
+      "sha256": "507b932c7dc643a998b70cbb274db355eb90d05fd9f81d2fbcc5d610d540ffa5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/490/icon/507b932c7dc643a998b70cbb274db355eb90d05fd9f81d2fbcc5d610d540ffa5.webp"
     },
     {
       "kind": "suggest",
@@ -15108,8 +15219,11 @@
       "name": "Парамедицина",
       "code": "paramedic",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 154,
+      "sha256": "45b4ec139b00c01d98a514b8217cfd06589c11dbef051120be1da6a5845ec7b3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/485/icon/45b4ec139b00c01d98a514b8217cfd06589c11dbef051120be1da6a5845ec7b3.webp"
     },
     {
       "kind": "suggest",
@@ -15131,8 +15245,11 @@
       "name": "Первая помощь",
       "code": "first-aid",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 153,
+      "sha256": "4d378b526525d46d213b4ef74b02217814906dacbcc5312df180fc7b0aac7c6f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/481/icon/4d378b526525d46d213b4ef74b02217814906dacbcc5312df180fc7b0aac7c6f.webp"
     },
     {
       "kind": "suggest",
@@ -15154,8 +15271,11 @@
       "name": "Пилотирование воздушного транспорта",
       "code": "pilot-air-vehicle",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 146,
+      "sha256": "5ae1cda6c1b9e4196e59e192590632a551d2dd89a478a3ef73a8d5e255d745de",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/437/icon/5ae1cda6c1b9e4196e59e192590632a551d2dd89a478a3ef73a8d5e255d745de.webp"
     },
     {
       "kind": "suggest",
@@ -15177,8 +15297,11 @@
       "name": "Пистолеты",
       "code": "handgun",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 150,
+      "sha256": "3f44b9c00f5464332f82ef872c137666f5ead18af9aa9566f1a383cc15c28d65",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/464/icon/3f44b9c00f5464332f82ef872c137666f5ead18af9aa9566f1a383cc15c28d65.webp"
     },
     {
       "kind": "suggest",
@@ -15200,8 +15323,11 @@
       "name": "Подделка",
       "code": "forgery",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 153,
+      "sha256": "3c1692bb86e844639c897b8d89fb1c44cca59a7cb69ef9725c899ca54e141947",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/482/icon/3c1692bb86e844639c897b8d89fb1c44cca59a7cb69ef9725c899ca54e141947.webp"
     },
     {
       "kind": "suggest",
@@ -15223,8 +15349,11 @@
       "name": "Подкуп",
       "code": "bribery",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 151,
+      "sha256": "656c087ab0c63ca067fe7dfa6bae4ae7653f91bdc7dc3382301eb51519907aaa",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/467/icon/656c087ab0c63ca067fe7dfa6bae4ae7653f91bdc7dc3382301eb51519907aaa.webp"
     },
     {
       "kind": "suggest",
@@ -15246,8 +15375,11 @@
       "name": "Поиск информации",
       "code": "library-search",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 148,
+      "sha256": "cbad34e547541e31b1869ca589e80bc49688bcc8fd24f6fa773b2d7b68c3ffab",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/451/icon/cbad34e547541e31b1869ca589e80bc49688bcc8fd24f6fa773b2d7b68c3ffab.webp"
     },
     {
       "kind": "suggest",
@@ -15269,8 +15401,11 @@
       "name": "Проницательность",
       "code": "human-perception",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 151,
+      "sha256": "f9731f61f58b300e2c3f09ca22d1e447ca1698253a70ee91409040c3b42f42d6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/469/icon/f9731f61f58b300e2c3f09ca22d1e447ca1698253a70ee91409040c3b42f42d6.webp"
     },
     {
       "kind": "suggest",
@@ -15292,8 +15427,11 @@
       "name": "Рукопашный бой",
       "code": "brawling",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 149,
+      "sha256": "b6b31e1a12fe40a48bca9038ecaaa95c6e46fb3cf314f1c7d5c6477413a71425",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/456/icon/b6b31e1a12fe40a48bca9038ecaaa95c6e46fb3cf314f1c7d5c6477413a71425.webp"
     },
     {
       "kind": "suggest",
@@ -15315,8 +15453,11 @@
       "name": "Скрытность",
       "code": "stealth",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 145,
+      "sha256": "ef30b9ecd15bbb345f347f442e85dde4337f02c79b2183ac967c1739662d3fa4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/435/icon/ef30b9ecd15bbb345f347f442e85dde4337f02c79b2183ac967c1739662d3fa4.webp"
     },
     {
       "kind": "suggest",
@@ -15338,8 +15479,11 @@
       "name": "Сопротивление пыткам и препаратам",
       "code": "resist-torture-drugs",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 145,
+      "sha256": "368eecf4b3d72ef581b358ed5d4f38c3413c3fbd0109ab6af19c957a7aeedca7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/434/icon/368eecf4b3d72ef581b358ed5d4f38c3413c3fbd0109ab6af19c957a7aeedca7.webp"
     },
     {
       "kind": "suggest",
@@ -15361,8 +15505,11 @@
       "name": "Сосредоточение",
       "code": "concentration",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 144,
+      "sha256": "d3b7235484ef88fd7c86f28fd2f24c0306d73f97ada2f4915db862df75cb1a23",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/425/icon/d3b7235484ef88fd7c86f28fd2f24c0306d73f97ada2f4915db862df75cb1a23.webp"
     },
     {
       "kind": "suggest",
@@ -15384,8 +15531,11 @@
       "name": "Сочинительство",
       "code": "composition",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 147,
+      "sha256": "ec5dd04dbf8166486d31acce3e04d09b1224ac34337efbf8e5b7cfc18338edb3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/444/icon/ec5dd04dbf8166486d31acce3e04d09b1224ac34337efbf8e5b7cfc18338edb3.webp"
     },
     {
       "kind": "suggest",
@@ -15407,8 +15557,11 @@
       "name": "Спрятать / обнаружить предмет",
       "code": "conceal-reveal-object",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 144,
+      "sha256": "ddf9245f866257f84072c4aae678a9d02234b2596d925786352e40a5790ffa69",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/426/icon/ddf9245f866257f84072c4aae678a9d02234b2596d925786352e40a5790ffa69.webp"
     },
     {
       "kind": "suggest",
@@ -15430,8 +15583,11 @@
       "name": "Стрельба из лука",
       "code": "archery",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 150,
+      "sha256": "074c795b4351b43b1e24bbf7b763496f4129c88e08d0d5a71fa0746dd91326e5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/462/icon/074c795b4351b43b1e24bbf7b763496f4129c88e08d0d5a71fa0746dd91326e5.webp"
     },
     {
       "kind": "suggest",
@@ -15453,8 +15609,11 @@
       "name": "Судовая техника",
       "code": "sea-vehicle-tech",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 154,
+      "sha256": "155f71734d3312e3f7e3834963acb21af4fef946828777594ea5a92d9d7e8f5c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/489/icon/155f71734d3312e3f7e3834963acb21af4fef946828777594ea5a92d9d7e8f5c.webp"
     },
     {
       "kind": "suggest",
@@ -15476,8 +15635,11 @@
       "name": "Тактика",
       "code": "tactics",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 148,
+      "sha256": "4cf1891313afcf773d486a4479e7a689d7df4b7d0276fb735b315a8042b55838",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/454/icon/4cf1891313afcf773d486a4479e7a689d7df4b7d0276fb735b315a8042b55838.webp"
     },
     {
       "kind": "suggest",
@@ -15499,8 +15661,11 @@
       "name": "Танец",
       "code": "dance",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 145,
+      "sha256": "1a9093d3046565103675e51ba50a5cc5cf5c9b26b4599d23cdc12b9b4c32d989",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/432/icon/1a9093d3046565103675e51ba50a5cc5cf5c9b26b4599d23cdc12b9b4c32d989.webp"
     },
     {
       "kind": "suggest",
@@ -15522,8 +15687,11 @@
       "name": "Торговля",
       "code": "trading",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 152,
+      "sha256": "53488d1ac4292f03ba383db0d711bd90552e1d44b755253cd5d09371fb97d7ff",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/474/icon/53488d1ac4292f03ba383db0d711bd90552e1d44b755253cd5d09371fb97d7ff.webp"
     },
     {
       "kind": "suggest",
@@ -15545,8 +15713,11 @@
       "name": "Тяжёлое оружие",
       "code": "heavy-weapons",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 150,
+      "sha256": "6f8242246f926a3c557b20e87c0e3fb049d8147c477cb51891ed89fd9a25b07c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/465/icon/6f8242246f926a3c557b20e87c0e3fb049d8147c477cb51891ed89fd9a25b07c.webp"
     },
     {
       "kind": "suggest",
@@ -15568,8 +15739,11 @@
       "name": "Убеждение",
       "code": "persuasion",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 151,
+      "sha256": "d303196142787c428eca16813ac6e4c4a6a811ec6863591978c9350e322d427e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/471/icon/d303196142787c428eca16813ac6e4c4a6a811ec6863591978c9350e322d427e.webp"
     },
     {
       "kind": "suggest",
@@ -15591,8 +15765,11 @@
       "name": "Уклонение",
       "code": "evasion",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 149,
+      "sha256": "f1873208d57237a8df87da3e94a414cdb441c168e3238cd7eb82ef08ef1c2300",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/457/icon/f1873208d57237a8df87da3e94a414cdb441c168e3238cd7eb82ef08ef1c2300.webp"
     },
     {
       "kind": "suggest",
@@ -15614,8 +15791,11 @@
       "name": "Управление водным транспортом",
       "code": "pilot-sea-vehicle",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 146,
+      "sha256": "7d62e51dbd3fef04d7ecce18c9313bdbdf0f2da41a31f0d71450d4a600269895",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/438/icon/7d62e51dbd3fef04d7ecce18c9313bdbdf0f2da41a31f0d71450d4a600269895.webp"
     },
     {
       "kind": "suggest",
@@ -15637,8 +15817,11 @@
       "name": "Уход за внешностью",
       "code": "personal-grooming",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 151,
+      "sha256": "bea24ea5f69c9d3c9218d0511351237fe03cb2a53748440295604779c4f5a5d2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/472/icon/bea24ea5f69c9d3c9218d0511351237fe03cb2a53748440295604779c4f5a5d2.webp"
     },
     {
       "kind": "suggest",
@@ -15660,8 +15843,11 @@
       "name": "Фото и видеосъёмка",
       "code": "photography-film",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 154,
+      "sha256": "89f0e93205ea35e7d315293f520aa637a7cd01e35c6ba40f25319d919751ad7a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/486/icon/89f0e93205ea35e7d315293f520aa637a7cd01e35c6ba40f25319d919751ad7a.webp"
     },
     {
       "kind": "suggest",
@@ -15683,8 +15869,11 @@
       "name": "Холодное оружие",
       "code": "melee-weapon",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 149,
+      "sha256": "ec8f48bb584669af8fdea21bd1d8c19b32960df38e916e7f480f81641e73a3c1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/459/icon/ec8f48bb584669af8fdea21bd1d8c19b32960df38e916e7f480f81641e73a3c1.webp"
     },
     {
       "kind": "suggest",
@@ -15706,8 +15895,11 @@
       "name": "Чтение по губам",
       "code": "lip-reading",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 144,
+      "sha256": "fc9bbd41b7933669cdcde12d0d80bcd6ad2559ed677d0b1a8301c102d7418a7a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/427/icon/fc9bbd41b7933669cdcde12d0d80bcd6ad2559ed677d0b1a8301c102d7418a7a.webp"
     },
     {
       "kind": "suggest",
@@ -15729,8 +15921,11 @@
       "name": "Электроника и безопасность",
       "code": "electronics-security-tech",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 153,
+      "sha256": "3e4b6d671dddb518b1912f81a49ed10b46736300c88a49d2008a8c5dc3618c0b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/480/icon/3e4b6d671dddb518b1912f81a49ed10b46736300c88a49d2008a8c5dc3618c0b.webp"
     },
     {
       "kind": "suggest",
@@ -15752,8 +15947,11 @@
       "name": "Язык",
       "code": "language",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 148,
+      "sha256": "8f87ff89c3f78ec108158f16d7bf1680f444d7c27c290fb4be245b396adcaf47",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/38/450/icon/8f87ff89c3f78ec108158f16d7bf1680f444d7c27c290fb4be245b396adcaf47.webp"
     },
     {
       "kind": "suggest",
@@ -18795,7 +18993,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 911,
+    "publishedSlots": 977,
     "readySlots": 0,
     "totalSlots": 1848
   }

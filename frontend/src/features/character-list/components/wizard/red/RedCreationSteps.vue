@@ -123,29 +123,35 @@
       @patch="patch"
       @roll="emit('roll-stats')"
     />
-    <template v-else-if="step === 'skills'"
-      ><RedCreationIntro title="Навыки" :cover="art.dictionaryCover('Навыки')" />
+    <template v-else-if="step === 'skills'">
+      <div class="red-stack skills-step-intro">
+        <RedCreationIntro title="Навыки" :cover="art.dictionaryCover('Навыки')" />
+      </div>
       <p>
         Стоимость: {{ validation.skills?.spent || 0 }} / 86. Родной язык 4 не
         расходует очки.
       </p>
-      <div class="red-form-grid">
-        <FormField
-          v-for="key in ['science', 'play-instrument']"
-          :key="key"
-          :label="
-            key === 'science' ? 'Специализация науки' : 'Музыкальный инструмент'
-          "
-          vertical
-          ><FormTextInput
-            :value="draft.specializations[key] || ''"
-            @update:value="emit('specialization', { key, value: $event })"
-        /></FormField>
-      </div>
+      <details class="skills-step-specializations">
+        <summary>Начальные специализации</summary>
+        <div class="red-form-grid">
+          <FormField
+            v-for="key in ['science', 'play-instrument']"
+            :key="key"
+            :label="key === 'science' ? 'Специализация науки' : 'Музыкальный инструмент'"
+            vertical
+          >
+            <FormTextInput
+              :value="draft.specializations[key] || ''"
+              @update:value="emit('specialization', { key, value: $event })"
+            />
+          </FormField>
+        </div>
+      </details>
       <RedSkills
         creation
         :values="skillValues"
         :items="[]"
+        :art="art"
         :editable="draft.method !== 'streetrat'"
         :allowed-keys="draft.method === 'edgerunner' ? RED_ROLE_SKILLS[draft.role].map(skill => skill.key) : null"
         @patch="patch"
@@ -292,6 +298,9 @@ const roleFields = {
 </script>
 
 <style scoped>
+.skills-step-intro :deep(.creation-cover) { height: clamp(110px, 18vw, 165px); object-position: center top; }
+.skills-step-specializations summary { cursor: pointer; color: var(--text-2); }
+.skills-step-specializations[open] summary { margin-block-end: var(--spacing-small); }
 @media (min-width: 1050px) {
   .method-stage :deep(.illustrated-choice-list--two-column) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
