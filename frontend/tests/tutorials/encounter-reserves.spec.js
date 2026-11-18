@@ -38,6 +38,18 @@ for(const width of [475,704,1440])test(`reserve sidebar tabs create rename and r
   await name.fill('Волки');await name.press('Enter')
   await expect(nav.getByRole('button',{name:'Волки',exact:true})).toBeVisible()
   await expect.poll(()=>api.encounter().reserveTabs?.[0]?.name).toBe('Волки')
+  const heading=sidebar.locator('.map-sidebar-heading')
+  for(const label of ['Переименовать вкладку','Удалить вкладку','Добавить существо']) {
+    const button=heading.getByRole('button',{name:label,exact:true})
+    await expect(button).toHaveCSS('width','48px')
+    await expect(button).toHaveCSS('height','48px')
+    await expect(button.locator('svg')).toHaveAttribute('width','20')
+    await expect(button.locator('svg')).toHaveAttribute('height','20')
+  }
+  await heading.getByRole('button',{name:'Добавить существо',exact:true}).click()
+  await expect(page.getByRole('menuitem',{name:'Создать упрощённое существо',exact:true})).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('menu',{name:'Добавить существо',exact:true})).toHaveCount(0)
   const id=api.encounter().reserveTabs[0].id
   await sidebar.getByRole('button',{name:'Переименовать вкладку',exact:true}).click()
   await name.fill('Не сохранять');await name.press('Escape')
