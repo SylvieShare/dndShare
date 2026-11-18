@@ -8,6 +8,7 @@ import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 export function useEncounterHp({
   encounter,
   applyCombatDamage,
+  previewHp = () => null,
   selectedUids,
   getCombatant,
   mutate,
@@ -41,10 +42,10 @@ export function useEncounterHp({
   function hpParts(c) {
     if (c.type === 'player') {
       const hp = getPlayerHp(c.charId) ?? { current: 0, max: 0, temp: 0 }
-      return { current: hp.current, max: hp.max, temp: hp.temp }
+      return { current: hp.current, max: hp.max, temp: hp.temp, ...previewHp(c.uid) }
     }
     const max = npcHpMax(c)
-    return { current: c.hpCurrent ?? max ?? 0, max, temp: c.hpTemp ?? 0 }
+    return { current: c.hpCurrent ?? max ?? 0, max, temp: c.hpTemp ?? 0, ...previewHp(c.uid) }
   }
 
   function hpPercent(c) {
@@ -68,16 +69,14 @@ export function useEncounterHp({
 
   function hpLabel(c) {
     if (c.type === 'player') {
-      const hp = getPlayerHp(c.charId)
-      if (!hp) return '—'
-      return `${hp.current}/${hp.max}`
+      return playerHpLabel(c) || '—'
     }
-    return `${c.hpCurrent ?? '?'}/${npcHpMax(c) || '?'}`
+    return `${previewHp(c.uid)?.current ?? c.hpCurrent ?? '?'}/${npcHpMax(c) || '?'}`
   }
 
   function playerHpLabel(c) {
-    const hp = getPlayerHp(c.charId)
-    if (!hp) return ''
+    if (!getPlayerHp(c.charId)) return ''
+    const hp = hpParts(c)
     return `${hp.current}/${hp.max}`
   }
 
@@ -86,29 +85,25 @@ export function useEncounterHp({
   }
 
   function npcHpObj(c) {
-    return { current: c.hpCurrent ?? 0, max: npcHpMax(c), temp: c.hpTemp ?? 0, hitDice: [] }
+    return { ...hpParts(getCombatant(c.uid) ?? c), hitDice: [] }
   }
 
   function playerHpObj(c) {
     const p = findParticipant(c.charId)
-    return (p && pvHp(p)) || {
-      current: 0, max: 0, temp: 0, hitDice: [], ds_success: 0, ds_failure: 0,
-    }
+    const hp = (p && pvHp(p)) || { current: 0, max: 0, temp: 0, hitDice: [], ds_success: 0, ds_failure: 0 }
+    return { ...hp, ...previewHp(c.uid) }
   }
 
   function npcDsHp(c) {
     return {
-      current: c.hpCurrent ?? 0,
-      max: npcHpMax(c),
-      temp: c.hpTemp ?? 0,
+      ...hpParts(c),
       ds_success: c.hpDsSuccess ?? 0,
       ds_failure: c.hpDsFailure ?? 0,
     }
   }
 
   function playerDsHp(c) {
-    const p = findParticipant(c.charId)
-    const v = (p && pvHp(p)) || {}
+    const v = playerHpObj(c)
     return {
       current: Number(v.current) || 0,
       max: hpMaximum(v),
@@ -209,9 +204,8 @@ export function useEncounterHp({
   }
 
   async function applyDamageToCombatant(combatant, amount) {
+    if (!combatant || !Number.isSafeInteger(amount) || amount < 1) return
     await applyCombatDamage([combatant], amount)
-    if (hpCalcNpc.value) hpCalcNpc.value = getCombatant(hpCalcNpc.value.uid)
-    if (hpCalcPlayer.value) hpCalcPlayer.value = getCombatant(hpCalcPlayer.value.uid)
   }
 
   async function onPlayerDsChange(c, hp) {

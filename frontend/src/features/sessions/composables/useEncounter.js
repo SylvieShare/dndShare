@@ -24,6 +24,8 @@ import {
   bestiaryTypeRef,
   ensureBestiaryType,
   initRank,
+  isSceneMember,
+  hpAfterDamage,
   normalizeEncounterPosition,
   sideOf,
 } from '@/features/sessions/lib/encounterHelpers'
@@ -118,8 +120,8 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     encounter.value = { ...encounter.value, combatants: [...encounter.value.combatants] }
   }
 
-  const inCombat = computed(() => {
-    const list = encounter.value.combatants.filter(c => c.position === 'combat')
+  const sceneRows = computed(() => {
+    const list = encounter.value.combatants.filter(isSceneMember)
     if (!encounter.value.active) return list
     return [...list].sort((a, b) => {
       if (a.initiative == null && b.initiative == null) return (a.tieBreak ?? 0) - (b.tieBreak ?? 0)
@@ -130,7 +132,10 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     })
   })
 
+  const inCombat = computed(() => sceneRows.value.filter(c => c.position === 'combat'))
+
   function isAliveInTurn(c) {
+    if (c.position === 'dead') return false
     if (c.type === 'npc' && Number(c.hpCurrent) <= 0) return false
     return true
   }
@@ -158,25 +163,35 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   const reserves = useEncounterReserves({ encounter, loaded, mutate, getCombatant })
   const { reserveNpcs } = reserves
   const reservePlayers = computed(() =>
-    encounter.value.combatants.filter(c => c.type === 'player' && c.position === 'reserve')
-  )
-  const deadCombatants = computed(() =>
-    encounter.value.combatants.filter(c => c.position === 'dead')
+    encounter.value.combatants.filter(c => c.type === 'player' && c.position !== 'combat')
   )
 
   function listForGroup(group) {
     if (group === 'combat') return inCombat.value
     if (group === 'reserve-npc') return reserveNpcs.value
     if (group === 'reserve-player') return reservePlayers.value
-    if (group === 'dead') return deadCombatants.value
     return []
   }
 
   const selection = useEncounterSelection({ encounter, listForGroup })
 
-  const impacts = useEncounterImpacts({ sessionUuid, persistence, load, findParticipant, applyLocalPatches })
+  const impacts = useEncounterImpacts({
+    sessionUuid,
+    persistence,
+    findParticipant,
+    applyLocalPatches,
+    predictHp: (actor, amount) => {
+      const current = hp.hpParts(actor)
+      if (!isRed.value) return hpAfterDamage(current, amount)
+      // Manual RED NPC damage targets the body with full SP and no critical injury.
+      if (actor.type !== 'npc' || !actor.override?.redStats) return null
+      const sp = Math.max(0, Number(actor.override.redArmor?.body) || 0)
+      return hpAfterDamage({ ...current, temp: 0 }, Math.max(0, amount - sp))
+    },
+  })
   const hp = useEncounterHp({
     applyCombatDamage: impacts.applyCombatDamage,
+    previewHp: impacts.previewHp,
     encounter,
     selectedUids: selection.selectedUids,
     getCombatant,
@@ -233,6 +248,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     getCombatant,
     mutate,
     inCombat,
+    sceneRows,
     turnOrder,
     selectedUids: selection.selectedUids,
     unselect: selection.unselect,
@@ -284,16 +300,15 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   const sortable = useSortable({
     activationDelay: motionTokens['encounter-drag-hold'],
     groups: {
-      'combat':         { items: inCombat,        accepts: () => true },
+      'combat':         { items: sceneRows,        accepts: () => true },
       'reserve-npc':    { items: reserveNpcs,     accepts: (item) => item?.type === 'npc' },
       'reserve-player': { items: reservePlayers,  accepts: (item) => item?.type === 'player' },
-      'dead':           { items: deadCombatants,  accepts: () => true },
     },
     getKey: c => c.uid,
     canDropAt: ({ item, toGroup, toIndex }) => {
       if (toGroup === 'combat') {
         if (!encounter.value.active) return true
-        const list = inCombat.value.filter(c => c.uid !== item.uid)
+        const list = sceneRows.value.filter(c => c.uid !== item.uid)
         const before = list[toIndex - 1]
         const after = list[toIndex]
         const src = initRank(item)
@@ -401,7 +416,6 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     isActiveInTurn,
     ...reserves,
     reservePlayers,
-    deadCombatants,
     npcReserveCollapsed,
     sortable,
     SIDE_OPTIONS,
@@ -496,7 +510,6 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     cloneNpc:               npcs.cloneNpc,
     removeNpc:              npcs.removeNpc,
     removeSelectedNpcs:     npcs.removeSelectedNpcs,
-    removeAllDeadNpcs:      npcs.removeAllDeadNpcs,
     // flow
     setInitiative:          flow.setInitiative,
     rollCombatantInitiative: flow.rollCombatantInitiative,
@@ -514,6 +527,10 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     sendCombatantsTo:       flow.sendCombatantsTo,
     sendSelectedTo:         flow.sendSelectedTo,
     sendToReserve:          flow.sendToReserve,
-    sendToGraveyard:        flow.sendToGraveyard,
+    markDefeated:          flow.markDefeated,
+    impactBusy:            impacts.busy,
+    impactError:           impacts.error,
+    canRetryImpact:        impacts.canRetry,
+    retryImpact:           impacts.retry,
   }
 }

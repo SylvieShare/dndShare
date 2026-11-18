@@ -43,14 +43,13 @@
 
     <div v-else-if="dsVisible&&isPlayer&&enc.isRed" class="enc-ds-overlay" @click.stop="enc.openHpCalc(combatant)"><span>Проверка смерти · d10</span></div>
     <div v-else-if="npcDead" class="enc-ds-overlay enc-ds-overlay--npc" @click.stop>
-      <span class="enc-skull">💀</span>
+      <EncounterDefeatedMark />
       <button
-        v-if="canEdit && section !== 'dead'"
+        v-if="canEdit && combatant.position !== 'dead' && !enc.impactBusy"
         type="button"
         class="enc-graveyard-btn"
-        title="Отправить на кладбище"
-        @click="enc.sendToGraveyard(combatant)"
-      >На кладбище</button>
+        @click="enc.markDefeated(combatant)"
+      >Отметить погибшим</button>
       <button
         v-if="canEdit"
         type="button"
@@ -64,6 +63,7 @@
 
 <script setup>
 import { computed, inject } from 'vue'
+import EncounterDefeatedMark from './EncounterDefeatedMark.vue'
 import { StatBar } from '@sylvieshare/share-ui'
 
 const props = defineProps({
@@ -102,7 +102,7 @@ const dsHp = computed(() => {
   return { current: 0, ds_success: 0, ds_failure: 0 }
 })
 
-const dsVisible = computed(() => (Number(dsHp.value.current) || 0) <= 0)
+const dsVisible = computed(() => props.combatant.position === 'dead' || (Number(dsHp.value.current) || 0) <= 0)
 const npcDead = computed(() => isNpc.value && dsVisible.value)
 const canEdit = computed(() => !!enc.canEditPlayerHp())
 
@@ -222,11 +222,6 @@ function togglePip(type, i) {
 .enc-ds-overlay--npc {
   gap: 10px;
   background: color-mix(in srgb, var(--bg) 45%, transparent);
-}
-.enc-skull {
-  font-size: 16px;
-  line-height: 1;
-  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--danger) 55%, transparent));
 }
 .enc-graveyard-btn {
   background: color-mix(in srgb, var(--danger) 18%, transparent);

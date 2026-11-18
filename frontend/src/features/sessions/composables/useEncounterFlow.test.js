@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import { describe, expect, it } from 'vitest'
 import { useEncounterFlow } from './useEncounterFlow'
+import { isSceneMember } from '../lib/encounterHelpers'
 
 function createFlow() {
   const encounter = ref({ active: true, round: 1, turnIndex: 0, combatants: [
@@ -95,6 +96,27 @@ it('starting combat never adds selected actors that were not put on the scene',(
   flow.toggleCombat();expect(encounter.value.active).toBe(false)
   flow.sendCombatantsTo([encounter.value.combatants[0]],'combat');flow.toggleCombat()
   expect(encounter.value.combatants[1].position).toBe('reserve')
+})
+
+it('retains defeated rows in their lists and revives scene actors in place', () => {
+  const { encounter, flow } = createFlow()
+  const [player, npc] = encounter.value.combatants
+  player.position = 'combat'
+  npc.reserveTabId = 'watch'
+  flow.markDefeated(npc)
+  expect(npc).toMatchObject({ position: 'dead', reserveTabId: 'watch' })
+  expect(isSceneMember(npc)).toBe(false)
+
+  flow.reviveCombatant(npc, 8)
+  flow.sendCombatantsTo([npc], 'combat')
+  encounter.value.turnIndex = 1
+  flow.markDefeated(player)
+  expect(isSceneMember(player)).toBe(true)
+  expect(encounter.value.turnIndex).toBe(0)
+  flow.reviveCombatant(player, 1)
+  expect(player.position).toBe('combat')
+  expect(player).not.toHaveProperty('defeatedOnScene')
+  expect(encounter.value.turnIndex).toBe(1)
 })
 it('reordering a home group retains combat participation and its canonical actor',()=>{
   const {encounter,flow}=createFlow(),npc=encounter.value.combatants[1]

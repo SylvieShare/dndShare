@@ -96,7 +96,7 @@
 .enc-toolbar :deep(.enc-icon-btn:hover:not(:disabled)) { background: var(--surface-active); color: var(--text-1); }
 .enc-toolbar :deep(.enc-icon-btn:focus-visible) { outline: 2px solid var(--accent-soft); outline-offset: 2px; }
 .enc-toolbar :deep(.enc-icon-btn:disabled) { opacity: .48; cursor: default; }
-.enc-toolbar :deep(.enc-icon-btn--danger:not(.enc-graveyard-trigger)) { color: var(--danger); }
+.enc-toolbar :deep(.enc-icon-btn--danger) { color: var(--danger); }
 .enc-toolbar :deep(.enc-icon-btn--challenge-active) {
   background: color-mix(in srgb, var(--accent) 18%, var(--surface-raised));
   color: var(--accent-soft);
@@ -109,13 +109,28 @@
   font-weight: 600;
 }
 .enc-toolbar .enc-battle-toggle--start {
-  background: var(--accent);
-  color: var(--text-on-accent);
+  --battle-start-glow: 42%;
+  min-height: calc(var(--layout-touch-min) + var(--spacing-small));
+  background: radial-gradient(ellipse at top,
+    color-mix(in srgb, var(--accent) var(--battle-start-glow), var(--surface-raised)),
+    color-mix(in srgb, var(--accent) 16%, var(--surface)));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 48%, transparent),
+    inset 0 1px color-mix(in srgb, var(--accent-soft) 45%, transparent);
+  color: var(--text-1);
+  font: 650 var(--type-workspace-title-size)/1.15 var(--font-display);
+  letter-spacing: .035em;
+  transition: box-shadow var(--motion-feedback), transform var(--motion-feedback);
 }
-.enc-toolbar .enc-battle-toggle--start:hover:not(:disabled) {
-  background: var(--accent-hover);
-  color: var(--text-on-accent);
+.enc-battle-toggle--start svg { color: var(--accent-soft); flex: none; }
+.enc-toolbar .enc-icon-btn.enc-battle-toggle--start:hover:not(:disabled) {
+  --battle-start-glow: 55%;
+  background: radial-gradient(ellipse at top,
+    color-mix(in srgb, var(--accent) var(--battle-start-glow), var(--surface-raised)),
+    color-mix(in srgb, var(--accent) 16%, var(--surface)));
+  box-shadow: inset 0 0 0 1px var(--accent),
+    inset 0 0 var(--spacing-large) color-mix(in srgb, var(--accent) 25%, transparent);
 }
+.enc-toolbar .enc-battle-toggle--start:active:not(:disabled) { transform: scale(.985); }
 .enc-toolbar .enc-battle-toggle--end {
   justify-self: end;
   width: auto;
@@ -152,7 +167,6 @@
   overflow-wrap: anywhere;
 }
 .enc-toolbar :deep(.enc-icon-count),
-.enc-toolbar :deep(.enc-graveyard-count),
 .enc-toolbar :deep(.enc-scenario-combats-count) {
   position: absolute;
   top: var(--spacing-xs);
@@ -171,5 +185,6 @@
 .enc-shortcut-hint {position:absolute;right:0;bottom:0;z-index:1;padding:0 var(--spacing-xs);background:var(--popover-bg);border-radius:var(--radius-small);color:var(--accent-soft);font:500 var(--type-context-size)/var(--type-context-line-height) var(--font-ui);pointer-events:none}
 
 @media (prefers-reduced-motion: reduce) {
-  .enc-toolbar :deep(.enc-icon-btn) { transition: none; }
+  .enc-toolbar :deep(.enc-icon-btn), .enc-toolbar .enc-battle-toggle--start { transition: none; }
+  .enc-toolbar .enc-battle-toggle--start:active:not(:disabled) { transform: none; }
 }

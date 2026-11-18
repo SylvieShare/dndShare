@@ -5,6 +5,7 @@ export function useEncounterFlow({
   getCombatant,
   mutate,
   inCombat,
+  sceneRows = inCombat,
   turnOrder,
   selectedUids,
   unselect,
@@ -101,12 +102,9 @@ export function useEncounterFlow({
   }
 
   function willMoveToGroup(c, group) {
-    if (group === 'combat') {
-      if (c.position === 'combat') return false
-      if (c.position === 'dead') return false
-      return true
-    }
-    if (group === 'dead') return c.position !== 'dead'
+    if (c.position === 'dead') return false
+    if (group === 'combat') return c.position !== 'combat'
+    if (group === 'dead') return true
     if (group === 'reserve') return c.position !== 'reserve'
     if (group === 'reserve-npc') return c.type === 'npc' && c.position !== 'reserve'
     if (group === 'reserve-player') return c.type === 'player' && c.position !== 'reserve'
@@ -125,6 +123,7 @@ export function useEncounterFlow({
   function sendCombatantsTo(combatants, group) {
     const targetIds = new Set((combatants || []).map(combatant => combatant?.uid).filter(Boolean))
     if (!targetIds.size) return
+    const turn = group === 'dead' ? captureTurn() : null
     mutate(() => {
       let tb = nextTieBreak(encounter.value.combatants)
       for (const c of encounter.value.combatants) {
@@ -135,8 +134,9 @@ export function useEncounterFlow({
           if (c.initiative == null && encounter.value.active) c.initiative = rollInitiativeFor(c)
           c.tieBreak = tb++
         } else if (group === 'dead') {
+          if (c.position === 'combat') c.defeatedOnScene = true
+          else c.initiative = null
           c.position = 'dead'
-          c.initiative = null
           c.surprised = false
         } else {
           c.position = 'reserve'
@@ -144,7 +144,9 @@ export function useEncounterFlow({
           c.surprised = false
         }
       }
+      restoreTurn(turn)
     })
+    if (group === 'dead') for (const uid of targetIds) unselect(uid)
   }
 
   function sendSelectedTo(group) {
@@ -154,20 +156,14 @@ export function useEncounterFlow({
     )
   }
 
-  function sendToGraveyard(c) {
-    mutate(() => {
-      const t = getCombatant(c.uid)
-      if (!t) return
-      t.position = 'dead'
-      t.initiative = null
-    })
-    unselect(c.uid)
+  function markDefeated(c) {
+    sendCombatantsTo([c], 'dead')
   }
 
   function sendToReserve(c) {
     mutate(() => {
       const t = getCombatant(c.uid)
-      if (!t) return
+      if (t?.position !== 'combat') return
       t.position = 'reserve'
       t.initiative = null
       t.surprised = false
@@ -175,17 +171,36 @@ export function useEncounterFlow({
   }
 
   function reviveCombatant(c, hpAmount) {
+    const turn = captureTurn()
     const revivedHp = Math.max(1, Math.floor(Number(hpAmount) || 1))
     mutate(() => {
       const t = getCombatant(c.uid)
       if (!t) return
-      if (t.position === 'dead') t.position = 'reserve'
+      if (t.position === 'dead') {
+        t.position = t.defeatedOnScene ? 'combat' : 'reserve'
+        delete t.defeatedOnScene
+      }
       if (t.type === 'npc') {
         t.hpCurrent = revivedHp
         t.hpDsSuccess = 0
         t.hpDsFailure = 0
       }
+      restoreTurn(turn)
     })
+  }
+
+  function captureTurn() {
+    if (!encounter.value.active || !turnOrder?.value.length) return null
+    const order = turnOrder.value.map(row => row.uid)
+    const index = encounter.value.turnIndex % order.length
+    return [...order.slice(index), ...order.slice(0, index)]
+  }
+
+  function restoreTurn(turn) {
+    if (!turn) return
+    const indices = new Map(turnOrder.value.map((row, index) => [row.uid, index]))
+    const current = turn.find(uid => indices.has(uid))
+    encounter.value.turnIndex = indices.get(current) ?? 0
   }
 
   function turnCount() {
@@ -217,19 +232,19 @@ export function useEncounterFlow({
   }
 
   function performSortDrop({ item, fromGroup, toGroup, toIndex }) {
+    if (item.position === 'dead') return
     let newCombatOrder = null
     if (toGroup === 'combat' && encounter.value.active) {
-      const filtered = inCombat.value.filter(c => c.uid !== item.uid)
+      const filtered = sceneRows.value.filter(c => c.uid !== item.uid)
       newCombatOrder = [...filtered.slice(0, toIndex), item, ...filtered.slice(toIndex)]
     }
 
     mutate(() => {
       const t = getCombatant(item.uid)
       if (!t) return
-      const newPos = toGroup === 'combat' ? 'combat' : (toGroup === 'dead' ? 'dead' : fromGroup === 'reserve-npc' && toGroup === 'reserve-npc' ? t.position : 'reserve')
+      const newPos = toGroup === 'combat' ? 'combat' : (fromGroup === 'reserve-npc' && toGroup === 'reserve-npc' ? t.position : 'reserve')
       t.position = newPos
       if (toGroup === 'reserve-npc' && t.type === 'npc') onReserveDrop?.(t)
-      if (newPos === 'dead') t.initiative = null
 
       const arr = encounter.value.combatants
       const srcIdx = arr.findIndex(c => c.uid === item.uid)
@@ -275,7 +290,7 @@ export function useEncounterFlow({
     sendCombatantsTo,
     sendSelectedTo,
     sendToReserve,
-    sendToGraveyard,
+    markDefeated,
     reviveCombatant,
     performSortDrop,
   }

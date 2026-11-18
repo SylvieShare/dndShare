@@ -62,6 +62,19 @@ export function useEncounterPersistence({
     clearTimeout(timer)
     return sync?.flush() || Promise.resolve(false)
   }
+  async function reconcile() {
+    const current = sync
+    if (!current) throw new Error('Синхронизация боя не готова.')
+    await current.ready
+    try {
+      await current.catchUp()
+    } catch {
+      const snapshot = await load(-1)
+      if (snapshot.data === undefined || !current.receive({ data: snapshot.data, version: snapshot.version }))
+        throw new Error('Не удалось обновить состояние боя.')
+    }
+    await current.whenIdle()
+  }
   function stop() {
     clearTimeout(timer)
     stopped = true
@@ -78,6 +91,7 @@ export function useEncounterPersistence({
     markLoadFailed,
     scheduleSave,
     flushSave,
+    reconcile,
     stop,
   }
 }

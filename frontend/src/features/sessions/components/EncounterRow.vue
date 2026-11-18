@@ -109,7 +109,7 @@ const displayName = computed(() =>
 )
 
 const challengeResult = computed(() =>
-  props.section !== 'dead' ? enc.challengeResult(props.combatant) : null
+  props.combatant.position !== 'dead' ? enc.challengeResult(props.combatant) : null
 )
 const resultHidden = ref(false), resultToggle = ref(null)
 function hideResult() { resultHidden.value = true; nextTick(() => resultToggle.value?.focus()) }
@@ -124,20 +124,21 @@ const rowClasses = computed(() => ({
   'enc-row--current': props.isCurrent,
   'enc-row--challenge': !!challengeResult.value,
   'enc-row--placeholder': enc.sortable.isSource(props.combatant),
-  'enc-row--skipped': skippedInTurn.value,
+  'enc-row--skipped': skippedInTurn.value && props.combatant.position !== 'dead',
+  'enc-row--defeated': props.combatant.position === 'dead',
 }))
 
 // The whole row is a drag handle now. Bail when the pointer lands on an
 // interactive control so clicks/typing still work there.
 const DRAG_IGNORE = 'input, textarea, button, a, [role="button"], .p-combat-controls, .enc-hp-area, .p-statuses-area'
 function onRowPointerDown(e) {
-  if (e.ctrlKey || e.metaKey) return
+  if (props.combatant.position === 'dead' || e.ctrlKey || e.metaKey) return
   if (e.button !== undefined && e.button !== 0) return
   if (e.target.closest(DRAG_IGNORE)) return
   enc.sortable.startDrag(e, props.combatant, props.section, props.idx)
 }
 
-const showCheckbox = computed(() => !!enc.canEditPlayerHp())
+const showCheckbox = computed(() => props.combatant.position !== 'dead' && !!enc.canEditPlayerHp())
 
 const statesBlock = computed(() => enc.statesBlock(props.combatant))
 const statesValue = computed(() => enc.statesValue(props.combatant))
@@ -209,6 +210,7 @@ function commitNoteEdit() {
 .enc-row-shell--placeholder :deep(.enc-row-order) { opacity: .25; }
 .enc-row { flex: 1; cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
 .enc-row--placeholder { cursor: grabbing; }
+.enc-row--defeated { cursor: pointer; }
 .enc-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .enc-row.enc-row--placeholder { border: 2px dashed var(--accent); }
 .enc-row--placeholder :deep(*) { visibility: hidden; }

@@ -23,7 +23,7 @@
         <span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span>
       </template>
       <template #presence><SessionCombatPresence :combatant="combatant" :active="encounter?.encounter.active" :current="combatCurrent" /></template>
-      <template v-if="showHp && isDead" #health><SessionPlayerDeathState :hp="hp" :editable="isDm" @revive="$emit('revive')" /></template>
+      <template v-if="isDead" #health><SessionPlayerDeathState :hp="hp" :editable="isDm" :can-edit="canCalculateHp && hp.current <= 0" :red="!!encounter?.isRed" @edit="encounter.openHpCalc(combatant)" @revive="$emit('revive')" /></template>
       <template #statuses><ParticipantStatuses :participant="participant" :editable="isDm" detailed /></template>
     </SessionPlayerTile>
     <RowActionMenu ref="menuRef" :anchor="menuAnchor" :trigger-attrs="{style:{display:'none'}}">
@@ -136,7 +136,7 @@ function onCardClick(event){
 }
 function suppressReorderClick(event) {
   if(event.target.closest('.roster-select-zone,.p-statuses-area'))return
-  if(handleCtrlSelection(event,props.combatEditable&&!!props.combatant,()=>emit('update:combat-selected',!props.combatSelected)))return
+  if(handleCtrlSelection(event,props.combatEditable && !!props.combatant && props.combatant.position !== 'dead',()=>emit('update:combat-selected',!props.combatSelected)))return
   if(props.shouldSuppressReorderClick?.()){event.preventDefault();event.stopPropagation()}
 }
 
@@ -163,8 +163,9 @@ const avaUrl = computed(() => pvAvatar(props.participant))
 
 
 const hp = computed(() => {
-  const v = pvHp(props.participant)
-  if (!v) return null
+  const data = pvHp(props.participant)
+  if (!data) return null
+  const v = (props.combatant && encounter?.playerHpObj?.(props.combatant)) || data
   return {
     current:    Number(v.current)    || 0,
     max:        hpMaximum(v),
@@ -176,7 +177,7 @@ const hp = computed(() => {
 
 const showHp = computed(() => hp.value !== null && hp.value.max > 0)
 const canCalculateHp = computed(() => props.isDm && !!encounter && !!props.combatant && !!hp.value && !!pvHpPath(props.participant))
-const isDead = computed(() => showHp.value && hp.value.current <= 0)
+const isDead = computed(() => hp.value && (props.combatant?.position === 'dead' || (showHp.value && hp.value.current <= 0)))
 
 </script>
 

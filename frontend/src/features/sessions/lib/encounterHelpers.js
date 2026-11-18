@@ -30,11 +30,14 @@ export function initRank(c) {
   return c.initiative == null ? Number.NEGATIVE_INFINITY : c.initiative
 }
 
+export function isSceneMember(c) {
+  return c.position === 'combat' || (c.position === 'dead' && c.defeatedOnScene === true)
+}
+
 export function matchesGroup(c, group) {
-  if (group === 'combat') return c.position === 'combat'
-  if (group === 'reserve-npc') return c.position !== 'dead' && c.type === 'npc'
-  if (group === 'reserve-player') return c.position === 'reserve' && c.type === 'player'
-  if (group === 'dead') return c.position === 'dead'
+  if (group === 'combat') return isSceneMember(c)
+  if (group === 'reserve-npc') return c.type === 'npc'
+  if (group === 'reserve-player') return c.position !== 'combat' && c.type === 'player'
   return false
 }
 

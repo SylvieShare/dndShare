@@ -37,7 +37,7 @@ export async function sessionLayout(page, {url='/tests/tutorials/fixtures/tutori
     if(path.endsWith('/chapter-graph'))json={arcs:[{id:3,name:'Начало пути',order:1}],chapters:[{id:12,arcId:3,number:1,name:'Перевал',status:'planned',positionX:0,positionY:0}],edges:[]}
     if(path.endsWith('/scene-graph'))json={scenes:[{id:31,chapterId:12,name:'Встреча',status:'planned',positionX:0,positionY:0}],edges:[]}
     if(path.endsWith('/block-graph'))json={items:[],edges:[]}
-    if(path.endsWith('/encounter'))json={data:encounter,version:encounterVersion}
+    if(path.endsWith('/encounter')||path.endsWith('/encounter/changes'))json={data:encounter,version:encounterVersion}
     if(path.endsWith('/music'))json=music?.state||{}
     if(path.endsWith('/global-maps'))json={maps:[]}
     if(path.endsWith('/maps'))json={maps:[],display:{mapId:null,visible:false,revision:0,camera:{x:0,y:0,cellPixels:64,rotation:0,fit:true}}}
@@ -46,5 +46,5 @@ export async function sessionLayout(page, {url='/tests/tutorials/fixtures/tutori
   })
   await page.goto(url)
   await page.addStyleTag({content:'html,body,#app{margin:0;height:100%;overflow:hidden}body{background:var(--bg);color:var(--text-1);font-family:var(--font-ui)}'})
-  return {encounter:()=>encounter,writes:encounterWrites}
+  return {encounter:()=>encounter,writes:encounterWrites,commitEncounter:()=>++encounterVersion}
 }

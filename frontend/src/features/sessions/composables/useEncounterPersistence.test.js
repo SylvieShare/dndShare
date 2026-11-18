@@ -1,5 +1,5 @@
 import { afterEach, expect, it, vi } from 'vitest'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useEncounterPersistence } from './useEncounterPersistence'
 afterEach(() => vi.useRealTimers())
 it('waits for hydration and captures the newest debounced state as patches', async () => {
@@ -71,4 +71,27 @@ it('flushes an unsent change when unmounted', async () => {
   expect(send.mock.calls[0][0].patches).toEqual([
     { op: 'set', path: ['active'], value: true },
   ])
+})
+
+it('reconciles a confirmed impact from a full snapshot without dropping an unrelated local edit', async () => {
+  vi.useFakeTimers()
+  const initial = { round: 1, combatants: [{ uid: 'wolf', hpCurrent: 15 }] }
+  const source = ref(structuredClone(initial))
+  const send = vi.fn(async packet => ({ version: 3, patches: packet.patches }))
+  const load = vi.fn()
+    .mockRejectedValueOnce(new Error('Delta unavailable'))
+    .mockResolvedValueOnce({ data: { ...initial, combatants: [{ uid: 'wolf', hpCurrent: 6 }] }, version: 2 })
+  const persistence = useEncounterPersistence({ source, send, load, debounceMs: 500 })
+  await persistence.markReady({ data: initial, version: 1 })
+  const unwatch = watch(source, persistence.scheduleSave, { deep: true, flush: 'sync' })
+  source.value.round = 2
+
+  const syncing = persistence.reconcile()
+  await vi.advanceTimersByTimeAsync(500)
+  await syncing
+  expect(load.mock.calls).toEqual([[1], [-1]])
+  expect(source.value).toEqual({ round: 2, combatants: [{ uid: 'wolf', hpCurrent: 6 }] })
+  expect(send.mock.calls[0][0]).toMatchObject({ baseVersion: 2, patches: [{ op: 'set', path: ['round'], value: 2 }] })
+  unwatch()
+  await persistence.stop()
 })

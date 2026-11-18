@@ -35,7 +35,7 @@
       >
         <Square v-if="enc.encounter.active" :size="16" />
         <Swords v-else :size="20" />
-        {{ enc.encounter.active ? 'Закончить бой' : 'Начать бой' }}
+        <span>{{ enc.encounter.active ? 'Закончить бой' : 'Начать бой' }}</span>
         <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+Enter</kbd>
       </button>
     </BaseTile>
@@ -53,20 +53,6 @@
       <div class="enc-action-row">
         <EncounterChallengeMenu label="Испытание" />
         <EncounterBulkDamageMenu label="Урон" />
-        <button
-          type="button"
-          class="enc-icon-btn"
-          :disabled="enc.selectedRerollCount === 0"
-          title="Перебросить инициативу выбранным"
-          aria-label="Перебросить инициативу выбранным"
-          aria-keyshortcuts="Shift+R"
-          @click="enc.rerollSelectedInitiative"
-        >
-          <Dices :size="18" />
-          <span class="enc-control-label">Инициатива</span>
-          <span v-if="enc.selectedRerollCount" class="enc-icon-count">{{ enc.selectedRerollCount }}</span>
-          <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+R</kbd>
-        </button>
       </div>
     </BaseTile>
 
@@ -79,19 +65,18 @@
           <span v-if="combatMoveCount" class="enc-icon-count">{{ combatMoveCount }}</span>
         </button>
         <EncounterScenarioCombatMenu v-if="scene" :session-uuid="sessionUuid" :scene="scene" @pick="$emit('import-combat-block', $event)" />
-        <EncounterGraveyardMenu label="Кладбище" :is-dm="isDm" @view-participant="$emit('view-participant', $event)" />
       </div>
-      <div class="enc-action-row enc-danger-row" role="group" aria-label="Перемещение на кладбище и удаление">
+      <div class="enc-action-row enc-danger-row" role="group" aria-label="Поражение и удаление">
         <button
           type="button"
           class="enc-icon-btn enc-icon-btn--danger"
-          :disabled="deadMoveCount === 0"
-          title="Убить выбранных — переместить на кладбище"
-          aria-label="Убить выбранных — переместить на кладбище"
+          :disabled="deadMoveCount === 0 || enc.impactBusy"
+          title="Отметить выбранных погибшими"
+          aria-label="Отметить выбранных погибшими"
           @click="enc.sendSelectedTo('dead')"
         >
           <Skull :size="18" />
-          <span class="enc-control-label">На кладбище</span>
+          <span class="enc-control-label">Отметить погибшими</span>
           <span v-if="deadMoveCount" class="enc-icon-count">{{ deadMoveCount }}</span>
         </button>
         <button
@@ -114,16 +99,15 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { ChevronLeft, ChevronRight, Dices, LogIn, Skull, Square, Swords, Trash2 } from '@lucide/vue'
+import { ChevronLeft, ChevronRight, LogIn, Skull, Square, Swords, Trash2 } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import EncounterBulkDamageMenu from './EncounterBulkDamageMenu.vue'
 import EncounterChallengeMenu from './EncounterChallengeMenu.vue'
-import EncounterGraveyardMenu from './EncounterGraveyardMenu.vue'
 import EncounterScenarioCombatMenu from './EncounterScenarioCombatMenu.vue'
 import SessionSelectionToolbar from './SessionSelectionToolbar.vue'
 import { sessionShortcutLabels } from '../lib/sessionShortcuts'
 const props=defineProps({sessionUuid:String,isDm:Boolean,encounter:{type:Object,required:true},selection:{type:Object,required:true},scene:Object,showShortcutHints:Boolean,transitioning:Boolean})
-defineEmits(['toggle-combat','view-participant','import-combat-block'])
+defineEmits(['toggle-combat','import-combat-block'])
 const enc=props.encounter
 const shortcutLabels=sessionShortcutLabels()
 const combatItems=computed(()=>enc.sortable.displayItems('combat'))

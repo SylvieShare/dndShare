@@ -6,9 +6,9 @@
     :trigger-attrs="{ style: { display: 'none' } }"
   >
     <template #default="{ close }">
-      <EncounterInitiativeMenu v-if="section !== 'dead'" :combatant="combatant" :encounter="enc" />
+      <EncounterInitiativeMenu v-if="combatant.position !== 'dead'" :combatant="combatant" :encounter="enc" />
       <EncounterSideMenu v-if="isNpc" :combatant="combatant" />
-      <RowActionItem v-if="section === 'combat' && (!enc.encounter.active || enc.encounter.round === 0)" :icon="Activity" @click="enc.toggleSurprised(combatant); close()">{{ combatant.surprised ? 'Убрать «врасплох»' : 'Застигнут врасплох' }}</RowActionItem>
+      <RowActionItem v-if="canReserve && (!enc.encounter.active || enc.encounter.round === 0)" :icon="Activity" @click="enc.toggleSurprised(combatant); close()">{{ combatant.surprised ? 'Убрать «врасплох»' : 'Застигнут врасплох' }}</RowActionItem>
       <RowActionItem
         v-if="canOpenCard"
         :icon="BookOpen"
@@ -97,10 +97,10 @@ const isNpc = computed(() => props.combatant.type === 'npc')
 const canOpenCard = computed(() => isNpc.value && props.combatant.itemId != null)
 const canReserve = computed(() => props.combatant.position === 'combat')
 const canRerollHp = computed(() =>
-  isNpc.value && props.combatant.position !== 'combat' && !!enc.npcHpFormula(props.combatant)
+  isNpc.value && props.combatant.position === 'reserve' && !!enc.npcHpFormula(props.combatant)
 )
 const canDelete = computed(() => isNpc.value)
-const canRevive = computed(() => props.section === 'dead' && enc.canEditPlayerHp())
+const canRevive = computed(() => props.combatant.position === 'dead' && enc.canEditPlayerHp())
 
 const cloneCount = ref(1)
 const menuAnchor = shallowRef(null)

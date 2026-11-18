@@ -38,9 +38,12 @@ for(const width of [390,834,1440])test(`combat selection icons and stage waterma
   const sidebar=page.locator('aside.map-sidebar'),nav=sidebar.getByRole('navigation'),toolbar=sidebar.locator('.session-sidebar-header-controls')
   await nav.getByRole('button',{name:'Запас',exact:true}).click()
   const first=sidebar.locator('[data-encounter-uid="wolf"]'),second=sidebar.locator('[data-encounter-uid="wolf2"]')
-  await first.getByRole('checkbox').click();await second.getByRole('checkbox').click()
   const summary=toolbar.locator('.roster-selection-summary')
+  await expect(summary).toHaveText('Никто не выбран')
+  const emptyHeight=(await summary.boundingBox()).height
+  await first.getByRole('checkbox').click();await second.getByRole('checkbox').click()
   await expect(summary.getByRole('img',{name:'Волк: 2',exact:true})).toBeVisible()
+  expect((await summary.boundingBox()).height).toBe(emptyHeight)
   await page.locator('.chapter-toolbar').getByRole('button',{name:'Хроника',exact:true}).click()
   await expect(summary.getByRole('img',{name:'Волк: 2',exact:true})).toBeVisible()
   await page.getByRole('button',{name:/Открыть бой/}).click()

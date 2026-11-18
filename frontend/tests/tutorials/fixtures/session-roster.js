@@ -1,7 +1,7 @@
 import { sessionLayout } from './session-layout.js'
 import { applyDocumentPatches } from '../../../src/shared/lib/documentPatch.js'
 
-export async function rosterSelectionFixture(page,width,{url='/sessions/test'}={}) {
+export async function rosterSelectionFixture(page,width,{url='/sessions/test',beforeImpact}={}) {
   await page.setViewportSize({width,height:980})
   const errors=[],warnings=[]
   page.on('pageerror',error=>{errors.push(String(error));throw error})
@@ -23,14 +23,16 @@ export async function rosterSelectionFixture(page,width,{url='/sessions/test'}={
   await page.route('**/api/sessions/test/save-targets',route=>route.fulfill({json:{targets:[...participants.map(p=>({kind:'character',charUuid:p.charUuid})),...api.encounter().combatants.filter(row=>row.type==='npc'&&row.position!=='dead').map(row=>({kind:'npc',npcUid:row.uid,encounterId:1}))]}}))
   await page.route('**/api/sessions/test/impacts',async route=>{
     const packet=route.request().postDataJSON();impacts.push(packet)
+    await beforeImpact?.()
     const rows=packet.targets.map(({target})=>{
       const p=participants.find(p=>p.charUuid===target.charUuid)
       const hp=p?p.data.values.hp:null,npc=api.encounter().combatants.find(row=>row.uid===target.npcUid)
-      const before={current:hp?.current ?? npc.hpCurrent,temp:hp?.temp || 0}
+      const before={current:hp?.current ?? npc.hpCurrent,temp:hp?.temp ?? npc?.hpTemp ?? 0}
       const absorbed=Math.min(before.temp,packet.amount),after={current:Math.max(0,before.current-packet.amount+absorbed),temp:before.temp-absorbed}
-      if(hp)Object.assign(hp,after);else npc.hpCurrent=after.current
+      if(hp)Object.assign(hp,after);else Object.assign(npc,{hpCurrent:after.current,hpTemp:after.temp})
       return {target,before,after}
     })
+    if (rows.some(({target})=>target.kind==='npc')) api.commitEncounter()
     await route.fulfill({json:{event:{data:{impacts:rows}}}})
   })
   return {...api,participants,writes,impacts,errors,warnings}

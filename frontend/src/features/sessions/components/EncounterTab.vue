@@ -73,7 +73,7 @@
     </div>
     <aside class="enc-secondary" aria-label="Управление боем">
       <EncounterControls :session-uuid="sessionUuid" :encounter="enc" :selection="sceneSelection" :is-dm="isDm" :scene="scene" :show-shortcut-hints="showShortcutHints" :transitioning="combatTransitioning"
-                         @toggle-combat="toggleCombat" @view-participant="$emit('view-participant',$event)" @import-combat-block="$emit('import-combat-block',$event)" />
+                         @toggle-combat="toggleCombat" @import-combat-block="$emit('import-combat-block',$event)" />
       <Transition name="enc-turn-preview"><EncounterTurnPreview v-if="enc.encounter.active && hasColumns" :combatant="currentTurnCombatant" @view-participant="$emit('view-participant',$event)" /></Transition>
     </aside>
 

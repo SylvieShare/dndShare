@@ -38,9 +38,14 @@ The sidebar remains available, while map canvas/inspector are hidden in combat.
 The command column groups fight flow, selection actions and scene composition
 into three panels. The phase panel shows the roster count and starts combat or
 provides round navigation and End. Selection uses the same summary as the left
-sidebar, with challenge, damage and initiative below it. Scene composition
-contains entry, scenario encounters and graveyard access. Send to graveyard and
-delete NPCs occupy a separate danger row.
+sidebar and reserves the same height for empty and single-row states. Challenge
+and damage appear below it. Initiative remains in row menus and shortcut handling.
+Scene composition contains entry, scenario encounters, marking defeated and removing NPCs.
+A combatant marked defeated keeps the home group and leaves the turn order. The
+persisted `defeatedOnScene` flag keeps their row on the scene and restores scene
+membership when revived. Older defeated records without the flag appear in their
+home group. At 0 HP, NPC rows display crossed bones and a skull, and D&D player
+rows link their death-save counters to the HP calculator.
 The workspace keeps Page padding on both sides and starts after the participant
 safe area, including the permanent rail on compact windows. The roster uses its
 own scroll gap; the current-turn reference keeps its existing NPC/player detail.
@@ -58,7 +63,7 @@ visual, including advantage and disadvantage rolls.
 
 Before and during combat, the DM header has a group-challenge action. It opens a
 compact setup popover with one of the six D&D abilities and a saving-throw
-toggle, then rolls a d20 for selected creatures on the scene or in reserve, excluding the graveyard. The action is disabled until at least one eligible creature is selected. A
+toggle, then rolls a d20 for selected creatures on the scene or in reserve, excluding defeated combatants. The action is disabled until at least one eligible creature is selected. A
 normal check uses that creature's ability modifier. A saving throw also uses a
 player's save proficiency and extra save bonuses, or the explicit bestiary save
 bonus for an NPC; an NPC without one falls back to its ability modifier. Each result is a drawer over the right side of its creature tile, sliding in from the right and clipped to that tile's bounds on desktop and mobile. It remains an `EncounterRow` layer rather than part of the common tile content. Width is capped at 248px and leaves the selection strip visible; neither the tile nor the 480px roster changes size. A corner button hides the result and becomes a reopen button; new results reveal the drawer again.

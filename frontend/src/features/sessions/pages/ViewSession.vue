@@ -147,7 +147,11 @@
         <SessionTimerStack v-if="isDm" :session-uuid="sessionUuid" :timers="sessionTimers" />
       </ChapterGraphTab>
 
-      <div v-if="combatWorkspaceError" class="combat-import-error" role="alert">{{ combatWorkspaceError }}</div>
+      <div v-if="encounter.impactError" class="combat-import-error" role="alert">
+        {{ encounter.impactError }}
+        <ActionButton v-if="encounter.canRetryImpact" variant="quiet" @click="encounter.retryImpact">Повторить синхронизацию HP</ActionButton>
+      </div>
+      <div v-else-if="combatWorkspaceError" class="combat-import-error" role="alert">{{ combatWorkspaceError }}</div>
 
 
       <SessionWorkspaceSidebar :controller="sidebar">
@@ -206,6 +210,7 @@
         v-if="encounter.hpCalcPlayer && !encounter.redHpParticipant"
         :key="encounter.hpCalcPlayer.uid"
         :hp="encounter.playerHpObj(encounter.hpCalcPlayer)"
+        :damage-pending="encounter.impactBusy"
         :damage-handler="amount => encounter.applyDamageToCombatant(encounter.hpCalcPlayer, amount)"
         @close="encounter.closeHpCalcPlayer"
         @change="encounter.onPlayerHpChange"
@@ -248,7 +253,7 @@ import { computed, defineAsyncComponent, provide, reactive, watch } from 'vue'
 import { onBeforeRouteLeave, useRoute } from 'vue-router'
 import { ref } from 'vue'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
-import { LoadingState } from '@sylvieshare/share-ui'
+import { ActionButton, LoadingState } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import CharacterCreateWizardModal from '@/features/character-list/components/CharacterCreateWizardModal.vue'
 import CharacterSheetModal from '@/features/character-editor/components/CharacterSheetModal.vue'

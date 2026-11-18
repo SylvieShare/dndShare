@@ -118,6 +118,7 @@ export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selecte
         hpDsFailure: 0,
         tieBreak: tb++,
       }
+      delete copy.defeatedOnScene
       additions.push(copy)
     }
     const combatants = [...encounter.value.combatants, ...additions]
@@ -143,14 +144,6 @@ export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selecte
     pruneToExisting()
   }
 
-  function removeAllDeadNpcs() {
-    encounter.value = {
-      ...encounter.value,
-      combatants: encounter.value.combatants.filter(x => !(x.type === 'npc' && x.position === 'dead')),
-    }
-    pruneToExisting()
-  }
-
   return {
     showNpcPicker,
     showSimpleForm,
@@ -162,6 +155,5 @@ export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selecte
     cloneNpc,
     removeNpc,
     removeSelectedNpcs,
-    removeAllDeadNpcs,
   }
 }

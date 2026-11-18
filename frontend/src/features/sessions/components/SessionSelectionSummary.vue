@@ -43,6 +43,8 @@ const stackStyle = computed(() => ({
   align-items: start;
   gap: var(--spacing-small);
   min-width: 0;
+  box-sizing: border-box;
+  min-block-size: calc(var(--layout-selection-summary-icon) + var(--spacing-large) + var(--spacing-xs));
   padding: var(--spacing-xs);
 }
 .selection-summary-icons {
@@ -95,7 +97,7 @@ const stackStyle = computed(() => ({
   background: var(--surface-active);
   color: var(--text-1);
 }
-.selection-summary-empty {font-size:var(--type-caption-size);color:var(--text-muted)}
+.selection-summary-empty {align-self:center;font-size:var(--type-caption-size);color:var(--text-muted)}
 .selection-summary-caption {flex:none;font-size:var(--type-caption-size);color:var(--text-muted)}
 .selection-summary-caption {line-height: var(--layout-selection-summary-icon)}
 </style>

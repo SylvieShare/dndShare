@@ -40,13 +40,14 @@
     <DndHpCalcModal
       v-if="enc.hpCalcNpc&&!enc.isRed"
       :hp="enc.npcHpObj(enc.hpCalcNpc)"
+      :damage-pending="enc.impactBusy"
       :damage-handler="amount => enc.applyDamageToCombatant(enc.hpCalcNpc, amount)"
       is-npc
       @close="enc.closeHpCalc"
       @change="enc.onNpcHpChange"
-      @graveyard="onNpcGraveyard"
+      @defeat="onNpcDefeat"
     />
-    <AppModalFrame v-if="enc.hpCalcNpc&&enc.isRed" title="Здоровье NPC · RED" @close="enc.closeHpCalc"><p>HP {{enc.hpCalcNpc.hpCurrent}} / {{enc.npcHpMax(enc.hpCalcNpc)}}</p><p>SP тела {{enc.hpCalcNpc.override?.redArmor?.body||0}} · головы {{enc.hpCalcNpc.override?.redArmor?.head||0}}</p><FormField label="Входящий урон в тело, до SP" vertical><FormNumberInput :value="redNpcDamage" :min="0" :max="999" @change="redNpcDamage=$event"/></FormField><ActionButton @click="enc.applyDamageToCombatant(enc.hpCalcNpc,redNpcDamage)">Применить урон</ActionButton><ActionButton @click="enc.openNpcHpEdit(enc.hpCalcNpc);enc.closeHpCalc()">Изменить HP</ActionButton></AppModalFrame>
+    <AppModalFrame v-if="enc.hpCalcNpc&&enc.isRed" title="Здоровье NPC · RED" @close="enc.closeHpCalc"><p>HP {{enc.npcHpObj(enc.hpCalcNpc).current}} / {{enc.npcHpMax(enc.hpCalcNpc)}}</p><p>SP тела {{enc.hpCalcNpc.override?.redArmor?.body||0}} · головы {{enc.hpCalcNpc.override?.redArmor?.head||0}}</p><FormField label="Входящий урон в тело, до SP" vertical><FormNumberInput :value="redNpcDamage" :min="0" :max="999" @change="redNpcDamage=$event"/></FormField><ActionButton :disabled="enc.impactBusy" @click="applyRedNpcDamage">Применить урон</ActionButton><ActionButton @click="enc.openNpcHpEdit(enc.hpCalcNpc);enc.closeHpCalc()">Изменить HP</ActionButton></AppModalFrame>
     <ItemViewModal
       v-if="enc.detailNpc && enc.detailNpc.itemId != null"
       :item-type-id="6"
@@ -59,13 +60,13 @@
 
     <AppModalFrame v-if="enc.hpEditNpc" :title="`${enc.npcName(enc.hpEditNpc)} · хиты`" @close="enc.closeNpcHpEdit">
       <FormField label="Текущие HP">
-        <FormNumberInput :value="enc.hpEditNpc.hpCurrent ?? 0" :min="0" :max="999" @change="enc.setNpcHpField('current', $event)" />
+        <FormNumberInput :disabled="enc.impactBusy" live :value="enc.hpEditNpc.hpCurrent ?? 0" :min="0" :max="999" @change="enc.setNpcHpField('current', $event)" />
       </FormField>
       <FormField label="Максимум HP">
-        <FormNumberInput :value="enc.npcHpMax(enc.hpEditNpc)" :min="0" :max="999" @change="enc.setNpcHpField('max', $event)" />
+        <FormNumberInput :disabled="enc.impactBusy" live :value="enc.npcHpMax(enc.hpEditNpc)" :min="0" :max="999" @change="enc.setNpcHpField('max', $event)" />
       </FormField>
       <FormField v-if="!enc.isRed" label="Временные HP">
-        <FormNumberInput :value="enc.hpEditNpc.hpTemp ?? 0" :min="0" :max="999" @change="enc.setNpcHpField('temp', $event)" />
+        <FormNumberInput :disabled="enc.impactBusy" live :value="enc.hpEditNpc.hpTemp ?? 0" :min="0" :max="999" @change="enc.setNpcHpField('temp', $event)" />
       </FormField>
     </AppModalFrame>
 
@@ -85,15 +86,23 @@ const props = defineProps({ encounter: { type: Object, required: true } })
 const enc = props.encounter
 provide('encounter', enc)
 
-function onNpcGraveyard() {
+function onNpcDefeat() {
   const c = enc.hpCalcNpc
   if (!c) return
-  enc.sendToGraveyard(c)
+  enc.markDefeated(c)
   enc.closeHpCalc()
 }
 
 const redStats=['INT','REF','DEX','TECH','COOL','WILL','LUCK','MOVE','BODY','EMP'],redNpcDamage=ref(0)
 const simpleForm = reactive({ name: '', ac: 0, hp: 0, hpMax: 0, description: '',headSP:0,redStats:Object.fromEntries(redStats.map(k=>[k,6])) })
+
+async function applyRedNpcDamage() {
+  try {
+    await enc.applyDamageToCombatant(enc.hpCalcNpc, redNpcDamage.value)
+  } catch {
+    // The encounter shows the synchronization error and retry action.
+  }
+}
 
 function onSimpleHp(val) {
   simpleForm.hp = val
