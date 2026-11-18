@@ -7,11 +7,12 @@
       <component :is="icon" class="combat-metric__icon" :size="iconSize" :stroke-width="1.7" aria-hidden="true" />
       <span class="combat-metric__label">{{ label }}</span>
     </span>
-    <div class="combat-metric__formula"><slot /></div>
+    <FitContent class="combat-metric__formula"><div class="combat-metric__formula-content"><slot /></div></FitContent>
   </component>
 </template>
 <script setup>
 import { computed } from 'vue'
+import { FitContent } from '@sylvieshare/share-ui'
 import { Crosshair, HeartPlus, Shield, ShieldPlus, Sparkles, Swords } from '@lucide/vue'
 import { layoutTokens } from '@/app/design-tokens'
 const props = defineProps({ kind: { type: String, default: 'damage' }, label: String, actionLabel: String,
@@ -28,7 +29,8 @@ button.combat-metric:focus-visible {outline:2px solid var(--accent-soft);outline
 .combat-metric__identity {display:flex;flex-direction:column;align-items:center;justify-content:center;align-self:stretch;gap:var(--spacing-xs);min-width:0;padding-inline-end:var(--spacing-small);border-inline-end:var(--layout-border) solid var(--border-strong);color:var(--text-muted)}
 .combat-metric__icon {flex:none;opacity:.5}
 .combat-metric__label {font-size:var(--type-context-size);line-height:var(--type-context-line-height);text-align:center;overflow-wrap:anywhere}
-.combat-metric__formula {display:flex;flex-direction:column;gap:var(--spacing-xs);min-width:0;max-width:100%}
+.combat-metric__formula {min-width:0;max-width:100%}
+.combat-metric__formula-content {display:flex;flex-direction:column;gap:var(--spacing-xs);min-width:0;max-width:100%}
 .combat-metric--compact {grid-template-columns:calc(var(--layout-spell-metric-icon) + var(--spacing-small) * 4) minmax(0,1fr);min-height:var(--layout-spell-metric-height)}
 .combat-metric--compact .combat-metric__label {overflow-wrap:normal}
 .combat-metric {container-type:inline-size}

@@ -1,4 +1,5 @@
 <template>
+  <FitContent inline>
   <div class="ad" :class="{ 'ad--compact': compact }">
     <component
       :is="rollable ? 'button' : 'span'"
@@ -67,10 +68,12 @@
       <slot name="heal-suffix" />
     </component>
   </div>
+  </FitContent>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { FitContent } from '@sylvieshare/share-ui'
 import { Shield } from '@lucide/vue'
 
 import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'
@@ -118,7 +121,7 @@ const hasDamage = computed(() => props.flatDamage !== null || props.damageParts.
 .ad {
   display: inline-flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: var(--fit-content-wrap,wrap);
   gap: 10px;
   min-width: 0;
 }

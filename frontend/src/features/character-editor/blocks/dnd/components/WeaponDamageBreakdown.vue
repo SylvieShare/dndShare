@@ -1,4 +1,5 @@
 <template>
+  <FitContent inline>
   <span ref="root" class="weapon-damage" :aria-label="label">
     <span v-for="(group, gi) in groups" :key="group.type" class="weapon-damage__group" :style="{ '--damage-color': group.color }">
       <span class="weapon-damage__terms">
@@ -33,9 +34,11 @@
     <span v-for="flash in flashes" :key="flash.id" class="weapon-formula-flash" :data-formula-flash="flash.key" :style="flash.style" aria-hidden="true"
       @animationend="removeFlash(flash.id)" @animationcancel="removeFlash(flash.id)" />
   </span>
+  </FitContent>
 </template>
 <script setup>
 import { computed, ref } from 'vue'
+import { FitContent } from '@sylvieshare/share-ui'
 import { layoutTokens } from '@/app/design-tokens'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import WeaponGripIcon from './WeaponGripIcon.vue'
@@ -54,9 +57,9 @@ const formulaRuns = column => [
 ]
 </script>
 <style scoped>
-.weapon-damage {position:relative;isolation:isolate;display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--spacing-small);min-width:0;max-width:100%}
+.weapon-damage {position:relative;isolation:isolate;display:flex;flex-wrap:var(--fit-content-wrap,wrap);align-items:flex-start;gap:var(--spacing-small);min-width:0;max-width:100%}
 .weapon-damage__group {display:flex;flex-direction:column;align-items:center;gap:var(--spacing-xs);min-width:0;max-width:100%;color:var(--damage-color)}
-.weapon-damage__terms,.weapon-damage__formula {display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--spacing-xs);min-width:0;max-width:100%}
+.weapon-damage__terms,.weapon-damage__formula {display:flex;flex-wrap:var(--fit-content-wrap,wrap);align-items:flex-start;gap:var(--spacing-xs);min-width:0;max-width:100%}
 .weapon-damage__addend,.weapon-damage__value {display:inline-flex;align-items:flex-start;gap:2px;min-width:0;max-width:100%}
 .weapon-damage__addend {flex:0 0 auto}
 .weapon-damage__column {display:flex;flex-direction:column;align-items:center;gap:0;min-width:0;max-width:100%}

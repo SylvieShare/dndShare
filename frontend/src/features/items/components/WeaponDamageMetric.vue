@@ -5,7 +5,7 @@
     :class="`weapon-damage-metric--${layout}`"
     :aria-label="`Урон: ${damage.label}`"
   >
-    <span class="weapon-damage-metric__value">
+    <FitContent inline><span class="weapon-damage-metric__value">
       <span v-if="damage.count !== 1" class="weapon-damage-metric__count">{{ damage.count }}</span>
       <SystemDie
         v-if="damage.diceSides"
@@ -14,13 +14,14 @@
         :animated="false"
       />
       <span v-else class="weapon-damage-metric__label">{{ damage.label }}</span>
-    </span>
+    </span></FitContent>
     <span class="weapon-damage-metric__title">Урон</span>
   </span>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { FitContent } from '@sylvieshare/share-ui'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { diceById } from '@/shared/lib/systemDice'
 

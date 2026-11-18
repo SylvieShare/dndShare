@@ -64,6 +64,12 @@ if (new URLSearchParams(location.search).has('cards')) {
   items.push({ id: 9, name: 'Ложная жизнь', nameEn: 'False Life', data: { lvl: 1, heal: { kind: 'temporary_hp', dices: [{ count: 1, dice_id: 'd4', bonus: 4 }] } } })
   items.push({ id: 10, name: 'Усыпление', nameEn: 'Sleep', data: { lvl: 1, rolls: [{ kind: 'effect', label: 'Запас хитов', dices: [{ count: 5, dice_id: 'd8' }] }] } })
 }
+if (new URLSearchParams(location.search).has('fitting')) {
+  items.push({ id: 41, name: 'Снаряд хаоса', nameEn: 'Chaos Bolt', data: { lvl: 1,
+    damage: { range_attack: true, scaling: 'slot', dices: [{ count: 2, dice_id: 'd8' }, { count: 1, dice_id: 'd6' }], addon: [{ count: 1, dice_id: 'd6' }] } } })
+  items.push({ id: 42, name: 'Длинная формула', nameEn: 'Long Formula', data: { lvl: 1,
+    damage: { dices: ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'd100', 'd6', 'd8', 'd10', 'd12', 'd20'].map(dice_id => ({ count: 2, dice_id })) } } })
+}
 itemsApi.byIds = async ids => ({ items: items.filter(item => ids.map(Number).includes(item.id)) })
 window.rolls = []; window.writes = []; window.events = []
 const dice = useDiceStore(pinia)

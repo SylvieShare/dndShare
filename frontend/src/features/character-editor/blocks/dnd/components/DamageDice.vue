@@ -1,4 +1,5 @@
 <template>
+  <FitContent inline>
   <span class="dd" :class="{ 'dd--wrap': wrap }" :style="{ '--dd-size': `${size}px`, '--dd-font-size': `${Math.max(12, Math.round(size * .38))}px` }">
     <template v-for="(g, gi) in groups" :key="gi">
       <span v-if="gi > 0" class="dd-op dd-op-between">+</span>
@@ -36,10 +37,12 @@
       </span>
     </template>
   </span>
+  </FitContent>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { FitContent } from '@sylvieshare/share-ui'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 
 // Shared dice display: damage/heal parts (`{ count, diceLabel, diceSides, type, typeColor }` — the shape both
@@ -110,9 +113,11 @@ function dieText(part) {
 
 <style scoped>
 .dd {
+  min-width: 0;
+  max-width: 100%;
   display: inline-flex;
   align-items: flex-start;
-  flex-wrap: wrap;
+  flex-wrap: var(--fit-content-wrap,wrap);
   gap: 2px 8px;
 }
 
@@ -126,6 +131,7 @@ function dieText(part) {
 
 .dd-dice {
   display: inline-flex;
+  flex-wrap: var(--fit-content-wrap,nowrap);
   align-items: center;
   gap: 4px;
 }
@@ -156,5 +162,5 @@ function dieText(part) {
   height: var(--dd-size);
 }
 .dd--wrap, .dd--wrap .dd-grp { max-width: 100%; min-width: 0; }
-.dd--wrap .dd-dice { flex-wrap: wrap; }
+.dd--wrap .dd-dice { flex-wrap: var(--fit-content-wrap,wrap); }
 </style>

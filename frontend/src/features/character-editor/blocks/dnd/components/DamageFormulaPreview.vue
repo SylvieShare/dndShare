@@ -1,18 +1,18 @@
 <template>
   <component :is="unframed ? 'span' : BaseTile" v-if="expression" class="damage-preview" :class="{ 'damage-preview--unframed': unframed }" aria-label="Итоговая формула урона">
     <small v-if="label">{{ label }}</small>
-    <span class="damage-preview-formula">
+    <FitContent><span class="damage-preview-formula">
       <template v-for="(group, index) in groups" :key="index">
         <span v-if="index" aria-hidden="true">+</span>
         <DamageDice :parts="group.parts" :modifier="group.modifier" :size="size" :default-color="group.color || defaultColor" />
       </template>
       <span v-if="!groups.length">0</span>
-    </span>
+    </span></FitContent>
   </component>
 </template>
 <script setup>
 import { computed } from 'vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { BaseTile, FitContent } from '@sylvieshare/share-ui'
 import { parseDiceExpression } from '@/shared/lib/dice'
 import DamageDice from './DamageDice.vue'
 const props = defineProps({ unframed: Boolean, size: { type: Number, default: 26 }, defaultColor: { type: String, default: 'var(--accent-soft)' }, expression: { type: String, default: '' }, label: { type: String, default: 'Итоговый урон' } })
@@ -32,5 +32,5 @@ const groups = computed(() => {
 .damage-preview { display: grid; gap: 6px; padding: 10px; }
 .damage-preview--unframed { padding: 0; }
 .damage-preview > small { color: var(--text-muted); font-size: 11px; }
-.damage-preview-formula { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px; color: var(--text-2); }
+.damage-preview-formula { display: flex; flex-wrap: var(--fit-content-wrap,wrap); align-items: flex-start; gap: 6px; color: var(--text-2); }
 </style>

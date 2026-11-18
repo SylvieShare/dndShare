@@ -22,14 +22,15 @@ describe('character spell card actions', () => {
     expect(source).toContain('v-if="ctx.charCtx.ownerMode && canPrepare"')
     expect(source).toContain('baseLvl.value > 0')
     expect(source).toContain('ctx.togglePrepared(props.entry.ref.key)')
-    expect(source).toContain(':permanent="false"')
+    expect(source).toContain(':prepared="isPrepared"')
+    expect(source).not.toContain('PreparedSpellBrackets')
     expect(source).not.toContain('isAlwaysPrepared')
   })
 
   it('opens the roll window for direct metric actions', () => {
     expect(source).toContain('<SpellRollMenu')
     expect(source).not.toContain(':rollable=')
-    expect(source).toContain('@roll-attack')
+    expect(source).toContain('@roll="openMetricRoll"')
     expect(source).toContain('<SpellRollDialog')
     expect(source).not.toContain('damage-menu')
     expect(source).not.toContain('class="sp-step"')

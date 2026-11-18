@@ -43,7 +43,7 @@ const metrics = computed(() => spellRollOptions(props.entry).map(option => {
 </script>
 <style scoped>
 .spell-metrics {display:grid;grid-template-columns:minmax(0,1fr);gap:var(--layout-weapon-metrics-gap);min-width:0;width:100%}
-.spell-metric-formula-row {display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--spacing-small);min-width:0;max-width:100%}
+.spell-metric-formula-row {display:flex;flex-wrap:var(--fit-content-wrap,wrap);align-items:flex-start;gap:var(--spacing-small);min-width:0;max-width:100%}
 .spell-metric-formula-row>.spell-scaling {flex:0 1 auto;min-width:0;max-width:100%}
 .spell-metric-attack {color:var(--accent-soft);font-family:var(--type-weapon-attack-family);font-size:var(--type-weapon-attack-size);font-weight:var(--type-weapon-attack-weight);line-height:var(--type-weapon-attack-line-height)}
 .spell-metric-title {color:var(--text-muted);font-size:var(--type-context-size);line-height:var(--type-context-line-height);overflow-wrap:anywhere}

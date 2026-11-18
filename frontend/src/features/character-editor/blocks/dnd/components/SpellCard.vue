@@ -15,13 +15,8 @@
         @pointerdown="onRowDown"
       >
     <button v-if="!entry.item" type="button" @click.stop="ctx.retryItems?.()">Повторить загрузку</button>
-    <PreparedSpellBrackets
-      v-if="isPrepared"
-      class="sp-prepared-brackets"
-      :permanent="false"
-    />
 
-    <SpellCardContent :item="entry.item" :name-en="nameEn" :grant-summary="grantSummary"
+    <SpellCardContent :item="entry.item" :name-en="nameEn" :grant-summary="grantSummary" :prepared="isPrepared"
       :range-override="ctx.spellRangeOverride?.(entry.item)" :scaling-hint="scalingHint">
     <template v-if="hasMetrics" #metrics>
       <div v-if="saveTag || instances > 1" class="sp-roll-summary">
@@ -105,7 +100,6 @@ import SpellRollMenu from './SpellRollMenu.vue'
 import SpellRollDialog from './SpellRollDialog.vue'
 import { useSpellRollOptions } from '../composables/useSpellRollOptions'
 import CharacterItemSkeleton from '@/features/character-editor/components/sheet/CharacterItemSkeleton.vue'
-import PreparedSpellBrackets from '@/features/character-editor/blocks/dnd/components/PreparedSpellBrackets.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { BaseTile, RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
@@ -230,7 +224,6 @@ function removeSpell(close) {
 .spell-row-clickable {cursor:pointer}
 .spell-row-draggable {cursor:grab;touch-action:pan-y}
 .spell-row-draggable:active {cursor:grabbing}
-.sp-prepared-brackets {position:absolute;z-index:2;inset:var(--spacing-compact);color:color-mix(in srgb,var(--accent) 62%,transparent);pointer-events:none}
 .sp-save {display:inline-flex;align-items:center;gap:var(--spacing-xs);color:var(--text-2);font-size:var(--type-context-size);font-weight:700;white-space:nowrap}
 .sp-mul {color:var(--text-2);font-size:var(--type-group-size);font-weight:700}
 .sp-roll-summary {display:flex;align-items:center;flex-wrap:wrap;gap:var(--spacing-small)}

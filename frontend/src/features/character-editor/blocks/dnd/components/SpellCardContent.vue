@@ -4,7 +4,7 @@
     <div class="sp-card-main">
       <div class="sp-info">
         <div class="sp-name-row">
-          <span class="sp-name">{{ item?.name || '…' }}</span>
+          <div class="sp-title-row"><span class="sp-name">{{ item?.name || '…' }}</span><span v-if="prepared" class="sp-prepared">[Подготовлено]</span></div>
           <span v-if="nameEn" class="sp-name-en" :title="nameEn">{{ nameEn }}</span>
         </div>
         <span v-if="grantSummary" class="sp-grant">{{ grantSummary }}</span>
@@ -22,7 +22,7 @@
 import SpellCardCover from './SpellCardCover.vue'
 import SpellMetadata from '@/features/items/components/SpellMetadata.vue'
 import SpellComponentBadge from '@/features/items/components/SpellComponentBadge.vue'
-defineProps({ item: Object, nameEn: String, rangeOverride: String, grantSummary: String, scalingHint: String })
+defineProps({ item: Object, nameEn: String, rangeOverride: String, grantSummary: String, scalingHint: String, prepared: Boolean })
 </script>
 <style scoped>
 .spell-card-content {position:relative;isolation:isolate;display:flex;flex-direction:column;gap:var(--spacing-small);height:100%;box-sizing:border-box;min-height:var(--layout-spell-card-min-height);min-width:0;padding:var(--spacing-medium)}
@@ -33,6 +33,8 @@ defineProps({ item: Object, nameEn: String, rangeOverride: String, grantSummary:
 .sp-meta>.spell-metadata {flex:1 1 var(--layout-spell-metric-min);min-width:0}
 .sp-components {flex:none;align-self:flex-start;margin-inline-start:auto}
 .sp-name-row {display:flex;flex-direction:column;align-items:flex-start;gap:var(--spacing-compact);min-width:0}
+.sp-title-row {min-width:0;max-width:100%;overflow-wrap:anywhere}
+.sp-prepared {display:inline-block;margin-inline-start:var(--spacing-compact);color:var(--accent-soft);font-family:var(--type-context-family);font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-weight:700;white-space:nowrap}
 .sp-name {flex-shrink:0;max-width:100%;min-width:0;color:var(--text-1);font-family:var(--type-spell-name-family);font-size:var(--type-spell-name-size);font-weight:var(--type-spell-name-weight);line-height:var(--type-spell-name-line-height);overflow-wrap:anywhere}
 .sp-name-en {max-width:100%;min-width:0;color:var(--text-muted);font-size:var(--type-context-size);line-height:var(--type-context-line-height);overflow-wrap:anywhere}
 .sp-grant {color:var(--accent-soft);font-size:var(--type-context-size);line-height:var(--type-context-line-height);overflow-wrap:anywhere}
