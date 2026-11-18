@@ -40,7 +40,6 @@ for (const width of [390, 932, 1440]) test(`passing the turn keeps every row in 
         top: bounds.top,
         height: bounds.height,
         labelOpacity: Number(getComputedStyle(label).opacity),
-        highlight: Number(paint.opacity),
         color: paint.backgroundColor,
       }
     })
@@ -70,10 +69,8 @@ for (const width of [390, 932, 1440]) test(`passing the turn keeps every row in 
   }
   for (const [index, start] of motion.before.slice(0, 2).entries()) {
     const end = motion.after[index]
-    for (const property of ['labelOpacity', 'highlight']) {
-      const min = Math.min(start[property], end[property]), max = Math.max(start[property], end[property])
-      expect(motion.samples.some(sample => sample[index][property] > min && sample[index][property] < max)).toBe(true)
-    }
+    const min = Math.min(start.labelOpacity, end.labelOpacity), max = Math.max(start.labelOpacity, end.labelOpacity)
+    expect(motion.samples.some(sample => sample[index].labelOpacity > min && sample[index].labelOpacity < max)).toBe(true)
     expect(motion.samples.some(sample => sample[index].color !== start.color && sample[index].color !== end.color)).toBe(true)
   }
   await expect.poll(() => api.encounter().turnIndex).toBe(1)
@@ -91,13 +88,13 @@ for (const width of [390, 932, 1440]) test(`passing the turn keeps every row in 
       top: tile.getBoundingClientRect().top,
       height: tile.getBoundingClientRect().height,
       labelOpacity: Number(getComputedStyle(tile.querySelector('.roster-presence-slot')).opacity),
-      highlight: Number(getComputedStyle(tile, '::before').opacity),
+      color: getComputedStyle(tile, '::before').backgroundColor,
     }))
   })
   expect(geometry(immediate)).toEqual(geometry(motion.before))
   for (const [index, tile] of immediate.entries()) {
     expect(tile.labelOpacity).toBe(motion.before[index].labelOpacity)
-    expect(tile.highlight).toBe(motion.before[index].highlight)
+    expect(tile.color).toBe(motion.before[index].color)
   }
   await expect.poll(() => api.encounter().turnIndex).toBe(0)
   await expect(root.locator('.enc-row--current')).toContainText('Лира')

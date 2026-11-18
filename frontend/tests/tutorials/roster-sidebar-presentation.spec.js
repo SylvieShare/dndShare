@@ -1,6 +1,17 @@
 import { expect, test } from '@playwright/test'
 import { rosterSelectionFixture } from './fixtures/session-roster.js'
 
+function tintAlpha(tile) {
+  return tile.evaluate(node => {
+    const canvas = document.createElement('canvas')
+    canvas.width = canvas.height = 1
+    const context = canvas.getContext('2d')
+    context.fillStyle = getComputedStyle(node, '::before').backgroundColor
+    context.fillRect(0, 0, 1, 1)
+    return context.getImageData(0, 0, 1, 1).data[3] / 255
+  })
+}
+
 for(const width of [390,834,1440])test(`roster header, edge scrollbar and brush selection at ${width}`,async({page},info)=>{
   const api=await rosterSelectionFixture(page,width)
   for(let i=2;i<16;i++){
@@ -20,11 +31,11 @@ for(const width of [390,834,1440])test(`roster header, edge scrollbar and brush 
     const hovered=sidebar.locator('.session-roster-list:visible .session-roster-tile').nth(1)
     await hovered.hover()
     await expect(hovered).toHaveCSS('background-color','rgba(0, 0, 0, 0)')
-    await expect.poll(()=>hovered.evaluate(n=>getComputedStyle(n,'::before').opacity)).toBe('0.11')
+    await expect.poll(()=>tintAlpha(hovered)).toBeCloseTo(.11,2)
     expect(await hovered.evaluate(n=>getComputedStyle(n,'::before').clipPath)).not.toBe('none')
     await info.attach(`hover-${tab}-${width}`,{body:await sidebar.screenshot({animations:'disabled'}),contentType:'image/png'})
     await header.hover()
-    await expect.poll(()=>hovered.evaluate(n=>getComputedStyle(n,'::before').opacity)).toBe('0')
+    await expect.poll(()=>tintAlpha(hovered)).toBe(0)
   }
   await nav.getByRole('button',{name:'Игроки',exact:true}).click()
   let count=0
@@ -44,7 +55,7 @@ for(const width of [390,834,1440])test(`roster header, edge scrollbar and brush 
     await expect(checkbox).toBeChecked()
     await expect(counter).toHaveText(`Выбрано: ${++count}`)
     await expect(tile).toHaveCSS('border-radius','0px')
-    await expect.poll(()=>tile.evaluate(n=>getComputedStyle(n,'::before').opacity)).toBe('0.13')
+    await expect.poll(()=>tintAlpha(tile)).toBeCloseTo(.13,2)
     expect((await row.boundingBox()).height).toBeCloseTo(before.height,1)
     await expect(list.locator('.workspace-row-divider--rough')).toHaveCount(15)
     const paths=await list.locator('.workspace-row-divider--rough path').evaluateAll(nodes=>nodes.slice(0,5).map(n=>n.getAttribute('d')))

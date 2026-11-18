@@ -1,6 +1,76 @@
 import { expect,test } from '@playwright/test'
 import { rosterSelectionFixture } from './fixtures/session-roster.js'
 
+test('deselecting the active creature fades its tint, brush and swords together', async ({ page }, info) => {
+  const api = await rosterSelectionFixture(page, 932)
+  const fight = api.encounter()
+  const wolf = fight.combatants.find(row => row.uid === 'wolf')
+  Object.assign(wolf, { position: 'combat', initiative: 18 })
+  Object.assign(fight, { active: true, round: 1, turnIndex: 0 })
+  await page.setViewportSize({ width: 932, height: 704 })
+  await page.reload()
+  await page.getByRole('button', { name: /Открыть бой/ }).click()
+  const sidebar = page.locator('aside.map-sidebar')
+  await sidebar.getByRole('navigation').getByRole('button', { name: 'Запас', exact: true }).click()
+  const tile = sidebar.locator('[data-encounter-uid="wolf"] .session-roster-tile')
+  const checkbox = tile.getByRole('checkbox', { name: 'Выбрать: Волк', exact: true })
+  await expect(tile).toHaveClass(/session-roster-tile--current/)
+  await checkbox.click()
+  await page.mouse.move(0, 0)
+  const brush = () => tile.evaluate(node => getComputedStyle(node, '::after').opacity)
+  await expect.poll(brush).toBe('0.34')
+
+  const motion = await tile.evaluate(async node => {
+    const canvas = document.createElement('canvas')
+    canvas.width = canvas.height = 1
+    const context = canvas.getContext('2d', { willReadFrequently: true })
+    const swords = node.querySelector('.roster-stage-backdrop svg')
+    const sample = () => {
+      context.clearRect(0, 0, 1, 1)
+      context.fillStyle = getComputedStyle(node, '::before').backgroundColor
+      context.fillRect(0, 0, 1, 1)
+      const tint = [...context.getImageData(0, 0, 1, 1).data]
+      return { tint, brush: Number(getComputedStyle(node, '::after').opacity), swords: Number(getComputedStyle(swords).opacity) }
+    }
+    const before = sample()
+    node.querySelector('[role="checkbox"]').click()
+    const frames = []
+    const deadline = performance.now() + 320
+    do {
+      await new Promise(requestAnimationFrame)
+      frames.push(sample())
+    } while (performance.now() < deadline)
+    return { before, frames, after: frames.at(-1) }
+  })
+
+  const { before, frames, after } = motion
+  expect(before.tint[3] / 255).toBeCloseTo(.13, 2)
+  expect(after.tint[3] / 255).toBeCloseTo(.05, 2)
+  expect([before.brush, before.swords]).toEqual([.34, .28])
+  expect([after.brush, after.swords]).toEqual([0, .16])
+  const progress = (start, value, end) => (start - value) / (start - end)
+  const intermediate = frames.filter(frame => frame.brush > .04 && frame.brush < .30)
+  expect(intermediate.length).toBeGreaterThan(0)
+  for (const frame of intermediate) {
+    const brushProgress = progress(before.brush, frame.brush, after.brush)
+    const swordProgress = progress(before.swords, frame.swords, after.swords)
+    const tintProgress = progress(before.tint[3], frame.tint[3], after.tint[3])
+    expect(Math.abs(brushProgress - swordProgress)).toBeLessThan(.02)
+    expect(Math.abs(brushProgress - tintProgress)).toBeLessThan(.10)
+  }
+  await expect(checkbox).not.toBeChecked()
+  await expect(tile.locator('.roster-presence')).toBeVisible()
+  await info.attach('deselect-frames', { body: Buffer.from(JSON.stringify(motion)), contentType: 'application/json' })
+  await info.attach('deselect-current-932', { body: await page.screenshot({ animations: 'disabled' }), contentType: 'image/png' })
+
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await checkbox.press('Space')
+  expect(await brush()).toBe('0.34')
+  await checkbox.press('Space')
+  expect(await brush()).toBe('0')
+  await expect(tile).toHaveClass(/session-roster-tile--current/)
+})
+
 test('selection captions and the following controls stay level as the selection changes', async ({ page }, info) => {
   const api = await rosterSelectionFixture(page, 932)
   const wolf = api.encounter().combatants.find(row => row.uid === 'wolf')
