@@ -62,13 +62,13 @@
             {{ creating ? "Создание…" : step < lastStep ? "Далее" : "Создать персонажа" }}
           </ActionButton>
         </div>
-        <ActionButton
-          v-if="!fullyValid"
-          class="red-incomplete-compact"
-          variant="quiet"
-          :disabled="creating || !available"
-          @click="requestIncomplete"
-        >Создать неполноценного</ActionButton>
+        <div v-if="!fullyValid" class="red-incomplete-compact">
+          <ActionButton
+            variant="quiet"
+            :disabled="creating || !available"
+            @click="requestIncomplete"
+          >Создать неполноценного</ActionButton>
+        </div>
       </div>
     </footer>
     <CharacterSheetModal
