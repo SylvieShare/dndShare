@@ -18,7 +18,7 @@
         <template #metrics><slot name="metrics" /></template>
         <template v-if="$slots.health" #health><slot name="health" /></template>
       </CharacterSummaryTile>
-      <slot name="presence" />
+      <slot v-if="!compact" name="presence" />
       <div v-if="hasStatuses && !compact" class="p-statuses-area"><slot name="statuses" /></div>
     </div>
   </BaseTile>

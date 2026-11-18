@@ -3,8 +3,8 @@ import {sessionLayout} from './fixtures/session-layout.js'
 import {encounterColumnsMinWidth} from '../../src/features/sessions/lib/encounterLayout.js'
 import {spacingTokens} from '../../src/app/design-tokens.js'
 
-test('passing the turn eases both tiles, including a quick reversal and reduced motion', async ({ page }, info) => {
-  await page.setViewportSize({ width: 932, height: 704 })
+for (const width of [390, 932, 1440]) test(`passing the turn keeps every row in place at ${width}`, async ({ page }, info) => {
+  await page.setViewportSize({ width, height: 844 })
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   const api = await sessionLayout(page, {
     url: '/sessions/test',
@@ -12,6 +12,7 @@ test('passing the turn eases both tiles, including a quick reversal and reduced 
     encounter: { active: true, round: 1, turnIndex: 0, combatants: [
       { uid: 'p-1', type: 'player', charId: 1, charUuid: 'hero', initiative: 18, position: 'combat' },
       { uid: 'wolf', type: 'npc', override: { name: 'Волк', hp: 12, ac: 13 }, hpCurrent: 12, markerLetter: 'A', initiative: 12, position: 'combat' },
+      { uid: 'orc', type: 'npc', override: { name: 'Орк', hp: 16, ac: 12 }, hpCurrent: 16, markerLetter: 'B', initiative: 8, position: 'combat' },
     ] },
   })
   await page.getByRole('button', { name: /Открыть бой/ }).click()
@@ -20,6 +21,12 @@ test('passing the turn eases both tiles, including a quick reversal and reduced 
   await expect(active).toHaveCount(1)
   await expect(root.locator('.enc-row--current')).toContainText('Лира')
   await page.mouse.move(0, 0)
+  await page.evaluate(async () => {
+    await document.fonts.ready
+    await new Promise(requestAnimationFrame)
+    const animations = document.getAnimations().filter(animation => Number.isFinite(animation.effect?.getComputedTiming().endTime))
+    await Promise.allSettled(animations.map(animation => animation.finished))
+  })
   const motion = await root.evaluate(async element => {
     const tiles = [...element.querySelectorAll('.session-roster-tile')]
     const frame = () => new Promise(requestAnimationFrame)
@@ -28,8 +35,10 @@ test('passing the turn eases both tiles, including a quick reversal and reduced 
     const sample = () => tiles.map(tile => {
       const label = tile.querySelector('.roster-presence-slot')
       const paint = getComputedStyle(tile, '::before')
+      const bounds = tile.getBoundingClientRect()
       return {
-        height: tile.getBoundingClientRect().height,
+        top: bounds.top,
+        height: bounds.height,
         labelOpacity: Number(getComputedStyle(label).opacity),
         highlight: Number(paint.opacity),
         color: paint.backgroundColor,
@@ -53,37 +62,40 @@ test('passing the turn eases both tiles, including a quick reversal and reduced 
     await frame()
     return { before, samples, after, reversing, retargeted: sample() }
   })
-  expect(motion.before.map(tile => tile.labelOpacity)).toEqual([1, 0])
-  expect(motion.after.map(tile => tile.labelOpacity)).toEqual([0, 1])
-  for (const [index, start] of motion.before.entries()) {
+  expect(motion.before.map(tile => tile.labelOpacity)).toEqual([1, 0, 0])
+  expect(motion.after.map(tile => tile.labelOpacity)).toEqual([0, 1, 0])
+  const geometry = tiles => tiles.map(({ top, height }) => ({ top: +top.toFixed(2), height: +height.toFixed(2) }))
+  for (const sample of [...motion.samples, motion.reversing, motion.retargeted]) {
+    expect(geometry(sample)).toEqual(geometry(motion.before))
+  }
+  for (const [index, start] of motion.before.slice(0, 2).entries()) {
     const end = motion.after[index]
-    expect(Math.abs(end.height - start.height)).toBeGreaterThan(10)
-    for (const property of ['height', 'labelOpacity', 'highlight']) {
+    for (const property of ['labelOpacity', 'highlight']) {
       const min = Math.min(start[property], end[property]), max = Math.max(start[property], end[property])
       expect(motion.samples.some(sample => sample[index][property] > min && sample[index][property] < max)).toBe(true)
     }
     expect(motion.samples.some(sample => sample[index].color !== start.color && sample[index].color !== end.color)).toBe(true)
-    expect(Math.abs(motion.retargeted[index].height - motion.reversing[index].height)).toBeLessThan(Math.abs(end.height - start.height))
   }
   await expect.poll(() => api.encounter().turnIndex).toBe(1)
   await expect(root.locator('.enc-row--current')).toContainText('Волк')
   await expect(root.locator('[data-encounter-uid="p-1"] .roster-presence')).toBeHidden()
   await expect(active).toHaveCount(1)
   await info.attach('turn-motion-frames', { body: Buffer.from(JSON.stringify(motion)), contentType: 'application/json' })
-  await info.attach('turn-motion-final-932', { body: await page.screenshot({ animations: 'disabled' }), contentType: 'image/png' })
+  await info.attach(`turn-motion-final-${width}`, { body: await page.screenshot({ animations: 'disabled' }), contentType: 'image/png' })
 
   await page.emulateMedia({ reducedMotion: 'reduce' })
   const immediate = await root.evaluate(async element => {
     element.querySelector('button[aria-label="Предыдущий ход"]').click()
     await new Promise(requestAnimationFrame)
     return [...element.querySelectorAll('.session-roster-tile')].map(tile => ({
+      top: tile.getBoundingClientRect().top,
       height: tile.getBoundingClientRect().height,
       labelOpacity: Number(getComputedStyle(tile.querySelector('.roster-presence-slot')).opacity),
       highlight: Number(getComputedStyle(tile, '::before').opacity),
     }))
   })
+  expect(geometry(immediate)).toEqual(geometry(motion.before))
   for (const [index, tile] of immediate.entries()) {
-    expect(tile.height).toBeCloseTo(motion.before[index].height, 1)
     expect(tile.labelOpacity).toBe(motion.before[index].labelOpacity)
     expect(tile.highlight).toBe(motion.before[index].highlight)
   }

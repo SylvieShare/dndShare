@@ -22,9 +22,10 @@ column contains the prepared or active roster. The right column contains
 participant's row, and the participant menu opens the character sheet or bestiary card.
 Порядковые номера на боевой сцене показаны шрифтом Cormorant Garamond
 без ведущих нулей.
-При передаче хода подпись «Сейчас ход», её место в плитке и подсветка
-плавно переходят между участниками. При reduced motion итоговое состояние
-показывается сразу.
+Во время боя в плитках участников сцены зарезервировано место для подписи
+«Сейчас ход». При передаче хода плавно меняются видимость подписи и подсветка,
+поэтому строки сохраняют положение и высоту. При reduced motion новое
+состояние показывается сразу.
 The chapter/scenario context is still retained for returning to the story and
 importing scenario combat blocks.
 
