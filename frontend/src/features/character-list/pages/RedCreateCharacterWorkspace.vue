@@ -26,9 +26,10 @@
         <LoadingState v-if="loading || catalogue.loading.value && !catalogue.items.value.length" label="Загрузка создания персонажа…" />
         <Transition v-else name="cc-fade" mode="out-in">
           <RedCreationSteps
-            :key="step"
+            :key="stepKey"
             :draft="draft"
-            :step="step"
+            :step="stepKey"
+            :role-expanded="roleExpanded"
             :items="catalogue.items.value"
             :art="art"
             :validation="wizard.validation.value"
@@ -36,7 +37,8 @@
             :skill-values="wizard.skillValues.value"
             @patch="patch"
             @method="requestChange('method', $event)"
-            @role="requestChange('role', $event)"
+            @role="selectRole"
+            @browse-roles="roleExpanded = false"
             @roll-stats="wizard.rollStats"
             @native-language="nativeLanguage"
             @specialization="specialization"
@@ -66,8 +68,10 @@
     />
     <ConfirmDialog
       v-if="pendingChange"
-      title="Изменить способ создания или роль?"
-      message="Характеристики и навыки будут приведены к новому методу, ролевые выборы и комплект будут пересобраны. Имя, жизненный путь и покупки сохранятся; бюджеты проверятся заново."
+      :title="pendingChange.kind === 'role' ? 'Изменить роль?' : 'Изменить способ создания?'"
+      :message="pendingChange.kind === 'role'
+        ? 'Навыки, специальные настройки и стартовый комплект будут пересобраны под новую роль.'
+        : 'Навыки будут пересобраны, а характеристики и бюджет будут рассчитываться по новому способу.'"
       confirm-label="Изменить"
       @cancel="pendingChange = null"
       @confirm="applyChange"
@@ -80,6 +84,7 @@
       @cancel="resetOpen = false"
       @confirm="
         wizard.reset();
+        roleExpanded = false;
         resetOpen = false;
       "
     />
@@ -127,16 +132,17 @@ const { draft, step } = wizard,
   pendingChange = ref(null);
 const art = useRedCreationArt();
 const mainRef = ref(null);
+const roleExpanded = ref(false);
 const lastStep = RED_CREATE_STEPS.length - 1;
+const stepKey = computed(() => RED_CREATE_STEPS[step.value].key);
 const summaries = computed(() => ({
-  Правила: "Cyberpunk RED · Core 1.25",
-  Роль: RED_ROLES.find(role => role.key === draft.value.role)?.name,
-  Завершение: draft.value.name.trim(),
+  method: "Cyberpunk RED · Core 1.25",
+  role: RED_ROLES.find(role => role.key === draft.value.role)?.name,
+  finish: draft.value.name.trim(),
 }));
-const steps = computed(() => RED_CREATE_STEPS.map(title => ({
-  key: title,
-  title,
-  summary: summaries.value[title],
+const steps = computed(() => RED_CREATE_STEPS.map(entry => ({
+  ...entry,
+  summary: summaries.value[entry.key],
 })));
 watch(step, () => { if (mainRef.value) mainRef.value.scrollTop = 0; });
 const creating = computed(() => props.creating || submitting.value),
@@ -151,11 +157,17 @@ function patch(value) {
 function requestChange(kind, value) {
   if (draft.value[kind] !== value) pendingChange.value = { kind, value };
 }
+function selectRole(value) {
+  if (value === draft.value.role) roleExpanded.value = true;
+  else requestChange("role", value);
+}
 function applyChange() {
   const change = pendingChange.value;
   pendingChange.value = null;
-  if (change.kind === "role") wizard.changeRole(change.value);
-  else wizard.changeMethod(change.value);
+  if (change.kind === "role") {
+    wizard.changeRole(change.value);
+    roleExpanded.value = true;
+  } else wizard.changeMethod(change.value);
 }
 function nativeLanguage(value) {
   const old = draft.value.nativeLanguage;

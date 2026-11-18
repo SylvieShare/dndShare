@@ -1,6 +1,6 @@
 <template>
   <div class="red-stack">
-    <IllustratedChoiceStage v-if="step === 0" class="method-stage" title="Способ создания" two-column>
+    <IllustratedChoiceStage v-if="step === 'method'" class="method-stage" title="Способ создания" two-column>
       <template #cards>
         <BackgroundSelectCard
           v-for="method in methods"
@@ -16,60 +16,71 @@
         />
       </template>
     </IllustratedChoiceStage>
-    <template v-else-if="step === 1">
-      <IllustratedChoiceStage title="Роль" two-column>
-        <template #cards>
-          <BackgroundSelectCard
-            v-for="role in RED_ROLES"
-            :key="role.key"
-            :title="role.name"
-            :description="roleItem(role.key)?.description || role.originalName"
-            :monogram="role.name[0]"
-            :image-url="roleItem(role.key)?.coverImageUrl || art.collectionCover('Роли')"
-            :selected="draft.role === role.key"
-            :expanded-selection="false"
-            panoramic
-            @select="emit('role', role.key)"
-          />
-        </template>
-      </IllustratedChoiceStage>
-      <div v-if="roleFields[draft.role]" class="red-panel">
-        <h3>Специальности роли</h3>
-        <FormField
-          v-for="[key, name] in roleFields[draft.role]"
-          :key="key"
-          :label="name"
-          vertical
-          ><FormNumberInput
-            :value="draft.roleChoices[key] || 0"
-            :min="0"
-            :max="4"
-            @change="
-              patch({ roleChoices: { ...draft.roleChoices, [key]: $event } })
-            " /></FormField
-        ><small>Всего очков: {{ draft.role === "tech" ? 8 : 4 }}</small>
-      </div>
-      <div v-if="draft.role === 'medtech'" class="red-panel">
-        <h3>
-          Рецепты · {{ draft.roleChoices.knownRecipes?.length || 0 }} /
-          {{ draft.roleChoices.pharmaceuticals || 0 }}
-        </h3>
-        <div class="red-actions">
-          <ActionButton
-            v-for="i in items.filter((i) => i.kind === 'pharmaceutical')"
-            :key="i.key"
-            :variant="
-              draft.roleChoices.knownRecipes?.includes(i.key)
-                ? 'primary'
-                : 'quiet'
-            "
-            @click="toggleRecipe(i.key)"
-            >{{ i.name }}</ActionButton
-          >
-        </div>
-      </div></template
+    <IllustratedChoiceStage
+      v-else-if="step === 'role'"
+      title="Роль"
+      :selected="roleExpanded"
+      :selection-key="roleExpanded ? draft.role : null"
+      back-text="К выбору роли"
+      two-column
+      @clear="emit('browse-roles')"
     >
-    <template v-else-if="step === 2"
+      <template #cards>
+        <BackgroundSelectCard
+          v-for="role in visibleRoles"
+          :key="role.key"
+          :title="role.name"
+          :description="roleItem(role.key)?.description || role.originalName"
+          :monogram="role.name[0]"
+          :image-url="roleItem(role.key)?.coverImageUrl || art.collectionCover('Роли')"
+          :selected="draft.role === role.key"
+          :expanded-selection="roleExpanded"
+          panoramic
+          @select="emit('role', role.key)"
+        />
+      </template>
+      <template #details>
+        <div v-if="roleFields[draft.role]" class="red-panel">
+          <h3>Специальности роли</h3>
+          <div class="red-form-grid">
+            <FormField
+              v-for="[key, name] in roleFields[draft.role]"
+              :key="key"
+              :label="name"
+              vertical
+            >
+              <FormNumberInput
+                :value="draft.roleChoices[key] || 0"
+                :min="0"
+                :max="4"
+                @change="patch({ roleChoices: { ...draft.roleChoices, [key]: $event } })"
+              />
+            </FormField>
+          </div>
+          <small>Всего очков: {{ draft.role === "tech" ? 8 : 4 }}</small>
+        </div>
+        <div v-if="draft.role === 'medtech'" class="red-panel">
+          <h3>
+            Рецепты · {{ draft.roleChoices.knownRecipes?.length || 0 }} /
+            {{ draft.roleChoices.pharmaceuticals || 0 }}
+          </h3>
+          <div class="red-actions">
+            <ActionButton
+              v-for="i in items.filter((i) => i.kind === 'pharmaceutical')"
+              :key="i.key"
+              :variant="
+                draft.roleChoices.knownRecipes?.includes(i.key)
+                  ? 'primary'
+                  : 'quiet'
+              "
+              @click="toggleRecipe(i.key)"
+              >{{ i.name }}</ActionButton
+            >
+          </div>
+        </div>
+      </template>
+    </IllustratedChoiceStage>
+    <template v-else-if="step === 'lifepath'"
       ><RedCreationIntro title="Жизненный путь" :cover="art.dictionaryCover('Местности')" />
       <div class="red-form-grid">
         <FormField label="Родной язык · бесплатный ранг 4" vertical
@@ -102,7 +113,7 @@
             "
         /></FormField></div
     ></template>
-    <template v-else-if="step === 3"
+    <template v-else-if="step === 'stats'"
       ><RedCreationIntro title="Характеристики" :cover="art.dictionaryCover('Характеристики')" />
       <p v-if="draft.method === 'complete'">
         Распределено {{ statTotal }} из 62. Каждое значение от 2 до 8.
@@ -133,7 +144,7 @@
         >
       </div></template
     >
-    <template v-else-if="step === 4"
+    <template v-else-if="step === 'skills'"
       ><RedCreationIntro title="Навыки" :cover="art.dictionaryCover('Навыки')" />
       <p>
         Стоимость: {{ validation.skills?.spent || 0 }} / 86. Родной язык 4 не
@@ -170,12 +181,12 @@
       </p></template
     >
     <RedCreationShop
-      v-else-if="step === 5 || step === 6"
+      v-else-if="step === 'equipment' || step === 'cyberware'"
       :draft="draft"
       :items="items"
       :summary="shopping"
-      :cyber="step === 6"
-      :cover="art.collectionCover(step === 6 ? 'Киберимпланты' : 'Снаряжение')"
+      :cyber="step === 'cyberware'"
+      :cover="art.collectionCover(step === 'cyberware' ? 'Киберимпланты' : 'Снаряжение')"
       @patch="patch"
     />
     <template v-else
@@ -229,7 +240,8 @@ import RedCreationIntro from "./RedCreationIntro.vue";
 import RedCreationShop from "./RedCreationShop.vue";
 const props = defineProps({
   draft: Object,
-  step: Number,
+  step: String,
+  roleExpanded: Boolean,
   items: Array,
   art: { type: Object, required: true },
   validation: Object,
@@ -240,6 +252,7 @@ const emit = defineEmits([
   "patch",
   "method",
   "role",
+  "browse-roles",
   "roll-stats",
   "native-language",
   "specialization",
@@ -248,6 +261,9 @@ const roleItems = computed(() => new Map(
   props.items.filter(item => item.kind === "role").map(item => [item.key, item]),
 ));
 const roleItem = key => roleItems.value.get(`role-${key}`);
+const visibleRoles = computed(() => props.roleExpanded
+  ? RED_ROLES.filter(role => role.key === props.draft.role)
+  : RED_ROLES);
 const patch = (value) => emit("patch", value);
 function toggleRecipe(key) {
   const known = props.draft.roleChoices.knownRecipes || [];

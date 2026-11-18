@@ -62,8 +62,13 @@ render before the network response while preserving the same API-shaped data.
 
 ## Creation entry points
 
-From `/chars`, D&D opens the full `/chars/new` page. The session workspace embeds
-that same full wizard in `CharacterCreateWizardModal`; successful creation
+Кнопка «Новый персонаж» на `/chars` открывает меню установленных систем.
+D&D и Cyberpunk RED открывают полноразмерный визард с выбранной системой
+в адресе. Vampire V20 открывает компактную форму. Выбор действует для
+создаваемого персонажа.
+
+The session workspace embeds the full wizard for the session's system in
+`CharacterCreateWizardModal`; successful creation
 attaches the character to the current session, refreshes its participant rail
 and closes the modal without opening the character sheet or changing the route.
 The invitation screen keeps the compact `CharacterCreateModal` based on

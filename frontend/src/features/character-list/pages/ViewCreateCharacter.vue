@@ -12,6 +12,12 @@ defineOptions({inheritAttrs:false})
 const props=defineProps({embedded:Boolean,creating:Boolean,error:String,sourceVersionId:Number,sourceName:String})
 const emit=defineEmits(['create','cancel'])
 const route=useRoute(),context=useGameContextStore(),workspace=ref(null)
-const isRed=computed(()=>props.sourceName==='Cyberpunk'||route.query.system==='cyberpunk-red'||(!props.sourceName&&context.context?.sourceName==='Cyberpunk'))
+const isRed = computed(() => {
+  if (props.sourceName) return props.sourceName === 'Cyberpunk'
+  if (route.query.system === 'cyberpunk-red' || route.query.system === 'dnd5e') {
+    return route.query.system === 'cyberpunk-red'
+  }
+  return context.context?.sourceName === 'Cyberpunk'
+})
 defineExpose({clearDraft:()=>workspace.value?.clearDraft?.()})
 </script>

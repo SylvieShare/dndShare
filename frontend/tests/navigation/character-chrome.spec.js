@@ -5,11 +5,11 @@ import { installCharacterChromeFixture } from './characterChromeFixture.js'
 for (const width of [320, 834, 1440]) test(`character actions stay in the main header row at ${width}`, async ({ page }) => {
   const errors = []; page.on('pageerror', error => errors.push(error.message))
   await page.setViewportSize({ width, height: 900 })
+  await page.emulateMedia({ reducedMotion: 'reduce' })
   await installCharacterChromeFixture(page)
   await page.goto('/chars')
   await expect(page.locator('.char-card')).toHaveCount(30, { timeout: 20000 })
-  await expect.poll(() => page.evaluate(() => document.getAnimations().filter(animation =>
-    animation.playState === 'running' && animation.effect?.getTiming().iterations !== Infinity).length)).toBe(0)
+  await expect(page.locator('.page-forward-enter-active, .page-backward-enter-active')).toHaveCount(0)
   const subheader = page.locator('.app-header .workspace-header-inner')
   await expect(subheader.getByRole('heading', { name: 'Персонажи', exact: true })).toBeVisible()
   await expect(subheader.getByRole('button', { name: 'Новый персонаж', exact: true })).toBeVisible()
@@ -29,7 +29,8 @@ for (const width of [320, 834, 1440]) test(`character actions stay in the main h
   expect(card.y).toBeLessThan(before.y + before.height)
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
   await subheader.getByRole('button', { name: 'Новый персонаж', exact: true }).click()
-  await expect(page).toHaveURL(/\/chars\/new/)
+  await page.getByRole('menu', { name: 'Выбрать игровую систему' }).getByRole('menuitem', { name: 'D&D 5e' }).click()
+  await expect(page).toHaveURL(/\/chars\/new\?system=dnd5e$/)
   await expect(page.locator('#app-subheader')).toHaveCount(0)
   expect(errors).toEqual([])
 })

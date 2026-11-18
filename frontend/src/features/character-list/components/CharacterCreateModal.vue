@@ -11,7 +11,7 @@
     <div class="cc-content" :class="{ revealed }">
       <h2 class="modal-title">Создать персонажа</h2>
 
-    <FormField label="Шаблон" vertical>
+    <FormField v-if="templates.length > 1" label="Шаблон" vertical>
       <FormSelect v-model:value="selectedTemplateId" @change="resetForm">
         <option disabled value="">Выберите шаблон</option>
         <option v-for="t in templates" :key="t.id" :value="t.id">{{ t.name }}</option>

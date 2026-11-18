@@ -30,8 +30,8 @@ async function fixture(page){
   return route.fulfill({json:{
    '/api/build-info':{backend:{version:'test',build:1,apiContract:1},frontend:{version:'0.0.0',build:0}},
    '/api/user/checkAuth':{auth:true,user:{id:1,login:'red-test',roles:[],hasCharacters:true,gameContext:{sourceVersionId:30}}},
-   '/api/sources':{sources:[{id:1,name:'DND5e',versions:[{id:1,sourceId:1,version:'2014'}]},{id:3,name:'Cyberpunk',versions:[{id:30,sourceId:3,version:'RED'}]}]},
-   '/api/templates':{templates:[{id:1,name:'DND5'},{id:3,name:'CYBERPUNK_RED'}]},
+   '/api/sources':{sources:[{id:1,name:'DND5e',versions:[{id:1,sourceId:1,version:'2014'}]},{id:2,name:'Vampire: TM',versions:[{id:20,sourceId:2,version:'V20'}]},{id:3,name:'Cyberpunk',versions:[{id:30,sourceId:3,version:'RED'}]}]},
+   '/api/templates':{templates:[{id:1,name:'DND5'},{id:2,name:'VTM20'},{id:3,name:'CYBERPUNK_RED'}]},
    '/api/cyberpunk-red/catalogue':{items,revision:core.revision,groups:core.groups},
    '/api/chars':{chars:[response()],sessionsByChar:{}},
    '/api/item-types':{types:[{name:'Киберимпланты',coverImageUrl:cover}]},
@@ -70,16 +70,57 @@ for(const width of [390,840,1440]){
   await expect.poll(()=>state.getData().values.identity.handle).toBe('STATIC II')
   await page.reload()
   await expect(page.locator('.character-heading h1')).toHaveText('STATIC II')
-  await page.goto('/chars/new?system=cyberpunk-red')
+  await page.goto('/chars')
+  await page.getByRole('button',{name:'Новый персонаж',exact:true}).click()
+  const menu=page.getByRole('menu',{name:'Выбрать игровую систему'})
+  if(width===1440){
+   await menu.getByRole('menuitem',{name:'Vampire V20',exact:true}).click()
+   await expect(page.getByPlaceholder('Введите имя...')).toBeVisible()
+   await expect(page.getByRole('option',{name:'VTM20'})).toHaveCount(0)
+   await page.getByRole('button',{name:'Отмена',exact:true}).click()
+   await expect(page.getByPlaceholder('Введите имя...')).toHaveCount(0)
+   await page.getByRole('button',{name:'Новый персонаж',exact:true}).click()
+  }
+  await menu.getByRole('menuitem',{name:'D&D 5e',exact:true}).click()
+  await expect(page.getByText('Версия правил',{exact:true})).toBeVisible()
+  await page.goBack()
+  await page.getByRole('button',{name:'Новый персонаж',exact:true}).click()
+  await menu.getByRole('menuitem',{name:'Cyberpunk RED',exact:true}).click()
+  const rail=page.getByRole('navigation',{name:'Шаги создания персонажа'})
+  await expect(rail.locator('.rail-title').filter({hasText:/^(Роль|Жизненный путь|Способ создания)$/})).toHaveText(['Роль','Жизненный путь','Способ создания'])
+  const main=page.locator('.red-wizard-main')
+  const solo=main.getByRole('button',{name:'Соло',exact:true})
+  if(width===1440){
+   await main.getByRole('button',{name:'Техник',exact:true}).click()
+   await page.getByRole('button',{name:'Изменить',exact:true}).click()
+   await expect(main.getByText('Полевая экспертиза',{exact:true})).toBeVisible()
+   await main.getByRole('button',{name:/К выбору роли/}).click()
+   await solo.click()
+   await page.getByRole('button',{name:'Изменить',exact:true}).click()
+   await main.getByRole('button',{name:/К выбору роли/}).click()
+  }
+  await expect(solo.locator('img')).toHaveJSProperty('naturalWidth',50)
+  await expect(main.getByText('Специальности роли',{exact:true})).toHaveCount(0)
+  await solo.click()
+  await expect(main.getByText('Специальности роли',{exact:true})).toBeVisible()
+  await expect(main.getByRole('button',{name:'Техник',exact:true})).toHaveCount(0)
+  const initiative=main.getByRole('spinbutton').nth(2)
+  await initiative.fill('1')
+  await initiative.blur()
+  await testInfo.attach(`wizard-${width}`,{body:await page.screenshot({animations:'disabled',timeout:10000}),contentType:'image/png'})
+  await main.getByRole('button',{name:/К выбору роли/}).click()
+  await expect(solo).toHaveAttribute('aria-pressed','true')
+  await solo.click()
+  await expect(initiative).toHaveValue('1')
+  const next=page.getByRole('button',{name:'Далее',exact:true})
+  await next.click()
+  await expect(main.getByRole('heading',{name:'Жизненный путь',exact:true})).toBeVisible()
+  await next.click()
   await expect(page.getByRole('heading',{name:'Способ создания'})).toBeVisible()
   await expect(page.getByRole('button',{name:'Полный пакет',exact:true}).locator('img')).toHaveJSProperty('naturalWidth',50)
   await page.getByRole('button',{name:'Уличная крыса',exact:true}).click()
   await page.getByRole('button',{name:'Изменить',exact:true}).click()
-  const rail=page.getByRole('navigation',{name:'Шаги создания персонажа'})
-  await rail.getByText('Роль',{exact:true}).click()
-  await expect(page.getByRole('button',{name:'Соло',exact:true}).locator('img')).toHaveJSProperty('naturalWidth',50)
-  await testInfo.attach(`wizard-${width}`,{body:await page.screenshot({animations:'disabled',timeout:10000}),contentType:'image/png'})
-  await rail.getByText('Характеристики',{exact:true}).click()
+  await next.click()
   await expect(page.locator('.creation-cover')).toHaveJSProperty('naturalWidth',50)
   await rail.getByText('Киберимпланты',{exact:true}).click()
   await expect(page.getByRole('heading',{name:'Киберимпланты',exact:true})).toBeVisible()
@@ -90,8 +131,35 @@ for(const width of [390,840,1440]){
   await page.getByRole('button',{name:'Создать персонажа',exact:true}).click()
   await expect(page).toHaveURL(new RegExp(`/char/${uuid}$`))
   expect(state.getData().values.creation.complete).toBe(true)
+  expect(state.getData().values.roles[0].choices.initiative).toBe(1)
   expect(state.getData().values.inventory.entries.length).toBeGreaterThan(10)
   if(width===1440){await page.goto(`/char/${uuid}/print`);await expect(page.locator('.red-print')).toBeVisible();await expect(page.locator('.rp-skills>div')).toHaveCount(67);await page.pdf({path:testInfo.outputPath('red-character-sheet.pdf'),format:'A4',printBackground:true})}
   expect(errors).toEqual([])
  })
 }
+
+test('RED restores the original screen of a saved wizard draft', async ({page}) => {
+  await fixture(page)
+  const storageKey = 'dndshare.red-create.v1'
+  const draft = {
+    schemaVersion: 1,
+    method: 'complete',
+    role: 'solo',
+    name: 'Старый черновик',
+    lifepath: { goal: 'Найти экипаж' },
+  }
+  await page.addInitScript(({storageKey,draft}) => {
+    if (!localStorage.getItem(storageKey)) {
+      localStorage.setItem(storageKey,JSON.stringify({draft,step:2}))
+    }
+  },{storageKey,draft})
+  await page.goto('/chars/new?system=cyberpunk-red')
+  const main = page.locator('.red-wizard-main')
+  await expect(main.getByRole('heading',{name:'Жизненный путь',exact:true})).toBeVisible()
+  await expect(main.locator('input').filter({visible:true}).last()).toBeVisible()
+  const saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)),storageKey)
+  expect(saved.stepKey).toBe('lifepath')
+  expect(saved.draft).toMatchObject(draft)
+  await page.reload()
+  await expect(main.getByRole('heading',{name:'Жизненный путь',exact:true})).toBeVisible()
+})

@@ -1,7 +1,30 @@
 <template>
   <div class="page">
     <PageHeaderPortal>
-      <HeaderCreateAction label="Новый персонаж" short-label="Новый" @click="openCreateModal" />
+      <ActionMenu title="Выбрать игровую систему" heading="Игровая система">
+        <template #trigger="{ open }">
+          <HeaderCreateAction
+            label="Новый персонаж"
+            short-label="Новый"
+            aria-haspopup="menu"
+            :aria-expanded="open"
+            @click="rememberCreateOrigin"
+          />
+        </template>
+        <template #default="{ close }">
+          <ActionMenuItem
+            v-for="option in createOptions"
+            :key="option.system"
+            :icon="option.icon"
+            @click="close(); chooseSystem(option)"
+          >{{ option.label }}</ActionMenuItem>
+          <LoadingState v-if="loadingSystems" label="Загрузка систем…" compact />
+          <ActionMenuItem v-else-if="systemLoadError" :icon="RotateCcw" @click="loadSystems">
+            Повторить загрузку систем
+          </ActionMenuItem>
+          <p v-else-if="!createOptions.length" class="create-system-empty">Нет доступных систем</p>
+        </template>
+      </ActionMenu>
     </PageHeaderPortal>
 
     <p v-if="loadError && chars.length" role="alert">{{ loadError }} <button type="button" @click="loadChars()">Повторить</button></p>
@@ -39,7 +62,7 @@
     <CharacterCreateModal
       ref="createRef"
       v-if="showModal"
-      :templates="templates"
+      :templates="modalTemplates"
       :creating="creating"
       :origin-rect="createOriginRect"
       :origin-el="createOriginEl"
@@ -59,6 +82,8 @@ export default { name: 'ViewListCharacters' }
 import CharacterListSkeleton from '../components/CharacterListSkeleton.vue'
 import PageHeaderPortal from '@/shared/ui/PageHeaderPortal.vue'
 import HeaderCreateAction from '@/shared/ui/HeaderCreateAction.vue'
+import { ActionMenu, ActionMenuItem, LoadingState } from '@sylvieshare/share-ui'
+import { Cpu, Moon, RotateCcw, Swords } from '@lucide/vue'
 import { computed, onActivated, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CharBox from "@/features/character-list/components/CharBox"
@@ -68,13 +93,11 @@ import { fetchGet, fetchPost, fetchDelete } from '@/shared/api/http'
 import { resolveSetting, settingAccessors } from '@/features/character-editor/settings'
 import { useAccountStore } from '@/stores/account'
 import { useTemplateStore } from '@/stores/template'
-import { useGameContextStore } from '@/stores/gameContext'
 
 const router = useRouter()
 const route = useRoute()
 const accountStore = useAccountStore()
 const templateStore = useTemplateStore()
-const gameContext=useGameContextStore()
 const chars = ref([])
 const sessionsByChar = ref({})
 const loadError = ref('')
@@ -85,6 +108,18 @@ const createRef = ref(null)
 const createOriginEl = ref(null)
 const createOriginRect = ref(null)
 const templates = computed(() => templateStore.all)
+const modalTemplates = ref([])
+const loadingSystems = ref(false)
+const systemLoadError = ref(false)
+const creationSystems = [
+  { system: 'dnd5e', label: 'D&D 5e', icon: Swords, wizard: true },
+  { system: 'cyberpunk-red', label: 'Cyberpunk RED', icon: Cpu, wizard: true },
+  { system: 'vtm-v20', label: 'Vampire V20', icon: Moon, wizard: false },
+]
+const createOptions = computed(() => creationSystems.flatMap(option => {
+  const template = templates.value.find(template => resolveSetting(template)?.system === option.system)
+  return template ? [{ ...option, template }] : []
+}))
 const groupedChars = computed(() => {
   const groups = new Map()
   for (const char of chars.value) {
@@ -136,18 +171,34 @@ function topSession(uuid) {
   return sessionsByChar.value[uuid]?.[0] || null
 }
 
-function openCreateModal(e) {
-  if(gameContext.context?.sourceName==='Cyberpunk'){router.push('/chars/new?system=cyberpunk-red');return}
-  // D&D creation has a dedicated full-page wizard; other registered systems use the compact modal.
-  const dnd = templates.value.find(t => resolveSetting(t)?.system === 'dnd5e')
-  if (dnd) { router.push('/chars/new'); return }
+function rememberCreateOrigin(e) {
   const el = e?.currentTarget || null
   createOriginEl.value = el
   if (el) {
     const r = el.getBoundingClientRect()
     createOriginRect.value = { left: r.left, top: r.top, width: r.width, height: r.height }
   }
-  showModal.value = true
+}
+
+async function loadSystems() {
+  loadingSystems.value = true
+  systemLoadError.value = false
+  try {
+    await templateStore.ensure()
+  } catch {
+    systemLoadError.value = true
+  } finally {
+    loadingSystems.value = false
+  }
+}
+
+function chooseSystem(option) {
+  if (option.wizard) {
+    router.push({ path: '/chars/new', query: { system: option.system } })
+  } else {
+    modalTemplates.value = [option.template]
+    showModal.value = true
+  }
 }
 
 function closeCreateModal() {
@@ -181,7 +232,7 @@ async function deleteChar(uuid) {
 
 onMounted(() => {
   loadChars(consumePrefetch(route.fullPath))
-  templateStore.ensure()
+  loadSystems()
 })
 
 let activationCount = 0
@@ -194,6 +245,7 @@ onActivated(() => {
 </script>
 
 <style scoped>
+.create-system-empty { margin: 0; padding: var(--spacing-small); color: var(--text-muted); }
 .page {
   padding: 20px;
   min-height: calc(100vh - var(--header-h));

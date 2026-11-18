@@ -17,6 +17,7 @@ export const useTemplateStore = defineStore('template', {
       if (pending) return pending
       pending = fetchGet('/templates').then(res => {
         this.templates = res?.templates || []
+      }).finally(() => {
         pending = null
       })
       return pending

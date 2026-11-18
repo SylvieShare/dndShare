@@ -14,15 +14,16 @@ import {
   redShoppingSummary,
 } from "@/features/character-editor/settings/cyberpunk-red/equipment";
 export const RED_CREATE_STEPS = [
-  "Правила",
-  "Роль",
-  "Жизненный путь",
-  "Характеристики",
-  "Навыки",
-  "Снаряжение",
-  "Киберимпланты",
-  "Завершение",
+  { key: "role", title: "Роль" },
+  { key: "lifepath", title: "Жизненный путь" },
+  { key: "method", title: "Способ создания" },
+  { key: "stats", title: "Характеристики" },
+  { key: "skills", title: "Навыки" },
+  { key: "equipment", title: "Снаряжение" },
+  { key: "cyberware", title: "Киберимпланты" },
+  { key: "finish", title: "Завершение" },
 ];
+const legacyStepKeys = ["method", "role", "lifepath", "stats", "skills", "equipment", "cyberware", "finish"];
 const initial = () => ({
   method: "complete",
   role: "solo",
@@ -46,6 +47,7 @@ export function useRedCreateWizard(items) {
     step = ref(0),
     storageError = ref("");
   const storageKey = "dndshare.red-create.v1";
+  let migratedStep = false;
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
     if (
@@ -54,17 +56,14 @@ export function useRedCreateWizard(items) {
       ["complete", "streetrat", "edgerunner"].includes(saved.draft.method)
     ) {
       draft.value = { ...initial(), ...saved.draft };
-      step.value = Math.min(7, Math.max(0, saved.step || 0));
+      const stepKey = saved.stepKey ?? legacyStepKeys[saved.step];
+      migratedStep = saved.stepKey == null && stepKey != null;
+      step.value = Math.max(0, RED_CREATE_STEPS.findIndex(entry => entry.key === stepKey));
     }
   } catch {
     storageError.value = "Не удалось восстановить черновик";
   }
   function resetRole() {
-    draft.value.skills = redInitialSkills(
-      draft.value.role,
-      draft.value.method,
-      draft.value,
-    );
     draft.value.kitChoices = Object.fromEntries(
       RED_STARTING_KITS[draft.value.role]
         .filter((r) => r.choice)
@@ -81,6 +80,14 @@ export function useRedCreateWizard(items) {
               knownRecipes: ["pharma-speedheal", "pharma-rapid-detox"],
             }
           : {};
+    resetMethodChoices();
+  }
+  function resetMethodChoices() {
+    draft.value.skills = redInitialSkills(
+      draft.value.role,
+      draft.value.method,
+      draft.value,
+    );
     if (draft.value.method !== "complete") {
       draft.value.statRolls = Array(
         draft.value.method === "streetrat" ? 1 : 10,
@@ -93,25 +100,22 @@ export function useRedCreateWizard(items) {
     }
   }
   if (!draft.value.skills.length) resetRole();
-  watch(
-    [draft, step],
-    () => {
-      try {
-        localStorage.setItem(
-          storageKey,
-          JSON.stringify({
-            draft: { ...draft.value, schemaVersion: 1 },
-            step: step.value,
-          }),
-        );
-        storageError.value = "";
-      } catch {
-        storageError.value =
-          "Черновик не сохранён на устройстве. Не закрывайте страницу.";
-      }
-    },
-    { deep: true },
-  );
+  function saveDraft() {
+    try {
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify({
+          draft: { ...draft.value, schemaVersion: 1 },
+          stepKey: RED_CREATE_STEPS[step.value].key,
+        }),
+      );
+      storageError.value = "";
+    } catch {
+      storageError.value = "Черновик не сохранён на устройстве. Не закрывайте страницу.";
+    }
+  }
+  if (migratedStep) saveDraft();
+  watch([draft, step], saveDraft, { deep: true });
   const shopping = computed(() => redShoppingSummary(draft.value, items.value));
   const validation = computed(() => validateRedCreation(draft.value));
   function changeRole(role) {
@@ -120,7 +124,7 @@ export function useRedCreateWizard(items) {
   }
   function changeMethod(method) {
     draft.value.method = method;
-    resetRole();
+    resetMethodChoices();
   }
   function rollStats() {
     draft.value.statRolls = Array.from(
