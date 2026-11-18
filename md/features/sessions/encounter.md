@@ -189,9 +189,10 @@ the normal encounter save queue.
 `useRosterSelection` derives one selection from canonical combatant UIDs,
 shared across Players, every reserve group and the scene. Its input is deduplicated
 by UID; a creature shown in two views receives damage or XP only once. Constant
-leading checkboxes separate selection from body menus. Checkbox targets are 48px
-with 22px glyphs; pointer/key events do not open menus or claim drag. Vertical
-touch movement scrolls both lists. HP and state controls stay interactive.
+leading checkboxes use 22px glyphs in a 48px-wide selection area that spans the
+row except for its 4px top and bottom edges. These edges and the rest of the
+row open the action menu. Vertical gestures in the selection area scroll the
+list. HP and state controls stay interactive.
 The sidebar shows selected actors across top-level tabs. A separate row above
 All shows bare per-type icons and individual player portraits, with quantities
 from two. All applies to the open roster, and «Сбросить выбор» clears the global

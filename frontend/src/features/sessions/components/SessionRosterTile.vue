@@ -45,8 +45,21 @@ defineEmits(['health','select'])
 .session-roster-tile--current.base-tile {--roster-state-color:var(--warning);--roster-state-opacity:.05}
 .session-roster-tile--compact.base-tile {padding:calc(var(--spacing-medium) / 2);width:var(--layout-touch-min);height:var(--layout-touch-min)}
 .session-roster-tile--selectable.base-tile {grid-template-columns:var(--layout-touch-min) minmax(0,1fr)}
-.roster-select-zone {box-sizing:border-box;display:flex;justify-content:center;align-items:flex-start;min-height:var(--layout-touch-min);padding-top:calc((var(--summary-avatar-size,var(--layout-sheet-header-icon)) - var(--layout-roster-checkbox-icon)) / 2);touch-action:pan-y}
+.roster-select-zone {
+  position: absolute;
+  inset-block: var(--spacing-xs);
+  inset-inline-start: var(--spacing-xs);
+  inline-size: var(--layout-touch-min);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-block-start: calc(var(--spacing-small) - var(--spacing-xs) + (var(--summary-avatar-size,var(--layout-sheet-header-icon)) - var(--layout-roster-checkbox-icon)) / 2);
+  cursor: pointer;
+  touch-action: pan-y;
+}
 .roster-content {min-width:0}
+.session-roster-tile--selectable .roster-content {grid-column:2}
 .roster-color-edge {display:none;position:absolute;inset:calc(var(--spacing-small) / -2) 0;z-index:-1;pointer-events:none;background:var(--player-color);clip-path:var(--roster-color-edge-clip)}
 .roster-stage-backdrop {position:absolute;inset:calc(var(--spacing-small) / -2) 0;z-index:-2;pointer-events:none;overflow:hidden;clip-path:var(--roster-paint-clip,var(--roster-paint-default))}
 .roster-stage-backdrop svg {position:absolute;inset-inline-end:var(--spacing-small);top:50%;transform:translateY(-50%);width:var(--layout-roster-stage-watermark);height:100%;max-height:var(--layout-roster-stage-watermark);color:var(--text-2);opacity:.16;transition:opacity var(--motion-feedback)}
