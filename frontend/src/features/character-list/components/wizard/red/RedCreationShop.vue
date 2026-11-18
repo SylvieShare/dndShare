@@ -170,7 +170,9 @@ const choices = computed(() =>
 );
 const giftRows = computed(() => {
   try {
-    return redKitRows(props.draft.role, props.draft.kitChoices).filter(
+    return redKitRows(
+      props.draft.role,
+      props.draft.kitChoices,
       (e) => (byKey.value[e.key]?.kind === "cyberware") === props.cyber,
     );
   } catch {

@@ -40,11 +40,14 @@
                 }}{{ row.costMultiplier === 2 ? " · ×2" : "" }}</small
               >
             </div>
+            <ActionButton v-if="editable && !compact && row.outsideRole" variant="quiet" @click="removeSkill(row.savedUid)">
+              Убрать
+            </ActionButton>
             <FormNumberInput
-              v-if="editable && !compact"
+              v-else-if="editable && !compact"
               :value="row.rank"
               :min="0"
-              :max="10"
+              :max="creation ? 6 : 10"
               @change="changeRank(row, $event)"
             />
             <strong v-if="creation">{{ stats[row.statKey] + row.rank }}</strong
@@ -66,7 +69,7 @@
         </div>
         <div v-if="editable && !compact" class="red-section">
           <h3>Новая специализация</h3>
-          <FormSelect v-model:value="specialSkill"
+          <FormSelect :value="selectedSpecialSkill" @update:value="specialSkill = $event"
             ><option v-for="s in specialized" :key="s.key" :value="s.key">
               {{ s.name }}
             </option></FormSelect
@@ -74,7 +77,7 @@
             v-model:value="specialName"
             placeholder="Язык, наука, инструмент или стиль"
             aria-label="Название специализации"
-          /><ActionButton :disabled="!specialName.trim()" @click="addSpecial"
+          /><ActionButton :disabled="!specialName.trim() || !selectedSpecialSkill" @click="addSpecial"
             >Добавить</ActionButton
           >
         </div>
@@ -104,23 +107,30 @@ const props = defineProps({
   editable: Boolean,
   compact: Boolean,
   creation: Boolean,
+  allowedKeys: Array,
 });
 const emit = defineEmits(["patch", "roll"]);
 const query = ref(""),
   specialSkill = ref("language"),
   specialName = ref("");
 const stats = computed(() => redEffectiveStats(props.values, props.items));
-const specialized = RED_SKILLS.filter((s) => s.specializationKind);
+const isAllowed = key => !props.allowedKeys || props.allowedKeys.includes(key);
+const specialized = computed(() => RED_SKILLS.filter(s => s.specializationKind && isAllowed(s.key)));
+const selectedSpecialSkill = computed(() => specialized.value.some(s => s.key === specialSkill.value)
+  ? specialSkill.value : specialized.value[0]?.key);
 const rows = computed(() =>
   RED_SKILLS.flatMap((skill) => {
     const owned = (props.values.skills || []).filter(
       (s) => s.key === skill.key,
     );
+    const outsideRole = !isAllowed(skill.key);
+    if (outsideRole && !owned.length) return [];
     return (owned.length ? owned : [{ uid: skill.key, rank: 0 }]).map(
       (entry) => ({
         ...skill,
         ...entry,
         savedUid: owned.length ? entry.uid : null,
+        outsideRole,
       }),
     );
   }).filter((s) =>
@@ -152,13 +162,17 @@ function changeRank(row, rank) {
     });
   emit("patch", { skills: entries });
 }
+function removeSkill(uid) {
+  emit("patch", { skills: props.values.skills.filter(skill => skill.uid !== uid) });
+}
 function addSpecial() {
   const name = specialName.value.trim();
+  const key = selectedSpecialSkill.value;
   if (
-    !name ||
+    !name || !key ||
     (props.values.skills || []).some(
       (s) =>
-        s.key === specialSkill.value &&
+        s.key === key &&
         s.specialization?.toLowerCase() === name.toLowerCase(),
     )
   )
@@ -168,7 +182,7 @@ function addSpecial() {
       ...(props.values.skills || []),
       {
         uid: crypto.randomUUID(),
-        key: specialSkill.value,
+        key,
         rank: 0,
         specialization: name,
       },

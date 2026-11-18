@@ -97,9 +97,15 @@ function statDescription(key) {
 .stat-budget { margin: 0; }
 .stat-budget strong { margin-inline-start: var(--spacing-small); font-size: var(--type-sheet-stat-size); }
 .stat-grid {
+  --stat-card-min: 200px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(
+    min(100%, max(var(--stat-card-min), calc((100% - 4 * var(--spacing-medium)) / 5))), 1fr
+  ));
   gap: var(--spacing-medium);
+}
+@media (max-width: 599px) {
+  .stat-grid { --stat-card-min: 163px; }
 }
 .stat-card {
   height: 100%;

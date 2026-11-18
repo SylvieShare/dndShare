@@ -11,11 +11,13 @@
       <CreateStepRail
         class="cc-rail"
         compact
-        :sequential="false"
         :steps="steps"
         :current="step"
-        :reachable="lastStep"
-        @go="step = $event"
+        :reachable="reachableStep"
+        :show-incomplete="!fullyValid"
+        :creating="creating || !available"
+        @go="goTo"
+        @create-incomplete="requestIncomplete"
         @reset="resetOpen = true"
       />
       <main ref="mainRef" class="cc-main red-wizard-main">
@@ -33,7 +35,7 @@
             :items="catalogue.items.value"
             :art="art"
             :validation="wizard.validation.value"
-            :shopping="wizard.shopping.value"
+            :shopping="stepKey === 'equipment' ? wizard.equipmentShopping.value : wizard.shopping.value"
             :skill-values="wizard.skillValues.value"
             @patch="patch"
             @method="requestChange('method', $event)"
@@ -48,23 +50,39 @@
     </div>
     <footer class="cc-foot">
       <div class="cc-foot-main">
+        <p v-if="blockReason" class="red-step-reason" role="status">{{ blockReason }}</p>
         <ActionButton variant="quiet" @click="step > 0 ? step-- : exit()">
           {{ step ? "Назад" : "Отмена" }}
         </ActionButton>
         <div class="cc-actions">
-          <ActionButton v-if="step === lastStep" variant="quiet" :disabled="creating || !available" @click="preview">
+          <ActionButton v-if="step === lastStep" variant="quiet" :disabled="creating || !available || !fullyValid" @click="preview">
             Предпросмотр листа
           </ActionButton>
-          <ActionButton :disabled="creating || !available || waitingForStatRoll" @click="step < lastStep ? step++ : create()">
+          <ActionButton :disabled="creating || !available || !!blockReason" @click="advance">
             {{ creating ? "Создание…" : step < lastStep ? "Далее" : "Создать персонажа" }}
           </ActionButton>
         </div>
+        <ActionButton
+          v-if="!fullyValid"
+          class="red-incomplete-compact"
+          variant="quiet"
+          :disabled="creating || !available"
+          @click="requestIncomplete"
+        >Создать неполноценного</ActionButton>
       </div>
     </footer>
     <CharacterSheetModal
       v-if="previewDraft"
       :draft="previewDraft"
       @close="previewDraft = null"
+    />
+    <ConfirmDialog
+      v-if="incompleteOpen"
+      title="Создать неполноценного персонажа?"
+      message="Можно закончить настройку в листе. Неуказанные характеристики получат минимальные значения. Недопустимые настройки и покупки могут быть исключены."
+      confirm-label="Создать"
+      @cancel="incompleteOpen = false"
+      @confirm="create({ incomplete: true })"
     />
     <ConfirmDialog
       v-if="pendingChange"
@@ -105,6 +123,7 @@ import {
 } from "../composables/useRedCreateWizard";
 import { RED_ROLES } from "@/features/character-editor/settings/cyberpunk-red/catalogue";
 import { useRedCreationArt } from "../composables/useRedCreationArt";
+import { redCreationStepError } from "../composables/redCreationStepValidation";
 import CharacterCreationHeader from "../components/CharacterCreationHeader.vue";
 import CreateStepRail from "../components/wizard/CreateStepRail.vue";
 import RedCreationSteps from "../components/wizard/red/RedCreationSteps.vue";
@@ -129,15 +148,13 @@ const { draft, step } = wizard,
   versionId = ref(null),
   previewDraft = ref(null),
   resetOpen = ref(false),
+  incompleteOpen = ref(false),
   pendingChange = ref(null);
 const art = useRedCreationArt();
 const mainRef = ref(null);
 const roleExpanded = ref(false);
 const lastStep = RED_CREATE_STEPS.length - 1;
 const stepKey = computed(() => RED_CREATE_STEPS[step.value].key);
-const waitingForStatRoll = computed(() =>
-  stepKey.value === "stats" && draft.value.method !== "complete" && draft.value.statRolls.length === 0,
-);
 const summaries = computed(() => ({
   method: "Cyberpunk RED · Core 1.25",
   role: RED_ROLES.find(role => role.key === draft.value.role)?.name,
@@ -154,6 +171,29 @@ const creating = computed(() => props.creating || submitting.value),
   available = computed(
     () => templateId.value && versionId.value && catalogue.items.value.length,
   );
+const firstInvalid = computed(() => {
+  for (const [index, entry] of RED_CREATE_STEPS.entries()) {
+    const reason = redCreationStepError(entry.key, draft.value, wizard.validation.value, catalogue.items.value);
+    if (reason) return { index, reason };
+  }
+  return null;
+});
+const reachableStep = computed(() => firstInvalid.value?.index ?? lastStep);
+const fullyValid = computed(() => firstInvalid.value === null);
+const blockReason = computed(() => firstInvalid.value?.index === step.value ? firstInvalid.value.reason : "");
+
+watch([available, reachableStep], ([ready, reachable]) => {
+  if (ready && step.value > reachable) step.value = reachable;
+}, { immediate: true });
+
+function goTo(index) {
+  if (index <= reachableStep.value) step.value = index;
+}
+function advance() {
+  if (!available.value || creating.value || blockReason.value) return;
+  if (step.value < lastStep) goTo(step.value + 1);
+  else create();
+}
 function patch(value) {
   Object.assign(draft.value, value);
 }
@@ -194,13 +234,13 @@ function exit() {
   if (props.embedded) emit("cancel");
   else router.push("/chars");
 }
-function getPayload() {
+function getPayload({ incomplete = false } = {}) {
   if (!available.value)
     throw new Error("Система или справочник RED ещё недоступны");
   return {
     templateId: templateId.value,
     sourceVersionId: versionId.value,
-    data: wizard.payload(),
+    data: wizard.payload({ incomplete }),
   };
 }
 function preview() {
@@ -219,17 +259,24 @@ function preview() {
     localError.value = e.message;
   }
 }
-async function create() {
-  if (creating.value) return;
+function requestAuth() {
+  window.dispatchEvent(new CustomEvent("dndshare:request-auth", {
+    detail: { reason: "create-character" },
+  }));
+}
+function requestIncomplete() {
+  if (!available.value || creating.value) return;
+  if (account.authStatus === "success") incompleteOpen.value = true;
+  else requestAuth();
+}
+async function create({ incomplete = false } = {}) {
+  incompleteOpen.value = false;
+  if (creating.value || (!incomplete && !fullyValid.value)) return;
   localError.value = "";
   try {
-    const payload = getPayload();
+    const payload = getPayload({ incomplete });
     if (account.authStatus !== "success") {
-      window.dispatchEvent(
-        new CustomEvent("dndshare:request-auth", {
-          detail: { reason: "create-character" },
-        }),
-      );
+      requestAuth();
       return;
     }
     if (props.embedded) {
@@ -281,4 +328,15 @@ defineExpose({ clearDraft: wizard.clearDraft });
 <style scoped>
 .red-wizard-main { padding-block-start: var(--spacing-medium); }
 .red-wizard-main > [role="alert"] { margin: 0 0 var(--spacing-medium); }
+.cc-foot-main { flex-wrap: wrap; }
+.red-step-reason {
+  flex: 1 1 100%;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--type-group-size);
+}
+.red-incomplete-compact { display: none; }
+@media (max-width: 920px) {
+  .red-incomplete-compact { display: inline-flex; margin-inline: auto; }
+}
 </style>

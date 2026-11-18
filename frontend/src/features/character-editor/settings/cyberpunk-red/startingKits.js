@@ -252,16 +252,14 @@ export const RED_KIT_HUMANITY = {
   fixer: 16,
   nomad: 14,
 };
-export function redKitRows(role, choices = {}) {
+export function redKitRows(role, choices = {}, include = () => true) {
   if (!RED_STARTING_KITS[role]) throw new RangeError("Unknown role");
-  return [
-    ...armor,
-    ...RED_STARTING_KITS[role].flatMap((row) => {
-      if (!row.choice) return [row];
-      const option = choices[row.choice];
-      if (!Number.isInteger(option) || !row.options[option])
-        throw new RangeError(`Выберите: ${row.choice}`);
-      return row.options[option];
-    }),
-  ];
+  return [...armor, ...RED_STARTING_KITS[role]].flatMap((row) => {
+    if (!row.choice) return include(row) ? [row] : [];
+    if (!row.options.some(option => option.some(include))) return [];
+    const option = choices[row.choice];
+    if (!Number.isInteger(option) || !row.options[option])
+      throw new RangeError(`Выберите: ${row.choice}`);
+    return row.options[option].filter(include);
+  });
 }

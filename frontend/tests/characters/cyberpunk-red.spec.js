@@ -114,11 +114,41 @@ for(const width of [390,840,1440]){
   await solo.click()
   await expect(initiative).toHaveValue('1')
   const next=page.getByRole('button',{name:'Далее',exact:true})
+  const railStep=name=>rail.locator('.rail-step').filter({has:page.getByText(name,{exact:true})})
+  await expect(page.getByRole('button',{name:'Создать неполноценного',exact:true}).filter({visible:true})).toHaveCount(1)
+  if(width===1440){
+   const precision=main.getByRole('spinbutton').nth(3)
+   await precision.fill('2');await precision.blur()
+   await expect(page.locator('.red-step-reason')).toHaveText('Превышен бюджет способности роли')
+   await expect(next).toBeDisabled()
+   await expect(railStep('Жизненный путь')).toBeDisabled()
+   await precision.fill('0');await precision.blur()
+  }
   await next.click()
   await expect(main.getByRole('heading',{name:'Жизненный путь',exact:true})).toBeVisible()
+  if(width===1440){
+   const language=main.locator('input').first()
+   await language.fill('')
+   await expect(next).toBeDisabled()
+   await expect(page.locator('.red-step-reason')).toContainText('Укажите родной язык')
+   await language.fill('Русский')
+  }
   await next.click()
   await expect(page.getByRole('heading',{name:'Способ создания'})).toBeVisible()
   await expect(page.getByRole('button',{name:'Полный пакет',exact:true}).locator('img')).toHaveJSProperty('naturalWidth',50)
+  if(width===1440){
+   await next.click()
+   const first=main.locator('.stat-card').first()
+   await first.getByRole('button',{name:'+',exact:true}).click()
+   await expect(page.locator('.red-step-reason')).toContainText('62 очка характеристик')
+   await expect(next).toBeDisabled()
+   await first.getByRole('button',{name:'−',exact:true}).click()
+   await next.click()
+   await expect(main.getByRole('heading',{name:'Навыки',exact:true}).first()).toBeVisible()
+   await expect(page.locator('.red-step-reason')).toContainText('86 очков навыков')
+   await expect(railStep('Снаряжение')).toBeDisabled()
+   await railStep('Способ создания').click()
+  }
   await page.getByRole('button',{name:'Уличная крыса',exact:true}).click()
   await page.getByRole('button',{name:'Изменить',exact:true}).click()
   await next.click()
@@ -129,15 +159,21 @@ for(const width of [390,840,1440]){
   await expect(stats.locator('.system-die')).toHaveCount(0)
   await expect(stats.locator('.stat-pending')).toHaveCount(10)
   await expect(next).toBeDisabled()
+  await expect(railStep('Навыки')).toBeDisabled()
   await stats.getByRole('button',{name:'Бросить d10',exact:true}).click()
   await expect(stats.getByRole('img',{name:/^d10: (?:10|[1-9])$/})).toHaveCount(1)
   await expect(stats.locator('.stat-pending')).toHaveCount(0)
   await expect(next).toBeEnabled()
+  const columns=await stats.locator('.stat-grid').evaluate(grid=>getComputedStyle(grid).gridTemplateColumns.split(' ').length)
+  expect(columns).toBeGreaterThan(1)
+  expect(columns).toBeLessThanOrEqual(width===390?2:width===840?3:4)
+  await testInfo.attach(`stats-${width}`,{body:await page.screenshot({animations:'disabled'}),contentType:'image/png'})
   await rail.getByText('Киберимпланты',{exact:true}).click()
   await expect(page.getByRole('heading',{name:'Киберимпланты',exact:true})).toBeVisible()
   await expect(page.locator('.creation-cover')).toHaveJSProperty('naturalWidth',50)
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
   await rail.getByText('Завершение',{exact:true}).click()
+  await expect(page.getByRole('button',{name:'Создать персонажа',exact:true})).toBeDisabled()
   await page.locator('.red-wizard-main input').fill('Новый RED')
   await page.getByRole('button',{name:'Создать персонажа',exact:true}).click()
   await expect(page).toHaveURL(new RegExp(`/char/${uuid}$`))
@@ -173,6 +209,47 @@ test('RED restores the original screen of a saved wizard draft', async ({page}) 
   expect(saved.draft).toMatchObject({...draft,schemaVersion:2})
   await page.reload()
   await expect(main.getByRole('heading',{name:'Жизненный путь',exact:true})).toBeVisible()
+})
+
+test('RED blocks incompatible implants and can save an incomplete sheet', async ({page}) => {
+  const state = await fixture(page)
+  const storageKey = 'dndshare.red-create.v1'
+  const options = {nativeLanguage:'Русский',specializations:{science:'Биология','play-instrument':'Гитара'}}
+  const draft = {
+    ...options,
+    schemaVersion:2,
+    method:'complete',
+    role:'solo',
+    name:'',
+    stats:{INT:6,REF:8,DEX:6,TECH:6,COOL:6,WILL:6,LUCK:6,MOVE:6,BODY:6,EMP:6},
+    skills:redInitialSkills('solo','streetrat',options),
+    cart:[
+      {uid:'gear-test',key:'gear-agent',count:1,pool:'general'},
+      {uid:'implant-test',key:'cyberware-teleoptics',count:1,pool:'general'},
+    ],
+  }
+  await page.addInitScript(({storageKey,draft})=>{
+    if(!localStorage.getItem(storageKey)) localStorage.setItem(storageKey,JSON.stringify({draft,stepKey:'finish'}))
+  },{storageKey,draft})
+  await page.setViewportSize({width:390,height:950})
+  await page.goto('/chars/new?system=cyberpunk-red')
+  const main = page.locator('.red-wizard-main')
+  await expect(main.getByRole('heading',{name:'Киберимпланты',exact:true})).toBeVisible()
+  await expect(page.locator('.red-step-reason')).toContainText('требуется основная установка')
+  await expect(page.getByRole('button',{name:'Далее',exact:true})).toBeDisabled()
+  const incomplete = page.getByRole('button',{name:'Создать неполноценного',exact:true}).filter({visible:true})
+  await incomplete.click()
+  await page.getByRole('button',{name:'Отмена',exact:true}).last().click()
+  await expect(main.getByRole('heading',{name:'Киберимпланты',exact:true})).toBeVisible()
+  await incomplete.click()
+  await page.getByRole('button',{name:'Создать',exact:true}).click()
+  await expect(page).toHaveURL(new RegExp(`/char/${uuid}$`))
+  const values = state.getData().values
+  expect(values.creation.complete).toBe(false)
+  expect(values.identity.handle).toBe('Новый персонаж')
+  expect(values.stats).toEqual(draft.stats)
+  expect(values.inventory.entries.some(entry=>entry.key==='gear-agent')).toBe(true)
+  expect(values.cyberware.installations).toEqual([])
 })
 
 test('RED replaces legacy placeholder dice with ten explicit Edgerunner rolls', async ({page}) => {

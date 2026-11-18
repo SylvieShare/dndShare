@@ -115,6 +115,7 @@ export function useRedCreateWizard(items) {
   if (migratedDraft) saveDraft();
   watch([draft, step], saveDraft, { deep: true });
   const shopping = computed(() => redShoppingSummary(draft.value, items.value));
+  const equipmentShopping = computed(() => redShoppingSummary(draft.value, items.value, { equipmentOnly: true }));
   const validation = computed(() => validateRedCreation(draft.value));
   function changeRole(role) {
     draft.value.role = role;
@@ -144,10 +145,11 @@ export function useRedCreateWizard(items) {
     step.value = 0;
     resetRole();
   }
-  function payload() {
+  function payload({ incomplete = false } = {}) {
     const result = finishRedCreation(
       JSON.parse(JSON.stringify(draft.value)),
       items.value,
+      { incomplete },
     );
     result.values.lifepath.roleSpecific = { ...draft.value.roleLifepath };
     return result;
@@ -163,6 +165,7 @@ export function useRedCreateWizard(items) {
     draft,
     step,
     shopping,
+    equipmentShopping,
     validation,
     storageError,
     reset,

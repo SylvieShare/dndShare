@@ -172,6 +172,7 @@ watch(() => props.current, revealCurrentStep, { flush: 'post' })
     background: transparent;
   }
   .rail--compact::before, .rail--compact .rail-head { display: none; }
+  .rail--compact .rail-incomplete { display: none; }
   .rail--compact .rail-step { flex: 0 0 auto; align-items: center; }
   .rail--compact .rail-copy { padding-top: 0; }
   .rail--compact .rail-summary, .rail--compact .rail-jump { display: none; }

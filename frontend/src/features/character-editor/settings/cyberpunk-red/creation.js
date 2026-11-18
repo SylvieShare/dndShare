@@ -71,13 +71,40 @@ export function validateRedCreation(draft) {
   return { valid: errors.length === 0, errors, skills: validation }
 }
 
+export function prepareIncompleteRedDraft(draft) {
+  const { errors } = validateRedCreation(draft)
+  const unusableStats = errors.some(error => error.path.startsWith('stats')
+    && (error.code !== 'stat-budget' || error.actual > error.expected))
+  const invalidLanguage = errors.some(error => error.path === 'nativeLanguage')
+  const unusableSkills = invalidLanguage || errors.some(error => {
+    if (!error.path.startsWith('skills')) return false
+    if (error.code === 'skill-budget') return error.actual > error.expected
+    return !['skill-minimum', 'grant-minimum', 'specialization-required'].includes(error.code)
+  })
+  const nativeLanguage = invalidLanguage ? '' : draft.nativeLanguage
+  return {
+    ...draft,
+    nativeLanguage,
+    roleChoices: errors.some(error => error.path === 'roleChoices') ? {} : draft.roleChoices,
+    stats: unusableStats
+      ? Object.fromEntries(RED_STATS.map(stat => [stat.key, RED_CORE_PROFILE.statMin]))
+      : draft.stats,
+    statRolls: unusableStats ? [] : draft.statRolls,
+    skills: unusableSkills
+      ? redInitialSkills(draft.role, draft.method, { ...draft, nativeLanguage })
+      : draft.skills,
+  }
+}
+
 // Intermediate assembly. Equipment and role choices must be finalized before publication.
-export function assembleRedBaseDocument(draft) {
-  const result = validateRedCreation(draft)
-  if (!result.valid) throw Object.assign(new Error('Invalid Cyberpunk RED character'), { errors: result.errors })
+export function assembleRedBaseDocument(draft, { incomplete = false } = {}) {
+  if (!incomplete) {
+    const result = validateRedCreation(draft)
+    if (!result.valid) throw Object.assign(new Error('Invalid Cyberpunk RED character'), { errors: result.errors })
+  }
   const maximum = redHealthMaximum(draft.stats.BODY, draft.stats.WILL)
   return { system: RED_SYSTEM, schemaVersion: 1, values: {
-    identity: { handle: draft.name.trim(), avatar: null },
+    identity: { handle: draft.name.trim() || 'Новый персонаж', avatar: null },
     rules: { profile: 'core-2045', revision: RED_CORE_REVISION, contentSourceIds: [...(draft.contentSourceIds || [])] },
     creation: { method: draft.method, complete: false, statRolls: [...(draft.statRolls || [])] },
     stats: { ...draft.stats }, skills: JSON.parse(JSON.stringify(draft.skills)),

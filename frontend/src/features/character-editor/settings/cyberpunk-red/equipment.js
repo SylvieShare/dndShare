@@ -10,7 +10,7 @@ export {
   redCyberRequirement,
   redCyberCapacity,
 } from "./cyberware.js";
-import { assembleRedBaseDocument, validateRedCreation } from "./creation.js";
+import { assembleRedBaseDocument, prepareIncompleteRedDraft } from "./creation.js";
 import { RED_KIT_HUMANITY, redKitRows } from "./startingKits.js";
 import { redHealthMaximum } from "./derived.js";
 import { redCyberWeaponEntry } from "./cyberWeapons.js";
@@ -21,13 +21,14 @@ export function redFashionEligible(item) {
     item.kind === "clothing" || item.facts?.cyberCategory === "fashionware"
   );
 }
-export function redShoppingSummary(draft, items) {
+export function redShoppingSummary(draft, items, { equipmentOnly = false } = {}) {
   const byKey = redByKey(items),
     errors = [];
   let general = 0,
     fashion = 0;
   for (const line of draft.cart || []) {
     const item = byKey[line.key];
+    if (equipmentOnly && item?.kind === "cyberware") continue;
     if (!item || !Number.isSafeInteger(line.count) || line.count < 1) {
       errors.push("Неизвестный предмет или неверное количество");
       continue;
@@ -99,29 +100,33 @@ export function redEffectiveStats(values, items) {
   return stats;
 }
 
-export function finishRedCreation(draft, items) {
-  const validation = validateRedCreation(draft),
-    summary = redShoppingSummary(draft, items);
-  if (!validation.valid || summary.errors.length)
-    throw new Error(
-      summary.errors.join("; ") || "Завершите характеристики и навыки",
-    );
-  const byKey = redByKey(items),
-    doc = assembleRedBaseDocument(draft),
-    v = doc.values;
-  const gifts =
-    draft.method === "complete" ? [] : redKitRows(draft.role, draft.kitChoices);
+function prepareRedStartingGear(draft, items, {
+  equipmentOnly = false,
+  includeKit = true,
+  spaceUid = null,
+} = {}) {
+  const summary = redShoppingSummary(draft, items, { equipmentOnly });
+  if (summary.errors.length) throw new Error(summary.errors[0]);
+
+  const byKey = redByKey(items);
+  const include = row => !equipmentOnly || byKey[row.key]?.kind !== "cyberware";
+  const gifts = includeKit && draft.method !== "complete"
+    ? redKitRows(draft.role, draft.kitChoices, include)
+    : [];
   const rows = [
-    ...gifts.map((row) => ({ ...row, gift: true })),
-    ...(draft.cart || []),
+    ...gifts.map(row => ({ ...row, gift: true })),
+    ...(draft.cart || []).filter(include),
   ];
+  const entries = [];
+  const installations = [];
+  const netrunning = { deckUid: null, loadedPrograms: [], encounter: null };
   let extraHumanity = 0;
   for (const row of rows) {
     const item = byKey[row.key];
     if (!item) throw new Error(`В справочнике отсутствует ${row.key}`);
     if (item.kind === "cyberware") {
       for (let i = 0; i < row.count; i++) {
-        v.cyberware.installations.push({
+        installations.push({
           uid: crypto.randomUUID(),
           key: item.key,
           itemId: item.id || null,
@@ -132,33 +137,33 @@ export function finishRedCreation(draft, items) {
         if (!row.gift) extraHumanity += Number(item.facts.humanity || 0);
       }
     } else
-      v.inventory.entries.push({
+      entries.push({
         uid: crypto.randomUUID(),
         key: item.key,
         itemId: item.id || null,
         count: row.count,
-        spaceUid: v.inventory.spaces[0].uid,
+        spaceUid,
         equipped: ["weapon", "armor", "cyberdeck"].includes(item.kind),
         loaded: 0,
         ablation: { head: 0, body: 0 },
         gift: !!row.gift,
       });
   }
-  for (const entry of v.cyberware.installations) {
+  for (const entry of installations) {
     const req = redCyberRequirement(byKey[entry.key]);
     if (req && !req.startsWith("flesh-")) {
       const size = Number(byKey[entry.key].facts.size ?? 1);
-      const parent = v.cyberware.installations.find(
+      const parent = installations.find(
         (e) =>
           e.key === req &&
-          v.cyberware.installations
+          installations
             .filter((child) => child.parentUid === e.uid)
             .reduce(
               (n, child) => n + Number(byKey[child.key]?.facts.size ?? 1),
               0,
             ) +
             size <=
-            redCyberCapacity(e, v.cyberware.installations, byKey),
+            redCyberCapacity(e, installations, byKey),
       );
       entry.parentUid = parent?.uid || null;
     }
@@ -166,30 +171,25 @@ export function finishRedCreation(draft, items) {
       const parentKey =
         req === "flesh-arm" ? "cyberware-cyberarm" : "cyberware-cyberleg";
       entry.parentUid =
-        v.cyberware.installations.find((e) => e.key === parentKey)?.uid || null;
+        installations.find((e) => e.key === parentKey)?.uid || null;
       if (!entry.parentUid) entry.location = entry.location || `${req}-left`;
     }
   }
   const cyberCheck = redCyberValidation(
-    v.cyberware.installations,
+    installations,
     items,
-    v.stats,
+    draft.stats,
   );
   if (cyberCheck.errors.length) throw new Error(cyberCheck.errors.join("; "));
-  v.humanity.current -=
-    extraHumanity +
-    (draft.method === "complete" ? 0 : RED_KIT_HUMANITY[draft.role]);
-  if (v.humanity.current < 0)
-    throw new Error("Потеря человечности превышает начальный запас");
-  v.economy.cashEb = summary.cash;
-  const effective = redEffectiveStats(v, items);
-  v.health.current = redHealthMaximum(effective.BODY, effective.WILL);
-  const deck = v.inventory.entries.find(
+  const humanity = draft.stats.EMP * 10 - extraHumanity -
+    (equipmentOnly || !includeKit || draft.method === "complete" ? 0 : RED_KIT_HUMANITY[draft.role]);
+  if (humanity < 0) throw new Error("Потеря человечности превышает начальный запас");
+  const deck = entries.find(
     (e) => byKey[e.key]?.kind === "cyberdeck",
   );
   if (deck) {
-    v.netrunning.deckUid = deck.uid;
-    v.netrunning.loadedPrograms = v.inventory.entries
+    netrunning.deckUid = deck.uid;
+    netrunning.loadedPrograms = entries
       .filter((e) => byKey[e.key]?.kind === "program")
       .flatMap((e) =>
         Array.from({ length: e.count }, () => ({
@@ -200,22 +200,67 @@ export function finishRedCreation(draft, items) {
           rez: byKey[e.key].facts.rez,
         })),
       );
-    const used = v.netrunning.loadedPrograms.reduce(
+    const used = netrunning.loadedPrograms.reduce(
       (n, p) => n + Number(byKey[p.key]?.facts.size || 1),
       0,
     );
     if (used > byKey[deck.key].facts.slots)
       throw new Error("Программы не помещаются в кибердеку");
   }
-  for (const implant of v.cyberware.installations) {
+  for (const implant of installations) {
     const weapon = redCyberWeaponEntry(
       implant,
       byKey[implant.key],
-      v.inventory.spaces[0].uid,
+      spaceUid,
     );
-    if (weapon) v.inventory.entries.push(weapon);
+    if (weapon) entries.push(weapon);
   }
-  v.creation.complete = true;
+  return { entries, installations, netrunning, humanity, cash: summary.cash };
+}
+
+export function redStartingGearError(draft, items, { equipmentOnly = false } = {}) {
+  try {
+    prepareRedStartingGear(draft, items, { equipmentOnly });
+    return "";
+  } catch (error) {
+    return error.message;
+  }
+}
+
+function incompleteStartingGear(draft, items, spaceUid) {
+  const attempts = [
+    [draft, { spaceUid }],
+    [draft, { spaceUid, equipmentOnly: true }],
+    [{ ...draft, cart: [] }, { spaceUid }],
+    [{ ...draft, cart: [] }, { spaceUid, includeKit: false }],
+  ];
+  for (const [candidate, options] of attempts) {
+    try {
+      return prepareRedStartingGear(candidate, items, options);
+    } catch {
+      // Keep the first usable selection and leave the rest for the sheet.
+    }
+  }
+  throw new Error("Не удалось собрать стартовое снаряжение RED");
+}
+
+export function finishRedCreation(draft, items, { incomplete = false } = {}) {
+  if (incomplete) draft = prepareIncompleteRedDraft(draft);
+  const doc = assembleRedBaseDocument(draft, { incomplete });
+  const v = doc.values;
+  const spaceUid = v.inventory.spaces[0].uid;
+  const gear = incomplete
+    ? incompleteStartingGear(draft, items, spaceUid)
+    : prepareRedStartingGear(draft, items, { spaceUid });
+  v.inventory.entries = gear.entries;
+  v.cyberware.installations = gear.installations;
+  v.netrunning = gear.netrunning;
+  v.humanity.current = gear.humanity;
+  v.economy.cashEb = gear.cash;
+  const effective = redEffectiveStats(v, items);
+  v.health.current = redHealthMaximum(effective.BODY, effective.WILL);
+  v.creation.complete = !incomplete;
+  const byKey = redByKey(items);
   for (const key of ["weapon-unarmed", "weapon-martial-arts"])
     if (byKey[key])
       v.inventory.entries.push({

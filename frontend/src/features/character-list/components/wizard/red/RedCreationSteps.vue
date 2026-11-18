@@ -146,6 +146,7 @@
         :values="skillValues"
         :items="[]"
         :editable="draft.method !== 'streetrat'"
+        :allowed-keys="draft.method === 'edgerunner' ? RED_ROLE_SKILLS[draft.role].map(skill => skill.key) : null"
         @patch="patch"
       />
       <p
@@ -155,7 +156,7 @@
         :key="JSON.stringify(e)"
         class="red-danger"
       >
-        {{ errorText(e) }}
+        {{ redCreationErrorText(e) }}
       </p></template
     >
     <RedCreationShop
@@ -184,13 +185,6 @@
       <p>
         Остаток денег: {{ shopping.cash }} eb. Неиспользованные деньги на одежду
         не переносятся.
-      </p>
-      <p
-        v-for="e in validation.errors"
-        :key="JSON.stringify(e)"
-        class="red-danger"
-      >
-        {{ errorText(e) }}
       </p></template
     >
   </div>
@@ -206,6 +200,7 @@ import {
 import {
   RED_ROLES,
 } from "@/features/character-editor/settings/cyberpunk-red/catalogue";
+import { RED_ROLE_SKILLS } from "@/features/character-editor/settings/cyberpunk-red/creationTables";
 import {
   RED_LIFEPATH_FIELDS,
   RED_ROLE_LIFEPATH,
@@ -216,6 +211,7 @@ import IllustratedChoiceStage from "../IllustratedChoiceStage.vue";
 import RedCreationStats from "./RedCreationStats.vue";
 import RedCreationIntro from "./RedCreationIntro.vue";
 import RedCreationShop from "./RedCreationShop.vue";
+import { redCreationErrorText } from "../../../composables/redCreationStepValidation";
 const props = defineProps({
   draft: Object,
   step: String,
@@ -292,26 +288,6 @@ const roleFields = {
     ["cryosystem", "Криосистемы"],
   ],
 };
-const errors = {
-  "role-choice-range": "Специальность роли превышает допустимый ранг",
-  "role-choice-budget": "Превышен бюджет способности роли",
-  "recipe-budget": "Число рецептов превышает фармацевтическую специальность",
-  "name-required": "Укажите имя",
-  "native-language-required": "Выберите родной язык",
-  "stat-rolls-required": "Сделайте бросок на шаге «Характеристики»",
-  "stat-table-mismatch": "Перебросьте характеристики для выбранной роли",
-  "stat-budget": "Распределите ровно 62 очка характеристик",
-  "stat-range": "Значение характеристики должно быть от 2 до 8",
-  "skill-budget": "Распределите ровно 86 очков навыков",
-  "skill-minimum": "Обязательный навык ниже минимума",
-  "skill-range": "Начальный ранг навыка не выше 6",
-  "specialization-required": "Укажите специализацию",
-  "skill-not-allowed": "Навык не входит в список этой роли",
-  "template-skill-mismatch": "Навык отличается от шаблона роли",
-  "duplicate-skill": "Повтор навыка или специализации",
-};
-const errorText = (e) =>
-  `${errors[e.code] || "Проверьте выбор"}${e.key ? `: ${e.key}` : ""}${e.expected != null ? ` (${e.actual} / ${e.expected})` : ""}`;
 </script>
 
 <style scoped>
