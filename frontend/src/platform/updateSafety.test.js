@@ -14,3 +14,16 @@ it('blocks open forms while allowing the version panel itself during an explicit
   expect(updateSafePoint({ ...document, querySelectorAll: () => [{ querySelector: () => ({}) }] }, '/', 0, true)).toBe(true)
   expect(updateSafePoint({ ...document, querySelectorAll: () => [{ querySelector: selector => selector === '.desktop-sidebar' ? {} : null }] }, '/', 0, true)).toBe(true)
 })
+
+it('allows explicit restart from the idle sessions list and protects an unfinished join', () => {
+  const unfinishedJoin = { ...document, querySelector: selector => selector === '[data-session-join-unfinished]' ? {} : null }
+  const openForm = { ...document, querySelectorAll: () => [{ querySelector: () => null }] }
+  for (const path of ['/sessions', '/sessions/']) {
+    expect(updateSafePoint(document, path, 0, true)).toBe(true)
+    expect(updateSafePoint(document, path)).toBe(false)
+    expect(updateSafePoint(document, path, 1, true)).toBe(false)
+    expect(updateSafePoint(unfinishedJoin, path, 0, true)).toBe(false)
+    expect(updateSafePoint(openForm, path, 0, true)).toBe(false)
+  }
+  expect(updateSafePoint(document, '/sessions/active-session', 0, true)).toBe(false)
+})

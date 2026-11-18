@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="page" :data-session-join-unfinished="joining || joinCode.trim() ? '' : undefined">
     <PageHeaderPortal>
       <HeaderCreateAction v-if="loading || hasAnything" label="Создать сессию" @click="showModal = true" />
     </PageHeaderPortal>
