@@ -27,9 +27,8 @@ Columns fit from the actual available width: RosterMin (320), its scroll gap (12
 ControlsMin (280) and Large (16). The roster grows to RosterWidth (480), controls
 to ControlsMax (420); the composition is aligned with the left workspace padding. The two
 columns scroll independently. Below that width, controls appear above the roster
-and scroll within a maximum 40dvh, leaving the roster usable in short windows.
-Resizing preserves the current turn and prepared roster. Controls stay in the
-same column before and after starting combat. The control column contains
+and scroll with it in a single column in both preparation and active combat.
+Resizing preserves the current turn and prepared roster. The controls contain
 section selection and both scene commands. «Со сцены» counts only selected
 scene members. Command buttons have visible captions and accessible names.
 
@@ -49,7 +48,7 @@ home group. At 0 HP, NPC rows display crossed bones and a skull, and D&D player
 rows link their death-save counters to the HP calculator.
 The workspace keeps Page padding on both sides and starts after the participant
 safe area, including the permanent rail on compact windows. The roster uses its
-own scroll gap.
+own scroll gap in the two-column layout.
 Row strips use the
 explicitly selected participant color for players or `iconColor` for NPCs; rows
 without an assigned color have no strip in either combat or the NPC reserve. The

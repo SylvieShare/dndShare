@@ -7,7 +7,8 @@ export function useEncounterWorkspaceLayout(root) {
   let observer
   function measure(){
     if(!root.value)return
-    const available=root.value.clientWidth-2*spacingTokens.page
+    // The shared scrollbar appears only in the single-column layout.
+    const available=root.value.offsetWidth-2*spacingTokens.page
     hasColumns.value=encounterColumnsFit(available)
     const roster=root.value.querySelector('.enc-content')
     compactRoster.value=(roster?.clientWidth || available)<encounterPrimaryWidth

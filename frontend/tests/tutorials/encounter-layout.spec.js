@@ -31,7 +31,7 @@ test('combat commands occupy their own column and both columns scroll independen
   expect(await roughRow.evaluate(row => getComputedStyle(row, '::before').clipPath)).toMatch(/polygon\(.+calc\(100% - /)
   for(const width of [390,704,834,1440,704]) {
     await page.setViewportSize({width,height:932})
-    const columns=await root.evaluate((n,gap)=>n.clientWidth-2*gap>=628,spacingTokens.page)
+    const columns=await root.evaluate((n,min)=>n.offsetWidth>=min,encounterColumnsMinWidth+2*spacingTokens.page)
     expect(columns).toBe(width>=834)
     await expect(preview).toHaveCount(0)
     for (const name of ['Убрать со сцены: 0', 'Бои сценария', 'Отметить выбранных погибшими', 'Удалить выбранных НПС']) {
@@ -57,6 +57,7 @@ test('combat commands occupy their own column and both columns scroll independen
       expect(b.x+b.width).toBeLessThanOrEqual(c.x+c.width+.5)
     }
     await controls.evaluate(n=>{n.scrollTop=0})
+    await root.evaluate(n=>{n.scrollTop=0})
     await info.attach(`combat-columns-${width}`,{body:await page.screenshot({animations:'disabled'}),contentType:'image/png'})
   }
   await page.setViewportSize({width:1440,height:932})
@@ -72,4 +73,68 @@ test('combat commands occupy their own column and both columns scroll independen
   await controls.getByRole('button',{name:'Следующий ход',exact:true}).click()
   await expect.poll(()=>api.encounter().round).toBe(2)
   expect(encounterColumnsMinWidth).toBe(628)
+})
+
+test.describe('compact combat on a touch screen', () => {
+  test.use({ hasTouch: true })
+
+  test('commands and scene share one scroll in preparation and active combat', async ({ page }, info) => {
+    const combatants = Array.from({ length: 14 }, (_, index) => ({
+      uid: `npc-${index + 1}`, type: 'npc', position: 'combat', initiative: 20 - index,
+      override: { name: `Участник ${index + 1}`, hp: 12, ac: 13 }, hpCurrent: 12,
+      markerLetter: String.fromCharCode(65 + index),
+    }))
+    await page.setViewportSize({ width: 704, height: 932 })
+    const api = await sessionLayout(page, { url: '/sessions/test', participants: [], encounter: { active: false, round: 0, turnIndex: 0, combatants } })
+    await page.getByRole('button', { name: /Открыть бой/ }).click()
+    const root = page.locator('.enc-wrap--workspace')
+    const roster = root.locator('.enc-content')
+    const controls = root.locator('.enc-secondary')
+    const start = controls.getByRole('button', { name: 'Начать бой', exact: true })
+    const last = roster.locator('[data-encounter-uid="npc-14"]').first()
+    await expect(start).toBeInViewport({ ratio: 1 })
+    await expect(root).not.toHaveClass(/enc-wrap--columns/)
+    await expect(roster.locator('.enc-row-shell')).toHaveCount(combatants.length)
+    const controlsTop = (await controls.boundingBox()).y
+    const initial = await controls.boundingBox()
+    const touch = await page.context().newCDPSession(page)
+    try {
+      const x = initial.x + 12
+      const y = initial.y + initial.height - 30
+      await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] })
+      for (let distance = 24; distance <= 168; distance += 24) {
+        await touch.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y: y - distance }] })
+      }
+      await touch.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+    } finally {
+      await touch.detach()
+    }
+    await expect.poll(() => root.evaluate(node => node.scrollTop)).toBeGreaterThan(30)
+    await expect.poll(async () => (await controls.boundingBox()).y).toBeLessThan(controlsTop - 30)
+    expect(await controls.evaluate(node => node.scrollTop)).toBe(0)
+
+    await last.scrollIntoViewIfNeeded()
+    await expect(last).toBeInViewport({ ratio: 1 })
+    await expect(start).not.toBeInViewport()
+    expect(await roster.evaluate(node => node.scrollTop)).toBe(0)
+    expect(api.writes).toHaveLength(0)
+    await info.attach('combat-shared-scroll-tablet', { body: await page.screenshot({ animations: 'disabled' }), contentType: 'image/png' })
+
+    await root.evaluate(node => { node.scrollTop = 0 })
+    await expect(start).toBeInViewport({ ratio: 1 })
+    await start.click()
+    await expect.poll(() => api.encounter().active).toBe(true)
+    await expect(roster.locator('.enc-row--current')).toContainText('Участник 1')
+    await page.setViewportSize({ width: 390, height: 844 })
+    const next = controls.getByRole('button', { name: 'Следующий ход', exact: true })
+    await expect(next).toBeInViewport({ ratio: 1 })
+    await last.scrollIntoViewIfNeeded()
+    await expect(last).toBeInViewport({ ratio: 1 })
+    await expect(next).not.toBeInViewport()
+    expect(await controls.evaluate(node => node.scrollTop)).toBe(0)
+    expect(await roster.evaluate(node => node.scrollTop)).toBe(0)
+    await root.evaluate(node => { node.scrollTop = 0 })
+    await next.click()
+    await expect(roster.locator('.enc-row--current')).toContainText('Участник 2')
+  })
 })

@@ -1,10 +1,40 @@
-.enc-wrap {position:relative;box-sizing:border-box;display:grid;flex:1;min-width:0;min-height:0;height:100%;grid-template-areas:"controls" "roster";grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:var(--spacing-large);padding:var(--spacing-page);overflow:hidden}
-.enc-wrap--workspace {position:absolute;inset:0}
-.enc-wrap--columns {grid-template-areas:"roster controls";grid-template-columns:minmax(calc(var(--layout-encounter-roster-min-width) + var(--layout-encounter-scroll-gap)),calc(var(--layout-encounter-roster-width) + var(--layout-encounter-scroll-gap))) minmax(var(--layout-encounter-controls-min-width),var(--layout-encounter-controls-max-width));grid-template-rows:minmax(0,1fr);justify-content:start}
-.enc-content {grid-area:roster;min-height:0;min-width:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-inline-end:var(--layout-encounter-scroll-gap)}
-.enc-secondary {grid-area:controls;display:flex;flex-direction:column;min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-inline-end:var(--spacing-xs)}
-.enc-secondary > :deep(.enc-toolbar) {flex:none}
-.enc-wrap:not(.enc-wrap--columns) .enc-secondary {max-height:40dvh}
+.enc-wrap {
+  position: relative;
+  box-sizing: border-box;
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  grid-template-areas: "controls" "roster";
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: max-content max-content;
+  gap: var(--spacing-large);
+  padding: var(--spacing-page);
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.enc-wrap--workspace { position: absolute; inset: 0; }
+.enc-wrap--columns {
+  grid-template-areas: "roster controls";
+  grid-template-columns:
+    minmax(calc(var(--layout-encounter-roster-min-width) + var(--layout-encounter-scroll-gap)), calc(var(--layout-encounter-roster-width) + var(--layout-encounter-scroll-gap)))
+    minmax(var(--layout-encounter-controls-min-width), var(--layout-encounter-controls-max-width));
+  grid-template-rows: minmax(0, 1fr);
+  justify-content: start;
+  overflow: hidden;
+  scrollbar-gutter: auto;
+}
+.enc-content { grid-area: roster; min-height: 0; min-width: 0; }
+.enc-secondary { grid-area: controls; min-height: 0; min-width: 0; }
+.enc-wrap--columns > :is(.enc-content, .enc-secondary) {
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.enc-wrap--columns > .enc-content { padding-inline-end: var(--layout-encounter-scroll-gap); }
+.enc-wrap--columns > .enc-secondary { padding-inline-end: var(--spacing-xs); }
 .enc-combat-primary,.enc-combat-scene,.enc-block,.enc-section {min-width:0}
 .enc-wrap--compact-roster .enc-combat-primary {--creature-avatar-size:var(--layout-touch-min);--encounter-avatar-size:var(--layout-touch-min);--participant-card-gap:var(--spacing-xs);--creature-tile-padding:var(--spacing-xs) var(--spacing-small) var(--spacing-xs) var(--spacing-xs)}
 .enc-section-title {margin:0 0 var(--spacing-small);min-height:var(--layout-touch-min);display:flex;align-items:center;gap:var(--spacing-small);color:var(--text-muted);font:600 var(--type-caption-size)/var(--type-caption-line-height) var(--font-ui)}
