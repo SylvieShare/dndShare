@@ -15,25 +15,7 @@
       <Transition name="enc-combat-scene">
         <div class="enc-combat-scene">
           <div class="enc-block enc-block--combat">
-            <div class="enc-section-title-row">
-              <div class="enc-section-title-group">
-                <span class="enc-section-title">
-                  <span class="enc-section-dot" />БОЕВАЯ СЦЕНА
-                </span>
-              </div>
-              <div v-if="isDm" class="enc-scene-actions" role="group" aria-label="Действия на боевой сцене">
-                <ActionButton
-                  variant="quiet"
-                  :disabled="!sceneSelection.returnTargets.length"
-                  :aria-label="`Убрать со сцены: ${sceneSelection.returnTargets.length}`"
-                  @click="enc.sendCombatantsTo(sceneSelection.returnTargets, 'reserve')"
-                >
-                  <template #icon><LogOut :size="18" aria-hidden="true" /></template>
-                  <span>Со<br />сцены</span>
-                  <span v-if="sceneSelection.returnTargets.length" class="enc-scene-action-count" aria-hidden="true">{{ sceneSelection.returnTargets.length }}</span>
-                </ActionButton>
-              </div>
-            </div>
+            <h2 class="enc-section-title"><span class="enc-section-dot" />БОЕВАЯ СЦЕНА</h2>
             <div class="enc-section">
               <div
                 v-if="combatItems.length === 0"
@@ -79,8 +61,6 @@
 
 <script setup>
 import { computed, provide, reactive, ref } from 'vue'
-import { ActionButton } from '@sylvieshare/share-ui'
-import { LogOut } from '@lucide/vue'
 import { useRosterSelection } from '../composables/useRosterSelection'
 import EncounterControls from './EncounterControls.vue'
 import EncounterRow from '@/features/sessions/components/EncounterRow'

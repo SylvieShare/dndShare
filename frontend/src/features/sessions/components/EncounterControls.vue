@@ -53,14 +53,25 @@
         <template #clear-label><span>Сбросить<br />выбор</span></template>
       </SessionSelectionToolbar>
       <div class="enc-action-grid" role="group" aria-label="Команды боя и сцены">
-        <EncounterChallengeMenu label="Испытание" />
-        <EncounterBulkDamageMenu label="Урон" />
         <button type="button" class="enc-icon-btn" :disabled="!combatMoveCount" aria-label="Добавить выбранных на сцену" @click="enc.sendSelectedTo('combat')">
           <LogIn :size="18" />
           <span class="enc-control-label">На<br />сцену</span>
           <span v-if="combatMoveCount" class="enc-icon-count">{{ combatMoveCount }}</span>
         </button>
+        <button
+          type="button"
+          class="enc-icon-btn"
+          :disabled="!returnTargets.length"
+          :aria-label="`Убрать со сцены: ${returnTargets.length}`"
+          @click="enc.sendCombatantsTo(returnTargets, 'reserve')"
+        >
+          <LogOut :size="18" />
+          <span class="enc-control-label">Со<br />сцены</span>
+          <span v-if="returnTargets.length" class="enc-icon-count" aria-hidden="true">{{ returnTargets.length }}</span>
+        </button>
         <EncounterScenarioCombatMenu v-if="scene" :session-uuid="sessionUuid" :scene="scene" @pick="$emit('import-combat-block', $event)" />
+        <EncounterChallengeMenu label="Испытание" />
+        <EncounterBulkDamageMenu label="Урон" />
         <button
           type="button"
           class="enc-icon-btn enc-icon-btn--danger"
@@ -93,7 +104,7 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { ChevronLeft, ChevronRight, LogIn, Skull, Square, Swords, Trash2 } from '@lucide/vue'
+import { ChevronLeft, ChevronRight, LogIn, LogOut, Skull, Square, Swords, Trash2 } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import EncounterBulkDamageMenu from './EncounterBulkDamageMenu.vue'
 import EncounterChallengeMenu from './EncounterChallengeMenu.vue'
@@ -106,6 +117,7 @@ const enc=props.encounter
 const shortcutLabels=sessionShortcutLabels()
 const combatItems=computed(()=>enc.sortable.displayItems('combat'))
 const combatMoveCount=computed(()=>enc.selectedToMoveTo('combat'))
+const returnTargets=computed(()=>props.selection.returnTargets)
 const deadMoveCount=computed(()=>enc.selectedToMoveTo('dead'))
 </script>
 <style scoped src="./styles/EncounterToolbar.css"></style>

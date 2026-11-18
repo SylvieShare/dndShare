@@ -71,7 +71,7 @@ test('manual NPC damage changes HP before the response and defeated rows survive
   }))
   await player.locator('.identity-name-text').click()
   const request = page.waitForRequest('**/api/char/player-0')
-  await page.getByRole('menuitem', { name: 'Открыть лист', exact: true }).click()
+  await page.getByRole('button', { name: 'Открыть лист', exact: true }).click()
   await request
   await expect(page.locator('.csm')).toBeVisible()
   await page.keyboard.press('Escape')

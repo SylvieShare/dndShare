@@ -17,8 +17,8 @@ load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 `useEncounter.js` composes them; row components remain presentation-only.
 
 The combat workspace is one responsive grid under the session header. Its left
-column contains the prepared/active roster and its scene command row; the right
-column contains `EncounterControls`. The current turn is highlighted on the
+column contains the prepared or active roster. The right column contains
+`EncounterControls`. The current turn is highlighted on the
 participant's row, and the participant menu opens the character sheet or bestiary card.
 The chapter/scenario context is still retained for returning to the story and
 importing scenario combat blocks.
@@ -29,17 +29,17 @@ to ControlsMax (420); the composition is aligned with the left workspace padding
 columns scroll independently. Below that width, controls appear above the roster
 and scroll within a maximum 40dvh, leaving the roster usable in short windows.
 Resizing preserves the current turn and prepared roster. Controls stay in the
-same column before and after starting combat. Section-select and add-to-scene
-commands remain in the control column. The right-aligned row beside the scene
-title holds «Со сцены» and counts only selected scene members. Command buttons
-have visible captions and accessible names.
+same column before and after starting combat. The control column contains
+section selection and both scene commands. «Со сцены» counts only selected
+scene members. Command buttons have visible captions and accessible names.
 
 The sidebar remains available, while map canvas/inspector are hidden in combat.
 The command column groups fight flow, selection actions and scene composition
 into two panels. The phase panel shows the roster count and starts combat or
 provides round navigation and End. Selection uses the same summary as the left
 sidebar and reserves the same height for empty and single-row states. Challenge,
-damage, entry, scenario encounters, marking defeated and NPC deletion share a grid
+damage, adding and removing scene members, scenario encounters, marking defeated
+and NPC deletion share a grid
 under this summary. Two-word command labels use two lines. Initiative remains in
 row menus and shortcut handling.
 A combatant marked defeated keeps the home group and leaves the turn order. The
@@ -95,7 +95,7 @@ controls independent HP rolls when adding handbook creatures and synchronizes
 across browsers through the session live stream. It starts disabled; no browser
 preference is used.
 
-NPC relations are optional. Reserve and combat summaries have no visible enemy/ally/minion/neutral caption; the relation stays in the row menu and accessible description. Map/catalogue tiles show relations as subtle diagonal `/` stripes tiled over the entire tile (7px colored stripe followed by a 14px transparent gap, a 1:2 rhythm), with separate colors for enemy, ally, minion and neutral. There is no relation chip. Clearing the relation removes the stripes; `aria-description` retains the relation label for assistive technology. The row menu’s «Отношение» submenu sets enemy, ally, minion or neutral and offers «Убрать тег». The tile background is not a separate picker; newly added NPCs have no relation tag. The map roster uses the same submenu. Surprised status is changed from the row menu.
+NPC relations are optional. Reserve and combat summaries have no visible enemy/ally/minion/neutral caption; the relation is available to assistive technology. Map/catalogue tiles show relations as subtle diagonal `/` stripes tiled over the entire tile (7px colored stripe followed by a 14px transparent gap, a 1:2 rhythm), with separate colors for enemy, ally, minion and neutral. There is no relation chip. Clearing the relation removes the stripes; `aria-description` retains the relation label for assistive technology. The map roster's «Отношение» submenu sets enemy, ally, minion or neutral and offers «Убрать тег». Newly added NPCs have no relation tag. Surprised status is changed from the row menu.
 
 Each NPC also receives the nearest free Latin marker from `A` through `Z`.
 The marker sits inside the avatar’s upper-right corner in reserves and combat
@@ -130,11 +130,10 @@ Enter/Space on the focused tile, opens its action menu below that tile,
 aligned with its right edge. The shared `RowActionMenu` anchors to the actual
 tile and moves the menu above it when the viewport has insufficient space
 below; initiative, HP, selection, marker and other dedicated controls keep their
-own click behavior. The shared menu can edit states for both players and NPCs,
-send a combatant to reserve, reroll formula-based NPC HP while it remains in
-reserve, and delete NPCs. Bestiary NPCs also expose `Открыть карточку`, which
-opens the standard handbook `ItemViewModal`; simplified creatures omit that
-action because they have no handbook record. There is no separate HP-reroll button on a row, and
+own click behavior. Square buttons at the top of the menu open the bestiary
+card or player sheet, edit an NPC note and delete the NPC. The bestiary action
+opens the standard `ItemViewModal` for catalogue creatures. Menu rows include
+states, sending a combatant to reserve and rerolling formula-based NPC HP in reserve. There is no separate HP-reroll button on a row, and
 the action is hidden once that NPC is on the combat scene. NPC
 color is not duplicated in the row action menu and remains part of the
 letter-marker popover. The combat scene stays mounted during preparation and active combat; its
@@ -202,8 +201,8 @@ Portraits overlap as the row narrows, and a very large selection continues on
 another row. The numeric live status remains available to assistive technology.
 The control column uses the same icon summary and global reset. Its All control
 applies to the scene roster.
-Every group action shows its eligible count. Adding to the scene is a sidebar
-action, and removal is next to the scene title. Tab changes animate the mounted
+Every group action shows its eligible count. The sidebar can add to the scene,
+and the combat control column can add or remove selected scene members. Tab changes animate the mounted
 sidebar body in the direction of navigation, respecting reduced motion.
 Damage captures explicit eligible targets for the idempotent authoritative impact
 command. D&D XP/IP targets characters only and retries only unconfirmed writes.

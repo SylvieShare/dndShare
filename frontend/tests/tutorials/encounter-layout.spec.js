@@ -21,6 +21,7 @@ test('combat commands occupy their own column and both columns scroll independen
   const actions = controls.getByRole('group', { name: 'Действия с выбранными участниками' })
   await expect(actions.getByRole('button', { name: 'Бои сценария', exact: true })).toBeVisible()
   await expect(actions.getByRole('button', { name: 'Отметить выбранных погибшими' })).toBeVisible()
+  await expect(actions.getByRole('button', { name: 'Убрать со сцены: 0', exact: true })).toBeDisabled()
   await expect(controls.locator('.enc-control-panel')).toHaveCount(2)
   await expect(roster.locator('.enc-icon-btn,.enc-section-icon-btn')).toHaveCount(0)
   await controls.getByRole('button',{name:'Следующий ход',exact:true}).click()
@@ -33,7 +34,7 @@ test('combat commands occupy their own column and both columns scroll independen
     const columns=await root.evaluate((n,gap)=>n.clientWidth-2*gap>=628,spacingTokens.page)
     expect(columns).toBe(width>=834)
     await expect(preview).toHaveCount(0)
-    for (const name of ['Бои сценария', 'Отметить выбранных погибшими', 'Удалить выбранных НПС']) {
+    for (const name of ['Убрать со сцены: 0', 'Бои сценария', 'Отметить выбранных погибшими', 'Удалить выбранных НПС']) {
       const caption = actions.getByRole('button', { name, exact: true }).locator('.enc-control-label')
       const lines = await caption.evaluate(label => {
         const range = document.createRange()

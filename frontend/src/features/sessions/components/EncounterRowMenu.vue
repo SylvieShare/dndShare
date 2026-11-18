@@ -6,19 +6,17 @@
     :trigger-attrs="{ style: { display: 'none' } }"
   >
     <template #default="{ close }">
+      <CharacterMenuActions
+        :view="canOpenCard || canOpenSheet ? () => openDetails(close) : undefined"
+        :view-label="canOpenCard ? 'Открыть карточку' : 'Открыть лист'"
+        :view-caption="canOpenCard ? 'Карточка' : 'Лист'"
+        :view-icon="BookOpen"
+        :edit="isNpc ? () => { close(); emit('edit-note') } : undefined"
+        edit-label="Изменить заметку"
+        :remove="isNpc ? () => { close(); enc.removeNpc(combatant) } : undefined"
+      />
       <EncounterInitiativeMenu v-if="combatant.position !== 'dead'" :combatant="combatant" :encounter="enc" />
-      <EncounterSideMenu v-if="isNpc" :combatant="combatant" />
       <RowActionItem v-if="canReserve && (!enc.encounter.active || enc.encounter.round === 0)" :icon="Activity" @click="enc.toggleSurprised(combatant); close()">{{ combatant.surprised ? 'Убрать «врасплох»' : 'Застигнут врасплох' }}</RowActionItem>
-      <RowActionItem
-        v-if="canOpenCard"
-        :icon="BookOpen"
-        @click="enc.openNpcDetail(combatant); close()"
-      >Открыть карточку</RowActionItem>
-      <RowActionItem
-        v-if="canOpenSheet"
-        action="view"
-        @click="$emit('view-participant', combatant.charId); close()"
-      >Открыть лист</RowActionItem>
       <RowActionItem
         v-if="statesBlock"
         :icon="Activity"
@@ -41,11 +39,6 @@
         :icon="Dices"
         @click="enc.rollNpcHpFromFormula(combatant); close()"
       >Перебросить HP</RowActionItem>
-      <RowActionItem
-        v-if="isNpc"
-        action="note"
-        @click="$emit('edit-note'); close()"
-      >Изменить заметку</RowActionItem>
       <RowActionSubmenu v-if="isNpc" label="Количество копий" :min-width="220">
         <template #trigger="{ open }">
           <RowActionItem :icon="Copy" submenu :submenu-open="open">
@@ -67,12 +60,6 @@
         action="revive"
         @click="enc.requestRevive(combatant); close()"
       >Воскресить</RowActionItem>
-      <RowActionItem
-        v-if="canDelete"
-        action="delete"
-        tone="danger"
-        @click="enc.removeNpc(combatant); close()"
-      >Удалить</RowActionItem>
     </template>
   </RowActionMenu>
   <NpcImpactHistory v-if="historyOpen" :uid="combatant.uid" @close="historyOpen = false" />
@@ -82,7 +69,7 @@
 import { computed, defineAsyncComponent, inject, nextTick, ref, shallowRef } from 'vue'
 import { Activity, Archive, BookOpen, Copy, Dices, History } from '@lucide/vue'
 import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
-import EncounterSideMenu from './EncounterSideMenu.vue'
+import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { ActionButton, FormField, FormNumberInput, RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
@@ -94,7 +81,7 @@ const props = defineProps({
   section:     { type: String, required: true },
   statesBlock: { type: Object, default: null },
 })
-defineEmits(['edit-states', 'edit-note', 'view-participant'])
+const emit = defineEmits(['edit-states', 'edit-note', 'view-participant'])
 
 const enc = inject('encounter')
 
@@ -105,12 +92,17 @@ const canReserve = computed(() => props.combatant.position === 'combat')
 const canRerollHp = computed(() =>
   isNpc.value && props.combatant.position === 'reserve' && !!enc.npcHpFormula(props.combatant)
 )
-const canDelete = computed(() => isNpc.value)
 const canRevive = computed(() => props.combatant.position === 'dead' && enc.canEditPlayerHp())
 
 const cloneCount = ref(1)
 const menuAnchor = shallowRef(null)
 const menuRef = ref(null)
+
+function openDetails(close) {
+  close()
+  if (canOpenCard.value) enc.openNpcDetail(props.combatant)
+  else emit('view-participant', props.combatant.charId)
+}
 
 function cloneNpc(closeSubmenu, closeMenu) {
   enc.cloneNpc(props.combatant, cloneCount.value)
