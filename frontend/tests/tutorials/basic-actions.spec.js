@@ -21,7 +21,7 @@ for (const width of [390, 834, 1920]) for (const version of ['2014', '2024']) {
     const guide = page.getByRole('region', { name: 'Памятка по действиям' })
     await expect(guide).toContainText(`D&D ${version}`)
     await expect(guide.locator('.basic-actions-grid button')).toHaveCount(version === '2024' ? 12 : 10)
-    await expect(page.getByRole('navigation').getByRole('button', { name: 'Действия', exact: true })).toHaveAttribute('aria-current', 'page')
+    await expect(page.getByRole('navigation').getByRole('button', { name: 'Памятка', exact: true })).toHaveAttribute('aria-current', 'page')
     expect(await guide.evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true)
     await page.screenshot({ path: testInfo.outputPath(`actions-${version}-${width}.png`), fullPage: true })
     await guide.getByRole('button', { name: 'Засада', exact: true }).click()
@@ -52,7 +52,7 @@ test('read-only guide works offline, with keyboard, resizing and navigation', as
   for (const width of [390, 1920, 834]) {
     await page.setViewportSize({ width, height: 1000 })
     await expect(guide).toBeVisible()
-    await expect(page.getByRole('navigation').getByRole('button', { name: 'Действия', exact: true })).toHaveAttribute('aria-current', 'page')
+    await expect(page.getByRole('navigation').getByRole('button', { name: 'Памятка', exact: true })).toHaveAttribute('aria-current', 'page')
   }
   await page.getByRole('navigation').getByRole('button', { name: 'Оружие', exact: true }).click()
   await expect(guide).toBeHidden()

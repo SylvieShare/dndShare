@@ -7,7 +7,7 @@ import equipment from './fields/equipment'
 import utilities from './fields/utilities'
 
 const statsTab = { id: 'stats', title: 'Статы', svg: '/static/tab-stats.svg' }
-const actionsTab = { id: 'basic-actions', title: 'Действия', svg: '/static/tab-actions.svg' }
+const actionsTab = { id: 'basic-actions', title: 'Памятка', svg: '/static/tab-actions.svg' }
 const sections = [
   { id: 'weapons', title: 'Оружие', svg: '/static/tab-weapons.svg' },
   { id: 'spells', title: 'Магия', svg: '/static/tab-magic.svg' },
@@ -18,7 +18,7 @@ const sections = [
 ]
 const compactSections = sections.filter(tab => tab.id !== 'abilities')
 compactSections.splice(compactSections.findIndex(tab => tab.id === 'inventory'), 0, sections.find(tab => tab.id === 'abilities'))
-compactSections.splice(1, 0, actionsTab)
+compactSections.push(actionsTab)
 
 // Game-field parameters and navigation labels; placement belongs to Vue components.
 export default {
@@ -27,6 +27,6 @@ export default {
   tabs: {
     phone: [statsTab, ...compactSections],
     tablet: [statsTab, ...compactSections],
-    desktop: [sections[0], actionsTab, sections[1], sections[3], { ...sections[2], title: 'Снаряжение' }, sections[4], sections[5]],
+    desktop: [sections[0], sections[1], sections[3], { ...sections[2], title: 'Снаряжение' }, sections[4], sections[5], actionsTab],
   },
 }
