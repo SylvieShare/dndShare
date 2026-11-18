@@ -2,7 +2,7 @@
   <BaseTile :outlined="false" :class="{ 'skill-row-shell': creation }">
     <article class="red-skill-card" :class="{ 'red-skill-card--row': creation }">
       <div class="skill-identity">
-        <ItemIcon :item="art.skill(row.key)" :size="40" placeholder />
+        <ItemIcon :item="art.skill(row.key)" :size="creation ? 36 : 40" placeholder />
         <div class="skill-name">
           <div class="skill-title">
             <FitContent v-if="creation" tag="h4" inline class="skill-title-fit" :min-scale="0.66" :title="row.name">
@@ -132,9 +132,10 @@ const editableRank = computed(() => props.canAdjust && !props.row.outsideRole &&
 .skill-row-shell { container: skill-row / inline-size; --tile-surface: var(--bg); }
 .red-skill-card--row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 240px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 224px);
   align-items: center;
   row-gap: var(--spacing-xs);
+  column-gap: var(--spacing-small);
 }
 .red-skill-card--row .skill-formula { margin-block-start: 0; }
 .red-skill-card--row .skill-actions, .skill-rank { grid-column: 1 / -1; }
@@ -178,7 +179,7 @@ const editableRank = computed(() => props.canAdjust && !props.row.outsideRole &&
 @container skill-row (max-width: 390px) {
   .red-skill-card--row { grid-template-columns: minmax(0, 1fr); }
   .red-skill-card--row .skill-formula {
-    --skill-icon-inset: calc(40px + var(--spacing-small));
+    --skill-icon-inset: calc(36px + var(--spacing-small));
     width: min(calc(100% - var(--skill-icon-inset)), 260px);
     margin-inline-start: var(--skill-icon-inset);
   }

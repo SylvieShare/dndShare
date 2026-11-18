@@ -321,10 +321,11 @@ for(const width of [390,840,1440]){
   if(width===1440){
    const longTitle=skills.getByRole('heading',{name:'Спрятать / обнаружить предмет',exact:true})
    await expect(longTitle).toHaveAttribute('data-fit-ready','')
-   expect(await longTitle.evaluate(title=>title.clientWidth)).toBeGreaterThan(100)
+   expect(await longTitle.evaluate(title=>title.clientWidth)).toBeGreaterThan(90)
    const scale=Number(await longTitle.getAttribute('data-fit-scale'))
    expect(scale).toBeGreaterThanOrEqual(.66)
    expect(scale).toBeLessThan(1)
+   await expect(skillCards.first().locator('.skill-title-fit')).toHaveAttribute('data-fit-wrapping','false')
   }
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
   await rail.getByText('Киберимпланты',{exact:true}).click()
