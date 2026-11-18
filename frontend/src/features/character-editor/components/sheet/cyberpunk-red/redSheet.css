@@ -13,6 +13,9 @@
     );
   align-items: start;
 }
+.red-sheet--desktop.red-sheet--focused-skills {
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 280px);
+}
 .red-sheet > *,
 .red-stack > * {
   min-width: 0;

@@ -3,8 +3,8 @@
     Данные листа RED неполны. Откройте сохранённого персонажа или завершите
     создание.
   </div>
-  <div v-else ref="body" class="red-sheet" :class="`red-sheet--${format}`">
-    <aside v-if="format === 'desktop'" ref="statsColumn">
+  <div v-else ref="body" class="red-sheet" :class="[`red-sheet--${format}`, { 'red-sheet--focused-skills': section === 'skills' }]">
+    <aside v-if="format === 'desktop'" v-show="section !== 'skills'" ref="statsColumn">
       <RedSkills
         :values="values"
         :items="catalogue.items.value"
