@@ -8753,8 +8753,11 @@
       "id": 7937,
       "name": "Боевой кенгурятник",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 184,
+      "sha256": "7b3bffb0aa01ab664885ef8f8e782116e944d22392ff655f182b4f47b9fe348c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7937/icon/7b3bffb0aa01ab664885ef8f8e782116e944d22392ff655f182b4f47b9fe348c.webp"
     },
     {
       "kind": "item",
@@ -8772,8 +8775,11 @@
       "id": 7938,
       "name": "Центр связи",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 184,
+      "sha256": "c77a0908a7b150008f134e5f4b1ffc9370e7aaada721fe9874a4ae2ba754abe5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7938/icon/c77a0908a7b150008f134e5f4b1ffc9370e7aaada721fe9874a4ae2ba754abe5.webp"
     },
     {
       "kind": "item",
@@ -8791,8 +8797,11 @@
       "id": 7939,
       "name": "Развёртываемая полоса с шипами",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 184,
+      "sha256": "6db3dea0f1d97a396d99f77a1d8e1739416dae6679e3ec6fdcaf8efb36d381b8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7939/icon/6db3dea0f1d97a396d99f77a1d8e1739416dae6679e3ec6fdcaf8efb36d381b8.webp"
     },
     {
       "kind": "item",
@@ -8810,8 +8819,11 @@
       "id": 7940,
       "name": "Блокировка на ДНК",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 184,
+      "sha256": "bb164afd71bccf61f421b1f626dfd83ebf9922d02fa0e139ad1e9a5d91227e5d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7940/icon/bb164afd71bccf61f421b1f626dfd83ebf9922d02fa0e139ad1e9a5d91227e5d.webp"
     },
     {
       "kind": "item",
@@ -8829,8 +8841,11 @@
       "id": 7941,
       "name": "Барабанный магазин (штурмовая винтовка)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 184,
+      "sha256": "bab44f7494e808fd39c661f18b37a6c5108c685f6cd1139ea32b33180dd3550c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7941/icon/bab44f7494e808fd39c661f18b37a6c5108c685f6cd1139ea32b33180dd3550c.webp"
     },
     {
       "kind": "item",
@@ -8848,8 +8863,11 @@
       "id": 7942,
       "name": "Барабанный магазин (гранатомёт)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 184,
+      "sha256": "64cf3c4b51eaa76a693c7f40ce0368c57a699c9a28b0b5a56d9f5f32a2d20955",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7942/icon/64cf3c4b51eaa76a693c7f40ce0368c57a699c9a28b0b5a56d9f5f32a2d20955.webp"
     },
     {
       "kind": "item",
@@ -8867,8 +8885,11 @@
       "id": 7943,
       "name": "Барабанный магазин (пистолет крупного калибра)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 184,
+      "sha256": "67dd3f3a134f1a82691a566346cd8d307cb4351ca6c35ca7783872f2b8dffc84",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7943/icon/67dd3f3a134f1a82691a566346cd8d307cb4351ca6c35ca7783872f2b8dffc84.webp"
     },
     {
       "kind": "item",
@@ -8886,8 +8907,11 @@
       "id": 7944,
       "name": "Барабанный магазин (ПП крупного калибра)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 184,
+      "sha256": "1533cc63aba1dd157a5668b09d5369e5dfe45ffd0f84f7ab1da2976a4aadb2bb",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7944/icon/1533cc63aba1dd157a5668b09d5369e5dfe45ffd0f84f7ab1da2976a4aadb2bb.webp"
     },
     {
       "kind": "item",
@@ -8905,8 +8929,11 @@
       "id": 7945,
       "name": "Барабанный магазин (пистолет среднего калибра)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 184,
+      "sha256": "1b72024b198ba6fa915495b4d44b71e910d893cd2b816ed26e0a386af9e847ec",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7945/icon/1b72024b198ba6fa915495b4d44b71e910d893cd2b816ed26e0a386af9e847ec.webp"
     },
     {
       "kind": "item",
@@ -8924,8 +8951,11 @@
       "id": 7946,
       "name": "Барабанный магазин (ракетница)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 184,
+      "sha256": "7334a28925b6a3cf7454a30754b7f65f1e56bc63d77b100efc1459f46c7eea38",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7946/icon/7334a28925b6a3cf7454a30754b7f65f1e56bc63d77b100efc1459f46c7eea38.webp"
     },
     {
       "kind": "item",
@@ -8943,8 +8973,11 @@
       "id": 7947,
       "name": "Барабанный магазин (дробовик)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 184,
+      "sha256": "f20dbc7d8ad19c2e9eb53d79ce065789f4127b67cdeb03982105b61b1e301567",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7947/icon/f20dbc7d8ad19c2e9eb53d79ce065789f4127b67cdeb03982105b61b1e301567.webp"
     },
     {
       "kind": "item",
@@ -8962,8 +8995,11 @@
       "id": 7948,
       "name": "Барабанный магазин (ПП)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 184,
+      "sha256": "cb535bb161ffcbf340a2117f1872ff12c66f49e1ff1c9a7b2f0e242ad93fff61",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7948/icon/cb535bb161ffcbf340a2117f1872ff12c66f49e1ff1c9a7b2f0e242ad93fff61.webp"
     },
     {
       "kind": "item",
@@ -20019,7 +20055,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1319,
+    "publishedSlots": 1331,
     "readySlots": 0,
     "totalSlots": 1848
   }
