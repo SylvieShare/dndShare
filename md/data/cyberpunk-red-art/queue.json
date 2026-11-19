@@ -1268,8 +1268,11 @@
       "id": 7589,
       "name": "Ракета (бронебойная)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 163,
+      "sha256": "19a17e9b280fd8802f8c9dcda1e72a82f2538fab82b0b4470af812cf5a3857d8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7589/icon/19a17e9b280fd8802f8c9dcda1e72a82f2538fab82b0b4470af812cf5a3857d8.webp"
     },
     {
       "kind": "item",
@@ -1287,8 +1290,11 @@
       "id": 7590,
       "name": "Ракета (умная)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 163,
+      "sha256": "1008da733d054090c9f7fad81c17d1c4fef7edf160b587889e592a906f2b635a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7590/icon/1008da733d054090c9f7fad81c17d1c4fef7edf160b587889e592a906f2b635a.webp"
     },
     {
       "kind": "item",
@@ -1306,8 +1312,11 @@
       "id": 7591,
       "name": "Дробь (стандартная)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 163,
+      "sha256": "45547a30e4f342ee8ed119cec247ec70f8e65b17f3787bf1eda32f49ab6be89b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7591/icon/45547a30e4f342ee8ed119cec247ec70f8e65b17f3787bf1eda32f49ab6be89b.webp"
     },
     {
       "kind": "item",
@@ -1325,8 +1334,11 @@
       "id": 7592,
       "name": "Дробь (зажигательная)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 163,
+      "sha256": "8d25a1003c0b2cbf7158911fdfa5f51cb15815e05c9ee09566984c998fc2a56e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7592/icon/8d25a1003c0b2cbf7158911fdfa5f51cb15815e05c9ee09566984c998fc2a56e.webp"
     },
     {
       "kind": "item",
@@ -1344,8 +1356,11 @@
       "id": 7593,
       "name": "Жакан (бронебойный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 163,
+      "sha256": "477a50b0cc30ad9735582b50b8eb5e65bac452de792efb11fedc53afc3d8a8cd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7593/icon/477a50b0cc30ad9735582b50b8eb5e65bac452de792efb11fedc53afc3d8a8cd.webp"
     },
     {
       "kind": "item",
@@ -1363,8 +1378,11 @@
       "id": 7594,
       "name": "Жакан (стандартный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 163,
+      "sha256": "53a835f2fdfa0d5f48c73645df5a509fc47f46c221eb1fc06d078996cbfc280b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7594/icon/53a835f2fdfa0d5f48c73645df5a509fc47f46c221eb1fc06d078996cbfc280b.webp"
     },
     {
       "kind": "item",
@@ -1382,8 +1400,11 @@
       "id": 7595,
       "name": "Жакан (экспансивный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 163,
+      "sha256": "d7996a28ff487ec98148ce3d9a63aaab97fbc1c3a79ef6d4e2d2884052e2205b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7595/icon/d7996a28ff487ec98148ce3d9a63aaab97fbc1c3a79ef6d4e2d2884052e2205b.webp"
     },
     {
       "kind": "item",
@@ -1401,8 +1422,11 @@
       "id": 7596,
       "name": "Жакан (зажигательный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 163,
+      "sha256": "18cf89206a0cfe1507a90156217afbd76303b539c768982fa67a43e9fc3f23f6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7596/icon/18cf89206a0cfe1507a90156217afbd76303b539c768982fa67a43e9fc3f23f6.webp"
     },
     {
       "kind": "item",
@@ -1420,8 +1444,11 @@
       "id": 7597,
       "name": "Жакан (резиновый)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 163,
+      "sha256": "33c18c7295ca7ba9994bac08ed263f33a788f50536586b86b09e478c8077b937",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7597/icon/33c18c7295ca7ba9994bac08ed263f33a788f50536586b86b09e478c8077b937.webp"
     },
     {
       "kind": "item",
@@ -1439,8 +1466,11 @@
       "id": 7598,
       "name": "Жакан (умный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 163,
+      "sha256": "34c4e2644933b06efc79208deb2f3af02ead07555df04f22467666221d4a8792",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7598/icon/34c4e2644933b06efc79208deb2f3af02ead07555df04f22467666221d4a8792.webp"
     },
     {
       "kind": "item",
@@ -1458,8 +1488,11 @@
       "id": 7599,
       "name": "Для пистолета сверхкрупного калибра (бронебойный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 163,
+      "sha256": "bd3abf6ae3b1714459e33d6e8a8cdf067c6f188984d5356cb85d9fd049f5c924",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7599/icon/bd3abf6ae3b1714459e33d6e8a8cdf067c6f188984d5356cb85d9fd049f5c924.webp"
     },
     {
       "kind": "item",
@@ -1477,8 +1510,11 @@
       "id": 7600,
       "name": "Для пистолета сверхкрупного калибра (стандартный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 163,
+      "sha256": "6d3abbefd47c79100b0e1ec2a329a39f0f0f872cfe65e84cd8ec65be9f261b22",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7600/icon/6d3abbefd47c79100b0e1ec2a329a39f0f0f872cfe65e84cd8ec65be9f261b22.webp"
     },
     {
       "kind": "item",
@@ -19263,7 +19299,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1067,
+    "publishedSlots": 1079,
     "readySlots": 0,
     "totalSlots": 1848
   }
