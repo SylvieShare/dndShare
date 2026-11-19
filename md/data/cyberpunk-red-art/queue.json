@@ -11391,8 +11391,11 @@
       "id": 8055,
       "name": "Микроволновка",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 195,
+      "sha256": "4679de3972ebac0a65d5cc96b258ae2f98c8217acbd1c9b3509dbd4e569098a1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8055/icon/4679de3972ebac0a65d5cc96b258ae2f98c8217acbd1c9b3509dbd4e569098a1.webp"
     },
     {
       "kind": "item",
@@ -11410,8 +11413,11 @@
       "id": 8056,
       "name": "Гранатомёт U-56 «Ковбой» от Милитех",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 195,
+      "sha256": "6569fc6844d6be6c0745a10cce79aee2e631ca4ea2141f6a85a260675ffe2ac9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8056/icon/6569fc6844d6be6c0745a10cce79aee2e631ca4ea2141f6a85a260675ffe2ac9.webp"
     },
     {
       "kind": "item",
@@ -11429,8 +11435,11 @@
       "id": 8057,
       "name": "Нагината",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 195,
+      "sha256": "0c6c1406c7a5e91e47a9e41b3921f373661b758e549359f7e0b43f9e224bbc5d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8057/icon/0c6c1406c7a5e91e47a9e41b3921f373661b758e549359f7e0b43f9e224bbc5d.webp"
     },
     {
       "kind": "item",
@@ -11448,8 +11457,11 @@
       "id": 8058,
       "name": "Нагината (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 195,
+      "sha256": "2573434979ba75b355dc39b01df3d652de1ad8431d393f127ffde3cec25be80c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8058/icon/2573434979ba75b355dc39b01df3d652de1ad8431d393f127ffde3cec25be80c.webp"
     },
     {
       "kind": "item",
@@ -11467,8 +11479,11 @@
       "id": 8059,
       "name": "Нагината (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 195,
+      "sha256": "436ed6b43e1edee4938be939b8fdab2d0f57f89e83711b80163a0f9ffa7fff35",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8059/icon/436ed6b43e1edee4938be939b8fdab2d0f57f89e83711b80163a0f9ffa7fff35.webp"
     },
     {
       "kind": "item",
@@ -11486,8 +11501,11 @@
       "id": 8060,
       "name": "Рельсотрон ЭМП-86 от Рейнметалл",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 195,
+      "sha256": "42e8037ac6244cbcd3e6dda5647e5c4f441edf8656f9211e2d19be50bb458b02",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8060/icon/42e8037ac6244cbcd3e6dda5647e5c4f441edf8656f9211e2d19be50bb458b02.webp"
     },
     {
       "kind": "item",
@@ -11505,8 +11523,11 @@
       "id": 8061,
       "name": "Ракетница",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 195,
+      "sha256": "dcfbdeec2f5c2ed3438560912ae333254954d46fe8d7ea401ccfc3f11fcd2214",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8061/icon/dcfbdeec2f5c2ed3438560912ae333254954d46fe8d7ea401ccfc3f11fcd2214.webp"
     },
     {
       "kind": "item",
@@ -11524,8 +11545,11 @@
       "id": 8062,
       "name": "Ракетница (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 195,
+      "sha256": "a44bb7ac0ab01fefedaf0a618a90e6c87ea7effebf128c589f3811e6d193867d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8062/icon/a44bb7ac0ab01fefedaf0a618a90e6c87ea7effebf128c589f3811e6d193867d.webp"
     },
     {
       "kind": "item",
@@ -11543,8 +11567,11 @@
       "id": 8063,
       "name": "Ракетница (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 195,
+      "sha256": "c3b62262c1d8ed004f11f4a36c9c7b41819fe90d706b6d0a639ccd67b8d4513d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8063/icon/c3b62262c1d8ed004f11f4a36c9c7b41819fe90d706b6d0a639ccd67b8d4513d.webp"
     },
     {
       "kind": "item",
@@ -11562,8 +11589,11 @@
       "id": 8064,
       "name": "Дробовик",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 195,
+      "sha256": "9aae3a6c042f30d6edaa5d44c0230c67a0bbd96aabd3624346afab662cb90e05",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8064/icon/9aae3a6c042f30d6edaa5d44c0230c67a0bbd96aabd3624346afab662cb90e05.webp"
     },
     {
       "kind": "item",
@@ -11581,8 +11611,11 @@
       "id": 8065,
       "name": "Дробовик (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 195,
+      "sha256": "d92ec002f6e29949402babcc633394af821c7b20cc5d9bf8571af06fb06fbf37",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8065/icon/d92ec002f6e29949402babcc633394af821c7b20cc5d9bf8571af06fb06fbf37.webp"
     },
     {
       "kind": "item",
@@ -11600,8 +11633,11 @@
       "id": 8066,
       "name": "Дробовик (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 195,
+      "sha256": "f0094f9198cc91c53380585fb3dac8fb7ad23484d2a353d6c43cde27b452f635",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8066/icon/f0094f9198cc91c53380585fb3dac8fb7ad23484d2a353d6c43cde27b452f635.webp"
     },
     {
       "kind": "item",
@@ -20415,7 +20451,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1451,
+    "publishedSlots": 1463,
     "readySlots": 0,
     "totalSlots": 1848
   }
