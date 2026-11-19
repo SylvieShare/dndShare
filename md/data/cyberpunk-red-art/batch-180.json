@@ -1,0 +1,525 @@
+{
+  "batch": 180,
+  "sourceId": 3,
+  "system": "Cyberpunk RED",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-180",
+  "assets": [
+    {
+      "key": "item-7810-icon",
+      "target": {
+        "kind": "item",
+        "id": 7810,
+        "typeId": 26,
+        "name": "Радиоприёмник/Музыкальный плеер"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Radio Scanner/Music Player — visual reference for the subject only: One implanted radio/music-receiver module, a tiny elegant graphite microboard with an enclosed memory connector and fine acoustic grille, a faint blue status light. Render only the defining object, head or emblem as a compact isolated icon; omit the reference scenery\" (Радиоприёмник/Музыкальный плеер), the \"cyberware-radio-scanner-music-player\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c44ad940-7dab-4d63-989c-c85821406b60.png",
+      "original": "originals/item-7810.png",
+      "final": "final/item-7810.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "705e4038204432241767e6302bcd08068f64f3074630c00ac4e2543be605547e",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "6d9d99fa3fab93bc457709825367d87e3ba8fda554c577e3a08a744f993d1c4f",
+      "bytes": 13058,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50892,
+        "objectKey": "system-item-media/v1/items/7810/icon/6d9d99fa3fab93bc457709825367d87e3ba8fda554c577e3a08a744f993d1c4f.webp",
+        "fileSize": 13058
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7810/icon/6d9d99fa3fab93bc457709825367d87e3ba8fda554c577e3a08a744f993d1c4f.webp"
+    },
+    {
+      "key": "item-7811-icon",
+      "target": {
+        "kind": "item",
+        "id": 7811,
+        "typeId": 26,
+        "name": "Покрытие Realskinn (киберрука)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Realskinn Covering (Cyber Arm) — visual reference for the subject only: A fully clothed middle-aged adult with a cybernetic arm covered in lifelike synthetic skin, subtle neat wrist/upper-arm seam reveals manufactured identity. Render only the defining object, head or emblem as a compact isolated icon; omit the reference scenery\" (Покрытие Realskinn (киберрука)), the \"cyberware-realskinn-covering-cyber-arm\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-beb7e5ce-430a-46a5-8d3b-f53b092fdbdf.png",
+      "original": "originals/item-7811.png",
+      "final": "final/item-7811.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "e0fa921b371dbe5fe02bef8428776d82a499241ce636f36d3456c76e9ed03916",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "fe10feeb74c9891611d39dae4bed0fd297d7e9775c07dde5c7fbb92781668e2e",
+      "bytes": 10162,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50893,
+        "objectKey": "system-item-media/v1/items/7811/icon/fe10feeb74c9891611d39dae4bed0fd297d7e9775c07dde5c7fbb92781668e2e.webp",
+        "fileSize": 10162
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7811/icon/fe10feeb74c9891611d39dae4bed0fd297d7e9775c07dde5c7fbb92781668e2e.webp"
+    },
+    {
+      "key": "item-7812-icon",
+      "target": {
+        "kind": "item",
+        "id": 7812,
+        "typeId": 26,
+        "name": "Покрытие Realskinn (кибернога)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Realskinn Covering (Cyber Leg) — visual reference for the subject only: A fully clothed mature adult seated in a prosthetic-fitting salon wearing knee-length shorts, one cybernetic lower leg has lifelike synthetic skin and a subtle neat ankle seam. Render only the defining object, head or emblem as a compact isolated icon; omit the reference scenery\" (Покрытие Realskinn (кибернога)), the \"cyberware-realskinn-covering-cyber-leg\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-018a0cca-ada3-4078-97b3-a3376da670d3.png",
+      "original": "originals/item-7812.png",
+      "final": "final/item-7812.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "3f1fe7bdf8535f8667e2f89886cddf010ebb3ecf019bd2bc65fd5014b51cb936",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "877afcbf0280c8b58a26e98d2737d2050df326031f1f874d9ea56853005be05a",
+      "bytes": 6656,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50894,
+        "objectKey": "system-item-media/v1/items/7812/icon/877afcbf0280c8b58a26e98d2737d2050df326031f1f874d9ea56853005be05a.webp",
+        "fileSize": 6656
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7812/icon/877afcbf0280c8b58a26e98d2737d2050df326031f1f874d9ea56853005be05a.webp"
+    },
+    {
+      "key": "item-7813-icon",
+      "target": {
+        "kind": "item",
+        "id": 7813,
+        "typeId": 26,
+        "name": "Потрошители"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Rippers — visual reference for the subject only: A cybernetic five-finger hand on a neutral display cradle with extendable carbon-glass FINGERTIP claws visible. Render only the defining object, head or emblem as a compact isolated icon; omit the reference scenery\" (Потрошители), the \"cyberware-rippers\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e77ac5cf-c13d-4899-97e7-a88db73e975b.png",
+      "original": "originals/item-7813.png",
+      "final": "final/item-7813.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "a3359e576802f27149c77768b490708107165d7a57ae5338b1f8a4bde0c54dbf",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "b7c57b2444cfb264eb7fc8b17661e52e8e0be9c3ad57591344d21db4a0d58ef9",
+      "bytes": 14942,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50895,
+        "objectKey": "system-item-media/v1/items/7813/icon/b7c57b2444cfb264eb7fc8b17661e52e8e0be9c3ad57591344d21db4a0d58ef9.webp",
+        "fileSize": 14942
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7813/icon/b7c57b2444cfb264eb7fc8b17661e52e8e0be9c3ad57591344d21db4a0d58ef9.webp"
+    },
+    {
+      "key": "item-7814-icon",
+      "target": {
+        "kind": "item",
+        "id": 7814,
+        "typeId": 26,
+        "name": "Сандевистан"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Sandevistan — visual reference for the subject only: A Sandevistan neural speedware module interpreted as a segmented slim processor strip with graphite and ivory segments, restrained amber pulsed status points and fine insulated contacts. Render only the defining object, head or emblem as a compact isolated icon; omit the reference scenery\" (Сандевистан), the \"cyberware-sandevistan\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8c852853-1301-4b55-9c17-9133116e7760.png",
+      "original": "originals/item-7814.png",
+      "final": "final/item-7814.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "dbb82e9c986fb6a9b12d0a96be102dea99eb0c81c366a0fb2c68d7e00772ee89",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "793df7e44f1d429350082c5465dafcc1bdf9258ad084122780e12fd73b3dfb53",
+      "bytes": 9368,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50896,
+        "objectKey": "system-item-media/v1/items/7814/icon/793df7e44f1d429350082c5465dafcc1bdf9258ad084122780e12fd73b3dfb53.webp",
+        "fileSize": 9368
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7814/icon/793df7e44f1d429350082c5465dafcc1bdf9258ad084122780e12fd73b3dfb53.webp"
+    },
+    {
+      "key": "item-7815-icon",
+      "target": {
+        "kind": "item",
+        "id": 7815,
+        "typeId": 26,
+        "name": "Скремблер/Дескремблер"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Scrambler/Descrambler — visual reference for the subject only: One implanted communications scrambler/descrambler module: two tiny complementary processor blocks on a SINGLE compact carrier board with a short protected internal link, amber and cyan accents. Render only the defining object, head or emblem as a compact isolated icon; omit the reference scenery\" (Скремблер/Дескремблер), the \"cyberware-scrambler-descrambler\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-97d3c99d-80a3-4917-8650-b21b694926ff.png",
+      "original": "originals/item-7815.png",
+      "final": "final/item-7815.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "56e866c3089493a4efe31bbd16aeb32882696fa018f9411e0bde8df017bfecce",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "4cd1a53ca97f14d3c61ad70857c821f0d5a3a6f2b9f5b0c7276e008f293083d7",
+      "bytes": 13828,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50897,
+        "objectKey": "system-item-media/v1/items/7815/icon/4cd1a53ca97f14d3c61ad70857c821f0d5a3a6f2b9f5b0c7276e008f293083d7.webp",
+        "fileSize": 13828
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7815/icon/4cd1a53ca97f14d3c61ad70857c821f0d5a3a6f2b9f5b0c7276e008f293083d7.webp"
+    },
+    {
+      "key": "item-7816-icon",
+      "target": {
+        "kind": "item",
+        "id": 7816,
+        "typeId": 26,
+        "name": "Царапки"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Scratchers\" (Царапки), the \"cyberware-scratchers\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1d8a0023-523c-4a7a-b3bb-adc51bfa7c2f.png",
+      "original": "originals/item-7816.png",
+      "final": "final/item-7816.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "9110875fa4578fe2377f1d25cdcb631ed2f623be304f8de36a863ebf72008165",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "c46dd61184cebc76def5a0190f4f242c08bd18aecc25de78a8c99081841d4e15",
+      "bytes": 16160,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50898,
+        "objectKey": "system-item-media/v1/items/7816/icon/c46dd61184cebc76def5a0190f4f242c08bd18aecc25de78a8c99081841d4e15.webp",
+        "fileSize": 16160
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7816/icon/c46dd61184cebc76def5a0190f4f242c08bd18aecc25de78a8c99081841d4e15.webp"
+    },
+    {
+      "key": "item-7817-icon",
+      "target": {
+        "kind": "item",
+        "id": 7817,
+        "typeId": 26,
+        "name": "Сенсорная установка"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Sensor Array — visual reference for the subject only: A cyberaudio sensor array on a neutral synthetic training head: exactly TWO long FLAT ANTENNA panels rise above the head like technological rabbit ears, with precise graphite surfaces and small teal insets. Render only the defining object, head or emblem as a compact isolated icon; omit the reference scenery\" (Сенсорная установка), the \"cyberware-sensor-array\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6f8882ba-39e8-4d49-8586-e81cc1036082.png",
+      "original": "originals/item-7817.png",
+      "final": "final/item-7817.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "dfbaccb6d7b0c7df72aed0f5dc2c0ecff7e0eae4f19e19793582aaf826ebf7b6",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "043eb0d3bf0a3e1583061165a33858dc0bdc2ee4e8709c049213eef42bf1d9f7",
+      "bytes": 10584,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50899,
+        "objectKey": "system-item-media/v1/items/7817/icon/043eb0d3bf0a3e1583061165a33858dc0bdc2ee4e8709c049213eef42bf1d9f7.webp",
+        "fileSize": 10584
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7817/icon/043eb0d3bf0a3e1583061165a33858dc0bdc2ee4e8709c049213eef42bf1d9f7.webp"
+    },
+    {
+      "key": "item-7818-icon",
+      "target": {
+        "kind": "item",
+        "id": 7818,
+        "typeId": 26,
+        "name": "Цветные линзы"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Shift Tacts — visual reference for the subject only: A mature adult woman around forty with normal human facial proportions looks into a small salon mirror; her two eyes have coordinated unusual amber-and-violet cosmetic iris tints with subtle patterned color rings. Render only the defining object, head or emblem as a compact isolated icon; omit the reference scenery\" (Цветные линзы), the \"cyberware-shift-tacts\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-61460e3d-8b73-49b2-81a8-5ef1d081bd31.png",
+      "original": "originals/item-7818.png",
+      "final": "final/item-7818.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "3206a4d045a64c787094f5167998c1ab5a8c570742dab25c7aeae8d7c18d7d99",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "79304eaa1479cf85e5728640bd860d77b723610050714a63b67002ab1de5a488",
+      "bytes": 18662,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50900,
+        "objectKey": "system-item-media/v1/items/7818/icon/79304eaa1479cf85e5728640bd860d77b723610050714a63b67002ab1de5a488.webp",
+        "fileSize": 18662
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7818/icon/79304eaa1479cf85e5728640bd860d77b723610050714a63b67002ab1de5a488.webp"
+    },
+    {
+      "key": "item-7819-icon",
+      "target": {
+        "kind": "item",
+        "id": 7819,
+        "typeId": 26,
+        "name": "Камера на плече"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Shoulder Cam\" (Камера на плече), the \"cyberware-shoulder-cam\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7fda14df-cc86-49d1-aa5e-a2753dbd69a9.png",
+      "original": "originals/item-7819.png",
+      "final": "final/item-7819.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "0625a01ef6af9ba61c98e0aee362cd9b655277a7b182a09b42b775e176314977",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "856a25b389f81c06cd0bc3119946a70f7cabae981fe7d8c43390ae51ac1e29be",
+      "bytes": 13588,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50901,
+        "objectKey": "system-item-media/v1/items/7819/icon/856a25b389f81c06cd0bc3119946a70f7cabae981fe7d8c43390ae51ac1e29be.webp",
+        "fileSize": 13588
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7819/icon/856a25b389f81c06cd0bc3119946a70f7cabae981fe7d8c43390ae51ac1e29be.webp"
+    },
+    {
+      "key": "item-7820-icon",
+      "target": {
+        "kind": "item",
+        "id": 7820,
+        "typeId": 26,
+        "name": "Ступни-ролики"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Skate Foot — visual reference for the subject only: A MATCHED PAIR of cybernetic feet with deployed compact inline skate wheels integrated into the soles, resting side by side on a maintenance bench. Render only the defining object, head or emblem as a compact isolated icon; omit the reference scenery\" (Ступни-ролики), the \"cyberware-skate-foot\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5605b06e-00e2-4efa-9602-0de07ed3b3a7.png",
+      "original": "originals/item-7820.png",
+      "final": "final/item-7820.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "de3904411750b2f644519132d9449648df5589e69c9227733c5d0c1888e87303",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "90f80209e6e5be3e2cfd8945c1e5603cd6d4958694729d067763d258fcc5a167",
+      "bytes": 18082,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50902,
+        "objectKey": "system-item-media/v1/items/7820/icon/90f80209e6e5be3e2cfd8945c1e5603cd6d4958694729d067763d258fcc5a167.webp",
+        "fileSize": 18082
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7820/icon/90f80209e6e5be3e2cfd8945c1e5603cd6d4958694729d067763d258fcc5a167.webp"
+    },
+    {
+      "key": "item-7821-icon",
+      "target": {
+        "kind": "item",
+        "id": 7821,
+        "typeId": 26,
+        "name": "Щепка с навыком"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Skill Chip — visual reference for the subject only: One standard-skill neural chip, a single slim amber graphite cartridge with a clean simple branching circuit-like inset and copper contacts. Render only the defining object, head or emblem as a compact isolated icon; omit the reference scenery\" (Щепка с навыком), the \"cyberware-skill-chip\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-59e9ea5f-7274-4132-a0b2-b4a869b29607.png",
+      "original": "originals/item-7821.png",
+      "final": "final/item-7821.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "5edb3d08bee29356a77992f48ccf31e439641c2a914438a626e89140501d92a2",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "b2344d85dad7c4d175fc76759898dc8ee3efcd84162394b1d428494cbd0157cd",
+      "bytes": 13032,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50903,
+        "objectKey": "system-item-media/v1/items/7821/icon/b2344d85dad7c4d175fc76759898dc8ee3efcd84162394b1d428494cbd0157cd.webp",
+        "fileSize": 13032
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7821/icon/b2344d85dad7c4d175fc76759898dc8ee3efcd84162394b1d428494cbd0157cd.webp"
+    }
+  ]
+}

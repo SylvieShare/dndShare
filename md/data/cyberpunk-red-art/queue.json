@@ -6034,8 +6034,11 @@
       "id": 7810,
       "name": "Радиоприёмник/Музыкальный плеер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 180,
+      "sha256": "6d9d99fa3fab93bc457709825367d87e3ba8fda554c577e3a08a744f993d1c4f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7810/icon/6d9d99fa3fab93bc457709825367d87e3ba8fda554c577e3a08a744f993d1c4f.webp"
     },
     {
       "kind": "item",
@@ -6053,8 +6056,11 @@
       "id": 7811,
       "name": "Покрытие Realskinn (киберрука)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 180,
+      "sha256": "fe10feeb74c9891611d39dae4bed0fd297d7e9775c07dde5c7fbb92781668e2e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7811/icon/fe10feeb74c9891611d39dae4bed0fd297d7e9775c07dde5c7fbb92781668e2e.webp"
     },
     {
       "kind": "item",
@@ -6072,8 +6078,11 @@
       "id": 7812,
       "name": "Покрытие Realskinn (кибернога)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 180,
+      "sha256": "877afcbf0280c8b58a26e98d2737d2050df326031f1f874d9ea56853005be05a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7812/icon/877afcbf0280c8b58a26e98d2737d2050df326031f1f874d9ea56853005be05a.webp"
     },
     {
       "kind": "item",
@@ -6091,8 +6100,11 @@
       "id": 7813,
       "name": "Потрошители",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 180,
+      "sha256": "b7c57b2444cfb264eb7fc8b17661e52e8e0be9c3ad57591344d21db4a0d58ef9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7813/icon/b7c57b2444cfb264eb7fc8b17661e52e8e0be9c3ad57591344d21db4a0d58ef9.webp"
     },
     {
       "kind": "item",
@@ -6110,8 +6122,11 @@
       "id": 7814,
       "name": "Сандевистан",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 180,
+      "sha256": "793df7e44f1d429350082c5465dafcc1bdf9258ad084122780e12fd73b3dfb53",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7814/icon/793df7e44f1d429350082c5465dafcc1bdf9258ad084122780e12fd73b3dfb53.webp"
     },
     {
       "kind": "item",
@@ -6129,8 +6144,11 @@
       "id": 7815,
       "name": "Скремблер/Дескремблер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 180,
+      "sha256": "4cd1a53ca97f14d3c61ad70857c821f0d5a3a6f2b9f5b0c7276e008f293083d7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7815/icon/4cd1a53ca97f14d3c61ad70857c821f0d5a3a6f2b9f5b0c7276e008f293083d7.webp"
     },
     {
       "kind": "item",
@@ -6148,8 +6166,11 @@
       "id": 7816,
       "name": "Царапки",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 180,
+      "sha256": "c46dd61184cebc76def5a0190f4f242c08bd18aecc25de78a8c99081841d4e15",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7816/icon/c46dd61184cebc76def5a0190f4f242c08bd18aecc25de78a8c99081841d4e15.webp"
     },
     {
       "kind": "item",
@@ -6167,8 +6188,11 @@
       "id": 7817,
       "name": "Сенсорная установка",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 180,
+      "sha256": "043eb0d3bf0a3e1583061165a33858dc0bdc2ee4e8709c049213eef42bf1d9f7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7817/icon/043eb0d3bf0a3e1583061165a33858dc0bdc2ee4e8709c049213eef42bf1d9f7.webp"
     },
     {
       "kind": "item",
@@ -6186,8 +6210,11 @@
       "id": 7818,
       "name": "Цветные линзы",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 180,
+      "sha256": "79304eaa1479cf85e5728640bd860d77b723610050714a63b67002ab1de5a488",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7818/icon/79304eaa1479cf85e5728640bd860d77b723610050714a63b67002ab1de5a488.webp"
     },
     {
       "kind": "item",
@@ -6205,8 +6232,11 @@
       "id": 7819,
       "name": "Камера на плече",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 180,
+      "sha256": "856a25b389f81c06cd0bc3119946a70f7cabae981fe7d8c43390ae51ac1e29be",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7819/icon/856a25b389f81c06cd0bc3119946a70f7cabae981fe7d8c43390ae51ac1e29be.webp"
     },
     {
       "kind": "item",
@@ -6224,8 +6254,11 @@
       "id": 7820,
       "name": "Ступни-ролики",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 180,
+      "sha256": "90f80209e6e5be3e2cfd8945c1e5603cd6d4958694729d067763d258fcc5a167",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7820/icon/90f80209e6e5be3e2cfd8945c1e5603cd6d4958694729d067763d258fcc5a167.webp"
     },
     {
       "kind": "item",
@@ -6243,8 +6276,11 @@
       "id": 7821,
       "name": "Щепка с навыком",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 180,
+      "sha256": "b2344d85dad7c4d175fc76759898dc8ee3efcd84162394b1d428494cbd0157cd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7821/icon/b2344d85dad7c4d175fc76759898dc8ee3efcd84162394b1d428494cbd0157cd.webp"
     },
     {
       "kind": "item",
@@ -19875,7 +19911,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1271,
+    "publishedSlots": 1283,
     "readySlots": 0,
     "totalSlots": 1848
   }
