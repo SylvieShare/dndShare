@@ -6826,8 +6826,11 @@
       "id": 7846,
       "name": "Чёрное кружево",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 183,
+      "sha256": "1bd16ac852512ff7b64db1a1dc90b103b48ddbd806be93f2925e4f5bd6a9bd23",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7846/icon/1bd16ac852512ff7b64db1a1dc90b103b48ddbd806be93f2925e4f5bd6a9bd23.webp"
     },
     {
       "kind": "item",
@@ -6845,8 +6848,11 @@
       "id": 7847,
       "name": "Синее стекло",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 183,
+      "sha256": "87dd7a55e2e9f1dde1279330a79a5e6dfb512764eadeefe0c87ab9c6540f8671",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7847/icon/87dd7a55e2e9f1dde1279330a79a5e6dfb512764eadeefe0c87ab9c6540f8671.webp"
     },
     {
       "kind": "item",
@@ -6864,8 +6870,11 @@
       "id": 7848,
       "name": "Буст",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 183,
+      "sha256": "cd0501a7c332c5bc7dc5857d3b2de87636ac9853f21f7f09a5227ecf41d437c0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7848/icon/cd0501a7c332c5bc7dc5857d3b2de87636ac9853f21f7f09a5227ecf41d437c0.webp"
     },
     {
       "kind": "item",
@@ -6883,8 +6892,11 @@
       "id": 7849,
       "name": "Смэш",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 183,
+      "sha256": "2878375f8aae9e4f2696698b73e98daae2d31fde7e4058aaa8be12f54e4bf5ea",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7849/icon/2878375f8aae9e4f2696698b73e98daae2d31fde7e4058aaa8be12f54e4bf5ea.webp"
     },
     {
       "kind": "item",
@@ -6902,8 +6914,11 @@
       "id": 7850,
       "name": "Синткокс",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 183,
+      "sha256": "870c028e5687329344263daeb87c18604f30c9be4c236c709bf2092b602a07c8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7850/icon/870c028e5687329344263daeb87c18604f30c9be4c236c709bf2092b602a07c8.webp"
     },
     {
       "kind": "item",
@@ -6987,8 +7002,11 @@
       "id": 7854,
       "name": "Боевая перчатка",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 183,
+      "sha256": "12c5f43a5e51981593b60d41ce3db5cf37ca0276cb59c17753d61ec10460614b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7854/icon/12c5f43a5e51981593b60d41ce3db5cf37ca0276cb59c17753d61ec10460614b.webp"
     },
     {
       "kind": "item",
@@ -7006,8 +7024,11 @@
       "id": 7855,
       "name": "Умные очки",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 183,
+      "sha256": "9b94e6424b5258dcd419c0e45817dbc2d2ce32603dcabbf3c6eaf87e3da46ace",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7855/icon/9b94e6424b5258dcd419c0e45817dbc2d2ce32603dcabbf3c6eaf87e3da46ace.webp"
     },
     {
       "kind": "item",
@@ -8622,8 +8643,11 @@
       "id": 7932,
       "name": "Армированная рама",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 183,
+      "sha256": "a92acefbf6d61d553cf7e7f08f133621ffdedf8bafee50ee4bc3c84158ab031e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7932/icon/a92acefbf6d61d553cf7e7f08f133621ffdedf8bafee50ee4bc3c84158ab031e.webp"
     },
     {
       "kind": "item",
@@ -8641,8 +8665,11 @@
       "id": 7933,
       "name": "Двигатели AV-4",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 183,
+      "sha256": "a57e873fab299c6b63b4b203837331ba708939c78e15c8a473a5ad915950288d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7933/icon/a57e873fab299c6b63b4b203837331ba708939c78e15c8a473a5ad915950288d.webp"
     },
     {
       "kind": "item",
@@ -8660,8 +8687,11 @@
       "id": 7934,
       "name": "Резервный диск",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 183,
+      "sha256": "40fa4595697ed249f2d34e1620a05f339895529d852da293d488ad9494b74525",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7934/icon/40fa4595697ed249f2d34e1620a05f339895529d852da293d488ad9494b74525.webp"
     },
     {
       "kind": "item",
@@ -8679,8 +8709,11 @@
       "id": 7935,
       "name": "Штык-нож",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 183,
+      "sha256": "70799322d58f325d06849faf70accb614f19fd239010def463c2e3ed1ff659d0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7935/icon/70799322d58f325d06849faf70accb614f19fd239010def463c2e3ed1ff659d0.webp"
     },
     {
       "kind": "item",
@@ -8698,8 +8731,11 @@
       "id": 7936,
       "name": "Пуленепробиваемое стекло",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 183,
+      "sha256": "e0fd7eb90e6fe7d3315bea83c68000d349a03560fe32fe71757f73b5320b1cb9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7936/icon/e0fd7eb90e6fe7d3315bea83c68000d349a03560fe32fe71757f73b5320b1cb9.webp"
     },
     {
       "kind": "item",
@@ -19983,7 +20019,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1307,
+    "publishedSlots": 1319,
     "readySlots": 0,
     "totalSlots": 1848
   }
