@@ -5128,8 +5128,11 @@
       "id": 7768,
       "name": "Усиленное экранирование (кибернога)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 177,
+      "sha256": "fd7b236a7a5185a2cd989ba438324d0031a653da1412bfe6f843b68aa7a965a2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7768/icon/fd7b236a7a5185a2cd989ba438324d0031a653da1412bfe6f843b68aa7a965a2.webp"
     },
     {
       "kind": "item",
@@ -5147,8 +5150,11 @@
       "id": 7769,
       "name": "Скрытая кобура",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 177,
+      "sha256": "8de7afef803d710bc0d3e1b19372fabafcbabc954f488e60d354e655a02ce2d8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7769/icon/8de7afef803d710bc0d3e1b19372fabafcbabc954f488e60d354e655a02ce2d8.webp"
     },
     {
       "kind": "item",
@@ -5166,8 +5172,11 @@
       "id": 7770,
       "name": "Радиопеленгатор",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 177,
+      "sha256": "5262cbacd7ac318083b34cb2377943acf975bdeeb58b6fcf4ca7edf85e8a84d9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7770/icon/5262cbacd7ac318083b34cb2377943acf975bdeeb58b6fcf4ca7edf85e8a84d9.webp"
     },
     {
       "kind": "item",
@@ -5185,8 +5194,11 @@
       "id": 7771,
       "name": "Улучшение изображения",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 177,
+      "sha256": "1f8c4f5097dab3e28fd5c41657e82950fdc3ef6600ef2da601522938c4862d36",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7771/icon/1f8c4f5097dab3e28fd5c41657e82950fdc3ef6600ef2da601522938c4862d36.webp"
     },
     {
       "kind": "item",
@@ -5204,8 +5216,11 @@
       "id": 7772,
       "name": "Имплантированный прямоходный остов β (бета)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 177,
+      "sha256": "655597b2b69817bc058f6c8e03a5c8322796ab750ad04bd517341228e716b36e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7772/icon/655597b2b69817bc058f6c8e03a5c8322796ab750ad04bd517341228e716b36e.webp"
     },
     {
       "kind": "item",
@@ -5223,8 +5238,11 @@
       "id": 7773,
       "name": "Имплантированный прямоходный остов ∑ (сигма)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 177,
+      "sha256": "9e54f9ce7c8bc40af752551fefd5d321fc4c52c4923c065f04f962ab249cdfdc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7773/icon/9e54f9ce7c8bc40af752551fefd5d321fc4c52c4923c065f04f962ab249cdfdc.webp"
     },
     {
       "kind": "item",
@@ -5242,8 +5260,11 @@
       "id": 7774,
       "name": "Независимый контур дыхания",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 177,
+      "sha256": "5c61f02d6964dc9f2840c2700e13fd0ca3884046222fd16d8f2a05db04d1f71c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7774/icon/5c61f02d6964dc9f2840c2700e13fd0ca3884046222fd16d8f2a05db04d1f71c.webp"
     },
     {
       "kind": "item",
@@ -5261,8 +5282,11 @@
       "id": 7775,
       "name": "Разъём интерфейса",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 177,
+      "sha256": "c012251b4736a794574d7a1c2440e8cad22695cd9527958945686c172629ad8b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7775/icon/c012251b4736a794574d7a1c2440e8cad22695cd9527958945686c172629ad8b.webp"
     },
     {
       "kind": "item",
@@ -5280,8 +5304,11 @@
       "id": 7776,
       "name": "Внутренний агент",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 177,
+      "sha256": "e2aee1b01967ea65dcaeaeecccaba55b0037902cee0c477f1697afcef16041d0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7776/icon/e2aee1b01967ea65dcaeaeecccaba55b0037902cee0c477f1697afcef16041d0.webp"
     },
     {
       "kind": "item",
@@ -5299,8 +5326,11 @@
       "id": 7777,
       "name": "Прыжковый усилитель",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 177,
+      "sha256": "6944ea2740222eec23ca3291c4a7afa34b77ffef090faa9c05807578b53f8842",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7777/icon/6944ea2740222eec23ca3291c4a7afa34b77ffef090faa9c05807578b53f8842.webp"
     },
     {
       "kind": "item",
@@ -5318,8 +5348,11 @@
       "id": 7778,
       "name": "Керензиков",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 177,
+      "sha256": "a6d067b16cd60bf0eab5f40dc5c5c94f3d7ee77fbef65839e3f5422d477723aa",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7778/icon/a6d067b16cd60bf0eab5f40dc5c5c94f3d7ee77fbef65839e3f5422d477723aa.webp"
     },
     {
       "kind": "item",
@@ -5337,8 +5370,11 @@
       "id": 7779,
       "name": "Шумопоглотитель",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 177,
+      "sha256": "5fef3e23ff1fe7130de1462eaad3f98b4e7f0e351c31848b1f14c32bb38a2da2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7779/icon/5fef3e23ff1fe7130de1462eaad3f98b4e7f0e351c31848b1f14c32bb38a2da2.webp"
     },
     {
       "kind": "item",
@@ -19767,7 +19803,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1235,
+    "publishedSlots": 1247,
     "readySlots": 0,
     "totalSlots": 1848
   }
