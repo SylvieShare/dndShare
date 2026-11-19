@@ -45,8 +45,10 @@ count. The turn arrows are paired and the forward action is labelled «След�
 combat controls. The shared selection toolbar uses the available-actions menu
 and displays grouped target portraits with counts for repeated creatures. It stays in the sidebar
 header until the collapse transition finishes. The combat card then reveals it
-below a divider. The summary row contains three stacked icon actions in order:
-«Сбросить выбор», «Действия» and, after a challenge, «Убрать испытание».
+below a divider, with the summary and actions on one row. In the sidebar,
+«Сбросить выбор» sits at the right edge of the summary; «Действия» is directly
+below it on the All row. After a challenge, «Убрать испытание» appears beside
+«Действия».
 A combatant marked defeated keeps the home group and leaves the turn order. The
 persisted `defeatedOnScene` flag keeps their row on the scene and restores scene
 membership when revived. Older defeated records without the flag appear in their

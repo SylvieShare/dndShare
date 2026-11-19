@@ -182,7 +182,7 @@ for(const width of [390,834,1440])test(`combat selection icons and stage waterma
   expect(api.errors).toEqual([]);expect(api.warnings).toEqual([])
 })
 
-for(const width of [390,834,1440]) test(`selection stacks beside the actions menu and fits the sidebar at ${width}`,async({page},info)=>{
+for(const width of [390,834,1440]) test(`selection stacks beside reset and keeps actions below at ${width}`,async({page},info)=>{
   const api=await rosterSelectionFixture(page,width)
   const groupCount = 32
   for(let i=2;i<groupCount;i++){
@@ -199,10 +199,14 @@ for(const width of [390,834,1440]) test(`selection stacks beside the actions men
   const summary=toolbar.locator('.roster-selection-summary')
   await expect(summary.locator('.selection-summary-item')).toHaveCount(groupCount)
   const actions=await toolbar.getByRole('button',{name:'Действия',exact:true}).boundingBox()
+  const reset=await toolbar.getByRole('button',{name:'Сбросить выбор',exact:true}).boundingBox()
   const checkbox=await selectAll.boundingBox()
   const summaryBox=await summary.boundingBox()
-  expect(actions.x).toBeGreaterThanOrEqual(summaryBox.x+summaryBox.width-.5)
-  expect(checkbox.y).toBeGreaterThanOrEqual(summaryBox.y+summaryBox.height-1)
+  expect(reset.x).toBeGreaterThanOrEqual(summaryBox.x+summaryBox.width)
+  expect(reset.y).toBeCloseTo(summaryBox.y, 0)
+  expect(actions.x+actions.width).toBeCloseTo(reset.x+reset.width, 0)
+  expect(actions.y).toBeGreaterThanOrEqual(summaryBox.y+summaryBox.height)
+  expect(checkbox.y+checkbox.height/2).toBeCloseTo(actions.y+actions.height/2, 0)
   const measure = () => summary.evaluate(node => {
     const items = [...node.querySelectorAll('.selection-summary-item')]
     const portraits = items.map(item => item.querySelector('.selection-summary-portrait').getBoundingClientRect())
@@ -278,6 +282,13 @@ test('closing the sidebar keeps its header in place until the combat footer can 
   expect(motion.after.height).toBeGreaterThan(0)
   expect(motion.frames.some(frame => frame.height > 0 && frame.height < motion.after.height && frame.alpha > 0 && frame.alpha < 1)).toBe(true)
   const phase = page.locator('.enc-secondary .enc-control-panel')
-  await expect(phase.locator('.combat-selection-footer .roster-selection')).toBeVisible()
-  await expect(phase.locator('.combat-selection-footer')).toHaveCSS('border-top-width', '1px')
+  const footer = phase.locator('.combat-selection-footer')
+  await expect(footer.locator('.roster-selection')).toBeVisible()
+  await expect(footer).toHaveCSS('border-top-width', '1px')
+  const summary = await footer.getByRole('group', { name: 'Выбрано по видам' }).boundingBox()
+  for (const name of ['Сбросить выбор', 'Действия']) {
+    const button = await footer.getByRole('button', { name, exact: true }).boundingBox()
+    expect(button.y).toBeCloseTo(summary.y, 0)
+    expect(button.x).toBeGreaterThanOrEqual(summary.x+summary.width)
+  }
 })

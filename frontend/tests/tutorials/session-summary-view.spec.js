@@ -174,24 +174,31 @@ test('challenge results appear on sidebar player and NPC tiles before combat', a
   expect(api.encounter().active).toBe(false)
   expect(api.encounter().combatants.every(row => row.position === 'reserve')).toBe(true)
   await page.setViewportSize({ width: 300, height: 980 })
-  const sizes = await toolbar.locator('.roster-selection-top').evaluate(row => {
+  const sizes = await toolbar.locator('.roster-selection-controls').evaluate(row => {
     const summary = row.querySelector('.roster-selection-summary')
     const rect = row.getBoundingClientRect()
-    const buttons = [...row.querySelectorAll('.roster-actions button')].map(button => {
+    const buttons = [...row.querySelectorAll('.roster-actions-trigger')].map(button => {
       const box = button.getBoundingClientRect()
       const icon = button.querySelector('svg').getBoundingClientRect()
       const caption = button.lastElementChild.getBoundingClientRect()
       return { label: button.getAttribute('aria-label') || button.textContent.trim(), x: box.x, y: box.y,
         right: box.right, iconAbove: icon.bottom <= caption.top }
     })
-    return { buttons, top: summary.getBoundingClientRect().top, right: rect.right,
+    const selectAll = row.querySelector('.roster-all-check').getBoundingClientRect()
+    const summaryRect = summary.getBoundingClientRect()
+    return { buttons, top: summaryRect.top, bottom: summaryRect.bottom, right: rect.right, selectAllRight: selectAll.right,
       summaryOverflow: summary.scrollWidth - summary.clientWidth }
   })
   expect(sizes.buttons.map(button => button.label)).toEqual(['Сбросить выбор', 'Действия', 'Убрать испытание'])
-  expect(sizes.buttons.every(button => button.iconAbove && Math.abs(button.y - sizes.top) < .5 && button.right <= sizes.right)).toBe(true)
+  expect(sizes.buttons.every(button => button.iconAbove && button.right <= sizes.right)).toBe(true)
   expect(sizes.summaryOverflow).toBeLessThanOrEqual(1)
-  expect(sizes.buttons[0].x).toBeLessThan(sizes.buttons[1].x)
-  expect(sizes.buttons[1].x).toBeLessThan(sizes.buttons[2].x)
+  const [reset, actionsMenu, clearChallenge] = sizes.buttons
+  expect(reset.y).toBeCloseTo(sizes.top, 0)
+  expect(actionsMenu.y).toBeGreaterThanOrEqual(sizes.bottom)
+  expect(actionsMenu.right).toBeCloseTo(reset.right, 0)
+  expect(clearChallenge.y).toBeCloseTo(actionsMenu.y, 0)
+  expect(clearChallenge.right).toBeLessThanOrEqual(actionsMenu.x)
+  expect(sizes.selectAllRight).toBeLessThanOrEqual(clearChallenge.x)
   await toolbar.getByRole('button', { name: 'Убрать испытание', exact: true }).click()
   await expect(sidebar.locator('.enc-row-result')).toHaveCount(0)
   await expect(toolbar.getByRole('button', { name: 'Убрать испытание', exact: true })).toHaveCount(0)
