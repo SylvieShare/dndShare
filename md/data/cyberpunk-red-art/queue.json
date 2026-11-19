@@ -10052,8 +10052,11 @@
       "id": 7994,
       "name": "Суперкар",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 190,
+      "sha256": "119aee5b8e7401f473e45e7de3f5a4c88ce57810fbdca749c7c24730db240c41",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7994/icon/119aee5b8e7401f473e45e7de3f5a4c88ce57810fbdca749c7c24730db240c41.webp"
     },
     {
       "kind": "item",
@@ -10071,8 +10074,11 @@
       "id": 7995,
       "name": "Супербайк",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 190,
+      "sha256": "b98d766d1ddf37e393a77da57d24ed66f9787003cfcc8ae0e385f5a71c7de601",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7995/icon/b98d766d1ddf37e393a77da57d24ed66f9787003cfcc8ae0e385f5a71c7de601.webp"
     },
     {
       "kind": "item",
@@ -10090,8 +10096,11 @@
       "id": 7996,
       "name": "Яхта",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 190,
+      "sha256": "e2c058981c2c034a73732e9f7d9cffa3aa53aa756ac8ad95bbff85cfe74bb9d2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7996/icon/e2c058981c2c034a73732e9f7d9cffa3aa53aa756ac8ad95bbff85cfe74bb9d2.webp"
     },
     {
       "kind": "item",
@@ -10109,8 +10118,11 @@
       "id": 7997,
       "name": "Пневматический пистолет",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 190,
+      "sha256": "1fd2e4c608455ae88a240be46a53ebf0ccdfd0cf4d9f26f9ecba0cdcad18bc2d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7997/icon/1fd2e4c608455ae88a240be46a53ebf0ccdfd0cf4d9f26f9ecba0cdcad18bc2d.webp"
     },
     {
       "kind": "item",
@@ -10128,8 +10140,11 @@
       "id": 7998,
       "name": "Штурмовая винтовка",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 190,
+      "sha256": "e58744b6e61fea899da7bafef689d00b158317504bed7aef36dcbabb40f91342",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7998/icon/e58744b6e61fea899da7bafef689d00b158317504bed7aef36dcbabb40f91342.webp"
     },
     {
       "kind": "item",
@@ -10147,8 +10162,11 @@
       "id": 7999,
       "name": "Штурмовая винтовка (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 190,
+      "sha256": "f2b9188ca12259b6f2ed5f35a91d328c47a7fb85674a0d85ca59475827933328",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7999/icon/f2b9188ca12259b6f2ed5f35a91d328c47a7fb85674a0d85ca59475827933328.webp"
     },
     {
       "kind": "item",
@@ -10166,8 +10184,11 @@
       "id": 8000,
       "name": "Штурмовая винтовка (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 190,
+      "sha256": "188178fb5eb3c3bc963260b20500352ac40be7e4b926f1728e205f88416a1b1f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8000/icon/188178fb5eb3c3bc963260b20500352ac40be7e4b926f1728e205f88416a1b1f.webp"
     },
     {
       "kind": "item",
@@ -10185,8 +10206,11 @@
       "id": 8001,
       "name": "Бейсбольная бита",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 190,
+      "sha256": "d266c31b57076a26348aac5e5617e56dd02ab69a60efa5d206f122f2358f4134",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8001/icon/d266c31b57076a26348aac5e5617e56dd02ab69a60efa5d206f122f2358f4134.webp"
     },
     {
       "kind": "item",
@@ -10204,8 +10228,11 @@
       "id": 8002,
       "name": "Бейсбольная бита (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 190,
+      "sha256": "ba79ba04fac0d20fd1a383f5c88f744437e44159580d353c4db03f9d58491b20",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8002/icon/ba79ba04fac0d20fd1a383f5c88f744437e44159580d353c4db03f9d58491b20.webp"
     },
     {
       "kind": "item",
@@ -10223,8 +10250,11 @@
       "id": 8003,
       "name": "Бейсбольная бита (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 190,
+      "sha256": "364ca7b6af14f4fc65ca8d9bdf6ed56d7a5cde71320bb46e79ec6b8563d1e52c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8003/icon/364ca7b6af14f4fc65ca8d9bdf6ed56d7a5cde71320bb46e79ec6b8563d1e52c.webp"
     },
     {
       "kind": "item",
@@ -10242,8 +10272,11 @@
       "id": 8004,
       "name": "Лук",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 190,
+      "sha256": "66866218eaa27b3c393be228604832e0fb4a1dca4bc3dfa9c446dc09e28b4524",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8004/icon/66866218eaa27b3c393be228604832e0fb4a1dca4bc3dfa9c446dc09e28b4524.webp"
     },
     {
       "kind": "item",
@@ -10261,8 +10294,11 @@
       "id": 8005,
       "name": "Лук (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 190,
+      "sha256": "b8e1d834c5ba2afec64fc19a98e69a047776c7392ad4cbcc68a9f52be0b35d44",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8005/icon/b8e1d834c5ba2afec64fc19a98e69a047776c7392ad4cbcc68a9f52be0b35d44.webp"
     },
     {
       "kind": "item",
@@ -20235,7 +20271,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1391,
+    "publishedSlots": 1403,
     "readySlots": 0,
     "totalSlots": 1848
   }
