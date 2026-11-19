@@ -8476,8 +8476,11 @@
       "id": 7921,
       "name": "Червь",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 189,
+      "sha256": "db976f98b780d0f5c081f620a54f8b3f1827117aa0b5a0cc696f5ec5a2fc4651",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7921/icon/db976f98b780d0f5c081f620a54f8b3f1827117aa0b5a0cc696f5ec5a2fc4651.webp"
     },
     {
       "kind": "item",
@@ -9807,8 +9810,11 @@
       "id": 7983,
       "name": "Аэрозеп",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 189,
+      "sha256": "f36d177f5bd20490fbcecda878175ca098825d6be3fc6ecd48320d7f7d31f228",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7983/icon/f36d177f5bd20490fbcecda878175ca098825d6be3fc6ecd48320d7f7d31f228.webp"
     },
     {
       "kind": "item",
@@ -9826,8 +9832,11 @@
       "id": 7984,
       "name": "Многоцелевой аэродин AV-4",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 189,
+      "sha256": "e0af13c62a9fd62c11e84ef330e892dc217d83a780c26735c6c26acf51bf197d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7984/icon/e0af13c62a9fd62c11e84ef330e892dc217d83a780c26735c6c26acf51bf197d.webp"
     },
     {
       "kind": "item",
@@ -9845,8 +9854,11 @@
       "id": 7985,
       "name": "Супер аэродин AV-9",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 189,
+      "sha256": "6cb2e77aa7085de2485af75d6b2bac55fcb00ea12715cab256c182c07cb0a5b5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7985/icon/6cb2e77aa7085de2485af75d6b2bac55fcb00ea12715cab256c182c07cb0a5b5.webp"
     },
     {
       "kind": "item",
@@ -9864,8 +9876,11 @@
       "id": 7986,
       "name": "Прогулочный катер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 189,
+      "sha256": "d3d81654573ed8fea0b40946b741fe9cdec8e4dc5efbee5e9d0730fb86b70fac",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7986/icon/d3d81654573ed8fea0b40946b741fe9cdec8e4dc5efbee5e9d0730fb86b70fac.webp"
     },
     {
       "kind": "item",
@@ -9883,8 +9898,11 @@
       "id": 7987,
       "name": "Компактный автомобиль",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 189,
+      "sha256": "c75e8249ff8f82f0b1542a2274f049b0da9050d1dbf4d9113910f8834b88f7f3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7987/icon/c75e8249ff8f82f0b1542a2274f049b0da9050d1dbf4d9113910f8834b88f7f3.webp"
     },
     {
       "kind": "item",
@@ -9902,8 +9920,11 @@
       "id": 7988,
       "name": "Автожир",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 189,
+      "sha256": "8b294e68e481a84ace3b20a3cdb62e763c86a24951e23dcbf4545f901ec4ca0b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7988/icon/8b294e68e481a84ace3b20a3cdb62e763c86a24951e23dcbf4545f901ec4ca0b.webp"
     },
     {
       "kind": "item",
@@ -9921,8 +9942,11 @@
       "id": 7989,
       "name": "Вертолёт",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 189,
+      "sha256": "085a8bdeac31cb835fe6a5e792080e3153591c628f2157216f78947bc45f579f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7989/icon/085a8bdeac31cb835fe6a5e792080e3153591c628f2157216f78947bc45f579f.webp"
     },
     {
       "kind": "item",
@@ -9940,8 +9964,11 @@
       "id": 7990,
       "name": "Спортивный автомобиль",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 189,
+      "sha256": "ee98ef68a5bfc012ef1e430b112342a809f5cddd8c0e450728ff70f9bee2f496",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7990/icon/ee98ef68a5bfc012ef1e430b112342a809f5cddd8c0e450728ff70f9bee2f496.webp"
     },
     {
       "kind": "item",
@@ -9959,8 +9986,11 @@
       "id": 7991,
       "name": "Гидроцикл",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 189,
+      "sha256": "21fab3f0c4915a517f6786330c009dd77d442113a3cbde538d7a65c09812785e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7991/icon/21fab3f0c4915a517f6786330c009dd77d442113a3cbde538d7a65c09812785e.webp"
     },
     {
       "kind": "item",
@@ -9978,8 +10008,11 @@
       "id": 7992,
       "name": "Дорожный мотоцикл",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 189,
+      "sha256": "b3348d12d4ebec6639e2a37cae18a0ec57eaa842a2a10358aa218b4d94f04d4a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7992/icon/b3348d12d4ebec6639e2a37cae18a0ec57eaa842a2a10358aa218b4d94f04d4a.webp"
     },
     {
       "kind": "item",
@@ -9997,8 +10030,11 @@
       "id": 7993,
       "name": "Быстроходный катер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 189,
+      "sha256": "55ba981351b61ec7cfef8caca7a26da82d6d22bcc13fc7699337dd48a8ebc9dd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7993/icon/55ba981351b61ec7cfef8caca7a26da82d6d22bcc13fc7699337dd48a8ebc9dd.webp"
     },
     {
       "kind": "item",
@@ -20199,7 +20235,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1379,
+    "publishedSlots": 1391,
     "readySlots": 0,
     "totalSlots": 1848
   }

@@ -1,0 +1,525 @@
+{
+  "batch": 189,
+  "sourceId": 3,
+  "system": "Cyberpunk RED",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-189",
+  "assets": [
+    {
+      "key": "item-7921-icon",
+      "target": {
+        "kind": "item",
+        "id": 7921,
+        "typeId": 33,
+        "name": "Червь"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Worm — visual reference for the subject only: A GOLDEN MECHANICAL WORM with NEON GREEN EYES curls beside a closed geometric data gate, one segment entering a small virtual opening. Render only the defining object, head or emblem as a compact isolated icon; omit the reference scenery\" (Червь), the \"program-worm\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-81817476-bfba-4345-bb6c-2f0e1d3de60d.png",
+      "original": "originals/item-7921.png",
+      "final": "final/item-7921.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "9dc96383fd8c816c7e59f3a927e9791205c9ddc087ed96a368140e3497fb7468",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "db976f98b780d0f5c081f620a54f8b3f1827117aa0b5a0cc696f5ec5a2fc4651",
+      "bytes": 16864,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51000,
+        "objectKey": "system-item-media/v1/items/7921/icon/db976f98b780d0f5c081f620a54f8b3f1827117aa0b5a0cc696f5ec5a2fc4651.webp",
+        "fileSize": 16864
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7921/icon/db976f98b780d0f5c081f620a54f8b3f1827117aa0b5a0cc696f5ec5a2fc4651.webp"
+    },
+    {
+      "key": "item-7983-icon",
+      "target": {
+        "kind": "item",
+        "id": 7983,
+        "typeId": 36,
+        "name": "Аэрозеп"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Aerozep\" (Аэрозеп), the \"vehicle-aerozep\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c969e12d-8e39-4f4a-8272-3b86f8c66ec3.png",
+      "original": "originals/item-7983.png",
+      "final": "final/item-7983.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "c68c432bf42bcffb66c2da0c26ce7ceb6c25121a82071f6e345e3ae17d197c39",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "f36d177f5bd20490fbcecda878175ca098825d6be3fc6ecd48320d7f7d31f228",
+      "bytes": 11718,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51001,
+        "objectKey": "system-item-media/v1/items/7983/icon/f36d177f5bd20490fbcecda878175ca098825d6be3fc6ecd48320d7f7d31f228.webp",
+        "fileSize": 11718
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7983/icon/f36d177f5bd20490fbcecda878175ca098825d6be3fc6ecd48320d7f7d31f228.webp"
+    },
+    {
+      "key": "item-7984-icon",
+      "target": {
+        "kind": "item",
+        "id": 7984,
+        "typeId": 36,
+        "name": "Многоцелевой аэродин AV-4"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"AV-4 Multipurpose Aerodyne\" (Многоцелевой аэродин AV-4), the \"vehicle-av-4-multipurpose-aerodyne\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e8e2b328-de0b-47bb-8aa9-212f7e663064.png",
+      "original": "originals/item-7984.png",
+      "final": "final/item-7984.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "075fc8432e3497f8b25aad93588291887ea81a579a3da55002d119671059a891",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "e0af13c62a9fd62c11e84ef330e892dc217d83a780c26735c6c26acf51bf197d",
+      "bytes": 14048,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51002,
+        "objectKey": "system-item-media/v1/items/7984/icon/e0af13c62a9fd62c11e84ef330e892dc217d83a780c26735c6c26acf51bf197d.webp",
+        "fileSize": 14048
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7984/icon/e0af13c62a9fd62c11e84ef330e892dc217d83a780c26735c6c26acf51bf197d.webp"
+    },
+    {
+      "key": "item-7985-icon",
+      "target": {
+        "kind": "item",
+        "id": 7985,
+        "typeId": 36,
+        "name": "Супер аэродин AV-9"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"AV-9 Super Aerodyne\" (Супер аэродин AV-9), the \"vehicle-av-9-super-aerodyne\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f633735a-d309-4d63-ad12-fc5b1d1e9126.png",
+      "original": "originals/item-7985.png",
+      "final": "final/item-7985.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "3127e274d23c8c7db2324bfa18012459880213c842342384b0df4228f8cd2457",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "6cb2e77aa7085de2485af75d6b2bac55fcb00ea12715cab256c182c07cb0a5b5",
+      "bytes": 10752,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51003,
+        "objectKey": "system-item-media/v1/items/7985/icon/6cb2e77aa7085de2485af75d6b2bac55fcb00ea12715cab256c182c07cb0a5b5.webp",
+        "fileSize": 10752
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7985/icon/6cb2e77aa7085de2485af75d6b2bac55fcb00ea12715cab256c182c07cb0a5b5.webp"
+    },
+    {
+      "key": "item-7986-icon",
+      "target": {
+        "kind": "item",
+        "id": 7986,
+        "typeId": 36,
+        "name": "Прогулочный катер"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Cabin Cruiser\" (Прогулочный катер), the \"vehicle-cabin-cruiser\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-adb9411d-52a3-4d77-9e42-0c7f49301769.png",
+      "original": "originals/item-7986.png",
+      "final": "final/item-7986.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "32c299115d26cd79d98ab98372993c5cacfdd20fb4a44987c570ea7e2f8317a1",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "d3d81654573ed8fea0b40946b741fe9cdec8e4dc5efbee5e9d0730fb86b70fac",
+      "bytes": 11612,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51004,
+        "objectKey": "system-item-media/v1/items/7986/icon/d3d81654573ed8fea0b40946b741fe9cdec8e4dc5efbee5e9d0730fb86b70fac.webp",
+        "fileSize": 11612
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7986/icon/d3d81654573ed8fea0b40946b741fe9cdec8e4dc5efbee5e9d0730fb86b70fac.webp"
+    },
+    {
+      "key": "item-7987-icon",
+      "target": {
+        "kind": "item",
+        "id": 7987,
+        "typeId": 36,
+        "name": "Компактный автомобиль"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Compact Groundcar\" (Компактный автомобиль), the \"vehicle-compact-groundcar\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4427934a-6cde-460d-8aac-b1bd8983b095.png",
+      "original": "originals/item-7987.png",
+      "final": "final/item-7987.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "c3438e72fd7a91fbd030123da02afcfaf103fe98195b06226fe1479e8342de79",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "c75e8249ff8f82f0b1542a2274f049b0da9050d1dbf4d9113910f8834b88f7f3",
+      "bytes": 12738,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51005,
+        "objectKey": "system-item-media/v1/items/7987/icon/c75e8249ff8f82f0b1542a2274f049b0da9050d1dbf4d9113910f8834b88f7f3.webp",
+        "fileSize": 12738
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7987/icon/c75e8249ff8f82f0b1542a2274f049b0da9050d1dbf4d9113910f8834b88f7f3.webp"
+    },
+    {
+      "key": "item-7988-icon",
+      "target": {
+        "kind": "item",
+        "id": 7988,
+        "typeId": 36,
+        "name": "Автожир"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Gyrocopter\" (Автожир), the \"vehicle-gyrocopter\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-232c5616-91bb-4ba8-84b3-c484e9e32603.png",
+      "original": "originals/item-7988.png",
+      "final": "final/item-7988.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "dc4df1408522404368d8bf3696c3ab4e978b360695c64ff6637e81af1149d991",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "8b294e68e481a84ace3b20a3cdb62e763c86a24951e23dcbf4545f901ec4ca0b",
+      "bytes": 12874,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51006,
+        "objectKey": "system-item-media/v1/items/7988/icon/8b294e68e481a84ace3b20a3cdb62e763c86a24951e23dcbf4545f901ec4ca0b.webp",
+        "fileSize": 12874
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7988/icon/8b294e68e481a84ace3b20a3cdb62e763c86a24951e23dcbf4545f901ec4ca0b.webp"
+    },
+    {
+      "key": "item-7989-icon",
+      "target": {
+        "kind": "item",
+        "id": 7989,
+        "typeId": 36,
+        "name": "Вертолёт"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Helicopter\" (Вертолёт), the \"vehicle-helicopter\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-824b0824-989b-4f26-bdf9-09165a0f39dc.png",
+      "original": "originals/item-7989.png",
+      "final": "final/item-7989.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "6f84847c5ee886073149ee9cd954163afe89e05a0b40beb61ccf7aba29672304",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "085a8bdeac31cb835fe6a5e792080e3153591c628f2157216f78947bc45f579f",
+      "bytes": 14176,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51007,
+        "objectKey": "system-item-media/v1/items/7989/icon/085a8bdeac31cb835fe6a5e792080e3153591c628f2157216f78947bc45f579f.webp",
+        "fileSize": 14176
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7989/icon/085a8bdeac31cb835fe6a5e792080e3153591c628f2157216f78947bc45f579f.webp"
+    },
+    {
+      "key": "item-7990-icon",
+      "target": {
+        "kind": "item",
+        "id": 7990,
+        "typeId": 36,
+        "name": "Спортивный автомобиль"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"High Performance Groundcar\" (Спортивный автомобиль), the \"vehicle-high-performance-groundcar\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5e14c912-555e-43d8-bf06-c5d7e37f546f.png",
+      "original": "originals/item-7990.png",
+      "final": "final/item-7990.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "f0bdb5689d464c2d2c81168947493fbce3782de92f4d1d0f7408343786912f8e",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "ee98ef68a5bfc012ef1e430b112342a809f5cddd8c0e450728ff70f9bee2f496",
+      "bytes": 10406,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51008,
+        "objectKey": "system-item-media/v1/items/7990/icon/ee98ef68a5bfc012ef1e430b112342a809f5cddd8c0e450728ff70f9bee2f496.webp",
+        "fileSize": 10406
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7990/icon/ee98ef68a5bfc012ef1e430b112342a809f5cddd8c0e450728ff70f9bee2f496.webp"
+    },
+    {
+      "key": "item-7991-icon",
+      "target": {
+        "kind": "item",
+        "id": 7991,
+        "typeId": 36,
+        "name": "Гидроцикл"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Jetski\" (Гидроцикл), the \"vehicle-jetski\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c140ad92-7182-4354-8a9f-1a0118f09eb8.png",
+      "original": "originals/item-7991.png",
+      "final": "final/item-7991.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "c4f3507baa8b1067af2292c81a7dda256e3a1fee73e0ba480b059315d5634b97",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "21fab3f0c4915a517f6786330c009dd77d442113a3cbde538d7a65c09812785e",
+      "bytes": 11890,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51009,
+        "objectKey": "system-item-media/v1/items/7991/icon/21fab3f0c4915a517f6786330c009dd77d442113a3cbde538d7a65c09812785e.webp",
+        "fileSize": 11890
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7991/icon/21fab3f0c4915a517f6786330c009dd77d442113a3cbde538d7a65c09812785e.webp"
+    },
+    {
+      "key": "item-7992-icon",
+      "target": {
+        "kind": "item",
+        "id": 7992,
+        "typeId": 36,
+        "name": "Дорожный мотоцикл"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Roadbike\" (Дорожный мотоцикл), the \"vehicle-roadbike\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-76c4de00-9e54-4a7c-916a-fa6660daed01.png",
+      "original": "originals/item-7992.png",
+      "final": "final/item-7992.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "a849a1dbe1745078992549d9c09ac6289466bee0ebcc3d1cf0c8bce8a338ec49",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "b3348d12d4ebec6639e2a37cae18a0ec57eaa842a2a10358aa218b4d94f04d4a",
+      "bytes": 17336,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51010,
+        "objectKey": "system-item-media/v1/items/7992/icon/b3348d12d4ebec6639e2a37cae18a0ec57eaa842a2a10358aa218b4d94f04d4a.webp",
+        "fileSize": 17336
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7992/icon/b3348d12d4ebec6639e2a37cae18a0ec57eaa842a2a10358aa218b4d94f04d4a.webp"
+    },
+    {
+      "key": "item-7993-icon",
+      "target": {
+        "kind": "item",
+        "id": 7993,
+        "typeId": 36,
+        "name": "Быстроходный катер"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Speedboat\" (Быстроходный катер), the \"vehicle-speedboat\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f7665c98-3f0c-4e79-8a69-a8d2ba002eb1.png",
+      "original": "originals/item-7993.png",
+      "final": "final/item-7993.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "e6e812f6a0ce924867ddf58430d8508bf15ea67b7e003ed34d8d7956c34c34ac",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "55ba981351b61ec7cfef8caca7a26da82d6d22bcc13fc7699337dd48a8ebc9dd",
+      "bytes": 10004,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51011,
+        "objectKey": "system-item-media/v1/items/7993/icon/55ba981351b61ec7cfef8caca7a26da82d6d22bcc13fc7699337dd48a8ebc9dd.webp",
+        "fileSize": 10004
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7993/icon/55ba981351b61ec7cfef8caca7a26da82d6d22bcc13fc7699337dd48a8ebc9dd.webp"
+    }
+  ]
+}
