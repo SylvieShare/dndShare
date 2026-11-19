@@ -12500,8 +12500,11 @@
       "id": 8102,
       "name": "Улица",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 201,
+      "sha256": "9881cfced34ab07b4a9980afd9e23ffcbdf45b70b55cb36bf330d63331c85ea0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8102/icon/9881cfced34ab07b4a9980afd9e23ffcbdf45b70b55cb36bf330d63331c85ea0.webp"
     },
     {
       "kind": "item",
@@ -12519,8 +12522,11 @@
       "id": 8103,
       "name": "Машина на улице",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 201,
+      "sha256": "1deaea01360d3e2c81cf69069931c171ca66b69e94cfd7076ea02751ba0252a1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8103/icon/1deaea01360d3e2c81cf69069931c171ca66b69e94cfd7076ea02751ba0252a1.webp"
     },
     {
       "kind": "item",
@@ -12538,8 +12544,11 @@
       "id": 8104,
       "name": "Кубический отель",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 201,
+      "sha256": "cd9a08c5d8217cdb179120a8b370db94a26316db0ff74ac20cb9d69b5baad335",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8104/icon/cd9a08c5d8217cdb179120a8b370db94a26316db0ff74ac20cb9d69b5baad335.webp"
     },
     {
       "kind": "item",
@@ -12557,8 +12566,11 @@
       "id": 8105,
       "name": "Грузовой контейнер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 201,
+      "sha256": "515524e624520aa5a3b580bb3827698e06c062127b32bd7200c1fa087a2dd45b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8105/icon/515524e624520aa5a3b580bb3827698e06c062127b32bd7200c1fa087a2dd45b.webp"
     },
     {
       "kind": "item",
@@ -12576,8 +12588,11 @@
       "id": 8106,
       "name": "Студия",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 201,
+      "sha256": "7d13421c7d2f8cd1798d91925ead0d0a43e51a437c133d52d8c390715bca83ff",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8106/icon/7d13421c7d2f8cd1798d91925ead0d0a43e51a437c133d52d8c390715bca83ff.webp"
     },
     {
       "kind": "item",
@@ -12595,8 +12610,11 @@
       "id": 8107,
       "name": "Двухкомнатные апартаменты",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 201,
+      "sha256": "53c24fb298d0849b39463ae7edd1eb5b218c8012fc270a72ede1630606b6654f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8107/icon/53c24fb298d0849b39463ae7edd1eb5b218c8012fc270a72ede1630606b6654f.webp"
     },
     {
       "kind": "item",
@@ -12614,8 +12632,11 @@
       "id": 8108,
       "name": "Корпоративный конапт",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 201,
+      "sha256": "47c8e1aacf29bc2e2a16a21bcbab2e6f3304319f138d5a46f56fe60e26e525dd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8108/icon/47c8e1aacf29bc2e2a16a21bcbab2e6f3304319f138d5a46f56fe60e26e525dd.webp"
     },
     {
       "kind": "item",
@@ -12633,8 +12654,11 @@
       "id": 8109,
       "name": "Высококлассный конапт",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 201,
+      "sha256": "8979326eb73275e4b368b699df8982cd58dadf4417556ad044a235a33509d183",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8109/icon/8979326eb73275e4b368b699df8982cd58dadf4417556ad044a235a33509d183.webp"
     },
     {
       "kind": "item",
@@ -12652,8 +12676,11 @@
       "id": 8110,
       "name": "Роскошный пентхаус",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 201,
+      "sha256": "705b4f59c3a8d2a0d9706df41823b46039c73fc8a527ceb21de9cf70f9af726b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8110/icon/705b4f59c3a8d2a0d9706df41823b46039c73fc8a527ceb21de9cf70f9af726b.webp"
     },
     {
       "kind": "item",
@@ -13049,8 +13076,11 @@
       "id": 8129,
       "name": "Бес",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 201,
+      "sha256": "b428bd554bf2053a3dee1d8f4bf0c0134e711ae3f3269420809e1f0787fd6d78",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8129/icon/b428bd554bf2053a3dee1d8f4bf0c0134e711ae3f3269420809e1f0787fd6d78.webp"
     },
     {
       "kind": "item",
@@ -13068,8 +13098,11 @@
       "id": 8130,
       "name": "Ифрит",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 201,
+      "sha256": "2c9a71eb2e62b98072b660213a21ff0086511fc5c8d50d5369efe7b69cb42de9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8130/icon/2c9a71eb2e62b98072b660213a21ff0086511fc5c8d50d5369efe7b69cb42de9.webp"
     },
     {
       "kind": "item",
@@ -13087,8 +13120,11 @@
       "id": 8131,
       "name": "Балрон",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 201,
+      "sha256": "0ffa9878e8feda8165374f98e10f8606355f9ca48f73871430c58a965eecf40a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8131/icon/0ffa9878e8feda8165374f98e10f8606355f9ca48f73871430c58a965eecf40a.webp"
     },
     {
       "kind": "item",
@@ -20631,7 +20667,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1523,
+    "publishedSlots": 1535,
     "readySlots": 0,
     "totalSlots": 1848
   }
