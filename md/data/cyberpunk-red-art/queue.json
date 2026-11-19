@@ -11655,8 +11655,11 @@
       "id": 8067,
       "name": "Крикун",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 196,
+      "sha256": "bb1a754c586e27e726251b297b5d07ff541f5a0edd36d3b1c0eb8841297ecb88",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8067/icon/bb1a754c586e27e726251b297b5d07ff541f5a0edd36d3b1c0eb8841297ecb88.webp"
     },
     {
       "kind": "item",
@@ -11674,8 +11677,11 @@
       "id": 8068,
       "name": "Кувалда",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 196,
+      "sha256": "fbf04d9e70a170594d33a80ef91779d290090381b04203753dace772bc93c73f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8068/icon/fbf04d9e70a170594d33a80ef91779d290090381b04203753dace772bc93c73f.webp"
     },
     {
       "kind": "item",
@@ -11693,8 +11699,11 @@
       "id": 8069,
       "name": "Кувалда (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 196,
+      "sha256": "991a9c91f1d62e30dc68711c9e1582c7a3f9d9c57b4dea2fdbe0312567834941",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8069/icon/991a9c91f1d62e30dc68711c9e1582c7a3f9d9c57b4dea2fdbe0312567834941.webp"
     },
     {
       "kind": "item",
@@ -11712,8 +11721,11 @@
       "id": 8070,
       "name": "Кувалда (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 196,
+      "sha256": "639cd0df8c5afb35b5ea228a8df2408478e209d7dcbb8fc2880ba843dcf65006",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8070/icon/639cd0df8c5afb35b5ea228a8df2408478e209d7dcbb8fc2880ba843dcf65006.webp"
     },
     {
       "kind": "item",
@@ -11731,8 +11743,11 @@
       "id": 8071,
       "name": "ПП",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 196,
+      "sha256": "77fc811f10aa806017538e75b72b18500200be8dbf98fa456b0bfb91d23d72c8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8071/icon/77fc811f10aa806017538e75b72b18500200be8dbf98fa456b0bfb91d23d72c8.webp"
     },
     {
       "kind": "item",
@@ -11750,8 +11765,11 @@
       "id": 8072,
       "name": "ПП (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 196,
+      "sha256": "179539310bb9ac904cabad5956a659f05dff9df618d2876f7286635b883833ba",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8072/icon/179539310bb9ac904cabad5956a659f05dff9df618d2876f7286635b883833ba.webp"
     },
     {
       "kind": "item",
@@ -11769,8 +11787,11 @@
       "id": 8073,
       "name": "ПП (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 196,
+      "sha256": "1001fe22dd64805fc1d2045b702fca1ffdc5311cdb09ea5f6244b235994f40b4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8073/icon/1001fe22dd64805fc1d2045b702fca1ffdc5311cdb09ea5f6244b235994f40b4.webp"
     },
     {
       "kind": "item",
@@ -11788,8 +11809,11 @@
       "id": 8074,
       "name": "Снайперская винтовка",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 196,
+      "sha256": "16cb7962ce2c1f5e3e816139f5636ae52703704cfd6a6436f9a17f96fa040742",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8074/icon/16cb7962ce2c1f5e3e816139f5636ae52703704cfd6a6436f9a17f96fa040742.webp"
     },
     {
       "kind": "item",
@@ -11807,8 +11831,11 @@
       "id": 8075,
       "name": "Снайперская винтовка (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 196,
+      "sha256": "72fe86fe7c1bc8549244b98da0e93c8767d8fb1bd9a4bb7ca7150b79918a7dec",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8075/icon/72fe86fe7c1bc8549244b98da0e93c8767d8fb1bd9a4bb7ca7150b79918a7dec.webp"
     },
     {
       "kind": "item",
@@ -11826,8 +11853,11 @@
       "id": 8076,
       "name": "Снайперская винтовка (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 196,
+      "sha256": "4847b0ec80f2a8692a460e2c62b7ca36c8f45857ba69a474a9c08fb0e4aa9ab7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8076/icon/4847b0ec80f2a8692a460e2c62b7ca36c8f45857ba69a474a9c08fb0e4aa9ab7.webp"
     },
     {
       "kind": "item",
@@ -11845,8 +11875,11 @@
       "id": 8077,
       "name": "Бита с гвоздями",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 196,
+      "sha256": "541b0e178362ae24e38902c7d861e601a10362fa41fa6a18c54b331cf905af0c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8077/icon/541b0e178362ae24e38902c7d861e601a10362fa41fa6a18c54b331cf905af0c.webp"
     },
     {
       "kind": "item",
@@ -11864,8 +11897,11 @@
       "id": 8078,
       "name": "Бита с гвоздями (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 196,
+      "sha256": "3ddeaf51eda5f7881c69da94654ff9e834a18740bdea0adeee93d99bbe962716",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8078/icon/3ddeaf51eda5f7881c69da94654ff9e834a18740bdea0adeee93d99bbe962716.webp"
     },
     {
       "kind": "item",
@@ -20451,7 +20487,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1463,
+    "publishedSlots": 1475,
     "readySlots": 0,
     "totalSlots": 1848
   }
