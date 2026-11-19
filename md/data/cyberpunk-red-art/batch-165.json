@@ -1,0 +1,526 @@
+{
+  "batch": 165,
+  "sourceId": 3,
+  "system": "Cyberpunk RED",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-165",
+  "assets": [
+    {
+      "key": "item-7613-icon",
+      "target": {
+        "kind": "item",
+        "id": 7613,
+        "typeId": 21,
+        "name": "Кожанка"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Leathers (Body)\" (Кожанка), the \"armor-leathers-body\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-099082b4-43c0-4800-a4a7-3259cc8375ce.png",
+      "original": "originals/item-7613.png",
+      "final": "final/item-7613.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "ff1866212ab7f2720107c8c63bd43259350334c9e086985d0401001b999d5182",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "c693ef20bf3a5124b12fa836ce5a1e8293c5829c74a7ac470d1a7f2ba55d99dc",
+      "bytes": 18350,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50712,
+        "objectKey": "system-item-media/v1/items/7613/icon/c693ef20bf3a5124b12fa836ce5a1e8293c5829c74a7ac470d1a7f2ba55d99dc.webp",
+        "fileSize": 18350
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7613/icon/c693ef20bf3a5124b12fa836ce5a1e8293c5829c74a7ac470d1a7f2ba55d99dc.webp"
+    },
+    {
+      "key": "item-7614-icon",
+      "target": {
+        "kind": "item",
+        "id": 7614,
+        "typeId": 21,
+        "name": "Кожанный шлем"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Leathers (Head)\" (Кожанный шлем), the \"armor-leathers-head\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8aa91f62-5d47-499c-9df2-6eac9e97d588.png",
+      "original": "originals/item-7614.png",
+      "final": "final/item-7614.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "203b56a91a1e54ce43c438f63905b25ec0395bd14102f59f91ab7e915365cd03",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "32ba656f6bd5dd6254f0479a7724482e0ec8a53741e304f0796f8e6ed3997ab3",
+      "bytes": 13890,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50713,
+        "objectKey": "system-item-media/v1/items/7614/icon/32ba656f6bd5dd6254f0479a7724482e0ec8a53741e304f0796f8e6ed3997ab3.webp",
+        "fileSize": 13890
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7614/icon/32ba656f6bd5dd6254f0479a7724482e0ec8a53741e304f0796f8e6ed3997ab3.webp"
+    },
+    {
+      "key": "item-7615-icon",
+      "target": {
+        "kind": "item",
+        "id": 7615,
+        "typeId": 21,
+        "name": "Лёгкий бронекостюм"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Light Armorjack (Body)\" (Лёгкий бронекостюм), the \"armor-light-armorjack-body\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-41410083-ebeb-4341-a03d-11e5962421d4.png",
+      "original": "originals/item-7615.png",
+      "final": "final/item-7615.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "f0b0c42f841b4be370e47e72fa532502ed2c007bbb84f7bf8f2c562fde1cb9b1",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "1160e4d91e9e1fc09bbbbfa684baa29358fae815145dba515e699346846de7ac",
+      "bytes": 13806,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50714,
+        "objectKey": "system-item-media/v1/items/7615/icon/1160e4d91e9e1fc09bbbbfa684baa29358fae815145dba515e699346846de7ac.webp",
+        "fileSize": 13806
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7615/icon/1160e4d91e9e1fc09bbbbfa684baa29358fae815145dba515e699346846de7ac.webp"
+    },
+    {
+      "key": "item-7616-icon",
+      "target": {
+        "kind": "item",
+        "id": 7616,
+        "typeId": 21,
+        "name": "Лёгкий бронешлем"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Light Armorjack (Head)\" (Лёгкий бронешлем), the \"armor-light-armorjack-head\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c101a801-9fd0-469b-911d-f1a88c3852f0.png",
+      "original": "originals/item-7616.png",
+      "final": "final/item-7616.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "9314893c1aae67e8873f4e614fa034c496a90150d41657cb46990d1e7bbc85a0",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "2220c4a116da612c6a6aae935b51a9048871b51d00751139d60051c9d5a443be",
+      "bytes": 15830,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50715,
+        "objectKey": "system-item-media/v1/items/7616/icon/2220c4a116da612c6a6aae935b51a9048871b51d00751139d60051c9d5a443be.webp",
+        "fileSize": 15830
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7616/icon/2220c4a116da612c6a6aae935b51a9048871b51d00751139d60051c9d5a443be.webp"
+    },
+    {
+      "key": "item-7617-icon",
+      "target": {
+        "kind": "item",
+        "id": 7617,
+        "typeId": 21,
+        "name": "Средний бронекостюм"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Medium Armorjack (Body)\" (Средний бронекостюм), the \"armor-medium-armorjack-body\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0883fe50-ebfb-4a58-b379-dc57290ea8b2.png",
+      "original": "originals/item-7617.png",
+      "final": "final/item-7617.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "cc8990a2e1a5b5f70444f16ddd605e977ca867108a00e85df50a1d5e017ad78d",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "e4e303555024921d3a631733b19d2840aa7ea60a8e4649e806bb6e559dd88d03",
+      "bytes": 18402,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50716,
+        "objectKey": "system-item-media/v1/items/7617/icon/e4e303555024921d3a631733b19d2840aa7ea60a8e4649e806bb6e559dd88d03.webp",
+        "fileSize": 18402
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7617/icon/e4e303555024921d3a631733b19d2840aa7ea60a8e4649e806bb6e559dd88d03.webp"
+    },
+    {
+      "key": "item-7618-icon",
+      "target": {
+        "kind": "item",
+        "id": 7618,
+        "typeId": 21,
+        "name": "Средний бронешлем"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Medium Armorjack (Head)\" (Средний бронешлем), the \"armor-medium-armorjack-head\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-bfcf1e19-467e-44aa-a156-d8aceb377d78.png",
+      "original": "originals/item-7618.png",
+      "final": "final/item-7618.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "4a20f60bbdfb6cea7243f8d30135bf03fb6858252c04ac12b7734f2cffbf386f",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "34862ca5351f8cad7f55ce8ec64acb838d1f4c0938608da26cfa69772fdbb6da",
+      "bytes": 15688,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50717,
+        "objectKey": "system-item-media/v1/items/7618/icon/34862ca5351f8cad7f55ce8ec64acb838d1f4c0938608da26cfa69772fdbb6da.webp",
+        "fileSize": 15688
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7618/icon/34862ca5351f8cad7f55ce8ec64acb838d1f4c0938608da26cfa69772fdbb6da.webp"
+    },
+    {
+      "key": "item-7619-icon",
+      "target": {
+        "kind": "item",
+        "id": 7619,
+        "typeId": 21,
+        "name": "Металлическая броня"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Metalgear® (Body)\" (Металлическая броня), the \"armor-metalgear-body\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7c9f24c2-fb87-41a8-b027-06891b459b80.png",
+      "original": "originals/item-7619.png",
+      "final": "final/item-7619.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "e028b400552d07929c377c31cb4f7487e6a03de60f2a1f77e83ad436695fe942",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "3e48e4983234bff4920eec2b336c9f0111381484a79e83638d31fa395bbf525e",
+      "bytes": 17190,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50718,
+        "objectKey": "system-item-media/v1/items/7619/icon/3e48e4983234bff4920eec2b336c9f0111381484a79e83638d31fa395bbf525e.webp",
+        "fileSize": 17190
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7619/icon/3e48e4983234bff4920eec2b336c9f0111381484a79e83638d31fa395bbf525e.webp"
+    },
+    {
+      "key": "item-7620-icon",
+      "target": {
+        "kind": "item",
+        "id": 7620,
+        "typeId": 21,
+        "name": "Металлический шлем"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Metalgear® (Head)\" (Металлический шлем), the \"armor-metalgear-head\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6e60b9d8-0a3a-40c0-9c5f-0e611b902c91.png",
+      "original": "originals/item-7620.png",
+      "final": "final/item-7620.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "71d32ddd541c4d882872acf4e89c9abdd20626fb7c084817861c7ed6f0c5bd9d",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "8d31feb2a6fa913a334cbd12e82a41a11bca206b7b55fd8583f6695842e0269e",
+      "bytes": 16148,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50719,
+        "objectKey": "system-item-media/v1/items/7620/icon/8d31feb2a6fa913a334cbd12e82a41a11bca206b7b55fd8583f6695842e0269e.webp",
+        "fileSize": 16148
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7620/icon/8d31feb2a6fa913a334cbd12e82a41a11bca206b7b55fd8583f6695842e0269e.webp"
+    },
+    {
+      "key": "item-8117-icon",
+      "target": {
+        "kind": "item",
+        "id": 8117,
+        "typeId": 22,
+        "name": "Аспид"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"asp\" (Аспид), the \"ice-asp\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b6648dda-485a-4479-93a0-b0ae62aecaa4.png",
+      "original": "originals/item-8117.png",
+      "final": "final/item-8117.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "cf18f924f38c0476af020609c1f5d54fa9fc03a556317833b5257ddc9e6a0ec9",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "edfe00f6813da291b8cd30e90cb71be2280fccb5c59f1c491cb04c95059a7eac",
+      "bytes": 16238,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50720,
+        "objectKey": "system-item-media/v1/items/8117/icon/edfe00f6813da291b8cd30e90cb71be2280fccb5c59f1c491cb04c95059a7eac.webp",
+        "fileSize": 16238
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8117/icon/edfe00f6813da291b8cd30e90cb71be2280fccb5c59f1c491cb04c95059a7eac.webp"
+    },
+    {
+      "key": "item-8118-icon",
+      "target": {
+        "kind": "item",
+        "id": 8118,
+        "typeId": 22,
+        "name": "Великан"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: GIANT, a Black ICE defensive virtual entity in a fictional NET. A pair of impossibly enormous slate armored boots standing close together, lower legs terminating at the top in a clean cyan digital dissolve. Low three-quarter view, strong angular silhouettes and cool white edges. No people, no coats, no torso, no floor.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8b194bb7-d0c9-4df1-a34a-8d73b1f91e1f.png",
+      "original": "originals/item-8118.png",
+      "final": "final/item-8118.webp",
+      "width": 128,
+      "height": 128,
+      "rejectedOriginal": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c61539bc-8982-4114-ad0d-a47f276f6f87.png",
+      "originalSha256": "deae764fc6a0463a1eb9768108a55cfec37b4ee28208bb1c5b5763eb012326fb",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "1db286dc438af33049aeba60ae07f3ace7f17fc585d34cd3e8dede157c7f08fb",
+      "bytes": 15644,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50721,
+        "objectKey": "system-item-media/v1/items/8118/icon/1db286dc438af33049aeba60ae07f3ace7f17fc585d34cd3e8dede157c7f08fb.webp",
+        "fileSize": 15644
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8118/icon/1db286dc438af33049aeba60ae07f3ace7f17fc585d34cd3e8dede157c7f08fb.webp"
+    },
+    {
+      "key": "item-8119-icon",
+      "target": {
+        "kind": "item",
+        "id": 8119,
+        "typeId": 22,
+        "name": "Адская гончая"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"hellhound\" (Адская гончая), the \"ice-hellhound\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-86cb41cb-bada-4b59-9b62-ae995588f8b1.png",
+      "original": "originals/item-8119.png",
+      "final": "final/item-8119.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "35c7b9809dc1f040e1e8a883f1b166aa843f7ff7b250f3b7772045add0f01d1e",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "f1a1f90934d79f3b6a85e3a6341e8ad73005148a268a72d4cd79cd78639c3405",
+      "bytes": 17188,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50722,
+        "objectKey": "system-item-media/v1/items/8119/icon/f1a1f90934d79f3b6a85e3a6341e8ad73005148a268a72d4cd79cd78639c3405.webp",
+        "fileSize": 17188
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8119/icon/f1a1f90934d79f3b6a85e3a6341e8ad73005148a268a72d4cd79cd78639c3405.webp"
+    },
+    {
+      "key": "item-8120-icon",
+      "target": {
+        "kind": "item",
+        "id": 8120,
+        "typeId": 22,
+        "name": "Кракен"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"kraken\" (Кракен), the \"ice-kraken\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-745641ed-263b-46bf-99fa-0324b0ba305e.png",
+      "original": "originals/item-8120.png",
+      "final": "final/item-8120.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "01d9a6712ecd44297d1b4457debcd400f901f4074f1ca0edc4aee615ecd4ff7a",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "72cb3443eefa537a0c2390f511feb839feb45809826342f638b34bca483374e4",
+      "bytes": 20020,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50723,
+        "objectKey": "system-item-media/v1/items/8120/icon/72cb3443eefa537a0c2390f511feb839feb45809826342f638b34bca483374e4.webp",
+        "fileSize": 20020
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8120/icon/72cb3443eefa537a0c2390f511feb839feb45809826342f638b34bca483374e4.webp"
+    }
+  ]
+}

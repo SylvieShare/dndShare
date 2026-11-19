@@ -1796,8 +1796,11 @@
       "id": 7613,
       "name": "Кожанка",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 165,
+      "sha256": "c693ef20bf3a5124b12fa836ce5a1e8293c5829c74a7ac470d1a7f2ba55d99dc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7613/icon/c693ef20bf3a5124b12fa836ce5a1e8293c5829c74a7ac470d1a7f2ba55d99dc.webp"
     },
     {
       "kind": "item",
@@ -1815,8 +1818,11 @@
       "id": 7614,
       "name": "Кожанный шлем",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 165,
+      "sha256": "32ba656f6bd5dd6254f0479a7724482e0ec8a53741e304f0796f8e6ed3997ab3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7614/icon/32ba656f6bd5dd6254f0479a7724482e0ec8a53741e304f0796f8e6ed3997ab3.webp"
     },
     {
       "kind": "item",
@@ -1834,8 +1840,11 @@
       "id": 7615,
       "name": "Лёгкий бронекостюм",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 165,
+      "sha256": "1160e4d91e9e1fc09bbbbfa684baa29358fae815145dba515e699346846de7ac",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7615/icon/1160e4d91e9e1fc09bbbbfa684baa29358fae815145dba515e699346846de7ac.webp"
     },
     {
       "kind": "item",
@@ -1853,8 +1862,11 @@
       "id": 7616,
       "name": "Лёгкий бронешлем",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 165,
+      "sha256": "2220c4a116da612c6a6aae935b51a9048871b51d00751139d60051c9d5a443be",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7616/icon/2220c4a116da612c6a6aae935b51a9048871b51d00751139d60051c9d5a443be.webp"
     },
     {
       "kind": "item",
@@ -1872,8 +1884,11 @@
       "id": 7617,
       "name": "Средний бронекостюм",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 165,
+      "sha256": "e4e303555024921d3a631733b19d2840aa7ea60a8e4649e806bb6e559dd88d03",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7617/icon/e4e303555024921d3a631733b19d2840aa7ea60a8e4649e806bb6e559dd88d03.webp"
     },
     {
       "kind": "item",
@@ -1891,8 +1906,11 @@
       "id": 7618,
       "name": "Средний бронешлем",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 165,
+      "sha256": "34862ca5351f8cad7f55ce8ec64acb838d1f4c0938608da26cfa69772fdbb6da",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7618/icon/34862ca5351f8cad7f55ce8ec64acb838d1f4c0938608da26cfa69772fdbb6da.webp"
     },
     {
       "kind": "item",
@@ -1910,8 +1928,11 @@
       "id": 7619,
       "name": "Металлическая броня",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 165,
+      "sha256": "3e48e4983234bff4920eec2b336c9f0111381484a79e83638d31fa395bbf525e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7619/icon/3e48e4983234bff4920eec2b336c9f0111381484a79e83638d31fa395bbf525e.webp"
     },
     {
       "kind": "item",
@@ -1929,8 +1950,11 @@
       "id": 7620,
       "name": "Металлический шлем",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 165,
+      "sha256": "8d31feb2a6fa913a334cbd12e82a41a11bca206b7b55fd8583f6695842e0269e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7620/icon/8d31feb2a6fa913a334cbd12e82a41a11bca206b7b55fd8583f6695842e0269e.webp"
     },
     {
       "kind": "item",
@@ -11525,8 +11549,11 @@
       "id": 8117,
       "name": "Аспид",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 165,
+      "sha256": "edfe00f6813da291b8cd30e90cb71be2280fccb5c59f1c491cb04c95059a7eac",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8117/icon/edfe00f6813da291b8cd30e90cb71be2280fccb5c59f1c491cb04c95059a7eac.webp"
     },
     {
       "kind": "item",
@@ -11544,8 +11571,11 @@
       "id": 8118,
       "name": "Великан",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 165,
+      "sha256": "1db286dc438af33049aeba60ae07f3ace7f17fc585d34cd3e8dede157c7f08fb",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8118/icon/1db286dc438af33049aeba60ae07f3ace7f17fc585d34cd3e8dede157c7f08fb.webp"
     },
     {
       "kind": "item",
@@ -11563,8 +11593,11 @@
       "id": 8119,
       "name": "Адская гончая",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 165,
+      "sha256": "f1a1f90934d79f3b6a85e3a6341e8ad73005148a268a72d4cd79cd78639c3405",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8119/icon/f1a1f90934d79f3b6a85e3a6341e8ad73005148a268a72d4cd79cd78639c3405.webp"
     },
     {
       "kind": "item",
@@ -11582,8 +11615,11 @@
       "id": 8120,
       "name": "Кракен",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 165,
+      "sha256": "72cb3443eefa537a0c2390f511feb839feb45809826342f638b34bca483374e4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8120/icon/72cb3443eefa537a0c2390f511feb839feb45809826342f638b34bca483374e4.webp"
     },
     {
       "kind": "item",
@@ -19335,7 +19371,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1091,
+    "publishedSlots": 1103,
     "readySlots": 0,
     "totalSlots": 1848
   }
