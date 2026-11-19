@@ -345,33 +345,6 @@ onMounted(() => initialize())
 </script>
 
 <style scoped>
-:deep(.cc-main), :deep(.cc-foot-main) {
-  border-inline: 1px solid color-mix(in srgb, var(--border-strong) 62%, transparent);
-}
-:deep(.cc-foot-main) {
-  border-top-color: color-mix(in srgb, var(--border-strong) 72%, transparent);
-}
-.cc-reason { font-size: 12px; color: var(--text-muted); }
-.cc-error { max-width: 520px; color: var(--danger); font-size: 12px; }
-.btn { border: none; border-radius: 9px; padding: 10px 22px; font: inherit; font-weight: 600; cursor: pointer; }
-.btn.disabled { opacity: .48; cursor: pointer; }
 :deep(.cc-main--invalid) { animation: cc-invalid .6s ease; }
 @keyframes cc-invalid { 0%, 100% { box-shadow: none; } 35% { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--danger) 72%, transparent); } }
-.btn.ghost { background: transparent; color: var(--text-2); box-shadow: inset 0 0 0 1px var(--border-strong); }
-.btn.ghost:hover { color: var(--text-1); }
-.btn.soft { background: transparent; color: var(--text-muted); padding-inline: 14px; font-size: 13px; }
-.btn.soft:hover:not(:disabled) { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); color: var(--text-1); }
-.btn.next { background: var(--accent); color: var(--text-on-accent); }
-.btn.next:hover:not(:disabled) { background: var(--accent-hover); }
-.btn.create { background: var(--accent); color: var(--text-on-accent); }
-.btn.create:hover:not(:disabled) { background: var(--accent-hover); }
-.btn:disabled { opacity: 0.5; cursor: default; }
-
-
-@media (max-width: 640px) {
-  :deep(.cc-main), :deep(.cc-foot-main) { border-inline: none; }
-  .cc-error { order: -1; flex: 0 0 100%; max-width: none; }
-  .btn { padding: 10px 18px; }
-  .btn.soft { padding-inline: 10px; }
-}
 </style>

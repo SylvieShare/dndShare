@@ -2,6 +2,7 @@ export function redCatalogueItem(row) {
   return row.data
     ? {
         id: row.id,
+        typeId: row.typeId,
         key: row.userId ? `custom-${row.id}` : row.data.red_key,
         name: row.name,
         nameEn: row.nameEn,

@@ -181,7 +181,7 @@
           :draft="draft"
           :items="items"
           :summary="shopping"
-          :cover="art.collectionCover('Снаряжение')"
+          :type-by-id="art.typeById"
           @patch="patch"
         />
       </template>

@@ -13,7 +13,7 @@ async function fixture(page){
  let data=finishRedCreation({...options,name:'STATIC',role:'netrunner',method:'streetrat',stats:redStatsFromRolls('netrunner','streetrat',[6]),statRolls:[6],skills:redInitialSkills('netrunner','streetrat',options),kitChoices:Object.fromEntries(RED_STARTING_KITS.netrunner.filter(r=>r.choice).map(r=>[r.choice,0])),cart:[]},core.items)
  let version=1;const rolls=[]
  const response=()=>({uuid,id:1,templateId:3,templateName:'CYBERPUNK_RED',sourceName:'Cyberpunk',sourceId:3,sourceVersionId:30,sourceVersion:'RED',version,userId:1,publicVisible:true,data})
- const items=core.items.map((i,index)=>({id:index+1000,typeId:100,name:i.name,nameEn:i.nameEn,coverImageUrl:i.kind==='role'?cover:undefined,data:{red_key:i.key,red_kind:i.kind,price_eb:i.facts.price,facts:i.facts},contentSources:[{page:i.page}]}))
+ const items=core.items.map((i,index)=>({id:index+1000,typeId:i.kind==='cyberware'?101:100,name:i.name,nameEn:i.nameEn,coverImageUrl:i.kind==='role'?cover:undefined,data:{red_key:i.key,red_kind:i.kind,price_eb:i.facts.price,facts:i.facts},contentSources:[{page:i.page}]}))
  await page.route('**/test-red-cover.svg',route=>route.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" width="50" height="20"><rect width="50" height="20" fill="teal"/></svg>'}))
  await page.route(url=>url.pathname.startsWith('/api/'),async route=>{
   const request=route.request(),url=new URL(request.url()),path=url.pathname,method=request.method()
@@ -34,7 +34,7 @@ async function fixture(page){
    '/api/templates':{templates:[{id:1,name:'DND5'},{id:2,name:'VTM20'},{id:3,name:'CYBERPUNK_RED'}]},
    '/api/cyberpunk-red/catalogue':{items,revision:core.revision,groups:core.groups},
    '/api/chars':{chars:[response()],sessionsByChar:{}},
-   '/api/item-types':{types:[{name:'Снаряжение',coverImageUrl:cover},{name:'Киберимпланты',coverImageUrl:cover}]},
+   '/api/item-types':{types:[{id:100,name:'Снаряжение',iconImageUrl:cover,coverImageUrl:cover},{id:101,name:'Киберимпланты',iconImageUrl:cover,coverImageUrl:cover}]},
    '/api/items/by-ids':{items:[]},
    '/api/suggest/types':{items:[{id:36,name:'Методы создания'},{id:34,name:'Характеристики',coverImageUrl:cover},{id:38,name:'Навыки',coverImageUrl:cover}]},
    '/api/suggest/36':{items:[{code:'complete',coverImageUrl:cover}]},
@@ -330,11 +330,14 @@ for(const width of [390,840,1440]){
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
   await rail.getByText('Магазин',{exact:true}).click()
   await expect(page.getByRole('heading',{name:'Магазин',exact:true})).toBeVisible()
-  await expect(page.locator('.creation-cover')).toHaveJSProperty('naturalWidth',50)
+  await expect(main.locator('.shop-summary .kit-panel')).toBeVisible()
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
+  const widthOfBorder = await main.evaluate(node => getComputedStyle(node).borderLeftWidth)
+  expect(widthOfBorder).toBe(width <= 640 ? '0px' : '1px')
   const shop=main.locator('.wizard-shop')
   await shop.locator('.categories').getByRole('button',{name:/Киберимпланты/}).click()
-  await shop.locator('.shop-entry button').first().click()
+  await expect(shop.locator('.categories button[aria-pressed=true] img')).toHaveAttribute('src',cover)
+  await shop.locator('.shop-add').first().click()
   await expect(shop.getByText('Расположение',{exact:true})).toBeVisible()
   await shop.getByRole('button',{name:'Убрать',exact:true}).click()
   await rail.getByText('Завершение',{exact:true}).click()

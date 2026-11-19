@@ -15,7 +15,7 @@
       :disabled="disabled || !activatable"
       @click="$emit('activate', item)"
     >
-      <ItemIcon class="item-reference-icon" :item="item" :type="type" :size="64" placeholder />
+      <slot name="icon"><ItemIcon class="item-reference-icon" :item="item" :type="type" :size="64" placeholder /></slot>
       <span class="item-reference-info">
         <span class="item-reference-main">
           <span class="item-reference-name">

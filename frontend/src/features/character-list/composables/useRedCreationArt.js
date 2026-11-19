@@ -36,6 +36,7 @@ export function useRedCreationArt() {
     load: sourceId => Promise.allSettled([loadDictionaries(sourceId), loadCollections(sourceId)]),
     dictionaryCover,
     collectionCover,
+    typeById: id => collectionTypes.value.find(type => type.id === id),
     stat: skillArt.stat,
     skill: skillArt.skill,
     methodCover: key => methods.value.find(row => row.code === key)?.coverImageUrl || dictionaryCover('Методы создания'),

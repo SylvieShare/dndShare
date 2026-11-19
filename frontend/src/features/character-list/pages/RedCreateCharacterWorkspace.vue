@@ -32,18 +32,16 @@
       />
     </Transition>
     <template #actions>
-        <p v-if="blockReason" class="red-step-reason" role="status">{{ blockReason }}</p>
-        <ActionButton variant="quiet" @click="step > 0 ? step-- : exit()">
-          {{ step ? "Назад" : "Отмена" }}
-        </ActionButton>
-        <div class="cc-actions">
-          <ActionButton v-if="step === lastStep" variant="quiet" :disabled="creating || !available || !fullyValid" @click="preview">
-            Предпросмотр листа
-          </ActionButton>
-          <ActionButton :disabled="creating || !available || !!blockReason" @click="advance">
-            {{ creating ? "Создание…" : step < lastStep ? "Далее" : "Создать персонажа" }}
-          </ActionButton>
-        </div>
+      <button type="button" class="btn ghost" @click="step > 0 ? step-- : exit()">{{ step ? "Назад" : "Отмена" }}</button>
+      <span v-if="blockReason" class="cc-reason red-step-reason" role="status">{{ blockReason }}</span>
+      <div class="cc-actions">
+        <button v-if="step === lastStep" type="button" class="btn soft" :disabled="creating || !available || !fullyValid" @click="preview">
+          Предпросмотр листа
+        </button>
+        <button type="button" class="btn" :class="step < lastStep ? 'next' : 'create'" :disabled="creating || !available || !!blockReason" @click="advance">
+          {{ creating ? "Создание…" : step < lastStep ? "Далее" : "Создать персонажа" }}
+        </button>
+      </div>
     </template>
     <template #dialogs>
       <CharacterSheetModal
@@ -301,13 +299,5 @@ defineExpose({ clearDraft: wizard.clearDraft });
   src="../../character-editor/components/sheet/cyberpunk-red/redSheet.css"
 ></style>
 <style scoped>
-:deep(.red-wizard-main) { padding-block-start: var(--spacing-medium); }
 :deep(.red-wizard-main) > [role="alert"] { margin: 0 0 var(--spacing-medium); }
-:deep(.cc-foot-main) { flex-wrap: wrap; }
-.red-step-reason {
-  flex: 1 1 100%;
-  margin: 0;
-  color: var(--text-muted);
-  font-size: var(--type-group-size);
-}
 </style>

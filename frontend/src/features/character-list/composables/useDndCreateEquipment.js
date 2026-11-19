@@ -200,7 +200,7 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
   }
 
   return {
-    loadEquipmentCatalogue, ensureEquipmentCatalogueItems, equipmentCatalogue, shopLoading,
+    loadEquipmentCatalogue, ensureEquipmentCatalogueItems, equipmentCatalogue, typeById, shopLoading,
     classEquipmentProfile, classEquipmentComplete, classEquipment, allEquipment,
     selectEquipmentOption, setEquipmentPick,
     addEquipment, removeEquipment, bumpEquipment,

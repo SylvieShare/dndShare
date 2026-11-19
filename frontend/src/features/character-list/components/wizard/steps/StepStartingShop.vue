@@ -1,79 +1,43 @@
 <template>
   <div class="shop-step">
-    <WizardShop :items="startingShopItems" :loading="shopLoading" :categories="categories" :category-of="categoryOf">
+    <WizardShop :items="startingShopItems" :loading="shopLoading" :categories="categories" :category-of="categoryOf" :cart-count="cartCount">
       <template #item="{ item }">
-        <div class="shop-item">
-          <ItemReferenceRow
-            :item="item"
-            :count="purchaseQuantity(item)"
-            :params="item.params"
-            roomy-weapon
-            @activate="viewItem = item"
-            @details="viewItem = item"
-            show-details
-          />
-          <button
-            type="button"
-            class="shop-add"
-            :disabled="!canBuyShopItem(item)"
-            :title="canBuyShopItem(item) ? `Купить за ${priceLabel(item)}` : 'Не хватает монет'"
-            @click="buy(item)"
-          >
-            <Plus :size="15" aria-hidden="true" />
-            {{ priceLabel(item) }}
-          </button>
-        </div>
+        <WizardShopOffer :item="item" :count="purchaseQuantity(item)" :price="priceLabel(item)"
+          :disabled="!canBuyShopItem(item)" @buy="buy(item)" @details="viewItem = item" />
       </template>
       <template #budget>
-        <section class="wealth-card">
-          <MultiToggle v-if="startingWealthFormulaLabel" :model-value="wealthMode" aria-label="Способ определения богатства" :options="wealthOptions" @update:model-value="requestReroll" />
-          <div class="wealth-copy">
-            <span class="wealth-kicker">Начальное богатство{{ wealthMode === 'roll' ? ' · ' + startingWealthFormulaLabel : '' }}</span>
-            <strong>{{ state.startingWealthRoll?.gold || 0 }} зм</strong>
-            <div v-if="state.startingWealthRoll?.rolls?.length" class="wealth-rolls">
-              <SystemDie v-for="(roll, index) in state.startingWealthRoll.rolls" :key="index" :sides="4" :value="roll" :size="34" :animated="false" />
-              <small>× {{ state.startingWealthRoll.multiplier }}</small>
-            </div>
+        <MultiToggle v-if="startingWealthFormulaLabel" :model-value="wealthMode" aria-label="Способ определения богатства" :options="wealthOptions" @update:model-value="requestReroll" />
+        <div class="wealth-copy">
+          <span class="wealth-kicker">Начальное богатство{{ wealthMode === 'roll' ? ' · ' + startingWealthFormulaLabel : '' }}</span>
+          <strong>{{ state.startingWealthRoll?.gold || 0 }} зм</strong>
+          <div v-if="state.startingWealthRoll?.rolls?.length" class="wealth-rolls">
+            <SystemDie v-for="(roll, index) in state.startingWealthRoll.rolls" :key="index" :sides="4" :value="roll" :size="34" :animated="false" />
+            <small>× {{ state.startingWealthRoll.multiplier }}</small>
           </div>
-          <button v-if="wealthMode === 'roll'" type="button" class="reroll" @click="requestReroll('roll')">
-            <Dices :size="17" aria-hidden="true" />
-            Перебросить
-          </button>
-          <div class="wealth-totals">
-            <span><small>Потрачено</small>{{ shopSpentLabel }}</span>
-            <span class="remaining"><small>Останется в кошельке</small>{{ shopRemainingLabel }}</span>
-          </div>
-        </section>
+        </div>
+        <button v-if="wealthMode === 'roll'" type="button" class="reroll" @click="requestReroll('roll')">
+          <Dices :size="17" aria-hidden="true" />
+          Перебросить
+        </button>
+        <div class="wealth-totals">
+          <span><small>Потрачено</small>{{ shopSpentLabel }}</span>
+          <span class="remaining"><small>Останется в кошельке</small>{{ shopRemainingLabel }}</span>
+        </div>
       </template>
       <template #cart>
-        <aside class="cart">
-          <div class="cart-heading">
-            <div>
-              <span>Корзина</span>
-              <small>{{ cartCountLabel }}</small>
-            </div>
-            <ShoppingBasket :size="20" aria-hidden="true" />
-          </div>
-          <div v-if="!state.startingShopCart.length" class="cart-empty">Добавляйте предметы из каталога. Покупки сразу считаются в бюджете.</div>
-          <div v-else class="cart-items">
-            <div v-for="entry in state.startingShopCart" :key="`${entry.item_id}:${JSON.stringify(entry.params)}`" class="cart-item">
-              <button class="cart-name" type="button" @click="viewItem = entry"><WizardShopItemIcon :item="entry" :size="30" :fallback="icons[entry.typeId]" />{{ instanceName(entry) }}</button>
-              <span class="cart-price">{{ priceLabel(entry) }}{{ packagingNote(entry) ? ` / ${purchaseQuantity(entry)} шт.` : '' }}</span>
-              <div class="cart-quantity">
-                <button type="button" aria-label="Уменьшить" @click="bumpShopItem(entry, -1)">−</button>
-                <strong>{{ entry.count }}</strong>
-                <button type="button" aria-label="Увеличить" :disabled="!canBuyShopItem(entry)" @click="bumpShopItem(entry, 1)">+</button>
-              </div>
-              <button class="cart-remove" type="button" aria-label="Убрать" @click="removeShopItem(entry)">
-                <X :size="14" aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-          <div class="cart-footer">
-            <span>Итого <strong>{{ shopSpentLabel }}</strong></span>
-            <span>Остаток <strong>{{ shopRemainingLabel }}</strong></span>
-          </div>
-        </aside>
+        <WizardShopCartLine v-for="entry in state.startingShopCart" :key="`${entry.item_id}:${JSON.stringify(entry.params)}`"
+          :item="entry" :name="instanceName(entry)" :price="priceLabel(entry) + (packagingNote(entry) ? ' / ' + purchaseQuantity(entry) + ' шт.' : '')"
+          @details="viewItem = entry" @remove="removeShopItem(entry)">
+          <template #quantity>
+            <button type="button" aria-label="Уменьшить" @click="bumpShopItem(entry, -1)">−</button>
+            <strong>{{ entry.count }}</strong>
+            <button type="button" aria-label="Увеличить" :disabled="!canBuyShopItem(entry)" @click="bumpShopItem(entry, 1)">+</button>
+          </template>
+        </WizardShopCartLine>
+      </template>
+      <template #totals>
+        <span>Итого <strong>{{ shopSpentLabel }}</strong></span>
+        <span>Остаток <strong>{{ shopRemainingLabel }}</strong></span>
       </template>
     </WizardShop>
 
@@ -99,21 +63,21 @@
 <script setup>
 import { MultiToggle } from '@sylvieshare/share-ui'
 import { computed, inject, ref } from 'vue'
-import { Dices, Plus, ShoppingBasket, X, Backpack, Wrench, Sword, Shield, FlaskConical, Car, WandSparkles } from '@lucide/vue'
+import { Dices } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import WizardShop from '../WizardShop.vue'
 import SystemDie from '@/shared/ui/SystemDie.vue'
-import WizardShopItemIcon from '../WizardShopItemIcon.vue'
+import WizardShopCartLine from '../WizardShopCartLine.vue'
+import WizardShopOffer from '../WizardShopOffer.vue'
 import MagicEquipmentInstanceModal from '@/features/items/components/MagicEquipmentInstanceModal.vue'
 import { initialChargeStocks } from '@/shared/lib/itemInitialCharges'
 import { magicEquipmentKinds } from '@/features/items/lib/magicEquipmentBases'
-import ItemReferenceRow from '@/features/items/components/ItemReferenceRow.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { formatCopper, itemCostCopper } from '@/features/character-editor/settings/dnd/creation/startingShop'
 import { packagingNote, purchaseQuantity } from '@/features/items/lib/itemPackaging'
 
 const {
-  state, shopLoading, startingShopItems, startingWealthFormulaLabel,
+  state, shopLoading, typeById, startingShopItems, startingWealthFormulaLabel,
   shopSpentLabel, shopRemainingLabel,
   addShopItem, removeShopItem, bumpShopItem, canBuyShopItem, rerollStartingWealth,
 } = inject('createWizard')
@@ -127,8 +91,7 @@ const TYPE_LABELS = [
   { id: 13, label: 'Транспорт' },
   { id: 19, label: 'Магические предметы' },
 ]
-const icons = { 2: Backpack, 14: Wrench, 1: Sword, 12: Shield, 10: FlaskConical, 13: Car, 19: WandSparkles }
-const categories = TYPE_LABELS.map(group => ({ ...group, icon: icons[group.id] }))
+const categories = computed(() => TYPE_LABELS.map(group => ({ ...group, type: typeById(group.id) })))
 const categoryOf = item => Number(item.typeId)
 const wealthMode = computed(() => state.startingWealthRoll?.rolls?.length ? 'roll' : 'fixed')
 const wealthOptions = [{ value: 'fixed', label: 'По умолчанию' }, { value: 'roll', label: 'Бросок' }]
@@ -139,7 +102,6 @@ function buy(item) { if (magicEquipmentKinds(item).length || initialChargeStocks
 function confirmPurchase(params) { addShopItem({ ...pendingPurchase.value, params }); pendingPurchase.value = null }
 const rerollConfirmOpen = ref(false)
 const cartCount = computed(() => state.startingShopCart.reduce((sum, entry) => sum + Math.max(1, Number(entry.count) || 1), 0))
-const cartCountLabel = computed(() => cartCount.value ? `${cartCount.value} шт.` : 'Пока пусто')
 const priceLabel = (item) => formatCopper(itemCostCopper(item))
 const instanceName = (entry) => entry.params?.length_ft != null ? `${entry.name} · ${entry.params.length_ft} фт.` : entry.name
 
@@ -152,44 +114,8 @@ function confirmReroll() { rerollConfirmOpen.value = false; rerollStartingWealth
 </script>
 
 <style scoped>
-.shop-step { display: flex; flex-direction: column; gap: 14px; }
-.wealth-card { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px 18px; padding: 16px 18px; border: 1px solid color-mix(in srgb, var(--warning) 38%, var(--border)); border-radius: calc(var(--r-md) + 3px); background: radial-gradient(circle at 8% 0%, color-mix(in srgb, var(--warning) 15%, transparent), transparent 38%), var(--surface); }
-.wealth-copy { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; }
-.wealth-kicker { width: 100%; color: var(--warning); font-size: 10px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
-.wealth-copy strong { color: var(--text-1); font-family: var(--font-display); font-size: 30px; }
 .wealth-rolls { display: flex; align-items: center; gap: 5px; }
 .wealth-rolls small { color: var(--text-muted); font-size: 11px; }
 .reroll { align-self: center; display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface-raised); color: var(--text-1); font: inherit; font-size: 12px; font-weight: 650; cursor: pointer; }
 .reroll:hover { border-color: var(--warning); color: var(--warning); }
-.wealth-totals { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.wealth-totals span { display: flex; flex-direction: column; gap: 2px; padding: 9px 11px; border-radius: var(--r-sm); background: color-mix(in srgb, var(--bg) 80%, transparent); color: var(--text-1); font-size: 14px; font-weight: 750; }
-.wealth-totals small { color: var(--text-muted); font-size: 9px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
-.wealth-totals .remaining { color: var(--success); }
-.cart { min-width: 0; border: 1px solid var(--border); border-radius: calc(var(--r-md) + 2px); background: color-mix(in srgb, var(--surface) 72%, transparent); }
-.shop-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; }
-.shop-add { display: flex; align-items: center; justify-content: center; gap: 5px; min-width: 84px; padding: 0 9px; border: 1px solid color-mix(in srgb, var(--success) 38%, var(--border)); border-radius: var(--r-md); background: color-mix(in srgb, var(--success) 10%, var(--surface)); color: var(--success); font: inherit; font-size: 10px; font-weight: 750; cursor: pointer; white-space: nowrap; }
-.shop-add:hover:not(:disabled) { background: color-mix(in srgb, var(--success) 18%, var(--surface)); }
-.shop-add:disabled { opacity: .35; cursor: not-allowed; }
-.cart { position: sticky; top: 12px; overflow: hidden; }
-.cart-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 13px 14px; border-bottom: 1px solid var(--border); color: var(--accent); }
-.cart-heading > div { display: flex; flex-direction: column; gap: 2px; }
-.cart-heading span { color: var(--text-1); font-family: var(--font-display); font-size: 18px; font-weight: 700; }
-.cart-heading small { color: var(--text-muted); font-size: 10px; }
-.cart-empty { padding: 28px 16px; color: var(--text-muted); font-size: 12px; line-height: 1.5; text-align: center; }
-.cart-items { display: flex; flex-direction: column; max-height: 470px; overflow-y: auto; }
-.cart-item { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 4px 8px; padding: 10px 12px; }
-.cart-item + .cart-item { border-top: 1px solid var(--border); }
-.cart-name { display: flex; align-items: center; gap: 6px; min-width: 0; padding: 0; border: 0; background: none; color: var(--text-1); font: inherit; font-size: 12px; font-weight: 650; text-align: left; cursor: pointer; }
-.cart-name:hover { color: var(--accent); }
-.cart-price { color: var(--warning); font-size: 10px; font-weight: 700; white-space: nowrap; }
-.cart-quantity { grid-column: 1 / 3; display: flex; align-items: center; gap: 5px; }
-.cart-quantity button, .cart-remove { width: 23px; height: 23px; display: grid; place-items: center; padding: 0; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-raised); color: var(--text-1); cursor: pointer; }
-.cart-quantity button:disabled { opacity: .35; cursor: not-allowed; }
-.cart-quantity strong { min-width: 24px; color: var(--text-1); font-size: 11px; text-align: center; }
-.cart-remove { grid-row: 1 / 3; grid-column: 3; border: 0; background: transparent; color: var(--text-muted); }
-.cart-remove:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
-.cart-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 11px 12px; border-top: 1px solid var(--border); background: var(--surface-raised); }
-.cart-footer span { display: flex; flex-direction: column; gap: 2px; color: var(--text-muted); font-size: 9px; text-transform: uppercase; }
-.cart-footer strong { color: var(--text-1); font-size: 12px; text-transform: none; }
-@media (max-width: 540px) { .wealth-card { grid-template-columns: 1fr; } .reroll { justify-self: start; } .wealth-totals { grid-column: 1; grid-template-columns: 1fr; } .shop-item { grid-template-columns: minmax(0, 1fr); } .shop-add { min-height: 34px; } }
 </style>

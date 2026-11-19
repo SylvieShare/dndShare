@@ -1,0 +1,17 @@
+<template>
+  <div class="cart-item">
+    <button class="cart-name" type="button" @click="$emit('details')">
+      <WizardShopItemIcon :item="item" :size="30" />{{ name || item.name }}
+    </button>
+    <span class="cart-price">{{ price }}</span>
+    <div class="cart-quantity"><slot name="quantity" /></div>
+    <button class="cart-remove" type="button" aria-label="Убрать" @click="$emit('remove')"><X :size="14" /></button>
+    <div v-if="$slots.default" class="cart-options"><slot /></div>
+  </div>
+</template>
+<script setup>
+import { X } from '@lucide/vue'
+import WizardShopItemIcon from './WizardShopItemIcon.vue'
+defineProps({ item: { type: Object, required: true }, name: String, price: String })
+defineEmits(['details', 'remove'])
+</script>

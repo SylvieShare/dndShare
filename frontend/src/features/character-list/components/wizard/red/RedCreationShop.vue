@@ -1,66 +1,32 @@
 <template>
   <div class="red-stack">
-    <RedCreationIntro title="Магазин" :cover="cover" />
-    <WizardShop :items="available" :categories="categories" :category-of="categoryOf" item-key="key">
+    <WizardShop :items="available" :categories="categories" :category-of="categoryOf" item-key="key" :cart-count="cartCount">
       <template #item="{ item }">
-        <div class="red-row shop-entry">
-          <WizardShopItemIcon :item="item" :size="36" :fallback="labels[item.kind]?.[1]" />
-          <span>{{ item.name }}<small>{{ item.facts.price }} eb<template v-if="item.facts.quantity > 1"> / {{ item.facts.quantity }} шт.</template></small></span>
-          <ActionButton :aria-label="'Добавить ' + item.name" @click="add(item)">+</ActionButton>
-        </div>
+        <WizardShopOffer :item="item" :price="item.facts.price + ' eb'" :count="item.facts.quantity || 1"
+          @buy="add(item)" @details="viewItem = item" />
       </template>
       <template #budget>
-        <WizardSectionPanel class="shopping-panel">
-          <div class="red-two">
-            <div>
-              <small>Основной бюджет</small
-              ><strong
-                >{{ summary.generalLimit - summary.general }} /
-                {{ summary.generalLimit }} eb</strong
-              >
-            </div>
-            <div v-if="draft.method === 'complete'">
-              <small>Одежда и fashionware</small
-              ><strong
-                >{{ summary.fashionLimit - summary.fashion }} /
-                {{ summary.fashionLimit }} eb</strong
-              >
-            </div>
-          </div>
-          <p v-for="error in summary.errors" :key="error" class="red-danger">
-            {{ error }}
-          </p>
-        </WizardSectionPanel>
+        <div class="wealth-copy">
+          <span class="wealth-kicker">Начальное богатство</span>
+          <strong>{{ summary.generalLimit }} eb</strong>
+        </div>
+        <div class="wealth-totals">
+          <span><small>Потрачено</small>{{ summary.general }} eb</span>
+          <span class="remaining"><small>Останется в кошельке</small>{{ summary.cash }} eb</span>
+          <template v-if="draft.method === 'complete'">
+            <span><small>Одежда и fashionware</small>{{ summary.fashionLimit }} eb</span>
+            <span><small>Осталось на одежду</small>{{ summary.fashionLimit - summary.fashion }} eb</span>
+          </template>
+        </div>
+        <p v-for="error in summary.errors" :key="error" class="red-danger">{{ error }}</p>
       </template>
       <template #cart>
-        <WizardSectionPanel class="shopping-panel">
-          <h3>Корзина</h3>
-          <p v-if="!draft.cart.length">Покупок пока нет.</p>
-          <div v-for="entry in draft.cart" :key="entry.uid" class="red-list-item">
-            <div class="red-row">
-              <WizardShopItemIcon :item="byKey[entry.key] || entry" :size="32" :fallback="labels[byKey[entry.key]?.kind]?.[1]" />
-              <div>
-                {{ byKey[entry.key]?.name
-                }}<small>{{
-                  entry.pool === "fashion" ? "Одежда" : "Основной бюджет"
-                }}</small>
-              </div>
-              <ActionButton
-                variant="quiet"
-                @click="
-                  emit('patch', {
-                    cart: draft.cart.filter((e) => e.uid !== entry.uid),
-                  })
-                "
-                >Убрать</ActionButton
-              >
-            </div>
-            <FormNumberInput
-              :value="entry.count"
-              :min="1"
-              :max="9999"
-              @change="changeCount(entry, $event)"
-            /><FormField v-if="byKey[entry.key]?.kind === 'cyberware'" label="Расположение" vertical
+        <WizardShopCartLine v-for="entry in draft.cart" :key="entry.uid" :item="byKey[entry.key] || { name: entry.key }"
+          :price="cartPrice(entry)" @details="viewItem = byKey[entry.key]" @remove="remove(entry)">
+          <template #quantity>
+            <FormNumberInput :value="entry.count" :min="1" :max="9999" @change="changeCount(entry, $event)" />
+          </template>
+          <FormField v-if="byKey[entry.key]?.kind === 'cyberware'" label="Расположение" vertical
               ><FormSelect
                 :value="entry.location || ''"
                 @update:value="changeLocation(entry, $event)"
@@ -82,11 +48,14 @@
               ><option value="general">Основной бюджет</option>
               <option value="fashion">Бюджет одежды</option></FormSelect
             >
-          </div>
-        </WizardSectionPanel>
+        </WizardShopCartLine>
+      </template>
+      <template #totals>
+        <span>Итого <strong>{{ summary.general + summary.fashion }} eb</strong></span>
+        <span>Остаток <strong>{{ summary.cash }} eb</strong></span>
       </template>
       <template #extras>
-        <WizardSectionPanel v-if="draft.method !== 'complete'" class="shopping-panel">
+        <WizardSectionPanel v-if="draft.method !== 'complete'" class="shopping-panel kit-panel">
           <h3>Комплект роли</h3>
           <div v-for="choice in choices" :key="choice.choice">
             <FormField label="Выбор в комплекте" vertical
@@ -110,29 +79,34 @@
               ></FormField
             >
           </div>
-          <div v-for="(row, i) in giftRows" :key="i" class="red-row">
-            <span>{{ byKey[row.key]?.name || row.key }}</span
-            ><strong>×{{ row.count }}</strong>
-          </div>
+          <details v-if="giftRows.length" class="kit-grants">
+            <summary>Уже выдано · {{ giftRows.length }} поз.</summary>
+            <div v-for="(row, i) in giftRows" :key="i" class="kit-row">
+              <WizardShopItemIcon :item="byKey[row.key] || {}" :size="30" />
+              <span>{{ byKey[row.key]?.name || row.key }}</span
+              ><strong>×{{ row.count }}</strong>
+            </div>
+          </details>
           <small>Выданное комплектом не уменьшает дополнительные 500 eb.</small>
         </WizardSectionPanel>
       </template>
     </WizardShop>
+    <ItemViewModal v-if="viewItem" :item-id="viewItem.id" :item-type-id="viewItem.typeId" @close="viewItem = null" />
   </div>
 </template>
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import {
-  ActionButton,
   FormField,
   FormSelect,
   FormNumberInput,
 } from "@sylvieshare/share-ui";
 import WizardSectionPanel from "@/shared/ui/WizardSectionPanel.vue";
-import RedCreationIntro from "./RedCreationIntro.vue";
+import ItemViewModal from "@/features/handbook/components/ItemViewModal.vue";
+import WizardShopOffer from "../WizardShopOffer.vue";
+import WizardShopCartLine from "../WizardShopCartLine.vue";
 import WizardShop from "../WizardShop.vue";
 import WizardShopItemIcon from "../WizardShopItemIcon.vue";
-import { Backpack, Cpu, Shield, Crosshair, Shirt, Car, Pill, Package } from "@lucide/vue";
 import {
   RED_STARTING_KITS,
   redKitRows,
@@ -142,24 +116,31 @@ const props = defineProps({
   draft: Object,
   items: Array,
   summary: Object,
-  cover: String,
+  typeById: { type: Function, required: true },
 });
 const emit = defineEmits(["patch"]);
+const viewItem = ref(null);
+const cartCount = computed(() => props.draft.cart.reduce((sum, line) => sum + line.count, 0));
+function cartPrice(entry) {
+  const facts = byKey.value[entry.key]?.facts;
+  return facts ? (facts.price * entry.count / (facts.quantity || 1)) + " eb" : "";
+}
+function remove(entry) {
+  emit("patch", { cart: props.draft.cart.filter(line => line.uid !== entry.uid) });
+}
 const byKey = computed(() => Object.fromEntries(props.items.map(item => [item.key, item])));
-const categoryOf = item => item.kind;
-const labels = {
-  gear: ["Снаряжение", Backpack], cyberware: ["Киберимпланты", Cpu],
-  weapon: ["Оружие", Crosshair], ammo: ["Боеприпасы", Crosshair], armor: ["Броня", Shield],
-  clothing: ["Одежда", Shirt], vehicle: ["Транспорт", Car], drug: ["Препараты", Pill],
-  pharmaceutical: ["Фармацевтика", Pill], cyberdeck: ["Кибердеки", Cpu],
-  program: ["Программы", Cpu], blackIce: ["Чёрный ЛЁД", Cpu], demon: ["Демоны", Cpu],
-  itemUpgrade: ["Модификации", Package], housing: ["Жильё", Package], lifestyle: ["Образ жизни", Package],
-};
+const categoryOf = item => item.typeId;
 const available = computed(() => props.items.filter(item =>
   !["criticalInjury", "role", "skill"].includes(item.kind) && item.facts.price > 0));
-const categories = computed(() => [...new Set([...Object.keys(labels), ...available.value.map(categoryOf)])].map(id => ({
-  id, label: labels[id]?.[0] || id, icon: labels[id]?.[1] || Package,
-})));
+const categories = computed(() => {
+  const groups = new Map();
+  for (const item of available.value) {
+    if (groups.has(item.typeId)) continue;
+    const type = props.typeById(item.typeId);
+    groups.set(item.typeId, { id: item.typeId, label: type?.name || item.kind, type });
+  }
+  return Array.from(groups.values()).sort((a, b) => a.label.localeCompare(b.label, "ru"));
+});
 const choices = computed(() => RED_STARTING_KITS[props.draft.role].filter(row => row.choice));
 const giftRows = computed(() => {
   try {
@@ -209,10 +190,9 @@ function changePool(entry, pool) {
 </script>
 
 <style scoped>
-.shop-entry { padding: var(--spacing-small); background: var(--surface); border-radius: var(--r-md); }
-.shop-entry span { flex: 1; }
-.shop-entry small { display: block; color: var(--text-muted); }
-.shopping-panel h3, .shopping-panel p { margin: 0; }
-.shopping-panel h3 { font-size: var(--type-row-size); }
-.shopping-panel small { display: block; color: var(--text-muted); }
+.kit-panel, .kit-panel > *, .kit-panel :deep(select) { min-width: 0; max-width: 100%; }
+.kit-grants summary { cursor: pointer; font-weight: 600; }
+.kit-row { margin-top: var(--spacing-small); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--spacing-small); overflow-wrap: anywhere; }
+.shopping-panel h3 { margin: 0; font-size: var(--type-row-size); }
+.shopping-panel small { color: var(--text-muted); }
 </style>

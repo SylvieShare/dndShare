@@ -10,6 +10,7 @@ for (const width of [390, 840, 1440]) {
       const catalogues = { 2: [rope], 9: [{ id: 12, typeId: 9, name: 'Воин', data: {} }] }
       const responses = {
         '/api/sources': { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] },
+        '/api/item-types': { types: [{id:2, name:'Снаряжение', iconImageUrl:icon}] },
         '/api/templates': { templates: [{ id: 1, name: 'DND5' }] },
         '/api/items': { items: catalogues[url.searchParams.get('typeId')] || [] },
         '/api/suggest/batch': { items: {} },
@@ -27,7 +28,8 @@ for (const width of [390, 840, 1440]) {
     const shop = page.locator('.wizard-shop')
     const categories = shop.getByRole('group', { name: 'Категории магазина' })
     await expect(categories.getByRole('button')).toHaveCount(1)
-    await expect(categories.locator('svg')).toBeVisible()
+    await expect(categories.locator('img')).toHaveAttribute('src',icon)
+    await expect(page.locator('.cc-main')).toHaveCSS('border-left-width', width <= 640 ? '0px' : '1px')
     const catalogue = await shop.locator('.catalogue').boundingBox()
     const summary = await shop.locator('.shop-summary').boundingBox()
     if (width === 390) expect(summary.y).toBeGreaterThan(catalogue.y)
