@@ -8168,8 +8168,11 @@
       "id": 7907,
       "name": "Доспехи",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 187,
+      "sha256": "9af13fc98885d5cf3e3c6cd098d2a48f8087a050f26cf8fcf7291752873a3459",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7907/icon/9af13fc98885d5cf3e3c6cd098d2a48f8087a050f26cf8fcf7291752873a3459.webp"
     },
     {
       "kind": "item",
@@ -8187,8 +8190,11 @@
       "id": 7908,
       "name": "Банхаммер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 187,
+      "sha256": "e39ccaf28358219c059fca68fde3e739b2f4f1685b16d70a0fd709bbd099b70c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7908/icon/e39ccaf28358219c059fca68fde3e739b2f4f1685b16d70a0fd709bbd099b70c.webp"
     },
     {
       "kind": "item",
@@ -9545,8 +9551,11 @@
       "id": 7973,
       "name": "Бортовое оружие ближнего боя",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 187,
+      "sha256": "8d207fe95204138aa55439ab07ede050d477486338e7c522871769a898c0db3b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7973/icon/8d207fe95204138aa55439ab07ede050d477486338e7c522871769a898c0db3b.webp"
     },
     {
       "kind": "item",
@@ -9564,8 +9573,11 @@
       "id": 7974,
       "name": "Бортовой ракетный блок",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 187,
+      "sha256": "319c469e26660fd1c3bfa7d37387b1b59e910ef75b8aa3faae786ebd4cb27153",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7974/icon/319c469e26660fd1c3bfa7d37387b1b59e910ef75b8aa3faae786ebd4cb27153.webp"
     },
     {
       "kind": "item",
@@ -9583,8 +9595,11 @@
       "id": 7975,
       "name": "Улучшение дальности",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 187,
+      "sha256": "b364e07232b811f4310f92f8cb477293da3830f6aa179acdd195dddb568f15a3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7975/icon/b364e07232b811f4310f92f8cb477293da3830f6aa179acdd195dddb568f15a3.webp"
     },
     {
       "kind": "item",
@@ -9602,8 +9617,11 @@
       "id": 7976,
       "name": "Дополнительные сиденья",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 187,
+      "sha256": "e4d4ca0dae26cd9240becf8cdc4f725979cae123b1a78845cb1ed55e3abea111",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7976/icon/e4d4ca0dae26cd9240becf8cdc4f725979cae123b1a78845cb1ed55e3abea111.webp"
     },
     {
       "kind": "item",
@@ -9621,8 +9639,11 @@
       "id": 7977,
       "name": "Дополнительная безопасность",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 187,
+      "sha256": "99e827b1c3ef96a110c7654d1a68d3e3ee6885640319f1b852508e39eb5dccee",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7977/icon/99e827b1c3ef96a110c7654d1a68d3e3ee6885640319f1b852508e39eb5dccee.webp"
     },
     {
       "kind": "item",
@@ -9640,8 +9661,11 @@
       "id": 7978,
       "name": "Подствольный дробовик",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 187,
+      "sha256": "310937ecc2292469e7bb1df6dda81a7956232ce50d04d4a405ce79a160f57e50",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7978/icon/310937ecc2292469e7bb1df6dda81a7956232ce50d04d4a405ce79a160f57e50.webp"
     },
     {
       "kind": "item",
@@ -9659,8 +9683,11 @@
       "id": 7979,
       "name": "Смартлинк",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 187,
+      "sha256": "48dcd9be6cee7a4bbb0a8263941bae9030045d86866b84345a3dd61f6efd12d0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7979/icon/48dcd9be6cee7a4bbb0a8263941bae9030045d86866b84345a3dd61f6efd12d0.webp"
     },
     {
       "kind": "item",
@@ -9678,8 +9705,11 @@
       "id": 7980,
       "name": "Отсек для контрабанды",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 187,
+      "sha256": "b01e1f92f4a79a26d62960ee1f35feaf3365984c2a34e3bf55a4a3b1a6f2b917",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7980/icon/b01e1f92f4a79a26d62960ee1f35feaf3365984c2a34e3bf55a4a3b1a6f2b917.webp"
     },
     {
       "kind": "item",
@@ -9697,8 +9727,11 @@
       "id": 7981,
       "name": "Снайперский прицел",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 187,
+      "sha256": "c8882f0873d480c478655eb5efce511a7928460c44ca80849ab2f5e744a06e03",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7981/icon/c8882f0873d480c478655eb5efce511a7928460c44ca80849ab2f5e744a06e03.webp"
     },
     {
       "kind": "item",
@@ -9716,8 +9749,11 @@
       "id": 7982,
       "name": "Крепление для тяжёлого оружия",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 187,
+      "sha256": "234b1cf83c5a7a8696f20eb14dbb1e10e287eb705cb6732790f1bd5a74166a5a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7982/icon/234b1cf83c5a7a8696f20eb14dbb1e10e287eb705cb6732790f1bd5a74166a5a.webp"
     },
     {
       "kind": "item",
@@ -20127,7 +20163,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1355,
+    "publishedSlots": 1367,
     "readySlots": 0,
     "totalSlots": 1848
   }
