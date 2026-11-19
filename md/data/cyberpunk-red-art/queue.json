@@ -4826,8 +4826,11 @@
       "id": 7754,
       "name": "Кибернога",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 176,
+      "sha256": "ebae0487570445b9809c9f03da985800a11b2dd1e99cf46cb5ab43ee6552032b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7754/icon/ebae0487570445b9809c9f03da985800a11b2dd1e99cf46cb5ab43ee6552032b.webp"
     },
     {
       "kind": "item",
@@ -4845,8 +4848,11 @@
       "id": 7755,
       "name": "Киберзмея",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 176,
+      "sha256": "4408da86c47f98950cfc271f72f721b0fe8e0f64e8dbbf2eae8902dcd1bfd5f6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7755/icon/4408da86c47f98950cfc271f72f721b0fe8e0f64e8dbbf2eae8902dcd1bfd5f6.webp"
     },
     {
       "kind": "item",
@@ -4864,8 +4870,11 @@
       "id": 7756,
       "name": "Дротикомёт",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 176,
+      "sha256": "eeb407c4efd85bce15504c9f7ebd0a27c68959b44734df08c6fce68c56b0cd41",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7756/icon/eeb407c4efd85bce15504c9f7ebd0a27c68959b44734df08c6fce68c56b0cd41.webp"
     },
     {
       "kind": "item",
@@ -4883,8 +4892,11 @@
       "id": 7757,
       "name": "Щепка со сложным навыком",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 176,
+      "sha256": "4e4d3a17a88a448995e85f1e033e90a4c8a02c815e4f87a3275f836773288217",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7757/icon/4e4d3a17a88a448995e85f1e033e90a4c8a02c815e4f87a3275f836773288217.webp"
     },
     {
       "kind": "item",
@@ -4902,8 +4914,11 @@
       "id": 7758,
       "name": "Шелкография от ЭМИ",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 176,
+      "sha256": "673953dfd108c398028ddd849bd04b2449b1333221b40de65e4dd05f38bf4fe0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7758/icon/673953dfd108c398028ddd849bd04b2449b1333221b40de65e4dd05f38bf4fe0.webp"
     },
     {
       "kind": "item",
@@ -4921,8 +4936,11 @@
       "id": 7759,
       "name": "Улучшенные антитела",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 176,
+      "sha256": "5a6986b321a80ac85f773bf832f00e2b873167c0cb89acfda54e5545010bfd00",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7759/icon/5a6986b321a80ac85f773bf832f00e2b873167c0cb89acfda54e5545010bfd00.webp"
     },
     {
       "kind": "item",
@@ -4940,8 +4958,11 @@
       "id": 7760,
       "name": "Exotic Bodysculpt",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 176,
+      "sha256": "616884467b80df0678d8d9d00996e577cb194a1bd58c136f5c09ce5ef220fde9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7760/icon/616884467b80df0678d8d9d00996e577cb194a1bd58c136f5c09ce5ef220fde9.webp"
     },
     {
       "kind": "item",
@@ -4997,8 +5018,11 @@
       "id": 7763,
       "name": "Жабры",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 176,
+      "sha256": "7c0364bfcab6881e213bc21b3623c0ab1d35d4d6a20142195d786e0f6dc09735",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7763/icon/7c0364bfcab6881e213bc21b3623c0ab1d35d4d6a20142195d786e0f6dc09735.webp"
     },
     {
       "kind": "item",
@@ -5016,8 +5040,11 @@
       "id": 7764,
       "name": "Наращенные мышцы и укреплённые кости",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 176,
+      "sha256": "19bd2346d0d1d7db2ae35de35b10797ad0b0d296cb6a430804fc5d4889e86bc0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7764/icon/19bd2346d0d1d7db2ae35de35b10797ad0b0d296cb6a430804fc5d4889e86bc0.webp"
     },
     {
       "kind": "item",
@@ -5035,8 +5062,11 @@
       "id": 7765,
       "name": "Рука-кошка",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 176,
+      "sha256": "2d8a05a31c6eaab36822d15150b64944756a57b3f60aaa3c29d6b3c4f66c57e5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7765/icon/2d8a05a31c6eaab36822d15150b64944756a57b3f60aaa3c29d6b3c4f66c57e5.webp"
     },
     {
       "kind": "item",
@@ -5054,8 +5084,11 @@
       "id": 7766,
       "name": "Цепкие ступни",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 176,
+      "sha256": "3fe456d385461bcb8de6a75c19af3931830462cd3f7be5370b7e1d9b56e9fb7f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7766/icon/3fe456d385461bcb8de6a75c19af3931830462cd3f7be5370b7e1d9b56e9fb7f.webp"
     },
     {
       "kind": "item",
@@ -5073,8 +5106,11 @@
       "id": 7767,
       "name": "Усиленное экранирование (киберрука)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 176,
+      "sha256": "07e76c0d83c782d0cbea50d7f323dac1ef132610a4feabb9f3e583e324e47b6a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7767/icon/07e76c0d83c782d0cbea50d7f323dac1ef132610a4feabb9f3e583e324e47b6a.webp"
     },
     {
       "kind": "item",
@@ -19731,7 +19767,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1223,
+    "publishedSlots": 1235,
     "readySlots": 0,
     "totalSlots": 1848
   }
