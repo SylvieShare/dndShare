@@ -3154,8 +3154,11 @@
       "id": 7675,
       "name": "Зеркальные очки (обычный прикид)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 171,
+      "sha256": "0f941c6a1713673f9c4e6b957c2721e45fedf0d049032a7e36017b8ec31363f8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7675/icon/0f941c6a1713673f9c4e6b957c2721e45fedf0d049032a7e36017b8ec31363f8.webp"
     },
     {
       "kind": "item",
@@ -3173,8 +3176,11 @@
       "id": 7676,
       "name": "Верх (Обычный прикид)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 171,
+      "sha256": "d07c11c7532467376c03551eb01ce9250f2db5b1af85790860a9bebaa2927cda",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7676/icon/d07c11c7532467376c03551eb01ce9250f2db5b1af85790860a9bebaa2927cda.webp"
     },
     {
       "kind": "item",
@@ -3192,8 +3198,11 @@
       "id": 7677,
       "name": "Низ (высокая мода)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 171,
+      "sha256": "ade1ef6df064e3396d3bf59ad5d89a3a7cb774ac98a538a4b09696584904a6be",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7677/icon/ade1ef6df064e3396d3bf59ad5d89a3a7cb774ac98a538a4b09696584904a6be.webp"
     },
     {
       "kind": "item",
@@ -3211,8 +3220,11 @@
       "id": 7678,
       "name": "Контактные линзы (высокая мода)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 171,
+      "sha256": "6c13b87cfb92ffd60e38bda5e6ce99969056a6e31f63d2c5c73ce94ade4b2b11",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7678/icon/6c13b87cfb92ffd60e38bda5e6ce99969056a6e31f63d2c5c73ce94ade4b2b11.webp"
     },
     {
       "kind": "item",
@@ -3230,8 +3242,11 @@
       "id": 7679,
       "name": "Обувь (высокая мода)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 171,
+      "sha256": "3c59a858473b6fa9e992c3a41051f8e77dc4a11850ae4ea984ff1a2696e82fec",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7679/icon/3c59a858473b6fa9e992c3a41051f8e77dc4a11850ae4ea984ff1a2696e82fec.webp"
     },
     {
       "kind": "item",
@@ -3249,8 +3264,11 @@
       "id": 7680,
       "name": "Очки (высокая мода)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 171,
+      "sha256": "941b4167edae5c06683d8f70cc2ce3e808e556ae50bc4dd65cd9a7e26452710b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7680/icon/941b4167edae5c06683d8f70cc2ce3e808e556ae50bc4dd65cd9a7e26452710b.webp"
     },
     {
       "kind": "item",
@@ -3268,8 +3286,11 @@
       "id": 7681,
       "name": "Головной убор (высокая мода)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 171,
+      "sha256": "14cf3a3b3f7225968e97adfbdd0d423351da4fb1d6f3ae887794aa6713041ce2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7681/icon/14cf3a3b3f7225968e97adfbdd0d423351da4fb1d6f3ae887794aa6713041ce2.webp"
     },
     {
       "kind": "item",
@@ -3287,8 +3308,11 @@
       "id": 7682,
       "name": "Верхняя одежда (высокая мода)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 171,
+      "sha256": "a76a3ed6d5fea0291b7497f65a31629f794ab35fb29d0c1a86856cbd529bfef0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7682/icon/a76a3ed6d5fea0291b7497f65a31629f794ab35fb29d0c1a86856cbd529bfef0.webp"
     },
     {
       "kind": "item",
@@ -3306,8 +3330,11 @@
       "id": 7683,
       "name": "Украшение (высокая мода)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 171,
+      "sha256": "9729f77747ab2d21169acd6a0887762abbb45df385bc29a081335f07bbeda0e9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7683/icon/9729f77747ab2d21169acd6a0887762abbb45df385bc29a081335f07bbeda0e9.webp"
     },
     {
       "kind": "item",
@@ -3325,8 +3352,11 @@
       "id": 7684,
       "name": "Зеркальные очки (высокая мода)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 171,
+      "sha256": "fae6aa4dc1e449acecf740f924bebee19822bc242539225e29887aa693996fe7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7684/icon/fae6aa4dc1e449acecf740f924bebee19822bc242539225e29887aa693996fe7.webp"
     },
     {
       "kind": "item",
@@ -3344,8 +3374,11 @@
       "id": 7685,
       "name": "Верх (высокая мода)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 171,
+      "sha256": "9c2af8f38bf04cdf690528fed264541e1f6965c406bbe55ba8e78ce314b97162",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7685/icon/9c2af8f38bf04cdf690528fed264541e1f6965c406bbe55ba8e78ce314b97162.webp"
     },
     {
       "kind": "item",
@@ -3363,8 +3396,11 @@
       "id": 7686,
       "name": "Низ (спортивки)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 171,
+      "sha256": "0199231931f90bc87755e696ac10b5b26dbb71376207ef9327f9de3bae089399",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7686/icon/0199231931f90bc87755e696ac10b5b26dbb71376207ef9327f9de3bae089399.webp"
     },
     {
       "kind": "item",
@@ -19551,7 +19587,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1163,
+    "publishedSlots": 1175,
     "readySlots": 0,
     "totalSlots": 1848
   }
