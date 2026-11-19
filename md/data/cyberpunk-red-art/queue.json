@@ -740,8 +740,11 @@
       "id": 7565,
       "name": "Граната (с ядом)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 161,
+      "sha256": "76429c2307c0459430313d78f775ef2a23f6b773557fd11038d7fb22877461ea",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7565/icon/76429c2307c0459430313d78f775ef2a23f6b773557fd11038d7fb22877461ea.webp"
     },
     {
       "kind": "item",
@@ -759,8 +762,11 @@
       "id": 7566,
       "name": "Граната (усыпляющая)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 161,
+      "sha256": "cee3922d295e5beb1a7a7f56cf7681ec6aa17bf2b033fe1db54eb40209e88d3a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7566/icon/cee3922d295e5beb1a7a7f56cf7681ec6aa17bf2b033fe1db54eb40209e88d3a.webp"
     },
     {
       "kind": "item",
@@ -778,8 +784,11 @@
       "id": 7567,
       "name": "Граната (дымовая)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 161,
+      "sha256": "3b0114320e2c59c53ddebd2bc020952dce02065925b68823e5a09b7ec96cc1a0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7567/icon/3b0114320e2c59c53ddebd2bc020952dce02065925b68823e5a09b7ec96cc1a0.webp"
     },
     {
       "kind": "item",
@@ -797,8 +806,11 @@
       "id": 7568,
       "name": "Граната (со слезоточивым газом)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 161,
+      "sha256": "2d38a5e2debc26c9445f79916eabc7e1147d82fb9341600c7fdb478edef2da5d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7568/icon/2d38a5e2debc26c9445f79916eabc7e1147d82fb9341600c7fdb478edef2da5d.webp"
     },
     {
       "kind": "item",
@@ -816,8 +828,11 @@
       "id": 7569,
       "name": "Для пистолета крупного калибра (бронебойный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 161,
+      "sha256": "1ee01f0de796c44b0215aa049c688792777956cd77b7dd36e141c40510c29fb4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7569/icon/1ee01f0de796c44b0215aa049c688792777956cd77b7dd36e141c40510c29fb4.webp"
     },
     {
       "kind": "item",
@@ -835,8 +850,11 @@
       "id": 7570,
       "name": "Для пистолета крупного калибра (стандартный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 161,
+      "sha256": "0619992a3caeba9c82ac338f3f2fb1080142e22b97fff93162a3b643b8b4720b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7570/icon/0619992a3caeba9c82ac338f3f2fb1080142e22b97fff93162a3b643b8b4720b.webp"
     },
     {
       "kind": "item",
@@ -854,8 +872,11 @@
       "id": 7571,
       "name": "Для пистолета крупного калибра (экспансивный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 161,
+      "sha256": "ed653d8156ed9b7640998cbdf92769d6c14547d0b54f7a0d51bae42adf4d731b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7571/icon/ed653d8156ed9b7640998cbdf92769d6c14547d0b54f7a0d51bae42adf4d731b.webp"
     },
     {
       "kind": "item",
@@ -873,8 +894,11 @@
       "id": 7572,
       "name": "Для пистолета крупного калибра (зажигательный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 161,
+      "sha256": "4ac3d1c1576bfa8f4a5076158c8d877136a0485532c77527bcf7cfbde3b1a318",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7572/icon/4ac3d1c1576bfa8f4a5076158c8d877136a0485532c77527bcf7cfbde3b1a318.webp"
     },
     {
       "kind": "item",
@@ -892,8 +916,11 @@
       "id": 7573,
       "name": "Для пистолета крупного калибра (резиновый)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 161,
+      "sha256": "bd5ad91ceadb7f195f2530bfa13fb2bc4a5c71222b2728287b57277ff44b6e5f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7573/icon/bd5ad91ceadb7f195f2530bfa13fb2bc4a5c71222b2728287b57277ff44b6e5f.webp"
     },
     {
       "kind": "item",
@@ -911,8 +938,11 @@
       "id": 7574,
       "name": "Для пистолета крупного калибра (умный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 161,
+      "sha256": "6b92b745db79f0964ec0a19b78a1d292ee2e2e4ed2a1bbb1961b27cc575ce71c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7574/icon/6b92b745db79f0964ec0a19b78a1d292ee2e2e4ed2a1bbb1961b27cc575ce71c.webp"
     },
     {
       "kind": "item",
@@ -930,8 +960,11 @@
       "id": 7575,
       "name": "Для пистолета среднего калибра (бронебойный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 161,
+      "sha256": "576d47696f5f8dbdd21ddf7b9f29b256d2850cfd277b96241a369d4486c872ff",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7575/icon/576d47696f5f8dbdd21ddf7b9f29b256d2850cfd277b96241a369d4486c872ff.webp"
     },
     {
       "kind": "item",
@@ -949,8 +982,11 @@
       "id": 7576,
       "name": "Для пистолета среднего калибра (стандартный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 161,
+      "sha256": "253ff3192674e26d0ba60cb42e2eede64f3a6f44d4d97ce5298d3b6975ec89ef",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7576/icon/253ff3192674e26d0ba60cb42e2eede64f3a6f44d4d97ce5298d3b6975ec89ef.webp"
     },
     {
       "kind": "item",
@@ -19191,7 +19227,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1043,
+    "publishedSlots": 1055,
     "readySlots": 0,
     "totalSlots": 1848
   }
