@@ -11108,8 +11108,11 @@
       "id": 8042,
       "name": "Лёгкое оружие ближнего боя (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 194,
+      "sha256": "40e1d5dd514d76d5bd7e70b282fd29ef5ea3f64727b45d4ca16ae22c8438dbf1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8042/icon/40e1d5dd514d76d5bd7e70b282fd29ef5ea3f64727b45d4ca16ae22c8438dbf1.webp"
     },
     {
       "kind": "item",
@@ -11127,8 +11130,11 @@
       "id": 8043,
       "name": "Лёгкое оружие ближнего боя (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 194,
+      "sha256": "ac1a422aae46f79b4240bc0f4c9a4fd4add357b858dd36649b61d919af7ef155",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8043/icon/ac1a422aae46f79b4240bc0f4c9a4fd4add357b858dd36649b61d919af7ef155.webp"
     },
     {
       "kind": "item",
@@ -11146,8 +11152,11 @@
       "id": 8044,
       "name": "Мачете",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 194,
+      "sha256": "4d802fa59f8c86f7626ac700f2989401e3b41d24d067124c1d543cacca6f91d7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8044/icon/4d802fa59f8c86f7626ac700f2989401e3b41d24d067124c1d543cacca6f91d7.webp"
     },
     {
       "kind": "item",
@@ -11165,8 +11174,11 @@
       "id": 8045,
       "name": "Мачете (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 194,
+      "sha256": "50229338efb3fa059a11c867bf35fda96ab84dd94b8ebe63526ade24ec565780",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8045/icon/50229338efb3fa059a11c867bf35fda96ab84dd94b8ebe63526ade24ec565780.webp"
     },
     {
       "kind": "item",
@@ -11184,8 +11196,11 @@
       "id": 8046,
       "name": "Мачете (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 194,
+      "sha256": "9c27eb63659d5251a0d7f28d9f3421b133e5118a9336ebe9d074242e83618625",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8046/icon/9c27eb63659d5251a0d7f28d9f3421b133e5118a9336ebe9d074242e83618625.webp"
     },
     {
       "kind": "item",
@@ -11203,8 +11218,11 @@
       "id": 8047,
       "name": "Малориан армс 3516",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 194,
+      "sha256": "2eb437c69ccf98b8026b983cca86f15a9f53390571c78cd9b6d343ec52b0555a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8047/icon/2eb437c69ccf98b8026b983cca86f15a9f53390571c78cd9b6d343ec52b0555a.webp"
     },
     {
       "kind": "item",
@@ -11241,8 +11259,11 @@
       "id": 8049,
       "name": "Среднее оружие ближнего боя",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 194,
+      "sha256": "162bb9e8e6d3a6b7a60f25dcda095b0d1121d1526c3039ec2ada4a551ce21546",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8049/icon/162bb9e8e6d3a6b7a60f25dcda095b0d1121d1526c3039ec2ada4a551ce21546.webp"
     },
     {
       "kind": "item",
@@ -11260,8 +11281,11 @@
       "id": 8050,
       "name": "Среднее оружие ближнего боя (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 194,
+      "sha256": "806caa865c3f36624022bc1ca789b02f3474175a5400785f39d795c9e41644d0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8050/icon/806caa865c3f36624022bc1ca789b02f3474175a5400785f39d795c9e41644d0.webp"
     },
     {
       "kind": "item",
@@ -11279,8 +11303,11 @@
       "id": 8051,
       "name": "Среднее оружие ближнего боя (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 194,
+      "sha256": "2ea84b78f1a77449f8aabff58f601f363fa2a28307cade0a6cadd9325a6a725c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8051/icon/2ea84b78f1a77449f8aabff58f601f363fa2a28307cade0a6cadd9325a6a725c.webp"
     },
     {
       "kind": "item",
@@ -11298,8 +11325,11 @@
       "id": 8052,
       "name": "Пистолет среднего калибра",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 194,
+      "sha256": "a400e23d7bf2baff920a911f26a0ec421916e2a21b14b586b9361209b1910063",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8052/icon/a400e23d7bf2baff920a911f26a0ec421916e2a21b14b586b9361209b1910063.webp"
     },
     {
       "kind": "item",
@@ -11317,8 +11347,11 @@
       "id": 8053,
       "name": "Пистолет среднего калибра (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 194,
+      "sha256": "f1865f3c139bb464faf2a15605756295558a9b56128eb4f91e97b1abd3aeea86",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8053/icon/f1865f3c139bb464faf2a15605756295558a9b56128eb4f91e97b1abd3aeea86.webp"
     },
     {
       "kind": "item",
@@ -11336,8 +11369,11 @@
       "id": 8054,
       "name": "Пистолет среднего калибра (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 194,
+      "sha256": "e003f8b6e74935be2f445c96eb0f293c815cc71cad0d6c6473fc911100739fce",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8054/icon/e003f8b6e74935be2f445c96eb0f293c815cc71cad0d6c6473fc911100739fce.webp"
     },
     {
       "kind": "item",
@@ -20379,7 +20415,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1439,
+    "publishedSlots": 1451,
     "readySlots": 0,
     "totalSlots": 1848
   }

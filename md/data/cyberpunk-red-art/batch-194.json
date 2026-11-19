@@ -1,0 +1,525 @@
+{
+  "batch": 194,
+  "sourceId": 3,
+  "system": "Cyberpunk RED",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-194",
+  "assets": [
+    {
+      "key": "item-8042-icon",
+      "target": {
+        "kind": "item",
+        "id": 8042,
+        "typeId": 37,
+        "name": "Лёгкое оружие ближнего боя (отличное)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Light Melee (Excellent)\" (Лёгкое оружие ближнего боя (отличное)), the \"weapon-light-melee-excellent\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c91856ad-9e26-4e43-bc02-e8ce109dd8c8.png",
+      "original": "originals/item-8042.png",
+      "final": "final/item-8042.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "e883d937202ba79553de50598768773a5e1bb3246072f83361ca10aee358c16b",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "40e1d5dd514d76d5bd7e70b282fd29ef5ea3f64727b45d4ca16ae22c8438dbf1",
+      "bytes": 5940,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51060,
+        "objectKey": "system-item-media/v1/items/8042/icon/40e1d5dd514d76d5bd7e70b282fd29ef5ea3f64727b45d4ca16ae22c8438dbf1.webp",
+        "fileSize": 5940
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8042/icon/40e1d5dd514d76d5bd7e70b282fd29ef5ea3f64727b45d4ca16ae22c8438dbf1.webp"
+    },
+    {
+      "key": "item-8043-icon",
+      "target": {
+        "kind": "item",
+        "id": 8043,
+        "typeId": 37,
+        "name": "Лёгкое оружие ближнего боя (плохое)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Light Melee (Poor)\" (Лёгкое оружие ближнего боя (плохое)), the \"weapon-light-melee-poor\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-748935d4-d733-41a4-95b6-8f0496139b74.png",
+      "original": "originals/item-8043.png",
+      "final": "final/item-8043.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "0d248f308c0fd95953ad3293aec541295ba5ee149d17a16e5b0adf59c619fc15",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "ac1a422aae46f79b4240bc0f4c9a4fd4add357b858dd36649b61d919af7ef155",
+      "bytes": 8048,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51061,
+        "objectKey": "system-item-media/v1/items/8043/icon/ac1a422aae46f79b4240bc0f4c9a4fd4add357b858dd36649b61d919af7ef155.webp",
+        "fileSize": 8048
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8043/icon/ac1a422aae46f79b4240bc0f4c9a4fd4add357b858dd36649b61d919af7ef155.webp"
+    },
+    {
+      "key": "item-8044-icon",
+      "target": {
+        "kind": "item",
+        "id": 8044,
+        "typeId": 37,
+        "name": "Мачете"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Machete\" (Мачете), the \"weapon-machete\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1d9d9e5f-868b-4a48-89ab-35e202799b4a.png",
+      "original": "originals/item-8044.png",
+      "final": "final/item-8044.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "de0dbc105d10e1a298dd68c06b1741089b9ac2a3d2c88fc8f95b3cfa10c5dafb",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "4d802fa59f8c86f7626ac700f2989401e3b41d24d067124c1d543cacca6f91d7",
+      "bytes": 6564,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51062,
+        "objectKey": "system-item-media/v1/items/8044/icon/4d802fa59f8c86f7626ac700f2989401e3b41d24d067124c1d543cacca6f91d7.webp",
+        "fileSize": 6564
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8044/icon/4d802fa59f8c86f7626ac700f2989401e3b41d24d067124c1d543cacca6f91d7.webp"
+    },
+    {
+      "key": "item-8045-icon",
+      "target": {
+        "kind": "item",
+        "id": 8045,
+        "typeId": 37,
+        "name": "Мачете (отличное)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Machete (Excellent)\" (Мачете (отличное)), the \"weapon-machete-excellent\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c2e5aec4-cf1f-43e3-af5d-0535125f0932.png",
+      "original": "originals/item-8045.png",
+      "final": "final/item-8045.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "5fa1491787a1a36b0f135a1e4d0b09b1cac2b681d0c1e16582de5edfbf60ee7e",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "50229338efb3fa059a11c867bf35fda96ab84dd94b8ebe63526ade24ec565780",
+      "bytes": 6820,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51063,
+        "objectKey": "system-item-media/v1/items/8045/icon/50229338efb3fa059a11c867bf35fda96ab84dd94b8ebe63526ade24ec565780.webp",
+        "fileSize": 6820
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8045/icon/50229338efb3fa059a11c867bf35fda96ab84dd94b8ebe63526ade24ec565780.webp"
+    },
+    {
+      "key": "item-8046-icon",
+      "target": {
+        "kind": "item",
+        "id": 8046,
+        "typeId": 37,
+        "name": "Мачете (плохое)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Machete (Poor)\" (Мачете (плохое)), the \"weapon-machete-poor\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d01aa4b4-9df7-48b6-b3b8-962448c0d0c0.png",
+      "original": "originals/item-8046.png",
+      "final": "final/item-8046.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "db39ae86d9d8994fbfdcd61045800fac548457afede6b936d33c261247e3edeb",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "9c27eb63659d5251a0d7f28d9f3421b133e5118a9336ebe9d074242e83618625",
+      "bytes": 6788,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51064,
+        "objectKey": "system-item-media/v1/items/8046/icon/9c27eb63659d5251a0d7f28d9f3421b133e5118a9336ebe9d074242e83618625.webp",
+        "fileSize": 6788
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8046/icon/9c27eb63659d5251a0d7f28d9f3421b133e5118a9336ebe9d074242e83618625.webp"
+    },
+    {
+      "key": "item-8047-icon",
+      "target": {
+        "kind": "item",
+        "id": 8047,
+        "typeId": 37,
+        "name": "Малориан армс 3516"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Malorian Arms 3516\" (Малориан армс 3516), the \"weapon-malorian-arms-3516\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f5118aa7-fc64-4fda-9a2b-28640af3fb4e.png",
+      "original": "originals/item-8047.png",
+      "final": "final/item-8047.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "743244e0cb1c3ed736275611be9267c2fb2cd9d44db1a959b628b9c8a4277c67",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "2eb437c69ccf98b8026b983cca86f15a9f53390571c78cd9b6d343ec52b0555a",
+      "bytes": 8578,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51065,
+        "objectKey": "system-item-media/v1/items/8047/icon/2eb437c69ccf98b8026b983cca86f15a9f53390571c78cd9b6d343ec52b0555a.webp",
+        "fileSize": 8578
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8047/icon/2eb437c69ccf98b8026b983cca86f15a9f53390571c78cd9b6d343ec52b0555a.webp"
+    },
+    {
+      "key": "item-8049-icon",
+      "target": {
+        "kind": "item",
+        "id": 8049,
+        "typeId": 37,
+        "name": "Среднее оружие ближнего боя"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Medium Melee\" (Среднее оружие ближнего боя), the \"weapon-medium-melee\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0187dfd9-58da-47ea-b6ff-f1f254c3b7af.png",
+      "original": "originals/item-8049.png",
+      "final": "final/item-8049.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "b2ce7020d83be5dd1ed222425cbe77359bff77fbef96d7ffc8d27545712472a9",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "162bb9e8e6d3a6b7a60f25dcda095b0d1121d1526c3039ec2ada4a551ce21546",
+      "bytes": 6310,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51066,
+        "objectKey": "system-item-media/v1/items/8049/icon/162bb9e8e6d3a6b7a60f25dcda095b0d1121d1526c3039ec2ada4a551ce21546.webp",
+        "fileSize": 6310
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8049/icon/162bb9e8e6d3a6b7a60f25dcda095b0d1121d1526c3039ec2ada4a551ce21546.webp"
+    },
+    {
+      "key": "item-8050-icon",
+      "target": {
+        "kind": "item",
+        "id": 8050,
+        "typeId": 37,
+        "name": "Среднее оружие ближнего боя (отличное)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Medium Melee (Excellent)\" (Среднее оружие ближнего боя (отличное)), the \"weapon-medium-melee-excellent\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7d7b6749-9c7a-440e-a099-85e270e8e4e0.png",
+      "original": "originals/item-8050.png",
+      "final": "final/item-8050.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "1a802066b78a60133baa402f6ae678c7d843ec8b60ac15c6b8ec1941bfa28b38",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "806caa865c3f36624022bc1ca789b02f3474175a5400785f39d795c9e41644d0",
+      "bytes": 6198,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51067,
+        "objectKey": "system-item-media/v1/items/8050/icon/806caa865c3f36624022bc1ca789b02f3474175a5400785f39d795c9e41644d0.webp",
+        "fileSize": 6198
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8050/icon/806caa865c3f36624022bc1ca789b02f3474175a5400785f39d795c9e41644d0.webp"
+    },
+    {
+      "key": "item-8051-icon",
+      "target": {
+        "kind": "item",
+        "id": 8051,
+        "typeId": 37,
+        "name": "Среднее оружие ближнего боя (плохое)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Medium Melee (Poor)\" (Среднее оружие ближнего боя (плохое)), the \"weapon-medium-melee-poor\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-72b08838-89d0-4b25-a5ab-670f11d3d665.png",
+      "original": "originals/item-8051.png",
+      "final": "final/item-8051.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "8a355f1d03e9252a3de7a8a5298ac1fa0e613643d8271806cbff696a6847d9cb",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "2ea84b78f1a77449f8aabff58f601f363fa2a28307cade0a6cadd9325a6a725c",
+      "bytes": 7146,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51068,
+        "objectKey": "system-item-media/v1/items/8051/icon/2ea84b78f1a77449f8aabff58f601f363fa2a28307cade0a6cadd9325a6a725c.webp",
+        "fileSize": 7146
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8051/icon/2ea84b78f1a77449f8aabff58f601f363fa2a28307cade0a6cadd9325a6a725c.webp"
+    },
+    {
+      "key": "item-8052-icon",
+      "target": {
+        "kind": "item",
+        "id": 8052,
+        "typeId": 37,
+        "name": "Пистолет среднего калибра"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Medium Pistol\" (Пистолет среднего калибра), the \"weapon-medium-pistol\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-adcd6dbb-ce64-4ec3-a3ea-569269a9f217.png",
+      "original": "originals/item-8052.png",
+      "final": "final/item-8052.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "23f85bcfc101665d4a66fda36081311e91ee28cc3264142752bc147d8845d840",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "a400e23d7bf2baff920a911f26a0ec421916e2a21b14b586b9361209b1910063",
+      "bytes": 9448,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51069,
+        "objectKey": "system-item-media/v1/items/8052/icon/a400e23d7bf2baff920a911f26a0ec421916e2a21b14b586b9361209b1910063.webp",
+        "fileSize": 9448
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8052/icon/a400e23d7bf2baff920a911f26a0ec421916e2a21b14b586b9361209b1910063.webp"
+    },
+    {
+      "key": "item-8053-icon",
+      "target": {
+        "kind": "item",
+        "id": 8053,
+        "typeId": 37,
+        "name": "Пистолет среднего калибра (отличное)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Medium Pistol (Excellent)\" (Пистолет среднего калибра (отличное)), the \"weapon-medium-pistol-excellent\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-784d592e-1b9e-4be1-989a-8805967c58e5.png",
+      "original": "originals/item-8053.png",
+      "final": "final/item-8053.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "42cd73ea1384eeef45418255833e567c1a4210b3df460e87e21b0ee2289d4f20",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "f1865f3c139bb464faf2a15605756295558a9b56128eb4f91e97b1abd3aeea86",
+      "bytes": 9400,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51070,
+        "objectKey": "system-item-media/v1/items/8053/icon/f1865f3c139bb464faf2a15605756295558a9b56128eb4f91e97b1abd3aeea86.webp",
+        "fileSize": 9400
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8053/icon/f1865f3c139bb464faf2a15605756295558a9b56128eb4f91e97b1abd3aeea86.webp"
+    },
+    {
+      "key": "item-8054-icon",
+      "target": {
+        "kind": "item",
+        "id": 8054,
+        "typeId": 37,
+        "name": "Пистолет среднего калибра (плохое)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Medium Pistol (Poor)\" (Пистолет среднего калибра (плохое)), the \"weapon-medium-pistol-poor\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-197aad19-83c8-4c1e-b0e6-6429dd4a8813.png",
+      "original": "originals/item-8054.png",
+      "final": "final/item-8054.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "a5a7e0a687933196f47b115ed091de75135120b80db1156ec0a09993febfb35c",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "e003f8b6e74935be2f445c96eb0f293c815cc71cad0d6c6473fc911100739fce",
+      "bytes": 10354,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51071,
+        "objectKey": "system-item-media/v1/items/8054/icon/e003f8b6e74935be2f445c96eb0f293c815cc71cad0d6c6473fc911100739fce.webp",
+        "fileSize": 10354
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8054/icon/e003f8b6e74935be2f445c96eb0f293c815cc71cad0d6c6473fc911100739fce.webp"
+    }
+  ]
+}
