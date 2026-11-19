@@ -1004,8 +1004,11 @@
       "id": 7577,
       "name": "Для пистолета среднего калибра (экспансивный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 162,
+      "sha256": "e71bca1504490311d08c68c5c801218f18396c70988d75d143672238a23995dd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7577/icon/e71bca1504490311d08c68c5c801218f18396c70988d75d143672238a23995dd.webp"
     },
     {
       "kind": "item",
@@ -1023,8 +1026,11 @@
       "id": 7578,
       "name": "Для пистолета среднего калибра (зажигательный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 162,
+      "sha256": "e98ea4672b0bbedb3e35a0923c712e7563606606a8d728a002b2ec254c138986",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7578/icon/e98ea4672b0bbedb3e35a0923c712e7563606606a8d728a002b2ec254c138986.webp"
     },
     {
       "kind": "item",
@@ -1042,8 +1048,11 @@
       "id": 7579,
       "name": "Для пистолета среднего калибра (резиновый)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 162,
+      "sha256": "f36dbec34bbfba102297981566e4ca382577171ef849e73b99deee6c0af87b8b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7579/icon/f36dbec34bbfba102297981566e4ca382577171ef849e73b99deee6c0af87b8b.webp"
     },
     {
       "kind": "item",
@@ -1061,8 +1070,11 @@
       "id": 7580,
       "name": "Для пистолета среднего калибра (умный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 162,
+      "sha256": "c607e87805b14a28d0dc394f2b9421da7e6737dbd7b4195d6f67fdb8f10df998",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7580/icon/c607e87805b14a28d0dc394f2b9421da7e6737dbd7b4195d6f67fdb8f10df998.webp"
     },
     {
       "kind": "item",
@@ -1080,8 +1092,11 @@
       "id": 7581,
       "name": "Пейнтбольный шарик (с кислотой)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 162,
+      "sha256": "6f48698d662041c25ab8db02a192e6fefc1140360d51dc35946d9c437cfdb8e5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7581/icon/6f48698d662041c25ab8db02a192e6fefc1140360d51dc35946d9c437cfdb8e5.webp"
     },
     {
       "kind": "item",
@@ -1099,8 +1114,11 @@
       "id": 7582,
       "name": "Пейнтбольный шарик (стандартный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 162,
+      "sha256": "b570296aa6576d3087dcc414e6f169a56bc9145739d2015e005040a28a18a06f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7582/icon/b570296aa6576d3087dcc414e6f169a56bc9145739d2015e005040a28a18a06f.webp"
     },
     {
       "kind": "item",
@@ -1118,8 +1136,11 @@
       "id": 7583,
       "name": "Винтовочный (бронебойный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 162,
+      "sha256": "a2023ce4cf1e11574347a344c0066c3cea8685d37e631723c74ce2fc4566b1c6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7583/icon/a2023ce4cf1e11574347a344c0066c3cea8685d37e631723c74ce2fc4566b1c6.webp"
     },
     {
       "kind": "item",
@@ -1137,8 +1158,11 @@
       "id": 7584,
       "name": "Винтовочный (стандартный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 162,
+      "sha256": "362c41933634929321ef8dd8b083e490831885c318ec3293d1922387f8d51dd2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7584/icon/362c41933634929321ef8dd8b083e490831885c318ec3293d1922387f8d51dd2.webp"
     },
     {
       "kind": "item",
@@ -1156,8 +1180,11 @@
       "id": 7585,
       "name": "Винтовочный (экспансивный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 162,
+      "sha256": "a3b8a99a53720c87229e0108b2e77c11e22a8dbcbc5a873d6275b8ae64df064e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7585/icon/a3b8a99a53720c87229e0108b2e77c11e22a8dbcbc5a873d6275b8ae64df064e.webp"
     },
     {
       "kind": "item",
@@ -1175,8 +1202,11 @@
       "id": 7586,
       "name": "Винтовочный (зажигательный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 162,
+      "sha256": "6f3cce6b25f61a5e3f63deccbbe4609d713009c8043b26940036160b8ebc0207",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7586/icon/6f3cce6b25f61a5e3f63deccbbe4609d713009c8043b26940036160b8ebc0207.webp"
     },
     {
       "kind": "item",
@@ -1194,8 +1224,11 @@
       "id": 7587,
       "name": "Винтовочный (резиновый)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 162,
+      "sha256": "b6f851f0f9d0a9b0333f964203add7d02383287a394f4fffdd45b771a9cd2281",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7587/icon/b6f851f0f9d0a9b0333f964203add7d02383287a394f4fffdd45b771a9cd2281.webp"
     },
     {
       "kind": "item",
@@ -1213,8 +1246,11 @@
       "id": 7588,
       "name": "Винтовочный (умный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 162,
+      "sha256": "4f15645e569796e8ce89cdf8dc67c306f6ee34169348b8e82d3dc60f82686ec7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7588/icon/4f15645e569796e8ce89cdf8dc67c306f6ee34169348b8e82d3dc60f82686ec7.webp"
     },
     {
       "kind": "item",
@@ -19227,7 +19263,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1055,
+    "publishedSlots": 1067,
     "readySlots": 0,
     "totalSlots": 1848
   }

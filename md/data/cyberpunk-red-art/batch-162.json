@@ -1,0 +1,525 @@
+{
+  "batch": 162,
+  "sourceId": 3,
+  "system": "Cyberpunk RED",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-162",
+  "assets": [
+    {
+      "key": "item-7577-icon",
+      "target": {
+        "kind": "item",
+        "id": 7577,
+        "typeId": 20,
+        "name": "Для пистолета среднего калибра (экспансивный)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Medium Pistol (Expansive)\" (Для пистолета среднего калибра (экспансивный)), the \"ammo-medium-pistol-expansive\" catalogue variant. Represent this fictional shop item solely as its sealed opaque supply case with a simple original pictogram for this variant, and a small color-coded band for its game effect. Only the exterior of closed packaging, no visible ammunition, contents, devices or technical detail. No text or labels.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-65da8464-04be-4879-86a8-4aec7ea587c0.png",
+      "original": "originals/item-7577.png",
+      "final": "final/item-7577.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "9f3f81a7f67f1cefa20d7ac535524a2a3b0a05a86792482aebd8c8c8d76a81f1",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "e71bca1504490311d08c68c5c801218f18396c70988d75d143672238a23995dd",
+      "bytes": 12718,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50676,
+        "objectKey": "system-item-media/v1/items/7577/icon/e71bca1504490311d08c68c5c801218f18396c70988d75d143672238a23995dd.webp",
+        "fileSize": 12718
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7577/icon/e71bca1504490311d08c68c5c801218f18396c70988d75d143672238a23995dd.webp"
+    },
+    {
+      "key": "item-7578-icon",
+      "target": {
+        "kind": "item",
+        "id": 7578,
+        "typeId": 20,
+        "name": "Для пистолета среднего калибра (зажигательный)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Medium Pistol (Incendiary)\" (Для пистолета среднего калибра (зажигательный)), the \"ammo-medium-pistol-incendiary\" catalogue variant. Represent this fictional shop item solely as its sealed opaque supply case with a simple original pictogram for this variant, and a small color-coded band for its game effect. Only the exterior of closed packaging, no visible ammunition, contents, devices or technical detail. No text or labels.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ec177113-b726-4e82-b29c-3d024e09b288.png",
+      "original": "originals/item-7578.png",
+      "final": "final/item-7578.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "aec6013d843752eeac172d1c27d455774d86549f81c4bc0ba1a48657b419ed11",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "e98ea4672b0bbedb3e35a0923c712e7563606606a8d728a002b2ec254c138986",
+      "bytes": 13008,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50677,
+        "objectKey": "system-item-media/v1/items/7578/icon/e98ea4672b0bbedb3e35a0923c712e7563606606a8d728a002b2ec254c138986.webp",
+        "fileSize": 13008
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7578/icon/e98ea4672b0bbedb3e35a0923c712e7563606606a8d728a002b2ec254c138986.webp"
+    },
+    {
+      "key": "item-7579-icon",
+      "target": {
+        "kind": "item",
+        "id": 7579,
+        "typeId": 20,
+        "name": "Для пистолета среднего калибра (резиновый)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Medium Pistol (Rubber)\" (Для пистолета среднего калибра (резиновый)), the \"ammo-medium-pistol-rubber\" catalogue variant. Represent this fictional shop item solely as its sealed opaque supply case with a simple original pictogram for this variant, and a small color-coded band for its game effect. Only the exterior of closed packaging, no visible ammunition, contents, devices or technical detail. No text or labels.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3abcd37c-c1f7-4961-88a1-c9b6070df915.png",
+      "original": "originals/item-7579.png",
+      "final": "final/item-7579.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "c094efc3e07957cf0011b7874c09c7a578bfa35f2fd235a95487e59dc65bb6c9",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "f36dbec34bbfba102297981566e4ca382577171ef849e73b99deee6c0af87b8b",
+      "bytes": 13474,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50678,
+        "objectKey": "system-item-media/v1/items/7579/icon/f36dbec34bbfba102297981566e4ca382577171ef849e73b99deee6c0af87b8b.webp",
+        "fileSize": 13474
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7579/icon/f36dbec34bbfba102297981566e4ca382577171ef849e73b99deee6c0af87b8b.webp"
+    },
+    {
+      "key": "item-7580-icon",
+      "target": {
+        "kind": "item",
+        "id": 7580,
+        "typeId": 20,
+        "name": "Для пистолета среднего калибра (умный)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Medium Pistol (Smart)\" (Для пистолета среднего калибра (умный)), the \"ammo-medium-pistol-smart\" catalogue variant. Represent this fictional shop item solely as its sealed opaque supply case with a simple original pictogram for this variant, and a small color-coded band for its game effect. Only the exterior of closed packaging, no visible ammunition, contents, devices or technical detail. No text or labels.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-cd152e97-6c13-472b-a622-249334390a86.png",
+      "original": "originals/item-7580.png",
+      "final": "final/item-7580.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "c9e96e1d7392faa8de06f1a54bd4525f22b7e973731eb3a88570f701c4621043",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "c607e87805b14a28d0dc394f2b9421da7e6737dbd7b4195d6f67fdb8f10df998",
+      "bytes": 11922,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50679,
+        "objectKey": "system-item-media/v1/items/7580/icon/c607e87805b14a28d0dc394f2b9421da7e6737dbd7b4195d6f67fdb8f10df998.webp",
+        "fileSize": 11922
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7580/icon/c607e87805b14a28d0dc394f2b9421da7e6737dbd7b4195d6f67fdb8f10df998.webp"
+    },
+    {
+      "key": "item-7581-icon",
+      "target": {
+        "kind": "item",
+        "id": 7581,
+        "typeId": 20,
+        "name": "Пейнтбольный шарик (с кислотой)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Paintball (Acid)\" (Пейнтбольный шарик (с кислотой)), the \"ammo-paintball-acid\" catalogue variant. Represent this fictional shop item solely as its sealed opaque supply case with a simple original pictogram for this variant, and a small color-coded band for its game effect. Only the exterior of closed packaging, no visible ammunition, contents, devices or technical detail. No text or labels.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d495ba6f-ad34-4ef7-b60a-735efb18aaf8.png",
+      "original": "originals/item-7581.png",
+      "final": "final/item-7581.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "fb19a6562f9cc1f4a4496d9c197e688ed68d68b972ebf63a1c3639e6fec00d51",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "6f48698d662041c25ab8db02a192e6fefc1140360d51dc35946d9c437cfdb8e5",
+      "bytes": 16060,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50680,
+        "objectKey": "system-item-media/v1/items/7581/icon/6f48698d662041c25ab8db02a192e6fefc1140360d51dc35946d9c437cfdb8e5.webp",
+        "fileSize": 16060
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7581/icon/6f48698d662041c25ab8db02a192e6fefc1140360d51dc35946d9c437cfdb8e5.webp"
+    },
+    {
+      "key": "item-7582-icon",
+      "target": {
+        "kind": "item",
+        "id": 7582,
+        "typeId": 20,
+        "name": "Пейнтбольный шарик (стандартный)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Paintball (Basic)\" (Пейнтбольный шарик (стандартный)), the \"ammo-paintball-basic\" catalogue variant. Represent this fictional shop item solely as its sealed opaque supply case with a simple original pictogram for this variant, and a small color-coded band for its game effect. Only the exterior of closed packaging, no visible ammunition, contents, devices or technical detail. No text or labels.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6dca0e4a-4c86-42ec-a8cc-275d65c58d51.png",
+      "original": "originals/item-7582.png",
+      "final": "final/item-7582.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "8193d1258bab84ac3bb512037b4017f67020993614b28d740fdd1e335d4ab535",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "b570296aa6576d3087dcc414e6f169a56bc9145739d2015e005040a28a18a06f",
+      "bytes": 16692,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50681,
+        "objectKey": "system-item-media/v1/items/7582/icon/b570296aa6576d3087dcc414e6f169a56bc9145739d2015e005040a28a18a06f.webp",
+        "fileSize": 16692
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7582/icon/b570296aa6576d3087dcc414e6f169a56bc9145739d2015e005040a28a18a06f.webp"
+    },
+    {
+      "key": "item-7583-icon",
+      "target": {
+        "kind": "item",
+        "id": 7583,
+        "typeId": 20,
+        "name": "Винтовочный (бронебойный)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Rifle (Armor-Piercing)\" (Винтовочный (бронебойный)), the \"ammo-rifle-armor-piercing\" catalogue variant. Represent this fictional shop item solely as its sealed opaque supply case with a simple original pictogram for this variant, and a small color-coded band for its game effect. Only the exterior of closed packaging, no visible ammunition, contents, devices or technical detail. No text or labels.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4b4e80b9-fd60-471e-93d6-c3a3e8230fdc.png",
+      "original": "originals/item-7583.png",
+      "final": "final/item-7583.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "e61416d4bf762f640169f8d24087c13a6b34d0898066bb8c9af469823629bf6b",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "a2023ce4cf1e11574347a344c0066c3cea8685d37e631723c74ce2fc4566b1c6",
+      "bytes": 11530,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50682,
+        "objectKey": "system-item-media/v1/items/7583/icon/a2023ce4cf1e11574347a344c0066c3cea8685d37e631723c74ce2fc4566b1c6.webp",
+        "fileSize": 11530
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7583/icon/a2023ce4cf1e11574347a344c0066c3cea8685d37e631723c74ce2fc4566b1c6.webp"
+    },
+    {
+      "key": "item-7584-icon",
+      "target": {
+        "kind": "item",
+        "id": 7584,
+        "typeId": 20,
+        "name": "Винтовочный (стандартный)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Rifle (Basic)\" (Винтовочный (стандартный)), the \"ammo-rifle-basic\" catalogue variant. Represent this fictional shop item solely as its sealed opaque supply case with a simple original pictogram for this variant, and a small color-coded band for its game effect. Only the exterior of closed packaging, no visible ammunition, contents, devices or technical detail. No text or labels.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f75cc171-54e8-4e86-9dcd-974b7dd5ef1b.png",
+      "original": "originals/item-7584.png",
+      "final": "final/item-7584.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "f41591908362e4375ad8ee851c27cafcab84f5096969fbdde9e42ba53ff0937e",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "362c41933634929321ef8dd8b083e490831885c318ec3293d1922387f8d51dd2",
+      "bytes": 12996,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50683,
+        "objectKey": "system-item-media/v1/items/7584/icon/362c41933634929321ef8dd8b083e490831885c318ec3293d1922387f8d51dd2.webp",
+        "fileSize": 12996
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7584/icon/362c41933634929321ef8dd8b083e490831885c318ec3293d1922387f8d51dd2.webp"
+    },
+    {
+      "key": "item-7585-icon",
+      "target": {
+        "kind": "item",
+        "id": 7585,
+        "typeId": 20,
+        "name": "Винтовочный (экспансивный)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Rifle (Expansive)\" (Винтовочный (экспансивный)), the \"ammo-rifle-expansive\" catalogue variant. Represent this fictional shop item solely as its sealed opaque supply case with a simple original pictogram for this variant, and a small color-coded band for its game effect. Only the exterior of closed packaging, no visible ammunition, contents, devices or technical detail. No text or labels.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6bb031d5-7bf3-4637-861a-8f07434814d7.png",
+      "original": "originals/item-7585.png",
+      "final": "final/item-7585.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "8a6fe3d2c35f68c956c3e601b88855148a1d877aa034cdd01eff79198e3f50d0",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "a3b8a99a53720c87229e0108b2e77c11e22a8dbcbc5a873d6275b8ae64df064e",
+      "bytes": 14568,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50684,
+        "objectKey": "system-item-media/v1/items/7585/icon/a3b8a99a53720c87229e0108b2e77c11e22a8dbcbc5a873d6275b8ae64df064e.webp",
+        "fileSize": 14568
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7585/icon/a3b8a99a53720c87229e0108b2e77c11e22a8dbcbc5a873d6275b8ae64df064e.webp"
+    },
+    {
+      "key": "item-7586-icon",
+      "target": {
+        "kind": "item",
+        "id": 7586,
+        "typeId": 20,
+        "name": "Винтовочный (зажигательный)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Rifle (Incendiary)\" (Винтовочный (зажигательный)), the \"ammo-rifle-incendiary\" catalogue variant. Represent this fictional shop item solely as its sealed opaque supply case with a simple original pictogram for this variant, and a small color-coded band for its game effect. Only the exterior of closed packaging, no visible ammunition, contents, devices or technical detail. No text or labels.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4edc3c02-d6dd-4f7c-bddb-64dd329d8a5d.png",
+      "original": "originals/item-7586.png",
+      "final": "final/item-7586.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "97d3d982a6dca06c0182e1a8355da68329fcd52d29d8cf7b85a14f1f4073c801",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "6f3cce6b25f61a5e3f63deccbbe4609d713009c8043b26940036160b8ebc0207",
+      "bytes": 14780,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50685,
+        "objectKey": "system-item-media/v1/items/7586/icon/6f3cce6b25f61a5e3f63deccbbe4609d713009c8043b26940036160b8ebc0207.webp",
+        "fileSize": 14780
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7586/icon/6f3cce6b25f61a5e3f63deccbbe4609d713009c8043b26940036160b8ebc0207.webp"
+    },
+    {
+      "key": "item-7587-icon",
+      "target": {
+        "kind": "item",
+        "id": 7587,
+        "typeId": 20,
+        "name": "Винтовочный (резиновый)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Rifle (Rubber)\" (Винтовочный (резиновый)), the \"ammo-rifle-rubber\" catalogue variant. Represent this fictional shop item solely as its sealed opaque supply case with a simple original pictogram for this variant, and a small color-coded band for its game effect. Only the exterior of closed packaging, no visible ammunition, contents, devices or technical detail. No text or labels.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1d39d7b1-f105-4bf6-a722-fd7ce5fca70f.png",
+      "original": "originals/item-7587.png",
+      "final": "final/item-7587.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "792bcb1ed1564f8339bb34d98d1badf52774c0dadd5aaee5eee98275d17ace82",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "b6f851f0f9d0a9b0333f964203add7d02383287a394f4fffdd45b771a9cd2281",
+      "bytes": 13566,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50686,
+        "objectKey": "system-item-media/v1/items/7587/icon/b6f851f0f9d0a9b0333f964203add7d02383287a394f4fffdd45b771a9cd2281.webp",
+        "fileSize": 13566
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7587/icon/b6f851f0f9d0a9b0333f964203add7d02383287a394f4fffdd45b771a9cd2281.webp"
+    },
+    {
+      "key": "item-7588-icon",
+      "target": {
+        "kind": "item",
+        "id": 7588,
+        "typeId": 20,
+        "name": "Винтовочный (умный)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Rifle (Smart)\" (Винтовочный (умный)), the \"ammo-rifle-smart\" catalogue variant. Represent this fictional shop item solely as its sealed opaque supply case with a simple original pictogram for this variant, and a small color-coded band for its game effect. Only the exterior of closed packaging, no visible ammunition, contents, devices or technical detail. No text or labels.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b6b88350-3656-4904-8a3d-3da12e6c30b4.png",
+      "original": "originals/item-7588.png",
+      "final": "final/item-7588.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "743226d1098b7a4795f44b3c4b53210c8e6f6b111f1eaa8f9e76cc802e96f469",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "4f15645e569796e8ce89cdf8dc67c306f6ee34169348b8e82d3dc60f82686ec7",
+      "bytes": 14116,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50687,
+        "objectKey": "system-item-media/v1/items/7588/icon/4f15645e569796e8ce89cdf8dc67c306f6ee34169348b8e82d3dc60f82686ec7.webp",
+        "fileSize": 14116
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7588/icon/4f15645e569796e8ce89cdf8dc67c306f6ee34169348b8e82d3dc60f82686ec7.webp"
+    }
+  ]
+}
