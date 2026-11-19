@@ -22,7 +22,6 @@ const groups = computed(() => selectedRosterGroups(props.items, props.encounter)
 .roster-selection-summary {
   display: flex;
   align-items: start;
-  flex-wrap: wrap;
   column-gap: var(--spacing-small);
   min-width: 0;
   container-type: inline-size;
@@ -34,20 +33,21 @@ const groups = computed(() => selectedRosterGroups(props.items, props.encounter)
 .selection-summary-caption {
   flex: none;
   max-inline-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: var(--type-caption-size);
   line-height: var(--layout-selection-summary-icon);
   color: var(--text-muted);
 }
 .selection-summary-caption-compact { display: none; }
-@container (max-width: 58px) {
+@container (max-width: 92px) {
   .selection-summary-caption-full { display: none; }
   .selection-summary-caption-compact { display: inline; }
   .selection-summary-caption,
-  .selection-summary-empty {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: var(--type-context-size);
-    line-height: var(--type-context-line-height);
-  }
+  .selection-summary-empty { font-size: var(--type-context-size); }
+}
+@container (max-width: 54px) {
+  .selection-summary-caption { display: none; }
 }
 </style>

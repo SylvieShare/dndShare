@@ -1,16 +1,17 @@
 <template>
   <span class="selection-summary-icons">
-    <span class="selection-summary-stack" :style="stackStyle">
+    <span class="selection-summary-stack" :style="{ '--selection-summary-intervals': Math.max(1, groups.length - 1) }">
       <span
-        v-for="group in groups"
+        v-for="(group, index) in groups"
         :key="group.key"
         class="selection-summary-item"
+        :style="{ '--selection-summary-index': index }"
         :title="group.count > 1 ? `${group.name} × ${group.count}` : group.name"
         role="img"
         :aria-label="group.count > 1 ? `${group.name}: ${group.count}` : group.name"
       >
         <span class="selection-summary-portrait" aria-hidden="true">
-          <CharacterAvatar v-if="group.player" :src="group.url" :name="group.name" size="var(--layout-selection-summary-icon)" />
+          <CharacterAvatar v-if="group.player" :src="group.url" :name="group.name" size="var(--creature-avatar-size)" />
           <SessionCreatureAvatar v-else :url="group.url" :svg="group.svg" :name="group.name" icon />
         </span>
         <span v-if="group.count > 1" class="selection-summary-quantity" aria-hidden="true">{{ group.count }}</span>
@@ -19,14 +20,9 @@
   </span>
 </template>
 <script setup>
-import { computed } from 'vue'
 import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
 import SessionCreatureAvatar from './SessionCreatureAvatar.vue'
-const props = defineProps({ groups: { type: Array, required: true } })
-const stackStyle = computed(() => ({
-  '--selection-summary-intervals': Math.max(1, props.groups.length - 1),
-  '--selection-summary-count-digits': Math.max(1, ...props.groups.map(group => String(group.count).length)),
-}))
+defineProps({ groups: { type: Array, required: true } })
 </script>
 <style scoped>
 .selection-summary-icons {
@@ -35,31 +31,25 @@ const stackStyle = computed(() => ({
   min-width: 0;
 }
 .selection-summary-stack {
-  --creature-avatar-size: var(--layout-selection-summary-icon);
-  --selection-summary-badge-min: max(var(--spacing-large), calc(var(--selection-summary-count-digits) * 1ch + var(--spacing-xs)));
+  --creature-avatar-size: min(var(--layout-selection-summary-icon), 100cqi);
   --selection-summary-step: clamp(
-    var(--selection-summary-badge-min),
-    calc((100cqi - var(--layout-selection-summary-icon) - .5px) / var(--selection-summary-intervals)),
-    calc(var(--layout-selection-summary-icon) + var(--spacing-small))
+    0px,
+    calc((100cqi - var(--creature-avatar-size)) / var(--selection-summary-intervals)),
+    calc(var(--creature-avatar-size) + var(--spacing-small))
   );
-  display: flex;
-  flex-wrap: wrap;
-  row-gap: var(--spacing-xs);
-  isolation: isolate;
-  /* Leave room for the part of the final portrait that extends past its slot. */
-  padding-inline-end: max(0px, calc(var(--layout-selection-summary-icon) - var(--selection-summary-step)));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: start;
   font-size: var(--type-context-size);
   font-variant-numeric: tabular-nums;
 }
 .selection-summary-item {
+  grid-area: 1 / 1;
   display: flex;
-  flex: none;
   flex-direction: column;
-  align-items: start;
-  inline-size: var(--selection-summary-step);
-}
-.selection-summary-item:last-child {
-  inline-size: min(var(--selection-summary-step), var(--layout-selection-summary-icon));
+  inline-size: var(--creature-avatar-size);
+  margin-inline-start: calc(var(--selection-summary-index) * var(--selection-summary-step));
+  isolation: isolate;
 }
 .selection-summary-portrait {
   display: flex;
@@ -71,10 +61,12 @@ const stackStyle = computed(() => ({
   display: grid;
   place-items: center;
   box-sizing: border-box;
-  min-inline-size: var(--spacing-large);
+  min-inline-size: min(100%, var(--spacing-large));
+  max-inline-size: 100%;
   block-size: var(--spacing-large);
   margin-block-start: calc(var(--spacing-xs) * -1);
   padding-inline: calc(var(--spacing-xs) / 2);
+  overflow: hidden;
   border-radius: var(--radius-small);
   background: var(--surface-active);
   color: var(--text-1);

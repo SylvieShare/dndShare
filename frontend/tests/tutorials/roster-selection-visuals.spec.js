@@ -184,7 +184,8 @@ for(const width of [390,834,1440])test(`combat selection icons and stage waterma
 
 for(const width of [390,834,1440]) test(`selection stacks beside the actions menu and fits the sidebar at ${width}`,async({page},info)=>{
   const api=await rosterSelectionFixture(page,width)
-  for(let i=2;i<9;i++){
+  const groupCount = 32
+  for(let i=2;i<groupCount;i++){
     api.participants.push({...structuredClone(api.participants[0]),charId:i+1,charUuid:`player-${i}`,data:{values:{...structuredClone(api.participants[0].data.values),name:`Герой ${i}`}}})
     api.encounter().combatants.push({uid:`p-${i+1}`,type:'player',charId:i+1,position:'reserve'})
   }
@@ -196,22 +197,33 @@ for(const width of [390,834,1440]) test(`selection stacks beside the actions men
   const selectAll=toolbar.getByRole('checkbox',{name:'Выбрать всех в этой вкладке',exact:true})
   await selectAll.click()
   const summary=toolbar.locator('.roster-selection-summary')
-  await expect(summary.locator('.selection-summary-item')).toHaveCount(9)
+  await expect(summary.locator('.selection-summary-item')).toHaveCount(groupCount)
   const actions=await toolbar.getByRole('button',{name:'Действия',exact:true}).boundingBox()
   const checkbox=await selectAll.boundingBox()
   const summaryBox=await summary.boundingBox()
   expect(actions.x).toBeGreaterThanOrEqual(summaryBox.x+summaryBox.width-.5)
   expect(checkbox.y).toBeGreaterThanOrEqual(summaryBox.y+summaryBox.height-1)
-  const geometry=await summary.evaluate(node=>{
-    const rect=element=>element.getBoundingClientRect()
+  const measure = () => summary.evaluate(node => {
+    const items = [...node.querySelectorAll('.selection-summary-item')]
+    const portraits = items.map(item => item.querySelector('.selection-summary-portrait').getBoundingClientRect())
+    const { left, top, right, bottom } = portraits.at(-1)
+    const hits = document.elementsFromPoint((left + right) / 2, (top + bottom) / 2)
+    const topItem = hits.map(element => element.closest('.selection-summary-item')).find(Boolean)
     return {
-      bounds:rect(node).toJSON(),
-      portraits:[...node.querySelectorAll('.selection-summary-portrait')].map(rect).map(r=>r.toJSON()),
+      bounds: node.getBoundingClientRect().toJSON(),
+      portraits: portraits.map(rect => rect.toJSON()),
+      topIndex: items.indexOf(topItem),
     }
   })
-  expect(geometry.portraits.every(rect=>rect.right<=geometry.bounds.right)).toBe(true)
-  expect(geometry.portraits[1].left).toBeLessThan(geometry.portraits[0].right)
-  expect(geometry.portraits.at(-1).right).toBeLessThanOrEqual(geometry.bounds.right)
+  function expectSingleRow({ bounds, portraits, topIndex }) {
+    expect(portraits).toHaveLength(groupCount)
+    expect(new Set(portraits.map(rect => rect.top)).size).toBe(1)
+    expect(portraits.every(rect => rect.left >= bounds.left && rect.right <= bounds.right)).toBe(true)
+    expect(portraits.slice(1).every((rect, i) => rect.left >= portraits[i].left && rect.left < portraits[i].right)).toBe(true)
+    expect(topIndex).toBe(groupCount - 1)
+    return portraits.at(-1).left - portraits[0].left
+  }
+  const spread = expectSingleRow(await measure())
   await expect(summary.locator('.selection-summary-quantity')).toHaveCount(0)
   await expect(summary.getByRole('img',{name:'Лира',exact:true})).toBeVisible()
   await expect(toolbar.getByRole('button',{name:'Сбросить выбор',exact:true})).toBeVisible()
@@ -219,11 +231,8 @@ for(const width of [390,834,1440]) test(`selection stacks beside the actions men
   if(width===390){
     await page.setViewportSize({width:300,height:980})
     if((await sidebar.getAttribute('class')).includes('map-sidebar--collapsed'))await nav.getByRole('button',{name:'Игроки',exact:true}).click()
-    await expect.poll(()=>summary.evaluate(node=>{
-      const bounds=node.getBoundingClientRect()
-      const portraits=[...node.querySelectorAll('.selection-summary-portrait')].map(element=>element.getBoundingClientRect())
-      return portraits.length===9 && new Set(portraits.map(rect=>rect.top)).size>1 && portraits.every(rect=>rect.right<=bounds.right)
-    })).toBe(true)
+    await expect(sidebar).not.toHaveClass(/map-sidebar--opening/)
+    expect(expectSingleRow(await measure())).toBeLessThan(spread)
   }
   await toolbar.getByRole('button',{name:'Сбросить выбор',exact:true}).click()
   await expect(summary).toHaveText('Никто не выбран')

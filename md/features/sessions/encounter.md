@@ -205,8 +205,9 @@ All shows bare per-type icons and individual player portraits, with quantities
 from two. All applies to the open roster, and «Сбросить выбор» clears the global
 selection. Map and world tools also show the summary and clear control.
 NPC templates group by itemId, simple creatures by name, and actors dedupe by UID.
-Portraits overlap as the row narrows, and a very large selection continues on
-another row. The numeric live status remains available to assistive technology.
+Portraits stay on one row and overlap more as the available width decreases.
+Later portraits and their badges are painted over earlier ones in roster order.
+The numeric live status remains available to assistive technology.
 «Все на сцене» applies to the scene roster. The same selection toolbar supports
 challenges, damage, XP/IP, scene entry and deleting NPCs. The combat workspace
 also shows scene exit and marking defeated in that toolbar. Tab changes animate
