@@ -4562,8 +4562,11 @@
       "id": 7742,
       "name": "Имплант записи брейндансов",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 175,
+      "sha256": "8e975bed15196b84268bccd16fe8b3691dc881553c53cd88c81a52329f85a993",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7742/icon/8e975bed15196b84268bccd16fe8b3691dc881553c53cd88c81a52329f85a993.webp"
     },
     {
       "kind": "item",
@@ -4581,8 +4584,11 @@
       "id": 7743,
       "name": "Обнаружитель жучков",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 175,
+      "sha256": "87773cafade558649e1b1920929219ce30654ec522abda1e5e7d6b096630e066",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7743/icon/87773cafade558649e1b1920929219ce30654ec522abda1e5e7d6b096630e066.webp"
     },
     {
       "kind": "item",
@@ -4600,8 +4606,11 @@
       "id": 7744,
       "name": "Химический анализатор",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 175,
+      "sha256": "c6dcfdc9e0048a765f40d739161ee984875c786c1f62656f0378ada7d4f5cb8a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7744/icon/c6dcfdc9e0048a765f40d739161ee984875c786c1f62656f0378ada7d4f5cb8a.webp"
     },
     {
       "kind": "item",
@@ -4619,8 +4628,11 @@
       "id": 7745,
       "name": "Химкожа",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 175,
+      "sha256": "dfbbbc6777725254cb2ca2666767d06b5835b01f3e0e15a3b4eedb4a4b1dc558",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7745/icon/dfbbbc6777725254cb2ca2666767d06b5835b01f3e0e15a3b4eedb4a4b1dc558.webp"
     },
     {
       "kind": "item",
@@ -4638,8 +4650,11 @@
       "id": 7746,
       "name": "Разъём для щепок",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 175,
+      "sha256": "456e3353c81cb1e83e509c96ecf0442a00c78638df0aba298acfeba3fbf4f6f7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7746/icon/456e3353c81cb1e83e509c96ecf0442a00c78638df0aba298acfeba3fbf4f6f7.webp"
     },
     {
       "kind": "item",
@@ -4657,8 +4672,11 @@
       "id": 7747,
       "name": "Хирон",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 175,
+      "sha256": "a8146602087baf8aba515cdc809f5d6e3e81a3d54a8913efaa9f2a4819f2c8b3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7747/icon/a8146602087baf8aba515cdc809f5d6e3e81a3d54a8913efaa9f2a4819f2c8b3.webp"
     },
     {
       "kind": "item",
@@ -4676,8 +4694,11 @@
       "id": 7748,
       "name": "Смена цвета",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 175,
+      "sha256": "e14eb7ed8b7aa119bda516d54d6240c247b8950299c2eb21a116534ba842904b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7748/icon/e14eb7ed8b7aa119bda516d54d6240c247b8950299c2eb21a116534ba842904b.webp"
     },
     {
       "kind": "item",
@@ -4695,8 +4716,11 @@
       "id": 7749,
       "name": "Имплантат контрацепции",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 175,
+      "sha256": "563c941fa45c1bfa4fd7c9c5b90237c007dbd1a777caf0cd98924d56d8a84983",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7749/icon/563c941fa45c1bfa4fd7c9c5b90237c007dbd1a777caf0cd98924d56d8a84983.webp"
     },
     {
       "kind": "item",
@@ -4714,8 +4738,11 @@
       "id": 7750,
       "name": "Киберрука",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 175,
+      "sha256": "24e9ff5af6f3634fbeed9eea6cecf4e13f040dc90e675a52193dad65063a6f9c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7750/icon/24e9ff5af6f3634fbeed9eea6cecf4e13f040dc90e675a52193dad65063a6f9c.webp"
     },
     {
       "kind": "item",
@@ -4733,8 +4760,11 @@
       "id": 7751,
       "name": "Система кибераудио",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 175,
+      "sha256": "021c33922d1b73730e777cf2d0f26e7ab21c06e698fcdd6ff1e04362e6141f8d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7751/icon/021c33922d1b73730e777cf2d0f26e7ab21c06e698fcdd6ff1e04362e6141f8d.webp"
     },
     {
       "kind": "item",
@@ -4752,8 +4782,11 @@
       "id": 7752,
       "name": "Кибердека (встроенная)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 175,
+      "sha256": "7866044528e2dc3815864d697ff59467ca4649de4d325405017e25b6018896fe",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7752/icon/7866044528e2dc3815864d697ff59467ca4649de4d325405017e25b6018896fe.webp"
     },
     {
       "kind": "item",
@@ -4771,8 +4804,11 @@
       "id": 7753,
       "name": "Киберглаз",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 175,
+      "sha256": "4129335a41218c36c2a78affab0887b697df1bbd93a6cc8e5aa7d07f439114e2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7753/icon/4129335a41218c36c2a78affab0887b697df1bbd93a6cc8e5aa7d07f439114e2.webp"
     },
     {
       "kind": "item",
@@ -19695,7 +19731,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1211,
+    "publishedSlots": 1223,
     "readySlots": 0,
     "totalSlots": 1848
   }
