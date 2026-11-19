@@ -2,7 +2,7 @@
   <BaseTile :outlined="false"
     ><div class="red-panel">
       <h2>Расходы и доходы</h2>
-      <p>Баланс: {{ values.economy.cashEb }} eb</p>
+      <p>Баланс: <EurodollarAmount :amount="values.economy.cashEb" /></p>
       <p v-if="error" class="red-danger" role="alert">{{ error }}</p>
       <FormField label="Жильё" vertical
         ><FormSelect
@@ -14,7 +14,7 @@
             :key="i.key"
             :value="i.key.replace('housing-', '')"
           >
-            {{ i.name }} · {{ i.facts.rent }} eb/месяц
+            {{ i.name }} · {{ i.facts.rent }} €$/месяц
           </option></FormSelect
         ></FormField
       >
@@ -28,14 +28,14 @@
             :key="i.key"
             :value="i.key.replace('lifestyle-', '')"
           >
-            {{ i.name }} · {{ i.facts.monthlyCost }} eb/месяц
+            {{ i.name }} · {{ i.facts.monthlyCost }} €$/месяц
           </option></FormSelect
         ></FormField
       >
       <ActionButton
         v-if="editable"
         @click="transaction(-monthly, 'Жильё и образ жизни')"
-        >Оплатить следующий месяц · {{ monthly }} eb</ActionButton
+        >Оплатить следующий месяц · <EurodollarAmount :amount="monthly" /></ActionButton
       ><small
         >При создании первый месяц уже оплачен. Корпоративное жильё требует
         соответствующего положения; последствия задолженности определяет
@@ -45,7 +45,7 @@
         <FormTextInput
           v-model:value="label"
           placeholder="Работа, продажа, лечение или иной расход"
-        /><FormField label="Сумма eb: плюс доход, минус расход" vertical
+        /><FormField label="Сумма в евродолларах: плюс доход, минус расход" vertical
           ><FormNumberInput
             :value="amount"
             :min="-100000000"
@@ -63,12 +63,13 @@
         class="red-row"
       >
         <span>{{ row.name }}</span
-        ><strong>{{ row.amount > 0 ? "+" : "" }}{{ row.amount }} eb</strong>
+        ><strong>{{ row.amount > 0 ? "+" : "" }}<EurodollarAmount :amount="row.amount" /></strong>
       </div>
     </div></BaseTile
   >
 </template>
 <script setup>
+import EurodollarAmount from '@/shared/ui/EurodollarAmount.vue'
 import { computed, ref } from "vue";
 import {
   BaseTile,

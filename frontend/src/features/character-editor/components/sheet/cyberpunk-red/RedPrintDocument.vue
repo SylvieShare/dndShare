@@ -13,7 +13,7 @@
       <span>HP {{ values.health.current }} / {{ hpMaximum }}</span
       ><span>Humanity {{ values.humanity.current }}</span
       ><span>LUCK {{ values.luck.current }} / {{ values.stats.LUCK }}</span
-      ><span>Деньги {{ values.economy.cashEb }} eb</span
+      ><span>Деньги <EurodollarAmount :amount="values.economy.cashEb" /></span
       ><span>IP {{ values.progression.ipAvailable }}</span
       ><span>Репутация {{ values.progression.reputation }}</span>
     </div>
@@ -150,6 +150,7 @@
   </article>
 </template>
 <script setup>
+import EurodollarAmount from '@/shared/ui/EurodollarAmount.vue'
 import { redBaseWeaponDamage } from "../../../settings/cyberpunk-red/cyberWeapons";
 import { computed } from "vue";
 import {

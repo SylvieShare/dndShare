@@ -15,7 +15,7 @@
         >
           <div>
             <strong>{{ item.name }}</strong
-            ><small>{{ item.nameEn }}<template v-if="item.facts.price != null"> · {{ item.facts.price }} eb{{ item.facts.quantity > 1 ? ` / ${item.facts.quantity} шт.` : "" }}</template></small
+            ><small>{{ item.nameEn }}<template v-if="item.facts.price != null"> · <EurodollarAmount :amount="item.facts.price" />{{ item.facts.quantity > 1 ? ` / ${item.facts.quantity} шт.` : "" }}</template></small
             ><small v-if="item.facts.damage"
               >{{ item.facts.damage }} · ROF {{ item.facts.rof }}</small
             >
@@ -33,6 +33,7 @@
   >
 </template>
 <script setup>
+import EurodollarAmount from '@/shared/ui/EurodollarAmount.vue'
 import { computed, ref } from "vue";
 import { AppModal, ActionButton, FormTextInput } from "@sylvieshare/share-ui";
 const props = defineProps({

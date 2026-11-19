@@ -85,7 +85,7 @@ const current = computed(() => groups.value.find(group => group.id === selected.
 .wizard-shop .wealth-kicker { width: 100%; color: var(--warning); font-size: 10px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
 .wizard-shop .wealth-copy strong { color: var(--text-1); font-family: var(--font-display); font-size: 30px; }
 .wizard-shop .wealth-totals { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.wizard-shop .wealth-totals span { display: flex; flex-direction: column; gap: 2px; padding: 9px 11px; border-radius: var(--r-sm); background: color-mix(in srgb, var(--bg) 80%, transparent); color: var(--text-1); font-size: 14px; font-weight: 750; }
+.wizard-shop .wealth-totals > span { display: flex; flex-direction: column; gap: 2px; padding: 9px 11px; border-radius: var(--r-sm); background: color-mix(in srgb, var(--bg) 80%, transparent); color: var(--text-1); font-size: 14px; font-weight: 750; }
 .wizard-shop .wealth-totals small { color: var(--text-muted); font-size: 9px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
 .wizard-shop .wealth-totals .remaining { color: var(--success); }
 .wizard-shop .cart { min-width: 0; border: 1px solid var(--border); border-radius: calc(var(--r-md) + 2px); background: color-mix(in srgb, var(--surface) 72%, transparent); }
@@ -111,7 +111,7 @@ const current = computed(() => groups.value.find(group => group.id === selected.
 .wizard-shop .cart-remove { grid-row: 1 / 3; grid-column: 3; border: 0; background: transparent; color: var(--text-muted); }
 .wizard-shop .cart-remove:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 .wizard-shop .cart-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 11px 12px; border-top: 1px solid var(--border); background: var(--surface-raised); }
-.wizard-shop .cart-footer span { display: flex; flex-direction: column; gap: 2px; color: var(--text-muted); font-size: 9px; text-transform: uppercase; }
+.wizard-shop .cart-footer > span { display: flex; flex-direction: column; gap: 2px; color: var(--text-muted); font-size: 9px; text-transform: uppercase; }
 .wizard-shop .cart-footer strong { color: var(--text-1); font-size: 12px; text-transform: none; }
 .wizard-shop .cart-options { grid-column: 1 / -1; display: grid; gap: var(--spacing-small); min-width: 0; }
 .wizard-shop .cart-options > *, .wizard-shop .shop-summary > *, .wizard-shop .shop-rows > * { min-width: 0; max-width: 100%; }

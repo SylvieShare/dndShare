@@ -6,7 +6,7 @@
     </ItemReferenceRow>
     <button type="button" class="shop-add" :disabled="disabled" :aria-label="'Добавить ' + item.name"
       :title="disabled ? 'Не хватает монет' : 'Купить за ' + price" @click="$emit('buy')">
-      <Plus :size="15" aria-hidden="true" />{{ price }}
+      <Plus :size="15" aria-hidden="true" /><slot name="price">{{ price }}</slot>
     </button>
   </div>
 </template>

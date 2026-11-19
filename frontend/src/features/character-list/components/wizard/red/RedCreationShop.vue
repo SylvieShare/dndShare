@@ -2,27 +2,30 @@
   <div class="red-stack">
     <WizardShop :items="available" :categories="categories" :category-of="categoryOf" item-key="key" :cart-count="cartCount">
       <template #item="{ item }">
-        <WizardShopOffer :item="item" :price="item.facts.price + ' eb'" :count="item.facts.quantity || 1"
-          @buy="add(item)" @details="viewItem = item" />
+        <WizardShopOffer :item="item" :price="item.facts.price + ' €$'" :count="item.facts.quantity || 1"
+          @buy="add(item)" @details="viewItem = item">
+          <template #price><EurodollarAmount :amount="item.facts.price" /></template>
+        </WizardShopOffer>
       </template>
       <template #budget>
         <div class="wealth-copy">
           <span class="wealth-kicker">Начальное богатство</span>
-          <strong>{{ summary.generalLimit }} eb</strong>
+          <strong><EurodollarAmount :amount="summary.generalLimit" /></strong>
         </div>
         <div class="wealth-totals">
-          <span><small>Потрачено</small>{{ summary.general }} eb</span>
-          <span class="remaining"><small>Останется в кошельке</small>{{ summary.cash }} eb</span>
+          <span><small>Потрачено</small><EurodollarAmount :amount="summary.general" /></span>
+          <span class="remaining"><small>Останется в кошельке</small><EurodollarAmount :amount="summary.cash" /></span>
           <template v-if="draft.method === 'complete'">
-            <span><small>Одежда и fashionware</small>{{ summary.fashionLimit }} eb</span>
-            <span><small>Осталось на одежду</small>{{ summary.fashionLimit - summary.fashion }} eb</span>
+            <span><small>Одежда и fashionware</small><EurodollarAmount :amount="summary.fashionLimit" /></span>
+            <span><small>Осталось на одежду</small><EurodollarAmount :amount="summary.fashionLimit - summary.fashion" /></span>
           </template>
         </div>
         <p v-for="error in summary.errors" :key="error" class="red-danger">{{ error }}</p>
       </template>
       <template #cart>
         <WizardShopCartLine v-for="entry in draft.cart" :key="entry.uid" :item="byKey[entry.key] || { name: entry.key }"
-          :price="cartPrice(entry)" @details="viewItem = byKey[entry.key]" @remove="remove(entry)">
+           @details="viewItem = byKey[entry.key]" @remove="remove(entry)">
+          <template #price><EurodollarAmount v-if="byKey[entry.key]" :amount="cartPrice(entry)" /></template>
           <template #quantity>
             <FormNumberInput :value="entry.count" :min="1" :max="9999" @change="changeCount(entry, $event)" />
           </template>
@@ -51,8 +54,8 @@
         </WizardShopCartLine>
       </template>
       <template #totals>
-        <span>Итого <strong>{{ summary.general + summary.fashion }} eb</strong></span>
-        <span>Остаток <strong>{{ summary.cash }} eb</strong></span>
+        <span>Итого <strong><EurodollarAmount :amount="summary.general + summary.fashion" /></strong></span>
+        <span>Остаток <strong><EurodollarAmount :amount="summary.cash" /></strong></span>
       </template>
       <template #extras>
         <WizardSectionPanel v-if="draft.method !== 'complete'" class="shopping-panel kit-panel">
@@ -87,7 +90,7 @@
               ><strong>×{{ row.count }}</strong>
             </div>
           </details>
-          <small>Выданное комплектом не уменьшает дополнительные 500 eb.</small>
+          <small>Выданное комплектом не уменьшает дополнительные <EurodollarAmount :amount="500" />.</small>
         </WizardSectionPanel>
       </template>
     </WizardShop>
@@ -95,6 +98,7 @@
   </div>
 </template>
 <script setup>
+import EurodollarAmount from '@/shared/ui/EurodollarAmount.vue'
 import { computed, ref } from "vue";
 import {
   FormField,
@@ -123,7 +127,7 @@ const viewItem = ref(null);
 const cartCount = computed(() => props.draft.cart.reduce((sum, line) => sum + line.count, 0));
 function cartPrice(entry) {
   const facts = byKey.value[entry.key]?.facts;
-  return facts ? (facts.price * entry.count / (facts.quantity || 1)) + " eb" : "";
+  return facts.price * entry.count / (facts.quantity || 1);
 }
 function remove(entry) {
   emit("patch", { cart: props.draft.cart.filter(line => line.uid !== entry.uid) });

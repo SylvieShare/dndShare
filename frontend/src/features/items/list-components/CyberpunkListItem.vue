@@ -10,11 +10,12 @@
     ><template v-if="metric" #metric
       ><strong>{{ metric }}</strong></template
     ><template v-if="facts.price != null" #trailing
-      ><span>{{ facts.price }} eb</span></template
+      ><span><EurodollarAmount :amount="facts.price" /></span></template
     ></ObjectListItem
   >
 </template>
 <script setup>
+import EurodollarAmount from '@/shared/ui/EurodollarAmount.vue'
 import { computed } from "vue";
 import {
   Cpu,

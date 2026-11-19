@@ -198,12 +198,13 @@
             {{ RED_ROLES.find((r) => r.key === draft.role)?.name }} · ранг 4 ·
             {{ methods.find(method => method.key === draft.method)?.name }}
           </p>
-          <p>Остаток денег: {{ shopping.cash }} eb. Неиспользованные деньги на одежду не переносятся.</p>
+          <p>Остаток денег: <EurodollarAmount :amount="shopping.cash" />. Неиспользованные деньги на одежду не переносятся.</p>
         </WizardSectionPanel>
       </template>
   </WizardStepOutlet>
 </template>
 <script setup>
+import EurodollarAmount from '@/shared/ui/EurodollarAmount.vue'
 import { computed } from "vue";
 import {
   ActionButton,

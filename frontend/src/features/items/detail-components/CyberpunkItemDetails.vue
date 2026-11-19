@@ -2,7 +2,7 @@
   <section class="red-item-detail">
     <RichContent :html="item.data.description || ''" />
     <p v-if="purchasable && facts.price != null">
-      <strong>{{ facts.price }} eb</strong
+      <strong><EurodollarAmount :amount="facts.price" /></strong
       ><span v-if="facts.quantity > 1"> за {{ facts.quantity }} шт.</span>
     </p>
     <dl>
@@ -30,6 +30,7 @@
   </section>
 </template>
 <script setup>
+import EurodollarAmount from '@/shared/ui/EurodollarAmount.vue'
 import { computed } from "vue";
 import RichContent from "@/shared/ui/DndRichContent.vue";
 import {

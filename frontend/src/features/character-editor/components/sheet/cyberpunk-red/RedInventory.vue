@@ -16,7 +16,7 @@
             @change="
               emit('patch', { economy: { ...values.economy, cashEb: $event } })
             "
-          /><strong v-else>{{ values.economy.cashEb }} eb</strong></FormField
+          /><strong v-else><EurodollarAmount :amount="values.economy.cashEb" /></strong></FormField
         >
         <p v-if="error" class="red-danger" role="alert">{{ error }}</p>
         <FormField v-if="editable" label="Добавление предметов" vertical
@@ -259,6 +259,7 @@
   </div>
 </template>
 <script setup>
+import EurodollarAmount from '@/shared/ui/EurodollarAmount.vue'
 import { computed, ref } from "vue";
 import {
   BaseTile,

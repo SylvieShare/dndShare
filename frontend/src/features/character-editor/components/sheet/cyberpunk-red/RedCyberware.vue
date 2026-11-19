@@ -108,7 +108,7 @@
       ><div class="red-panel">
         <h2>{{ selected.name }}</h2>
         <p>
-          Стоимость {{ selected.facts.price }} eb · потеря Humanity
+          Стоимость <EurodollarAmount :amount="selected.facts.price" /> · потеря Humanity
           {{ selected.facts.humanityRoll }}.
         </p>
         <FormField label="Основание" vertical
@@ -136,6 +136,7 @@
   </div>
 </template>
 <script setup>
+import EurodollarAmount from '@/shared/ui/EurodollarAmount.vue'
 import { computed, ref } from "vue";
 import {
   BaseTile,

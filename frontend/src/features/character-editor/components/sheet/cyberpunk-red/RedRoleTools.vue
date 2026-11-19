@@ -11,7 +11,7 @@
             :key="i.key"
             :value="i.key"
           >
-            {{ i.name }} · {{ i.facts.price }} eb
+            {{ i.name }} · {{ i.facts.price }} €$
           </option></FormSelect
         ></FormField
       >
@@ -32,7 +32,7 @@
       >
       <p v-if="plan">
         DV {{ plan.dv }} · {{ plan.time }} · материалы
-        {{ mode === "field" ? 0 : plan.materials }} eb
+        <EurodollarAmount :amount="mode === 'field' ? 0 : plan.materials" />
       </p>
       <ActionButton :disabled="!editable || !plan" @click="work"
         >Проверка работы</ActionButton
@@ -121,6 +121,7 @@
   </div>
 </template>
 <script setup>
+import EurodollarAmount from '@/shared/ui/EurodollarAmount.vue'
 import { computed, ref } from "vue";
 import {
   FormField,

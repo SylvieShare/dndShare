@@ -52,7 +52,7 @@
               title: 'Изготовление: ' + recipe.name,
             })
           "
-          >Изготовить · 200 eb</ActionButton
+          >Изготовить · <EurodollarAmount :amount="200" /></ActionButton
         >
       </div>
     </div>
@@ -63,6 +63,7 @@
   </div>
 </template>
 <script setup>
+import EurodollarAmount from '@/shared/ui/EurodollarAmount.vue'
 import { computed } from "vue";
 import { ActionButton } from "@sylvieshare/share-ui";
 const props = defineProps({ role: Object, items: Array, editable: Boolean }),
