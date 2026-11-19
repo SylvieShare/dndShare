@@ -1,0 +1,525 @@
+{
+  "batch": 192,
+  "sourceId": 3,
+  "system": "Cyberpunk RED",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-192",
+  "assets": [
+    {
+      "key": "item-8018-icon",
+      "target": {
+        "kind": "item",
+        "id": 8018,
+        "typeId": 37,
+        "name": "Монтировка (отличное)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Crowbar (Excellent)\" (Монтировка (отличное)), the \"weapon-crowbar-excellent\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0349d01c-8b5a-4cb3-8bef-5ee8df3182ac.png",
+      "original": "originals/item-8018.png",
+      "final": "final/item-8018.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "f216b542b9e7ec1d50336697ecaf9e3be69da01a2d01434636835b96fd738ee1",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "298e7018c8a006bccb1d205b314a111befd83eae295232f63a20cd4cf4c97ad8",
+      "bytes": 6770,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51036,
+        "objectKey": "system-item-media/v1/items/8018/icon/298e7018c8a006bccb1d205b314a111befd83eae295232f63a20cd4cf4c97ad8.webp",
+        "fileSize": 6770
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8018/icon/298e7018c8a006bccb1d205b314a111befd83eae295232f63a20cd4cf4c97ad8.webp"
+    },
+    {
+      "key": "item-8019-icon",
+      "target": {
+        "kind": "item",
+        "id": 8019,
+        "typeId": 37,
+        "name": "Монтировка (плохое)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Crowbar (Poor)\" (Монтировка (плохое)), the \"weapon-crowbar-poor\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6cdd098a-3c9c-4d87-8b7f-b797452018c7.png",
+      "original": "originals/item-8019.png",
+      "final": "final/item-8019.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "58f56817fbe4e36e62e9d4b3c8fa574149d5ca3a63f05e5257be2c28d9135624",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "ab2b87097a1ee8c9a325ea7711ca0467a7b0891abd259e9dae9e344a67138570",
+      "bytes": 6536,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51037,
+        "objectKey": "system-item-media/v1/items/8019/icon/ab2b87097a1ee8c9a325ea7711ca0467a7b0891abd259e9dae9e344a67138570.webp",
+        "fileSize": 6536
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8019/icon/ab2b87097a1ee8c9a325ea7711ca0467a7b0891abd259e9dae9e344a67138570.webp"
+    },
+    {
+      "key": "item-8020-icon",
+      "target": {
+        "kind": "item",
+        "id": 8020,
+        "typeId": 37,
+        "name": "Дротикомёт"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Dartgun\" (Дротикомёт), the \"weapon-dartgun\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-67d1383a-eebd-485f-9fc8-a71b8a155a53.png",
+      "original": "originals/item-8020.png",
+      "final": "final/item-8020.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "f8e200b91c19771f9f00f7b3c07851dedde684afa98c9b98561a479fcf2c64bb",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "72691d7f6bb9529525b1105ae193bca77ebda6f224f6e4bd1f203a6b505947f1",
+      "bytes": 8348,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51038,
+        "objectKey": "system-item-media/v1/items/8020/icon/72691d7f6bb9529525b1105ae193bca77ebda6f224f6e4bd1f203a6b505947f1.webp",
+        "fileSize": 8348
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8020/icon/72691d7f6bb9529525b1105ae193bca77ebda6f224f6e4bd1f203a6b505947f1.webp"
+    },
+    {
+      "key": "item-8021-icon",
+      "target": {
+        "kind": "item",
+        "id": 8021,
+        "typeId": 37,
+        "name": "Огнемёт"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: Symbolic category art for the fictional flame-projector item: a red-orange enamel flame pin, cut in the shape of a broad three-lobed flame, with amber inset and tiny silver edging. Depict the decorative pin alone.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-99024f32-681b-461e-84cd-5aafd097a18c.png",
+      "original": "originals/item-8021.png",
+      "final": "final/item-8021.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "a0724a7b4b1e2999fae7c1a9284593b28b9f44296faa0be6a5f924367aa38ca2",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "5461de00aa7d9802a6ed6f8740ddc2bed1b9577058f0e43f24a5f672f48ab2df",
+      "bytes": 13674,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51039,
+        "objectKey": "system-item-media/v1/items/8021/icon/5461de00aa7d9802a6ed6f8740ddc2bed1b9577058f0e43f24a5f672f48ab2df.webp",
+        "fileSize": 13674
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8021/icon/5461de00aa7d9802a6ed6f8740ddc2bed1b9577058f0e43f24a5f672f48ab2df.webp"
+    },
+    {
+      "key": "item-8022-icon",
+      "target": {
+        "kind": "item",
+        "id": 8022,
+        "typeId": 37,
+        "name": "Гранатомёт"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Grenade Launcher — for this entry use exclusively a CLOSED factory transport case with violet shell pictogram and two dark clasps and one turquoise handle. Depict only packaging; no weapon, ammunition, technical construction or diagrams\" (Гранатомёт), the \"weapon-grenade-launcher\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-48d97d96-f7e7-42c9-ad6a-61487e7056a4.png",
+      "original": "originals/item-8022.png",
+      "final": "final/item-8022.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "e1cb6c22dfe199ce4f0141db49e6a5f184a042f3ae774c0d25123badd8c4be10",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "b8036d1219590711d5e3ddb3af43f94ebf90622177e757e1c1a3d3fdac1366d7",
+      "bytes": 9402,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51040,
+        "objectKey": "system-item-media/v1/items/8022/icon/b8036d1219590711d5e3ddb3af43f94ebf90622177e757e1c1a3d3fdac1366d7.webp",
+        "fileSize": 9402
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8022/icon/b8036d1219590711d5e3ddb3af43f94ebf90622177e757e1c1a3d3fdac1366d7.webp"
+    },
+    {
+      "key": "item-8023-icon",
+      "target": {
+        "kind": "item",
+        "id": 8023,
+        "typeId": 37,
+        "name": "Гранатомёт (отличное)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Grenade Launcher (Excellent) — for this entry use exclusively a CLOSED factory transport case with violet shell pictogram and pristine ivory corner caps and double gold latches. Depict only packaging; no weapon, ammunition, technical construction or diagrams\" (Гранатомёт (отличное)), the \"weapon-grenade-launcher-excellent\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-95da4e9f-fa7c-4302-911a-690041fff582.png",
+      "original": "originals/item-8023.png",
+      "final": "final/item-8023.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "631a4c9cd233ad9d413b1958b431e6e896e6d4eafe05fa919cf583a292e43248",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "7405454aca08fe251bf18af8508fa117b022d8a6d3d3a186e124839b3e88435f",
+      "bytes": 11034,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51041,
+        "objectKey": "system-item-media/v1/items/8023/icon/7405454aca08fe251bf18af8508fa117b022d8a6d3d3a186e124839b3e88435f.webp",
+        "fileSize": 11034
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8023/icon/7405454aca08fe251bf18af8508fa117b022d8a6d3d3a186e124839b3e88435f.webp"
+    },
+    {
+      "key": "item-8024-icon",
+      "target": {
+        "kind": "item",
+        "id": 8024,
+        "typeId": 37,
+        "name": "Гранатомёт (плохое)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: Symbolic game inventory art for the low-quality grenade launcher: a scuffed ochre triangular embroidered quartermaster patch with a plum bursting-star pictogram and visibly frayed corner. Only the cloth patch.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3d65262d-87a3-4bc9-9d68-94d92af335b4.png",
+      "original": "originals/item-8024.png",
+      "final": "final/item-8024.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "99e7e765a20f62df54bbde64839454bf7ec79b19dfbbedfe2e79765eab676efa",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "01dcbade989350d4895cb3189ef32320a9df0eddd70a411527890db7692eccc7",
+      "bytes": 16820,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51042,
+        "objectKey": "system-item-media/v1/items/8024/icon/01dcbade989350d4895cb3189ef32320a9df0eddd70a411527890db7692eccc7.webp",
+        "fileSize": 16820
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8024/icon/01dcbade989350d4895cb3189ef32320a9df0eddd70a411527890db7692eccc7.webp"
+    },
+    {
+      "key": "item-8025-icon",
+      "target": {
+        "kind": "item",
+        "id": 8025,
+        "typeId": 37,
+        "name": "Тяжёлое оружие ближнего боя"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: Symbolic inventory art for the heavy melee equipment class: a large angular graphite-and-burgundy shield-shaped enamel pin with one broad embossed hammer emblem and two copper rivets. Only the decorative insignia, no actual weapon or action.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7f53be36-517d-4760-adb3-81f078d1f394.png",
+      "original": "originals/item-8025.png",
+      "final": "final/item-8025.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "2bf6646d0b42f61797f9eb3ed309d101f8a0a569e0152c5dc788e460b22507c3",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "0ac7d613c196ba5e0df899fbaae0fa7269d25d4093b69cfdd837675b0d5c0e0a",
+      "bytes": 11632,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51043,
+        "objectKey": "system-item-media/v1/items/8025/icon/0ac7d613c196ba5e0df899fbaae0fa7269d25d4093b69cfdd837675b0d5c0e0a.webp",
+        "fileSize": 11632
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8025/icon/0ac7d613c196ba5e0df899fbaae0fa7269d25d4093b69cfdd837675b0d5c0e0a.webp"
+    },
+    {
+      "key": "item-8026-icon",
+      "target": {
+        "kind": "item",
+        "id": 8026,
+        "typeId": 37,
+        "name": "Тяжёлое оружие ближнего боя (отличное)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Heavy Melee (Excellent)\" (Тяжёлое оружие ближнего боя (отличное)), the \"weapon-heavy-melee-excellent\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f3a4f272-6add-440d-91a8-89bd79e4a396.png",
+      "original": "originals/item-8026.png",
+      "final": "final/item-8026.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "9e8b067c3a2a69b4a26a3a22a64b4ea3acb27df91ee06376dd40501b18cf6592",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "c1a60c86f991d70b49527dbfd3e6189fd0b620987222f81c3826c9bba6bea170",
+      "bytes": 8080,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51044,
+        "objectKey": "system-item-media/v1/items/8026/icon/c1a60c86f991d70b49527dbfd3e6189fd0b620987222f81c3826c9bba6bea170.webp",
+        "fileSize": 8080
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8026/icon/c1a60c86f991d70b49527dbfd3e6189fd0b620987222f81c3826c9bba6bea170.webp"
+    },
+    {
+      "key": "item-8027-icon",
+      "target": {
+        "kind": "item",
+        "id": 8027,
+        "typeId": 37,
+        "name": "Тяжёлое оружие ближнего боя (плохое)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Heavy Melee (Poor)\" (Тяжёлое оружие ближнего боя (плохое)), the \"weapon-heavy-melee-poor\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ec84a300-7db2-4acb-82ab-6caa4e3c790b.png",
+      "original": "originals/item-8027.png",
+      "final": "final/item-8027.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "25053d8db52a05eada54b9e61a435838ce18146704282291af87a054fd7277f5",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "f4cd2efaa7c8ec31e824465361bbec649cdf559ff63118403bebb8a7d4ab6cce",
+      "bytes": 9416,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51045,
+        "objectKey": "system-item-media/v1/items/8027/icon/f4cd2efaa7c8ec31e824465361bbec649cdf559ff63118403bebb8a7d4ab6cce.webp",
+        "fileSize": 9416
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8027/icon/f4cd2efaa7c8ec31e824465361bbec649cdf559ff63118403bebb8a7d4ab6cce.webp"
+    },
+    {
+      "key": "item-8028-icon",
+      "target": {
+        "kind": "item",
+        "id": 8028,
+        "typeId": 37,
+        "name": "Пистолет крупного калибра"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Heavy Pistol\" (Пистолет крупного калибра), the \"weapon-heavy-pistol\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c865ddbe-799b-474f-b136-cdb6adbf6ca6.png",
+      "original": "originals/item-8028.png",
+      "final": "final/item-8028.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "370199c51c0cc567d490348450feb42a353043bb9c32f94093dcb00581abb906",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "37d148c4c09e0702549a184cb0f4d912ede27d26fd00e2ce14a1b65ca6aad144",
+      "bytes": 9704,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51046,
+        "objectKey": "system-item-media/v1/items/8028/icon/37d148c4c09e0702549a184cb0f4d912ede27d26fd00e2ce14a1b65ca6aad144.webp",
+        "fileSize": 9704
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8028/icon/37d148c4c09e0702549a184cb0f4d912ede27d26fd00e2ce14a1b65ca6aad144.webp"
+    },
+    {
+      "key": "item-8029-icon",
+      "target": {
+        "kind": "item",
+        "id": 8029,
+        "typeId": 37,
+        "name": "Пистолет крупного калибра (отличное)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Heavy Pistol (Excellent)\" (Пистолет крупного калибра (отличное)), the \"weapon-heavy-pistol-excellent\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9ddebe69-5b7d-4f93-8e78-9b4935379966.png",
+      "original": "originals/item-8029.png",
+      "final": "final/item-8029.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "1c699817ad1636072d9a0b0067d5f24e576b99a601a30d1fb53962ee938f01ce",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "156dd7266862f51043515881a5ff8ab072472e5d02b161c7172c3f9d6aa1f91d",
+      "bytes": 10330,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51047,
+        "objectKey": "system-item-media/v1/items/8029/icon/156dd7266862f51043515881a5ff8ab072472e5d02b161c7172c3f9d6aa1f91d.webp",
+        "fileSize": 10330
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8029/icon/156dd7266862f51043515881a5ff8ab072472e5d02b161c7172c3f9d6aa1f91d.webp"
+    }
+  ]
+}
