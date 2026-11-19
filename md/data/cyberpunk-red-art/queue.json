@@ -2362,8 +2362,11 @@
       "id": 7639,
       "name": "Зеркальные очки (бомжатский прикид)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 168,
+      "sha256": "2fb849c09a606d75beffe836e4bed8a649fac6832c65a8eb5d71c2c1d043954d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7639/icon/2fb849c09a606d75beffe836e4bed8a649fac6832c65a8eb5d71c2c1d043954d.webp"
     },
     {
       "kind": "item",
@@ -2381,8 +2384,11 @@
       "id": 7640,
       "name": "Верх (бомжатский прикид)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 168,
+      "sha256": "8ced316027aec2e543f01694b3b0bd4a7565bcdd9d0015ad58cd7a89a1dc1c50",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7640/icon/8ced316027aec2e543f01694b3b0bd4a7565bcdd9d0015ad58cd7a89a1dc1c50.webp"
     },
     {
       "kind": "item",
@@ -2400,8 +2406,11 @@
       "id": 7641,
       "name": "Низ (бохо)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 168,
+      "sha256": "261c039bfbc22f78e70b733b1f03dc5e469dd247138150ae1a363d201d1741ef",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7641/icon/261c039bfbc22f78e70b733b1f03dc5e469dd247138150ae1a363d201d1741ef.webp"
     },
     {
       "kind": "item",
@@ -2419,8 +2428,11 @@
       "id": 7642,
       "name": "Контактные линзы (бохо)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 168,
+      "sha256": "e69ea78c391197642f2418325cd88b8a8a559d233baf3830ac19cc9150aaa985",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7642/icon/e69ea78c391197642f2418325cd88b8a8a559d233baf3830ac19cc9150aaa985.webp"
     },
     {
       "kind": "item",
@@ -2438,8 +2450,11 @@
       "id": 7643,
       "name": "Обувь (бохо)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 168,
+      "sha256": "b5c7ed40fdcf03354bfe3d8e19b4b28475ce4899a81fb33172fa87203098a15c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7643/icon/b5c7ed40fdcf03354bfe3d8e19b4b28475ce4899a81fb33172fa87203098a15c.webp"
     },
     {
       "kind": "item",
@@ -2457,8 +2472,11 @@
       "id": 7644,
       "name": "Очки (бохо)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 168,
+      "sha256": "ea135af48d7eac94b89e95deba6ee5f0e665fda4680f996986bb52e14655d74b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7644/icon/ea135af48d7eac94b89e95deba6ee5f0e665fda4680f996986bb52e14655d74b.webp"
     },
     {
       "kind": "item",
@@ -2476,8 +2494,11 @@
       "id": 7645,
       "name": "Головной убор (бохо)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 168,
+      "sha256": "f571319ec1c03210c80bf233d0ed586dffd561069cf56943e8418343be80e658",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7645/icon/f571319ec1c03210c80bf233d0ed586dffd561069cf56943e8418343be80e658.webp"
     },
     {
       "kind": "item",
@@ -2495,8 +2516,11 @@
       "id": 7646,
       "name": "Верхняя одежда (бохо)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 168,
+      "sha256": "6a98f7ca146d56466e99c758bf2d1a623b8846915ab1972adfef7aaad0adc746",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7646/icon/6a98f7ca146d56466e99c758bf2d1a623b8846915ab1972adfef7aaad0adc746.webp"
     },
     {
       "kind": "item",
@@ -2514,8 +2538,11 @@
       "id": 7647,
       "name": "Украшение (бохо)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 168,
+      "sha256": "c40432ba04f6604805fbb228edf2b3f7bf9e148bc7cee65f1e1e4c3c9badd963",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7647/icon/c40432ba04f6604805fbb228edf2b3f7bf9e148bc7cee65f1e1e4c3c9badd963.webp"
     },
     {
       "kind": "item",
@@ -2533,8 +2560,11 @@
       "id": 7648,
       "name": "Зеркальные очки (бохо)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 168,
+      "sha256": "4208a5fcd97aa4d45aba395b880f34da0e49bbd3b1f8bda6562bc8d9e939fb10",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7648/icon/4208a5fcd97aa4d45aba395b880f34da0e49bbd3b1f8bda6562bc8d9e939fb10.webp"
     },
     {
       "kind": "item",
@@ -2552,8 +2582,11 @@
       "id": 7649,
       "name": "Верх (бохо)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 168,
+      "sha256": "731690b95e84a2d6c6f35bdeee855dadc4cc124e5476c0f2341168fe308be7a1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7649/icon/731690b95e84a2d6c6f35bdeee855dadc4cc124e5476c0f2341168fe308be7a1.webp"
     },
     {
       "kind": "item",
@@ -2571,8 +2604,11 @@
       "id": 7650,
       "name": "Низ (деловой стиль)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 168,
+      "sha256": "34b062615face5a4ff9f257396d13a920b22b3dcd8f133c6f6973fc9cd0f4528",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7650/icon/34b062615face5a4ff9f257396d13a920b22b3dcd8f133c6f6973fc9cd0f4528.webp"
     },
     {
       "kind": "item",
@@ -19443,7 +19479,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1127,
+    "publishedSlots": 1139,
     "readySlots": 0,
     "totalSlots": 1848
   }

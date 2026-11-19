@@ -1,0 +1,525 @@
+{
+  "batch": 168,
+  "sourceId": 3,
+  "system": "Cyberpunk RED",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-168",
+  "assets": [
+    {
+      "key": "item-7639-icon",
+      "target": {
+        "kind": "item",
+        "id": 7639,
+        "typeId": 23,
+        "name": "Зеркальные очки (бомжатский прикид)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Bag Lady Chic Mirrorshades\" (Зеркальные очки (бомжатский прикид)), the \"clothing-bag-lady-chic-mirrorshades\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8e854039-4314-4eba-9b37-a88a391bba3f.png",
+      "original": "originals/item-7639.png",
+      "final": "final/item-7639.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "dfb9c0fc0dc2e8170a50aa275248a510ccc40aad06898d7cb99f3c1024f11b5e",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "2fb849c09a606d75beffe836e4bed8a649fac6832c65a8eb5d71c2c1d043954d",
+      "bytes": 10196,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50748,
+        "objectKey": "system-item-media/v1/items/7639/icon/2fb849c09a606d75beffe836e4bed8a649fac6832c65a8eb5d71c2c1d043954d.webp",
+        "fileSize": 10196
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7639/icon/2fb849c09a606d75beffe836e4bed8a649fac6832c65a8eb5d71c2c1d043954d.webp"
+    },
+    {
+      "key": "item-7640-icon",
+      "target": {
+        "kind": "item",
+        "id": 7640,
+        "typeId": 23,
+        "name": "Верх (бомжатский прикид)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Bag Lady Chic Top\" (Верх (бомжатский прикид)), the \"clothing-bag-lady-chic-top\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-dffa025d-305a-4ec0-ad00-2d1f7256c824.png",
+      "original": "originals/item-7640.png",
+      "final": "final/item-7640.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "0a4c9c712ab9dbe5a0897ad0ec45cf184a571186c13625b3c0a8c464c375e117",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "8ced316027aec2e543f01694b3b0bd4a7565bcdd9d0015ad58cd7a89a1dc1c50",
+      "bytes": 18136,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50749,
+        "objectKey": "system-item-media/v1/items/7640/icon/8ced316027aec2e543f01694b3b0bd4a7565bcdd9d0015ad58cd7a89a1dc1c50.webp",
+        "fileSize": 18136
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7640/icon/8ced316027aec2e543f01694b3b0bd4a7565bcdd9d0015ad58cd7a89a1dc1c50.webp"
+    },
+    {
+      "key": "item-7641-icon",
+      "target": {
+        "kind": "item",
+        "id": 7641,
+        "typeId": 23,
+        "name": "Низ (бохо)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Bohemian Bottoms\" (Низ (бохо)), the \"clothing-bohemian-bottoms\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3f0ea5ed-837d-43ee-a026-9d1e8e954945.png",
+      "original": "originals/item-7641.png",
+      "final": "final/item-7641.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "fa9ca6f503d55c8ffaf9cd872e65b24bdba22645f8047fe1cf03e72ed3e43be0",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "261c039bfbc22f78e70b733b1f03dc5e469dd247138150ae1a363d201d1741ef",
+      "bytes": 17622,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50750,
+        "objectKey": "system-item-media/v1/items/7641/icon/261c039bfbc22f78e70b733b1f03dc5e469dd247138150ae1a363d201d1741ef.webp",
+        "fileSize": 17622
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7641/icon/261c039bfbc22f78e70b733b1f03dc5e469dd247138150ae1a363d201d1741ef.webp"
+    },
+    {
+      "key": "item-7642-icon",
+      "target": {
+        "kind": "item",
+        "id": 7642,
+        "typeId": 23,
+        "name": "Контактные линзы (бохо)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Bohemian Contact Lenses\" (Контактные линзы (бохо)), the \"clothing-bohemian-contact-lenses\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7fc2d263-66bc-4b3a-99f5-472892e64bca.png",
+      "original": "originals/item-7642.png",
+      "final": "final/item-7642.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "d788eb90bcff1a9c1be773930a88a77889c2d46d6d6ef5eb9e4f3a90c739b7e5",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "e69ea78c391197642f2418325cd88b8a8a559d233baf3830ac19cc9150aaa985",
+      "bytes": 21956,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50751,
+        "objectKey": "system-item-media/v1/items/7642/icon/e69ea78c391197642f2418325cd88b8a8a559d233baf3830ac19cc9150aaa985.webp",
+        "fileSize": 21956
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7642/icon/e69ea78c391197642f2418325cd88b8a8a559d233baf3830ac19cc9150aaa985.webp"
+    },
+    {
+      "key": "item-7643-icon",
+      "target": {
+        "kind": "item",
+        "id": 7643,
+        "typeId": 23,
+        "name": "Обувь (бохо)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Bohemian Footwear\" (Обувь (бохо)), the \"clothing-bohemian-footwear\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e8b422a1-d10e-4ab0-a1ba-fe0e57d2c408.png",
+      "original": "originals/item-7643.png",
+      "final": "final/item-7643.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "04b10cb34814ff5045b8cb416e45561254c50d14c91a20c3864c87a971f95783",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "b5c7ed40fdcf03354bfe3d8e19b4b28475ce4899a81fb33172fa87203098a15c",
+      "bytes": 19158,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50752,
+        "objectKey": "system-item-media/v1/items/7643/icon/b5c7ed40fdcf03354bfe3d8e19b4b28475ce4899a81fb33172fa87203098a15c.webp",
+        "fileSize": 19158
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7643/icon/b5c7ed40fdcf03354bfe3d8e19b4b28475ce4899a81fb33172fa87203098a15c.webp"
+    },
+    {
+      "key": "item-7644-icon",
+      "target": {
+        "kind": "item",
+        "id": 7644,
+        "typeId": 23,
+        "name": "Очки (бохо)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Bohemian Glasses\" (Очки (бохо)), the \"clothing-bohemian-glasses\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f543c482-ae85-4412-b148-452c96663f94.png",
+      "original": "originals/item-7644.png",
+      "final": "final/item-7644.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "34034484b8e01f373d696556f9d18d007453969b77d9d1c8d03f3ebb096a2e34",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "ea135af48d7eac94b89e95deba6ee5f0e665fda4680f996986bb52e14655d74b",
+      "bytes": 11356,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50753,
+        "objectKey": "system-item-media/v1/items/7644/icon/ea135af48d7eac94b89e95deba6ee5f0e665fda4680f996986bb52e14655d74b.webp",
+        "fileSize": 11356
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7644/icon/ea135af48d7eac94b89e95deba6ee5f0e665fda4680f996986bb52e14655d74b.webp"
+    },
+    {
+      "key": "item-7645-icon",
+      "target": {
+        "kind": "item",
+        "id": 7645,
+        "typeId": 23,
+        "name": "Головной убор (бохо)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Bohemian Hat\" (Головной убор (бохо)), the \"clothing-bohemian-hat\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-70662d6d-c82d-4774-881e-7193996c116d.png",
+      "original": "originals/item-7645.png",
+      "final": "final/item-7645.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "52fdf4e139f320fc3f62688bebfd2569693c8c3378cefd569966f173e0f90d80",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "f571319ec1c03210c80bf233d0ed586dffd561069cf56943e8418343be80e658",
+      "bytes": 11948,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50754,
+        "objectKey": "system-item-media/v1/items/7645/icon/f571319ec1c03210c80bf233d0ed586dffd561069cf56943e8418343be80e658.webp",
+        "fileSize": 11948
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7645/icon/f571319ec1c03210c80bf233d0ed586dffd561069cf56943e8418343be80e658.webp"
+    },
+    {
+      "key": "item-7646-icon",
+      "target": {
+        "kind": "item",
+        "id": 7646,
+        "typeId": 23,
+        "name": "Верхняя одежда (бохо)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Bohemian Jacket\" (Верхняя одежда (бохо)), the \"clothing-bohemian-jacket\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6d2349a9-08c3-4afc-b18b-bad4d9948502.png",
+      "original": "originals/item-7646.png",
+      "final": "final/item-7646.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "c95be76f604a9c63e04bf50319ad93682d703657253ef042ce2216d9cbf97d7f",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "6a98f7ca146d56466e99c758bf2d1a623b8846915ab1972adfef7aaad0adc746",
+      "bytes": 18550,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50755,
+        "objectKey": "system-item-media/v1/items/7646/icon/6a98f7ca146d56466e99c758bf2d1a623b8846915ab1972adfef7aaad0adc746.webp",
+        "fileSize": 18550
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7646/icon/6a98f7ca146d56466e99c758bf2d1a623b8846915ab1972adfef7aaad0adc746.webp"
+    },
+    {
+      "key": "item-7647-icon",
+      "target": {
+        "kind": "item",
+        "id": 7647,
+        "typeId": 23,
+        "name": "Украшение (бохо)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Bohemian Jewelry\" (Украшение (бохо)), the \"clothing-bohemian-jewelry\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7e4f446e-8e71-4bca-b66d-cad65806af2b.png",
+      "original": "originals/item-7647.png",
+      "final": "final/item-7647.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "1b447553f0107e90921c6cfeff23712c099a80bd0d0850451a37ee717c43bc2a",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "c40432ba04f6604805fbb228edf2b3f7bf9e148bc7cee65f1e1e4c3c9badd963",
+      "bytes": 17390,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50756,
+        "objectKey": "system-item-media/v1/items/7647/icon/c40432ba04f6604805fbb228edf2b3f7bf9e148bc7cee65f1e1e4c3c9badd963.webp",
+        "fileSize": 17390
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7647/icon/c40432ba04f6604805fbb228edf2b3f7bf9e148bc7cee65f1e1e4c3c9badd963.webp"
+    },
+    {
+      "key": "item-7648-icon",
+      "target": {
+        "kind": "item",
+        "id": 7648,
+        "typeId": 23,
+        "name": "Зеркальные очки (бохо)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Bohemian Mirrorshades\" (Зеркальные очки (бохо)), the \"clothing-bohemian-mirrorshades\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-dade7618-d7f9-4063-9350-d753929e6496.png",
+      "original": "originals/item-7648.png",
+      "final": "final/item-7648.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "7ec09cdac0b58a291c28f4fecc6bde1c0a89756586b975b2a8968e10585803df",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "4208a5fcd97aa4d45aba395b880f34da0e49bbd3b1f8bda6562bc8d9e939fb10",
+      "bytes": 12934,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50757,
+        "objectKey": "system-item-media/v1/items/7648/icon/4208a5fcd97aa4d45aba395b880f34da0e49bbd3b1f8bda6562bc8d9e939fb10.webp",
+        "fileSize": 12934
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7648/icon/4208a5fcd97aa4d45aba395b880f34da0e49bbd3b1f8bda6562bc8d9e939fb10.webp"
+    },
+    {
+      "key": "item-7649-icon",
+      "target": {
+        "kind": "item",
+        "id": 7649,
+        "typeId": 23,
+        "name": "Верх (бохо)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Bohemian Top\" (Верх (бохо)), the \"clothing-bohemian-top\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5ddcfa80-f155-463a-a5f2-8af02b97109d.png",
+      "original": "originals/item-7649.png",
+      "final": "final/item-7649.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "2afa6d785a281a7f676ebf96bfcad6f1e9cccb10ff87e980655769e176bb8142",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "731690b95e84a2d6c6f35bdeee855dadc4cc124e5476c0f2341168fe308be7a1",
+      "bytes": 19112,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50758,
+        "objectKey": "system-item-media/v1/items/7649/icon/731690b95e84a2d6c6f35bdeee855dadc4cc124e5476c0f2341168fe308be7a1.webp",
+        "fileSize": 19112
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7649/icon/731690b95e84a2d6c6f35bdeee855dadc4cc124e5476c0f2341168fe308be7a1.webp"
+    },
+    {
+      "key": "item-7650-icon",
+      "target": {
+        "kind": "item",
+        "id": 7650,
+        "typeId": 23,
+        "name": "Низ (деловой стиль)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Businesswear Bottoms\" (Низ (деловой стиль)), the \"clothing-businesswear-bottoms\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b2a3bb8c-ce59-453b-bf6b-979638f29ece.png",
+      "original": "originals/item-7650.png",
+      "final": "final/item-7650.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "3bca6108aa8fac8ca329b430a719840433f22c5efe2b7d4010dd8b51e02224d3",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "34b062615face5a4ff9f257396d13a920b22b3dcd8f133c6f6973fc9cd0f4528",
+      "bytes": 9672,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50759,
+        "objectKey": "system-item-media/v1/items/7650/icon/34b062615face5a4ff9f257396d13a920b22b3dcd8f133c6f6973fc9cd0f4528.webp",
+        "fileSize": 9672
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7650/icon/34b062615face5a4ff9f257396d13a920b22b3dcd8f133c6f6973fc9cd0f4528.webp"
+    }
+  ]
+}
