@@ -1,7 +1,7 @@
 <template>
   <WizardFrame
     :embedded="embedded" :creating="creating" :steps="steps"
-    class="red-wizard" main-class="red-wizard-main" :icon="Cpu"
+    class="red-wizard" :main-class="{ 'red-wizard-main': true, 'shop-main': stepKey === 'equipment' }" :icon="Cpu"
     :current="step" :reachable="reachableStep" :show-incomplete="!fullyValid" :incomplete-disabled="!available"
     @create-incomplete="requestIncomplete"
     @scroll-source="mainRef = $event" @go="goTo" @close="exit" @reset="resetOpen = true"

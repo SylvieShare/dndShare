@@ -338,6 +338,13 @@ for(const width of [390,840,1440]){
   await shop.locator('.categories').getByRole('button',{name:/Киберимпланты/}).click()
   await expect(shop.locator('.categories button[aria-pressed=true] img')).toHaveAttribute('src',cover)
   await expect(shop.locator('.wealth-copy img[alt="евродоллары"]')).toHaveJSProperty('naturalWidth',128)
+  if(width>620){
+   const mainOverflow=await main.evaluate(el=>el.scrollHeight-el.clientHeight)
+   expect(mainOverflow).toBeLessThanOrEqual(1)
+   const gap=await shop.locator('.shop-rows').evaluate(el=>document.querySelector('.cc-foot').getBoundingClientRect().top-el.getBoundingClientRect().bottom)
+   expect(Math.abs(gap)).toBeLessThanOrEqual(1)
+  }
+  await expect(shop.locator('.shop-item .item-icon--type img').first()).toHaveAttribute('src',cover)
   await shop.locator('.shop-add').first().click()
   await expect(shop.locator('.cart-price img[alt="евродоллары"]')).toBeVisible()
   await expect(shop.getByText('Расположение',{exact:true})).toBeVisible()

@@ -2,7 +2,7 @@
   <div class="shop-step">
     <WizardShop :items="startingShopItems" :loading="shopLoading" :categories="categories" :category-of="categoryOf" :cart-count="cartCount">
       <template #item="{ item }">
-        <WizardShopOffer :item="item" :count="purchaseQuantity(item)" :price="priceLabel(item)"
+        <WizardShopOffer :item-type="typeById(item.typeId)" :item="item" :count="purchaseQuantity(item)" :price="priceLabel(item)"
           :disabled="!canBuyShopItem(item)" @buy="buy(item)" @details="viewItem = item" />
       </template>
       <template #budget>
@@ -26,7 +26,7 @@
       </template>
       <template #cart>
         <WizardShopCartLine v-for="entry in state.startingShopCart" :key="`${entry.item_id}:${JSON.stringify(entry.params)}`"
-          :item="entry" :name="instanceName(entry)" :price="priceLabel(entry) + (packagingNote(entry) ? ' / ' + purchaseQuantity(entry) + ' шт.' : '')"
+          :item-type="typeById(entry.typeId)" :item="entry" :name="instanceName(entry)" :price="priceLabel(entry) + (packagingNote(entry) ? ' / ' + purchaseQuantity(entry) + ' шт.' : '')"
           @details="viewItem = entry" @remove="removeShopItem(entry)">
           <template #quantity>
             <button type="button" aria-label="Уменьшить" @click="bumpShopItem(entry, -1)">−</button>

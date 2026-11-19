@@ -1,7 +1,7 @@
 <template>
   <div class="cart-item">
     <button class="cart-name" type="button" @click="$emit('details')">
-      <WizardShopItemIcon :item="item" :size="30" />{{ name || item.name }}
+      <ItemIcon placeholder :type="itemType" :item="item" :size="30" />{{ name || item.name }}
     </button>
     <span class="cart-price"><slot name="price">{{ price }}</slot></span>
     <div class="cart-quantity"><slot name="quantity" /></div>
@@ -11,7 +11,7 @@
 </template>
 <script setup>
 import { X } from '@lucide/vue'
-import WizardShopItemIcon from './WizardShopItemIcon.vue'
-defineProps({ item: { type: Object, required: true }, name: String, price: String })
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
+defineProps({ item: { type: Object, required: true }, name: String, itemType: Object, price: String })
 defineEmits(['details', 'remove'])
 </script>

@@ -7,7 +7,7 @@ for (const width of [390, 840, 1440]) {
     await page.setViewportSize({ width, height: 920 })
     await page.route(url => url.pathname.startsWith('/api/'), route => {
       const url = new URL(route.request().url())
-      const catalogues = { 2: [rope], 9: [{ id: 12, typeId: 9, name: 'Воин', data: {} }] }
+      const catalogues = { 2: Array.from({length: 30}, (_, index) => ({ ...rope, id: rope.id + index })), 9: [{ id: 12, typeId: 9, name: 'Воин', data: {} }] }
       const responses = {
         '/api/sources': { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] },
         '/api/item-types': { types: [{id:2, name:'Снаряжение', iconImageUrl:icon}] },
@@ -34,7 +34,16 @@ for (const width of [390, 840, 1440]) {
     const summary = await shop.locator('.shop-summary').boundingBox()
     if (width === 390) expect(summary.y).toBeGreaterThan(catalogue.y)
     else expect(summary.x).toBeGreaterThanOrEqual(catalogue.x + catalogue.width)
-    await shop.locator('.shop-add').click()
+    if (width > 620) {
+      const list = shop.locator('.shop-rows')
+      const bottomGap = await list.evaluate(el =>
+        document.querySelector('.cc-foot').getBoundingClientRect().top - el.getBoundingClientRect().bottom)
+      expect(Math.abs(bottomGap)).toBeLessThanOrEqual(1)
+      await list.evaluate(el => { el.scrollTop = el.scrollHeight })
+      expect(await list.evaluate(el => el.scrollTop)).toBeGreaterThan(0)
+      await list.evaluate(el => { el.scrollTop = 0 })
+    }
+    await shop.locator('.shop-add').first().click()
     await expect(shop.locator('.cart-name img')).toBeVisible()
     await info.attach('shop-' + width, { body: await page.screenshot(), contentType: 'image/png' })
     await shop.getByRole('radio', { name: 'Бросок' }).click()

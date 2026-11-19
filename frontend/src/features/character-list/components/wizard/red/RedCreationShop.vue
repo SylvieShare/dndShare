@@ -1,8 +1,8 @@
 <template>
-  <div class="red-stack">
+  <div class="shop-step">
     <WizardShop :items="available" :categories="categories" :category-of="categoryOf" item-key="key" :cart-count="cartCount">
       <template #item="{ item }">
-        <WizardShopOffer :item="item" :price="item.facts.price + ' €$'" :count="item.facts.quantity || 1"
+        <WizardShopOffer :item="item" :item-type="typeById(item.typeId)" :price="item.facts.price + ' €$'" :count="item.facts.quantity || 1"
           @buy="add(item)" @details="viewItem = item">
           <template #price><EurodollarAmount :amount="item.facts.price" /></template>
         </WizardShopOffer>
@@ -23,7 +23,7 @@
         <p v-for="error in summary.errors" :key="error" class="red-danger">{{ error }}</p>
       </template>
       <template #cart>
-        <WizardShopCartLine v-for="entry in draft.cart" :key="entry.uid" :item="byKey[entry.key] || { name: entry.key }"
+        <WizardShopCartLine :item-type="typeById(byKey[entry.key]?.typeId)" v-for="entry in draft.cart" :key="entry.uid" :item="byKey[entry.key] || { name: entry.key }"
            @details="viewItem = byKey[entry.key]" @remove="remove(entry)">
           <template #price><EurodollarAmount v-if="byKey[entry.key]" :amount="cartPrice(entry)" /></template>
           <template #quantity>
@@ -85,7 +85,7 @@
           <details v-if="giftRows.length" class="kit-grants">
             <summary>Уже выдано · {{ giftRows.length }} поз.</summary>
             <div v-for="(row, i) in giftRows" :key="i" class="kit-row">
-              <WizardShopItemIcon :item="byKey[row.key] || {}" :size="30" />
+              <ItemIcon placeholder :type="typeById(byKey[row.key]?.typeId)" :item="byKey[row.key] || {}" :size="30" />
               <span>{{ byKey[row.key]?.name || row.key }}</span
               ><strong>×{{ row.count }}</strong>
             </div>
@@ -110,7 +110,7 @@ import ItemViewModal from "@/features/handbook/components/ItemViewModal.vue";
 import WizardShopOffer from "../WizardShopOffer.vue";
 import WizardShopCartLine from "../WizardShopCartLine.vue";
 import WizardShop from "../WizardShop.vue";
-import WizardShopItemIcon from "../WizardShopItemIcon.vue";
+import ItemIcon from "@/features/items/components/ItemIcon.vue";
 import {
   RED_STARTING_KITS,
   redKitRows,

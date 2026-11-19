@@ -72,7 +72,14 @@ const current = computed(() => groups.value.find(group => group.id === selected.
 .categories { display: flex; flex-wrap: wrap; gap: 4px; }
 .categories button { display: inline-flex; align-items: center; gap: 4px; padding: 6px 8px; background: var(--surface); color: var(--text-2); border: 0; border-radius: var(--r-md); font: inherit; font-size: 12px; cursor: pointer; }
 .categories button[aria-pressed=true] { background: var(--accent); color: var(--text-on-accent); }
-.shop-rows { display: grid; gap: var(--spacing-small); max-height: 66dvh; overflow-y: auto; }
+.shop-rows { display: grid; gap: var(--spacing-small); align-content: start; overflow-y: auto; }
+@container wizard-main (min-width: 621px) {
+  .wizard-shop { flex: 1 1 0; min-height: 0; grid-template-rows: auto minmax(0, 1fr); }
+  .shop-columns { min-height: 0; grid-template-rows: minmax(0, 1fr); align-items: stretch; }
+  .catalogue { min-height: 0; grid-template-rows: auto auto minmax(3rem, 1fr); overflow-y: auto; }
+  .shop-summary { min-height: 0; align-content: start; overflow-y: auto; }
+  .shop-rows { min-height: 0; }
+}
 @container (max-width: 620px) {
   .shop-columns { grid-template-columns: minmax(0, 1fr); }
   .shop-rows { max-height: 48dvh; }
@@ -98,7 +105,7 @@ const current = computed(() => groups.value.find(group => group.id === selected.
 .wizard-shop .cart-heading span { color: var(--text-1); font-family: var(--font-display); font-size: 18px; font-weight: 700; }
 .wizard-shop .cart-heading small { color: var(--text-muted); font-size: 10px; }
 .wizard-shop .cart-empty { padding: 28px 16px; color: var(--text-muted); font-size: 12px; line-height: 1.5; text-align: center; }
-.wizard-shop .cart-items { display: flex; flex-direction: column; max-height: 470px; overflow-y: auto; }
+.wizard-shop .cart-items { display: flex; flex-direction: column; }
 .wizard-shop .cart-item { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 4px 8px; padding: 10px 12px; }
 .wizard-shop .cart-item + .cart-item { border-top: 1px solid var(--border); }
 .wizard-shop .cart-name { display: flex; align-items: center; gap: 6px; min-width: 0; padding: 0; border: 0; background: none; color: var(--text-1); font: inherit; font-size: 12px; font-weight: 650; text-align: left; cursor: pointer; }

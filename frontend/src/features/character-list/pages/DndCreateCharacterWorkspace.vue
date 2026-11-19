@@ -1,7 +1,7 @@
 <template>
   <WizardFrame
     :embedded="embedded" :creating="creating" :steps="steps"
-    :main-class="{ 'cc-main--invalid': invalidPulse }"
+    :main-class="{ 'cc-main--invalid': invalidPulse, 'shop-main': stepKey === 'shop' }"
     :current="current" :reachable="maxReachable" :show-incomplete="!isFullyValid" :incomplete-disabled="initializing || !!bootstrapError"
     @create-incomplete="createIncomplete"
     @scroll-source="mainRef = $event" @go="goTo" @close="exit" @reset="resetOpen = true"
