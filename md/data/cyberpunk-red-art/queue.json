@@ -10844,8 +10844,11 @@
       "id": 8030,
       "name": "Пистолет крупного калибра (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 193,
+      "sha256": "bbc42816ea1a3bc6b331408c3aca7a6ffa08a83c4243a6ad9edaea36d8fbc7bc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8030/icon/bbc42816ea1a3bc6b331408c3aca7a6ffa08a83c4243a6ad9edaea36d8fbc7bc.webp"
     },
     {
       "kind": "item",
@@ -10863,8 +10866,11 @@
       "id": 8031,
       "name": "ПП крупного калибра",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 193,
+      "sha256": "dd44e6bbcd39be0201c758ca4fef5ffc3168771620464dceb6d7c1dd910d847a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8031/icon/dd44e6bbcd39be0201c758ca4fef5ffc3168771620464dceb6d7c1dd910d847a.webp"
     },
     {
       "kind": "item",
@@ -10882,8 +10888,11 @@
       "id": 8032,
       "name": "ПП крупного калибра (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 193,
+      "sha256": "a36879f35b006daf91c0308f8f69359918e0419b0c4d107801ea95b46967c1d3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8032/icon/a36879f35b006daf91c0308f8f69359918e0419b0c4d107801ea95b46967c1d3.webp"
     },
     {
       "kind": "item",
@@ -10901,8 +10910,11 @@
       "id": 8033,
       "name": "ПП крупного калибра (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 193,
+      "sha256": "45aa18b26079c55c2044d9459d35ef30eed93775efc2af3bf90109bd3cd3b70b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8033/icon/45aa18b26079c55c2044d9459d35ef30eed93775efc2af3bf90109bd3cd3b70b.webp"
     },
     {
       "kind": "item",
@@ -10920,8 +10932,11 @@
       "id": 8034,
       "name": "Лопасти вертолёта",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 193,
+      "sha256": "1444b9f00ba4cf2cb60ec574d3519098713b99ad21d1668b85ea8bcd788985c0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8034/icon/1444b9f00ba4cf2cb60ec574d3519098713b99ad21d1668b85ea8bcd788985c0.webp"
     },
     {
       "kind": "item",
@@ -10939,8 +10954,11 @@
       "id": 8035,
       "name": "Лопасти вертолёта (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 193,
+      "sha256": "11a7de8a308f05a50b961a572b9627925ee5e91314057ab5a2c1a66717d5f61e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8035/icon/11a7de8a308f05a50b961a572b9627925ee5e91314057ab5a2c1a66717d5f61e.webp"
     },
     {
       "kind": "item",
@@ -10958,8 +10976,11 @@
       "id": 8036,
       "name": "Лопасти вертолёта (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 193,
+      "sha256": "f613d65401005c4d0d27365a9e6f14899563dde52a0bc2a1f532d5df58e0f0a0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8036/icon/f613d65401005c4d0d27365a9e6f14899563dde52a0bc2a1f532d5df58e0f0a0.webp"
     },
     {
       "kind": "item",
@@ -10977,8 +10998,11 @@
       "id": 8037,
       "name": "«Моно-три» от Кэндати",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 193,
+      "sha256": "54ccdfbe55430eefe88b760fc38074766c99a82d2971c4e45d63e20baee573a5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8037/icon/54ccdfbe55430eefe88b760fc38074766c99a82d2971c4e45d63e20baee573a5.webp"
     },
     {
       "kind": "item",
@@ -10996,8 +11020,11 @@
       "id": 8038,
       "name": "Свинцовая труба",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 193,
+      "sha256": "f0420cb7cb7c28d55d462b51d1f3b9a347a8bcaa322833ac7437ce3e08766f39",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8038/icon/f0420cb7cb7c28d55d462b51d1f3b9a347a8bcaa322833ac7437ce3e08766f39.webp"
     },
     {
       "kind": "item",
@@ -11015,8 +11042,11 @@
       "id": 8039,
       "name": "Свинцовая труба (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 193,
+      "sha256": "2e018d38c24114774750664d4b2c8d85ec563c571cdf5d36ca7ca05053486fb6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8039/icon/2e018d38c24114774750664d4b2c8d85ec563c571cdf5d36ca7ca05053486fb6.webp"
     },
     {
       "kind": "item",
@@ -11034,8 +11064,11 @@
       "id": 8040,
       "name": "Свинцовая труба (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 193,
+      "sha256": "abdd9a261878f1542b20c673dba517cf5143381dcc84244fd2c0c5eedf8a5540",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8040/icon/abdd9a261878f1542b20c673dba517cf5143381dcc84244fd2c0c5eedf8a5540.webp"
     },
     {
       "kind": "item",
@@ -11053,8 +11086,11 @@
       "id": 8041,
       "name": "Лёгкое оружие ближнего боя",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 193,
+      "sha256": "f905a51f733d2c8bcabae60c5c9c0ed663590dbe401d5057e816e0dfd2b47efa",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8041/icon/f905a51f733d2c8bcabae60c5c9c0ed663590dbe401d5057e816e0dfd2b47efa.webp"
     },
     {
       "kind": "item",
@@ -20343,7 +20379,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1427,
+    "publishedSlots": 1439,
     "readySlots": 0,
     "totalSlots": 1848
   }
