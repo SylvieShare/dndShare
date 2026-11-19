@@ -6917,10 +6917,11 @@
       "id": 7886,
       "name": "Сумка медтехника",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 158,
-      "sha256": "0b4e8e4f6e14bb5ec73caf798220411f383b0da474b60d1562af6acded7ecb69"
+      "sha256": "0b4e8e4f6e14bb5ec73caf798220411f383b0da474b60d1562af6acded7ecb69",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7886/icon/0b4e8e4f6e14bb5ec73caf798220411f383b0da474b60d1562af6acded7ecb69.webp"
     },
     {
       "kind": "item",
@@ -6938,10 +6939,11 @@
       "id": 7887,
       "name": "Щепка памяти",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 158,
-      "sha256": "f351b878be67f1dedca1489f8099f512c125ad85142a7ac6d4f211ef97af8467"
+      "sha256": "f351b878be67f1dedca1489f8099f512c125ad85142a7ac6d4f211ef97af8467",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7887/icon/f351b878be67f1dedca1489f8099f512c125ad85142a7ac6d4f211ef97af8467.webp"
     },
     {
       "kind": "item",
@@ -6959,10 +6961,11 @@
       "id": 7888,
       "name": "ИРП",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 158,
-      "sha256": "8a7082c1ef881e235da02a104c91dc5daa1a7f8c0415d90230ca65af9be793fc"
+      "sha256": "8a7082c1ef881e235da02a104c91dc5daa1a7f8c0415d90230ca65af9be793fc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7888/icon/8a7082c1ef881e235da02a104c91dc5daa1a7f8c0415d90230ca65af9be793fc.webp"
     },
     {
       "kind": "item",
@@ -6980,10 +6983,11 @@
       "id": 7889,
       "name": "Набор личной гигиены",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 158,
-      "sha256": "69e04a1a8cc92a59062ff0810cf220dd7e252df690c5013e834d1b5f58dd95bc"
+      "sha256": "69e04a1a8cc92a59062ff0810cf220dd7e252df690c5013e834d1b5f58dd95bc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7889/icon/69e04a1a8cc92a59062ff0810cf220dd7e252df690c5013e834d1b5f58dd95bc.webp"
     },
     {
       "kind": "item",
@@ -7001,10 +7005,11 @@
       "id": 7890,
       "name": "Карманный усилитель",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 158,
-      "sha256": "e1b4d81cd91d8c83eaada8e0c39c3a191495d52aadc46d26e4ea025315c32c08"
+      "sha256": "e1b4d81cd91d8c83eaada8e0c39c3a191495d52aadc46d26e4ea025315c32c08",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7890/icon/e1b4d81cd91d8c83eaada8e0c39c3a191495d52aadc46d26e4ea025315c32c08.webp"
     },
     {
       "kind": "item",
@@ -7022,10 +7027,11 @@
       "id": 7891,
       "name": "Антирадар",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 158,
-      "sha256": "4789ecdae1fe0d858ec8af6ab119b948cc7441ed26f272907ff946f787dd6668"
+      "sha256": "4789ecdae1fe0d858ec8af6ab119b948cc7441ed26f272907ff946f787dd6668",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7891/icon/4789ecdae1fe0d858ec8af6ab119b948cc7441ed26f272907ff946f787dd6668.webp"
     },
     {
       "kind": "item",
@@ -7043,10 +7049,11 @@
       "id": 7892,
       "name": "Радиационный костюм",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 158,
-      "sha256": "6f9bb740e41f1a014f6fcb583081dc523e173903fbfd0ea349337b0eaedeb1d8"
+      "sha256": "6f9bb740e41f1a014f6fcb583081dc523e173903fbfd0ea349337b0eaedeb1d8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7892/icon/6f9bb740e41f1a014f6fcb583081dc523e173903fbfd0ea349337b0eaedeb1d8.webp"
     },
     {
       "kind": "item",
@@ -7064,10 +7071,11 @@
       "id": 7893,
       "name": "Радиокоммуникатор",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 158,
-      "sha256": "2c4b7e1a8f7e9274e195db3ece95bbca8d084a2aa38f7090136834a1c8c58870"
+      "sha256": "2c4b7e1a8f7e9274e195db3ece95bbca8d084a2aa38f7090136834a1c8c58870",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7893/icon/2c4b7e1a8f7e9274e195db3ece95bbca8d084a2aa38f7090136834a1c8c58870.webp"
     },
     {
       "kind": "item",
@@ -7085,10 +7093,11 @@
       "id": 7894,
       "name": "Радиоприёмник/Музыкальный плеер",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 158,
-      "sha256": "875a17ce18f852a459394960752b16ee710301529e270e8508b56119fe724399"
+      "sha256": "875a17ce18f852a459394960752b16ee710301529e270e8508b56119fe724399",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7894/icon/875a17ce18f852a459394960752b16ee710301529e270e8508b56119fe724399.webp"
     },
     {
       "kind": "item",
@@ -7106,10 +7115,11 @@
       "id": 7895,
       "name": "Сигнальная шашка",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 158,
-      "sha256": "79838870d7c18aa71ff5f470a9c327ec635e9adb7cbee53acff6065d9c30ac56"
+      "sha256": "79838870d7c18aa71ff5f470a9c327ec635e9adb7cbee53acff6065d9c30ac56",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7895/icon/79838870d7c18aa71ff5f470a9c327ec635e9adb7cbee53acff6065d9c30ac56.webp"
     },
     {
       "kind": "item",
@@ -7127,10 +7137,11 @@
       "id": 7896,
       "name": "Верёвка (60 м/ярд)",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 158,
-      "sha256": "7f7e210be63bd36e6cc5cef36ab4a3cf357175b015cc223d00395090d30c98af"
+      "sha256": "7f7e210be63bd36e6cc5cef36ab4a3cf357175b015cc223d00395090d30c98af",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7896/icon/7f7e210be63bd36e6cc5cef36ab4a3cf357175b015cc223d00395090d30c98af.webp"
     },
     {
       "kind": "item",
@@ -7148,10 +7159,11 @@
       "id": 7897,
       "name": "Скремблер/Дескремблер",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 158,
-      "sha256": "92ce045dc0a47aa44a9921d7f493887fea9c6092a58755ffe46acdf1de0483f2"
+      "sha256": "92ce045dc0a47aa44a9921d7f493887fea9c6092a58755ffe46acdf1de0483f2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7897/icon/92ce045dc0a47aa44a9921d7f493887fea9c6092a58755ffe46acdf1de0483f2.webp"
     },
     {
       "kind": "item",
@@ -19167,7 +19179,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1019,
+    "publishedSlots": 1031,
     "readySlots": 0,
     "totalSlots": 1848
   }
