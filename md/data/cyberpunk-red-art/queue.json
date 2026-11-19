@@ -11919,8 +11919,11 @@
       "id": 8079,
       "name": "Бита с гвоздями (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 197,
+      "sha256": "cc4939d79619e3de4c88ad0ad506f014aba2a8ca8ec6af8d3615f35e5a9d9ec3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8079/icon/cc4939d79619e3de4c88ad0ad506f014aba2a8ca8ec6af8d3615f35e5a9d9ec3.webp"
     },
     {
       "kind": "item",
@@ -11938,8 +11941,11 @@
       "id": 8080,
       "name": "Оглушающая дубинка",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 197,
+      "sha256": "fb309579ce8ea72c0c5ce06cb5c942f884b6278ad5868f0c8459ac1c8bb53fa1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8080/icon/fb309579ce8ea72c0c5ce06cb5c942f884b6278ad5868f0c8459ac1c8bb53fa1.webp"
     },
     {
       "kind": "item",
@@ -11957,8 +11963,11 @@
       "id": 8081,
       "name": "Шокер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 197,
+      "sha256": "453fc738edce36667feb4f7aa8e826b404db95f70db7dbdcf784ca951a0402c7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8081/icon/453fc738edce36667feb4f7aa8e826b404db95f70db7dbdcf784ca951a0402c7.webp"
     },
     {
       "kind": "item",
@@ -11976,8 +11985,11 @@
       "id": 8082,
       "name": "Меч",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 197,
+      "sha256": "828a32d80352ec6c1ee2770f3b80265d871f907e9a8361b86efda0f95da0a72b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8082/icon/828a32d80352ec6c1ee2770f3b80265d871f907e9a8361b86efda0f95da0a72b.webp"
     },
     {
       "kind": "item",
@@ -11995,8 +12007,11 @@
       "id": 8083,
       "name": "Меч (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 197,
+      "sha256": "207750669e9136174d7a465943cd128b1bd0921161128b1da71a16fb4ab11218",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8083/icon/207750669e9136174d7a465943cd128b1bd0921161128b1da71a16fb4ab11218.webp"
     },
     {
       "kind": "item",
@@ -12014,8 +12029,11 @@
       "id": 8084,
       "name": "Меч (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 197,
+      "sha256": "2953c39d23dc42c50ca50a221cb3961800d8aa1fe125183853cde11a195300df",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8084/icon/2953c39d23dc42c50ca50a221cb3961800d8aa1fe125183853cde11a195300df.webp"
     },
     {
       "kind": "item",
@@ -12052,8 +12070,11 @@
       "id": 8086,
       "name": "Томагавк",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 197,
+      "sha256": "712e473b7fc0a06773f246f720f3318c4ba30b703eb159259e835490f87a3959",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8086/icon/712e473b7fc0a06773f246f720f3318c4ba30b703eb159259e835490f87a3959.webp"
     },
     {
       "kind": "item",
@@ -12071,8 +12092,11 @@
       "id": 8087,
       "name": "Томагавк (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 197,
+      "sha256": "1ab149923720673cfa48e38cf66014572c61733f6b1011c995f492e7dd09ce2d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8087/icon/1ab149923720673cfa48e38cf66014572c61733f6b1011c995f492e7dd09ce2d.webp"
     },
     {
       "kind": "item",
@@ -12090,8 +12114,11 @@
       "id": 8088,
       "name": "Томагавк (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 197,
+      "sha256": "71fee2e28f007fa3169c565436acaf20080e4b701aabf7c1d426914e19fc5037",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8088/icon/71fee2e28f007fa3169c565436acaf20080e4b701aabf7c1d426914e19fc5037.webp"
     },
     {
       "kind": "item",
@@ -12109,8 +12136,11 @@
       "id": 8089,
       "name": "«Спираль» от Цунами армс",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 197,
+      "sha256": "1a12bd5a657c7928a01c66cc5fe6a1f6a8533ff0746e55eba65ee5d9a1d6535f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8089/icon/1a12bd5a657c7928a01c66cc5fe6a1f6a8533ff0746e55eba65ee5d9a1d6535f.webp"
     },
     {
       "kind": "item",
@@ -12147,8 +12177,11 @@
       "id": 8091,
       "name": "Очень тяжёлое оружие ближнего боя",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 197,
+      "sha256": "75005c099c19673f652e65c0f4e9024a28c6fdc1597b6e6dea9a1939123b7bf7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8091/icon/75005c099c19673f652e65c0f4e9024a28c6fdc1597b6e6dea9a1939123b7bf7.webp"
     },
     {
       "kind": "item",
@@ -12166,8 +12199,11 @@
       "id": 8092,
       "name": "Очень тяжёлое оружие ближнего боя (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 197,
+      "sha256": "2d5f6f951eb402bc405e56a54f47d98060afc07ec0df5e838f4c881555deff4b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8092/icon/2d5f6f951eb402bc405e56a54f47d98060afc07ec0df5e838f4c881555deff4b.webp"
     },
     {
       "kind": "item",
@@ -20487,7 +20523,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1475,
+    "publishedSlots": 1487,
     "readySlots": 0,
     "totalSlots": 1848
   }
