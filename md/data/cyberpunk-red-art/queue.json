@@ -9281,8 +9281,11 @@
       "id": 7961,
       "name": "Увеличенный магазин (пистолет сверхкрупного калибра)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 186,
+      "sha256": "dd275dfb90d3f0745a3bf562c75070927934d174be98850d32adc7a72afacb63",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7961/icon/dd275dfb90d3f0745a3bf562c75070927934d174be98850d32adc7a72afacb63.webp"
     },
     {
       "kind": "item",
@@ -9300,8 +9303,11 @@
       "id": 7962,
       "name": "Подствольный гранатомёт",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 186,
+      "sha256": "7c66542ebc55c5eea94d762083270233c359da90a40b7457e54075029df85134",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7962/icon/7c66542ebc55c5eea94d762083270233c359da90a40b7457e54075029df85134.webp"
     },
     {
       "kind": "item",
@@ -9319,8 +9325,11 @@
       "id": 7963,
       "name": "Экранирование схем",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 186,
+      "sha256": "53c2e8a05cd2c7e2a0ac9063da2600606dd45542f13a843e13950530eb9acf36",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7963/icon/53c2e8a05cd2c7e2a0ac9063da2600606dd45542f13a843e13950530eb9acf36.webp"
     },
     {
       "kind": "item",
@@ -9338,8 +9347,11 @@
       "id": 7964,
       "name": "Утяжелённая рама",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 186,
+      "sha256": "f92709f27479375763ace9d0fb08d07e8cff668cefc2cdb3887e04f87c1831c8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7964/icon/f92709f27479375763ace9d0fb08d07e8cff668cefc2cdb3887e04f87c1831c8.webp"
     },
     {
       "kind": "item",
@@ -9357,8 +9369,11 @@
       "id": 7965,
       "name": "Жилой отсек",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 186,
+      "sha256": "f84f8465f081e6e73bbfa719cbca12edc09ac8b3b0f5a89f17fa48e2a00dd7c1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7965/icon/f84f8465f081e6e73bbfa719cbca12edc09ac8b3b0f5a89f17fa48e2a00dd7c1.webp"
     },
     {
       "kind": "item",
@@ -9376,8 +9391,11 @@
       "id": 7966,
       "name": "Воздушная подушка",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 186,
+      "sha256": "722eb79605e34480eae0469c017cac08ec89689bba7dd1548394d89a70afc9fa",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7966/icon/722eb79605e34480eae0469c017cac08ec89689bba7dd1548394d89a70afc9fa.webp"
     },
     {
       "kind": "item",
@@ -9395,8 +9413,11 @@
       "id": 7967,
       "name": "ИК прицел ночного видения",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 186,
+      "sha256": "dc160db862f80814372d8043b35694a5a9f73c20b52c54f1e33aaa6cde3165c1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7967/icon/dc160db862f80814372d8043b35694a5a9f73c20b52c54f1e33aaa6cde3165c1.webp"
     },
     {
       "kind": "item",
@@ -9414,8 +9435,11 @@
       "id": 7968,
       "name": "Изолированная проводка",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 186,
+      "sha256": "f54802b3df6b15f4836a5761f7a2287caa1caa9487dc617f70c071d02f687f13",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7968/icon/f54802b3df6b15f4836a5761f7a2287caa1caa9487dc617f70c071d02f687f13.webp"
     },
     {
       "kind": "item",
@@ -9433,8 +9457,11 @@
       "id": 7969,
       "name": "Барьер KRASH",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 186,
+      "sha256": "78cc55628044f53123dc5b263c90a43ce6ea4965323192a8f89b8bc03a3ca8fa",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7969/icon/78cc55628044f53123dc5b263c90a43ce6ea4965323192a8f89b8bc03a3ca8fa.webp"
     },
     {
       "kind": "item",
@@ -9452,8 +9479,11 @@
       "id": 7970,
       "name": "Система закиси азота",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 186,
+      "sha256": "b1e9526c4c41291dec8ba0450d52ac73433d3525caa2dd7396efa1c72d4dc9ed",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7970/icon/b1e9526c4c41291dec8ba0450d52ac73433d3525caa2dd7396efa1c72d4dc9ed.webp"
     },
     {
       "kind": "item",
@@ -9471,8 +9501,11 @@
       "id": 7971,
       "name": "Бортовой огнемёт",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 186,
+      "sha256": "97499368a78ff6a1ed6966c9a3476de51833d98b821822cef0ea92d1ce6dd33d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7971/icon/97499368a78ff6a1ed6966c9a3476de51833d98b821822cef0ea92d1ce6dd33d.webp"
     },
     {
       "kind": "item",
@@ -9490,8 +9523,11 @@
       "id": 7972,
       "name": "Бортовой пулемёт",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 186,
+      "sha256": "ca8528f93b56abde1572ee82e90e2383b9d90fdf78431de3e02ec8e4b448396b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7972/icon/ca8528f93b56abde1572ee82e90e2383b9d90fdf78431de3e02ec8e4b448396b.webp"
     },
     {
       "kind": "item",
@@ -20091,7 +20127,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1343,
+    "publishedSlots": 1355,
     "readySlots": 0,
     "totalSlots": 1848
   }
