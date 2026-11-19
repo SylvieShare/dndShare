@@ -3946,8 +3946,11 @@
       "id": 7711,
       "name": "Зеркальные очки (городской эпатаж)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 174,
+      "sha256": "85d6e7a1601b07715cd764fe5dd2d82322acfbe6f4a4259572776ccffdceb861",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7711/icon/85d6e7a1601b07715cd764fe5dd2d82322acfbe6f4a4259572776ccffdceb861.webp"
     },
     {
       "kind": "item",
@@ -3965,8 +3968,11 @@
       "id": 7712,
       "name": "Верх (городской эпатаж)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 174,
+      "sha256": "6247df5aaa00ebbc1134a2f3f31df12c1621efd56409991231769da319542483",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7712/icon/6247df5aaa00ebbc1134a2f3f31df12c1621efd56409991231769da319542483.webp"
     },
     {
       "kind": "item",
@@ -4402,8 +4408,11 @@
       "id": 7735,
       "name": "Усиленный слух",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 174,
+      "sha256": "5a388574e09fa635d98eed3530651c9f95d765e28745ade4a3a8b48c5f47e646",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7735/icon/5a388574e09fa635d98eed3530651c9f95d765e28745ade4a3a8b48c5f47e646.webp"
     },
     {
       "kind": "item",
@@ -4421,8 +4430,11 @@
       "id": 7736,
       "name": "Антиблик",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 174,
+      "sha256": "328dfdc8a165b39e100ff7d52272dfd473d934e74cfecbae427bf3e3c05eaf80",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7736/icon/328dfdc8a165b39e100ff7d52272dfd473d934e74cfecbae427bf3e3c05eaf80.webp"
     },
     {
       "kind": "item",
@@ -4440,8 +4452,11 @@
       "id": 7737,
       "name": "Искусственные плечи",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 174,
+      "sha256": "e34d95b196b7923504be70b7f97e0fc0e1fbb8f855fb1cdbf9b335d11eaef1d5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7737/icon/e34d95b196b7923504be70b7f97e0fc0e1fbb8f855fb1cdbf9b335d11eaef1d5.webp"
     },
     {
       "kind": "item",
@@ -4459,8 +4474,11 @@
       "id": 7738,
       "name": "Диктофон",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 174,
+      "sha256": "89005fc3adeab127748790f35d218496656384c2537f798150693da120729330",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7738/icon/89005fc3adeab127748790f35d218496656384c2537f798150693da120729330.webp"
     },
     {
       "kind": "item",
@@ -4478,8 +4496,11 @@
       "id": 7739,
       "name": "АудиоВокс",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 174,
+      "sha256": "67ee4c4bf6f79bbbf196813561964964e8f630fe6ebb6b76e88bc07f3fbc0d24",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7739/icon/67ee4c4bf6f79bbbf196813561964964e8f630fe6ebb6b76e88bc07f3fbc0d24.webp"
     },
     {
       "kind": "item",
@@ -4497,8 +4518,11 @@
       "id": 7740,
       "name": "Большие костяшки",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 174,
+      "sha256": "6a0d51d03238136979c6d945b44d3ad5491880851aab271b46d733194a9829e6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7740/icon/6a0d51d03238136979c6d945b44d3ad5491880851aab271b46d733194a9829e6.webp"
     },
     {
       "kind": "item",
@@ -4516,8 +4540,11 @@
       "id": 7741,
       "name": "Биомонитор",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 174,
+      "sha256": "9bf1cfc03c0d24bf74e8a25f22c9aca0a2c86f607fd1233ac98a7e74e8a7903c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7741/icon/9bf1cfc03c0d24bf74e8a25f22c9aca0a2c86f607fd1233ac98a7e74e8a7903c.webp"
     },
     {
       "kind": "item",
@@ -6606,8 +6633,11 @@
       "id": 7851,
       "name": "Кибердека",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 174,
+      "sha256": "337b5a4fd487f8d31cab08469247ba5db0d3c6b46ea4e44cba913055afedf338",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7851/icon/337b5a4fd487f8d31cab08469247ba5db0d3c6b46ea4e44cba913055afedf338.webp"
     },
     {
       "kind": "item",
@@ -6625,8 +6655,11 @@
       "id": 7852,
       "name": "Кибердека (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 174,
+      "sha256": "92483d4e6d71dac2e1538639cf73bc7346b807b9be4f677f57a0fc7d6421443e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7852/icon/92483d4e6d71dac2e1538639cf73bc7346b807b9be4f677f57a0fc7d6421443e.webp"
     },
     {
       "kind": "item",
@@ -6644,8 +6677,11 @@
       "id": 7853,
       "name": "Кибердека (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 174,
+      "sha256": "2c4f39097466d9e641734ed80da545f7c7ec140078f341718bf2b05db8c39dba",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7853/icon/2c4f39097466d9e641734ed80da545f7c7ec140078f341718bf2b05db8c39dba.webp"
     },
     {
       "kind": "item",
@@ -19659,7 +19695,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1199,
+    "publishedSlots": 1211,
     "readySlots": 0,
     "totalSlots": 1848
   }
