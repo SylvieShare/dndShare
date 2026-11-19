@@ -1,0 +1,535 @@
+{
+  "batch": 203,
+  "sourceId": 3,
+  "system": "Cyberpunk RED",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-203",
+  "assets": [
+    {
+      "key": "item-7923-icon",
+      "target": {
+        "kind": "item",
+        "id": 7923,
+        "typeId": 34,
+        "name": "Фиксер"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: A compact HEAD AND SHOULDERS PORTRAIT of a broad-shouldered middle-aged Black fixer with shaved head, fine gold-rimmed round glasses, knowing smile and burgundy tailored collar. One living adult face is central, fills most of the icon, facial features fully visible; show only a hint of costume. Illustration of a person, NOT a separate garment, object or unoccupied suit. No body below upper chest, no other figures or backdrop.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-53c479d3-5a8a-41db-abac-4ea582293ff5.png",
+      "original": "originals/item-7923.png",
+      "final": "final/item-7923.webp",
+      "width": 128,
+      "height": 128,
+      "rejectedOriginal": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-56d926b8-b46a-43d7-953a-0ab23cfaff8c.png",
+      "originalSha256": "22574d03d3b1a394e944e018a285683bd0a5dbde4082edfcd3be0c91a57da7aa",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "f5b86543574d5ff57fbfce8572cefab5f7a4a3fe913eabb32eea4460063f5220",
+      "bytes": 14682,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51168,
+        "objectKey": "system-item-media/v1/items/7923/icon/f5b86543574d5ff57fbfce8572cefab5f7a4a3fe913eabb32eea4460063f5220.webp",
+        "fileSize": 14682
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7923/icon/f5b86543574d5ff57fbfce8572cefab5f7a4a3fe913eabb32eea4460063f5220.webp"
+    },
+    {
+      "key": "item-7924-icon",
+      "target": {
+        "kind": "item",
+        "id": 7924,
+        "typeId": 34,
+        "name": "Законник"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: A compact HEAD AND SHOULDERS PORTRAIT of a weathered Latino law officer in his fifties, salt-and-pepper hair, navy high collar and small shoulder radio, no official insignia. One living adult face is central, fills most of the icon, facial features fully visible; show only a hint of costume. Illustration of a person, NOT a separate garment, object or unoccupied suit. No body below upper chest, no other figures or backdrop.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a1733539-54aa-4fb9-a607-99917c705e78.png",
+      "original": "originals/item-7924.png",
+      "final": "final/item-7924.webp",
+      "width": 128,
+      "height": 128,
+      "rejectedOriginal": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-710e6d8f-c2b6-4970-bdaf-269aea9f8099.png",
+      "originalSha256": "beafc06580cf494df2a62086a8015c06ae0c22927cc987ce5084f5af0345e92f",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "96a7e748922cbb94b0a7584325ba9e110790181776444544b852c5652940cb05",
+      "bytes": 16258,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51169,
+        "objectKey": "system-item-media/v1/items/7924/icon/96a7e748922cbb94b0a7584325ba9e110790181776444544b852c5652940cb05.webp",
+        "fileSize": 16258
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7924/icon/96a7e748922cbb94b0a7584325ba9e110790181776444544b852c5652940cb05.webp"
+    },
+    {
+      "key": "item-7925-icon",
+      "target": {
+        "kind": "item",
+        "id": 7925,
+        "typeId": 34,
+        "name": "Журналист"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: A compact HEAD AND SHOULDERS PORTRAIT of a field journalist in her late thirties, deep brown skin, short natural curls, mustard utility collar and small recording microphone at the edge of the frame. One living adult face is central, fills most of the icon, facial features fully visible; show only a hint of costume. Illustration of a person, NOT a separate garment, object or unoccupied suit. No body below upper chest, no other figures or backdrop.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e5508dd8-1fe7-4d58-9423-afe6b7ebb208.png",
+      "original": "originals/item-7925.png",
+      "final": "final/item-7925.webp",
+      "width": 128,
+      "height": 128,
+      "rejectedOriginal": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d5af121f-ad8c-404a-b886-79705af39b6e.png",
+      "originalSha256": "2e5541cdfc3af5a343ed1e06dbd9539ebf33c95982fd3f3fda626b317431ea4d",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "cf7f0222eaf791c6de7de8e4ab5906d838498c6b6a6a8bda363527e7f47e0339",
+      "bytes": 14416,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51170,
+        "objectKey": "system-item-media/v1/items/7925/icon/cf7f0222eaf791c6de7de8e4ab5906d838498c6b6a6a8bda363527e7f47e0339.webp",
+        "fileSize": 14416
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7925/icon/cf7f0222eaf791c6de7de8e4ab5906d838498c6b6a6a8bda363527e7f47e0339.webp"
+    },
+    {
+      "key": "item-7926-icon",
+      "target": {
+        "kind": "item",
+        "id": 7926,
+        "typeId": 34,
+        "name": "Медтехник"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: A compact HEAD AND SHOULDERS PORTRAIT of an older South Asian medtech with silver hair and short beard, teal medical collar under a light coat and steady attentive expression. One living adult face is central, fills most of the icon, facial features fully visible; show only a hint of costume. Illustration of a person, NOT a separate garment, object or unoccupied suit. No body below upper chest, no other figures or backdrop.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a47a9570-aa98-415b-90e7-5cb90d14ca84.png",
+      "original": "originals/item-7926.png",
+      "final": "final/item-7926.webp",
+      "width": 128,
+      "height": 128,
+      "rejectedOriginal": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b78fae2e-62c1-4d49-8de7-8780dee68da4.png",
+      "originalSha256": "3a246a2b63739c8b8a99ef3d7d518984806affc8a8c02a42258e671fa4e63ec7",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "5014a014a862e5fb89c7db6edad1a22b94d319b44c8d2abec662b4241767fb1c",
+      "bytes": 16476,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51171,
+        "objectKey": "system-item-media/v1/items/7926/icon/5014a014a862e5fb89c7db6edad1a22b94d319b44c8d2abec662b4241767fb1c.webp",
+        "fileSize": 16476
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7926/icon/5014a014a862e5fb89c7db6edad1a22b94d319b44c8d2abec662b4241767fb1c.webp"
+    },
+    {
+      "key": "item-7927-icon",
+      "target": {
+        "kind": "item",
+        "id": 7927,
+        "typeId": 34,
+        "name": "Нетраннер"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: A compact HEAD AND SHOULDERS PORTRAIT of an androgynous adult netrunner with pale skin, short dark hair with a violet streak, neural temple jack and angular graphite coat collar. One living adult face is central, fills most of the icon, facial features fully visible; show only a hint of costume. Illustration of a person, NOT a separate garment, object or unoccupied suit. No body below upper chest, no other figures or backdrop.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-abc9f9d1-4721-4dc7-962a-90b253193020.png",
+      "original": "originals/item-7927.png",
+      "final": "final/item-7927.webp",
+      "width": 128,
+      "height": 128,
+      "rejectedOriginal": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6958b507-5682-49f2-ae96-77eb98db3905.png",
+      "originalSha256": "5ef413c76ffbd5fb17d2ad5fb3210b6f19eb776dbfbc85bbc5616dc8e0439a28",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "e0448b8e2b660404e45617e7c1ce03a927ae03fb8ba020ebce5a1d2c3d833ed1",
+      "bytes": 15096,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51172,
+        "objectKey": "system-item-media/v1/items/7927/icon/e0448b8e2b660404e45617e7c1ce03a927ae03fb8ba020ebce5a1d2c3d833ed1.webp",
+        "fileSize": 15096
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7927/icon/e0448b8e2b660404e45617e7c1ce03a927ae03fb8ba020ebce5a1d2c3d833ed1.webp"
+    },
+    {
+      "key": "item-7928-icon",
+      "target": {
+        "kind": "item",
+        "id": 7928,
+        "typeId": 34,
+        "name": "Кочевник"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: A compact HEAD AND SHOULDERS PORTRAIT of a woman nomad driver in her forties with sun-weathered tan skin, a long dark braid over one shoulder and patched ochre jacket collar. One living adult face is central, fills most of the icon, facial features fully visible; show only a hint of costume. Illustration of a person, NOT a separate garment, object or unoccupied suit. No body below upper chest, no other figures or backdrop.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-eb50133c-704d-46f9-96df-08e23f098bb9.png",
+      "original": "originals/item-7928.png",
+      "final": "final/item-7928.webp",
+      "width": 128,
+      "height": 128,
+      "rejectedOriginal": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6da2e597-9f2b-4287-a975-97805bbb575a.png",
+      "originalSha256": "83d3552741b66682d26220b29b78884fc7b4440a890bb330bb713b8f3e70979e",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "9c82b57744373e224bbe581caa63bbb2664a3bb138178c7a3d64ffc22fbda7f6",
+      "bytes": 16518,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51173,
+        "objectKey": "system-item-media/v1/items/7928/icon/9c82b57744373e224bbe581caa63bbb2664a3bb138178c7a3d64ffc22fbda7f6.webp",
+        "fileSize": 16518
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7928/icon/9c82b57744373e224bbe581caa63bbb2664a3bb138178c7a3d64ffc22fbda7f6.webp"
+    },
+    {
+      "key": "item-7929-icon",
+      "target": {
+        "kind": "item",
+        "id": 7929,
+        "typeId": 34,
+        "name": "Рокербой"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: A compact HEAD AND SHOULDERS PORTRAIT of a charismatic Black male rocker in his mid-thirties, short silver-dyed curls, red sleeveless stage jacket, one stage microphone by his chin. One living adult face is central, fills most of the icon, facial features fully visible; show only a hint of costume. Illustration of a person, NOT a separate garment, object or unoccupied suit. No body below upper chest, no other figures or backdrop.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-af137ad7-5804-4b6a-9a6f-0e506591d64e.png",
+      "original": "originals/item-7929.png",
+      "final": "final/item-7929.webp",
+      "width": 128,
+      "height": 128,
+      "rejectedOriginal": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-54d93911-d295-4e9f-9260-efa4dfb26767.png",
+      "originalSha256": "ed24db2f00274a7e6083d688f8ea1f44a5576db04a321966d1d64fb8e6e2d352",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "4b0bdb314337c59860c7aa9cee9ed733d8f3544e5e852773096783233279db2f",
+      "bytes": 15982,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51174,
+        "objectKey": "system-item-media/v1/items/7929/icon/4b0bdb314337c59860c7aa9cee9ed733d8f3544e5e852773096783233279db2f.webp",
+        "fileSize": 15982
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7929/icon/4b0bdb314337c59860c7aa9cee9ed733d8f3544e5e852773096783233279db2f.webp"
+    },
+    {
+      "key": "item-7930-icon",
+      "target": {
+        "kind": "item",
+        "id": 7930,
+        "typeId": 34,
+        "name": "Соло"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: A compact HEAD AND SHOULDERS PORTRAIT of a mature woman solo with olive skin, cropped dark hair, small healed eyebrow scar, graphite armor collar and a small orange comms earpiece. One living adult face is central, fills most of the icon, facial features fully visible; show only a hint of costume. Illustration of a person, NOT a separate garment, object or unoccupied suit. No body below upper chest, no other figures or backdrop.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-fd5e5f71-117f-492e-8182-6764ccc815ca.png",
+      "original": "originals/item-7930.png",
+      "final": "final/item-7930.webp",
+      "width": 128,
+      "height": 128,
+      "rejectedOriginal": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5d298288-a11d-4c19-8839-e831c48fca0b.png",
+      "originalSha256": "68262cd38618feaf312b6b5a000a84f646d31bdf538fa7533796515383acbd09",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "c025ce3fbc80142b435850281d5f97270024428115bec4e91b099b2c373fcadf",
+      "bytes": 14190,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51175,
+        "objectKey": "system-item-media/v1/items/7930/icon/c025ce3fbc80142b435850281d5f97270024428115bec4e91b099b2c373fcadf.webp",
+        "fileSize": 14190
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7930/icon/c025ce3fbc80142b435850281d5f97270024428115bec4e91b099b2c373fcadf.webp"
+    },
+    {
+      "key": "item-7931-icon",
+      "target": {
+        "kind": "item",
+        "id": 7931,
+        "typeId": 34,
+        "name": "Техник"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: A compact HEAD AND SHOULDERS PORTRAIT of an older Black tech with bald head and short gray beard, teal apron straps over a cream collar, magnifying loupe flipped up beside one eye. One living adult face is central, fills most of the icon, facial features fully visible; show only a hint of costume. Illustration of a person, NOT a separate garment, object or unoccupied suit. No body below upper chest, no other figures or backdrop.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-92709a88-e96a-4585-8dd9-8b0d0b613ff5.png",
+      "original": "originals/item-7931.png",
+      "final": "final/item-7931.webp",
+      "width": 128,
+      "height": 128,
+      "rejectedOriginal": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-32c134ce-eb3d-4b93-8622-94e4ea52bd63.png",
+      "originalSha256": "c66ebf7c36fe6ac383207d50eafb4e33f6a3524c6624c23a3782e22b6999c4c9",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "f892cb170f15e4484c5e0625c1821a4555b392f2ad82acb868a02d41961865d2",
+      "bytes": 15894,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51176,
+        "objectKey": "system-item-media/v1/items/7931/icon/f892cb170f15e4484c5e0625c1821a4555b392f2ad82acb868a02d41961865d2.webp",
+        "fileSize": 15894
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7931/icon/f892cb170f15e4484c5e0625c1821a4555b392f2ad82acb868a02d41961865d2.webp"
+    },
+    {
+      "key": "item-8048-icon",
+      "target": {
+        "kind": "item",
+        "id": 8048,
+        "typeId": 37,
+        "name": "Боевые искусства"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Martial Arts\" (Боевые искусства), the \"weapon-martial-arts\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1db03c30-a926-4feb-9fc6-f88714c762f8.png",
+      "original": "originals/item-8048.png",
+      "final": "final/item-8048.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "4dcfaaa2ac191fc572aaaee089c0fed5ea735aa7b1dbe16fd3542a06c961ad10",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "d66bcad66e0cb59c7cf372b0173c60812c7bf1148c05edd3ac8b9d0043e8f9e9",
+      "bytes": 12760,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51177,
+        "objectKey": "system-item-media/v1/items/8048/icon/d66bcad66e0cb59c7cf372b0173c60812c7bf1148c05edd3ac8b9d0043e8f9e9.webp",
+        "fileSize": 12760
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8048/icon/d66bcad66e0cb59c7cf372b0173c60812c7bf1148c05edd3ac8b9d0043e8f9e9.webp"
+    },
+    {
+      "key": "item-8085-icon",
+      "target": {
+        "kind": "item",
+        "id": 8085,
+        "typeId": 37,
+        "name": "Метательное оружие"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: A sports-style catalogue emblem representing the tabletop thrown-weapon attack category: ivory curved flight arc leading to a simple red target circle on a small asymmetrical teal enamel pin, dark metal edging. Only an abstract trajectory symbol, no weapon or person, no instructional detail, letters or numbers.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4d707715-9bc9-4a61-bcbd-a1aafae770e5.png",
+      "original": "originals/item-8085.png",
+      "final": "final/item-8085.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "7894c09fa97a02009f687dd8a4c6091aeeb8cf40da88113acf9492511b89e440",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "9b1a67adaa598b831f50e054570e3e194c42a290f1ef517c6d07ad6db016d289",
+      "bytes": 11028,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51178,
+        "objectKey": "system-item-media/v1/items/8085/icon/9b1a67adaa598b831f50e054570e3e194c42a290f1ef517c6d07ad6db016d289.webp",
+        "fileSize": 11028
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8085/icon/9b1a67adaa598b831f50e054570e3e194c42a290f1ef517c6d07ad6db016d289.webp"
+    },
+    {
+      "key": "item-8090-icon",
+      "target": {
+        "kind": "item",
+        "id": 8090,
+        "typeId": 37,
+        "name": "Без оружия"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: One natural healthy closed human fist, seen from the knuckle side with a short intact red shirt cuff at the wrist. Game category icon for unarmed fighting. Only a bare hand: no brass knuckles, glove, gadget, brand or weapon.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-af2af25e-28f1-41ad-90f4-7ba6bedcf584.png",
+      "original": "originals/item-8090.png",
+      "final": "final/item-8090.webp",
+      "width": 128,
+      "height": 128,
+      "rejectedOriginal": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-eaf407d6-07cb-4923-8539-633b2ea7abb7.png",
+      "originalSha256": "9ce215b8232a0438f5b3e96018323dbda6d83c72ab23d5f2c010b72071b9d87f",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "ee6c05071f81df1039432a3b7b5aac78e4861d9a457d1f27d44b486a0251f3db",
+      "bytes": 14768,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51179,
+        "objectKey": "system-item-media/v1/items/8090/icon/ee6c05071f81df1039432a3b7b5aac78e4861d9a457d1f27d44b486a0251f3db.webp",
+        "fileSize": 14768
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8090/icon/ee6c05071f81df1039432a3b7b5aac78e4861d9a457d1f27d44b486a0251f3db.webp"
+    }
+  ]
+}

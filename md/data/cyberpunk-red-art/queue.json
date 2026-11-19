@@ -8616,8 +8616,11 @@
       "id": 7923,
       "name": "Фиксер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 203,
+      "sha256": "f5b86543574d5ff57fbfce8572cefab5f7a4a3fe913eabb32eea4460063f5220",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7923/icon/f5b86543574d5ff57fbfce8572cefab5f7a4a3fe913eabb32eea4460063f5220.webp"
     },
     {
       "kind": "item",
@@ -8635,8 +8638,11 @@
       "id": 7924,
       "name": "Законник",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 203,
+      "sha256": "96a7e748922cbb94b0a7584325ba9e110790181776444544b852c5652940cb05",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7924/icon/96a7e748922cbb94b0a7584325ba9e110790181776444544b852c5652940cb05.webp"
     },
     {
       "kind": "item",
@@ -8654,8 +8660,11 @@
       "id": 7925,
       "name": "Журналист",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 203,
+      "sha256": "cf7f0222eaf791c6de7de8e4ab5906d838498c6b6a6a8bda363527e7f47e0339",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7925/icon/cf7f0222eaf791c6de7de8e4ab5906d838498c6b6a6a8bda363527e7f47e0339.webp"
     },
     {
       "kind": "item",
@@ -8673,8 +8682,11 @@
       "id": 7926,
       "name": "Медтехник",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 203,
+      "sha256": "5014a014a862e5fb89c7db6edad1a22b94d319b44c8d2abec662b4241767fb1c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7926/icon/5014a014a862e5fb89c7db6edad1a22b94d319b44c8d2abec662b4241767fb1c.webp"
     },
     {
       "kind": "item",
@@ -8692,8 +8704,11 @@
       "id": 7927,
       "name": "Нетраннер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 203,
+      "sha256": "e0448b8e2b660404e45617e7c1ce03a927ae03fb8ba020ebce5a1d2c3d833ed1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7927/icon/e0448b8e2b660404e45617e7c1ce03a927ae03fb8ba020ebce5a1d2c3d833ed1.webp"
     },
     {
       "kind": "item",
@@ -8711,8 +8726,11 @@
       "id": 7928,
       "name": "Кочевник",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 203,
+      "sha256": "9c82b57744373e224bbe581caa63bbb2664a3bb138178c7a3d64ffc22fbda7f6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7928/icon/9c82b57744373e224bbe581caa63bbb2664a3bb138178c7a3d64ffc22fbda7f6.webp"
     },
     {
       "kind": "item",
@@ -8730,8 +8748,11 @@
       "id": 7929,
       "name": "Рокербой",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 203,
+      "sha256": "4b0bdb314337c59860c7aa9cee9ed733d8f3544e5e852773096783233279db2f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7929/icon/4b0bdb314337c59860c7aa9cee9ed733d8f3544e5e852773096783233279db2f.webp"
     },
     {
       "kind": "item",
@@ -8749,8 +8770,11 @@
       "id": 7930,
       "name": "Соло",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 203,
+      "sha256": "c025ce3fbc80142b435850281d5f97270024428115bec4e91b099b2c373fcadf",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7930/icon/c025ce3fbc80142b435850281d5f97270024428115bec4e91b099b2c373fcadf.webp"
     },
     {
       "kind": "item",
@@ -8768,8 +8792,11 @@
       "id": 7931,
       "name": "Техник",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 203,
+      "sha256": "f892cb170f15e4484c5e0625c1821a4555b392f2ad82acb868a02d41961865d2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7931/icon/f892cb170f15e4484c5e0625c1821a4555b392f2ad82acb868a02d41961865d2.webp"
     },
     {
       "kind": "item",
@@ -11339,8 +11366,11 @@
       "id": 8048,
       "name": "Боевые искусства",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 203,
+      "sha256": "d66bcad66e0cb59c7cf372b0173c60812c7bf1148c05edd3ac8b9d0043e8f9e9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8048/icon/d66bcad66e0cb59c7cf372b0173c60812c7bf1148c05edd3ac8b9d0043e8f9e9.webp"
     },
     {
       "kind": "item",
@@ -12150,8 +12180,11 @@
       "id": 8085,
       "name": "Метательное оружие",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 203,
+      "sha256": "9b1a67adaa598b831f50e054570e3e194c42a290f1ef517c6d07ad6db016d289",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8085/icon/9b1a67adaa598b831f50e054570e3e194c42a290f1ef517c6d07ad6db016d289.webp"
     },
     {
       "kind": "item",
@@ -12257,8 +12290,11 @@
       "id": 8090,
       "name": "Без оружия",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 203,
+      "sha256": "ee6c05071f81df1039432a3b7b5aac78e4861d9a457d1f27d44b486a0251f3db",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8090/icon/ee6c05071f81df1039432a3b7b5aac78e4861d9a457d1f27d44b486a0251f3db.webp"
     },
     {
       "kind": "item",
@@ -20703,7 +20739,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1547,
+    "publishedSlots": 1559,
     "readySlots": 0,
     "totalSlots": 1848
   }
