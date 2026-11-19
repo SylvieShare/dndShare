@@ -8212,8 +8212,11 @@
       "id": 7909,
       "name": "ДекаЛОМ",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 188,
+      "sha256": "1b514e2409eb707011000c06e67c895a1c67c8a9962d15b5822ac9e1e1d1a62f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7909/icon/1b514e2409eb707011000c06e67c895a1c67c8a9962d15b5822ac9e1e1d1a62f.webp"
     },
     {
       "kind": "item",
@@ -8231,8 +8234,11 @@
       "id": 7910,
       "name": "Стиратель",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 188,
+      "sha256": "15f1fc61bc9de2087c2a6ccaaccf2afc8728c102ccc5bb8e0773920b619e33dd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7910/icon/15f1fc61bc9de2087c2a6ccaaccf2afc8728c102ccc5bb8e0773920b619e33dd.webp"
     },
     {
       "kind": "item",
@@ -8250,8 +8256,11 @@
       "id": 7911,
       "name": "Фейерверк",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 188,
+      "sha256": "d05a8406e52ad48b2584695114a834829694d8234f59919e0f058c3ac8b46149",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7911/icon/d05a8406e52ad48b2584695114a834829694d8234f59919e0f058c3ac8b46149.webp"
     },
     {
       "kind": "item",
@@ -8269,8 +8278,11 @@
       "id": 7912,
       "name": "Адский снаряд",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 188,
+      "sha256": "c4c144dcad8cd23f2fc34e2a78a213e75079c7deb5e36d8130246946af7ae05c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7912/icon/c4c144dcad8cd23f2fc34e2a78a213e75079c7deb5e36d8130246946af7ae05c.webp"
     },
     {
       "kind": "item",
@@ -8288,8 +8300,11 @@
       "id": 7913,
       "name": "Нервотрёп",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 188,
+      "sha256": "4eb9b1c38521a258abcb2d017d8fa99badb64b89ce53477d86c841b8bbf29178",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7913/icon/4eb9b1c38521a258abcb2d017d8fa99badb64b89ce53477d86c841b8bbf29178.webp"
     },
     {
       "kind": "item",
@@ -8307,8 +8322,11 @@
       "id": 7914,
       "name": "Ядовитое обнуление",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 188,
+      "sha256": "b11ac641006ac7becb1d7080ddf98d2ad3f001cdaffaaa0558d597379bbe59b6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7914/icon/b11ac641006ac7becb1d7080ddf98d2ad3f001cdaffaaa0558d597379bbe59b6.webp"
     },
     {
       "kind": "item",
@@ -8326,8 +8344,11 @@
       "id": 7915,
       "name": "Я тебя вижу",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 188,
+      "sha256": "f4d1078891ebd065b6c70bc5d188531ea9f81ff62e4fcb863112278c03119497",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7915/icon/f4d1078891ebd065b6c70bc5d188531ea9f81ff62e4fcb863112278c03119497.webp"
     },
     {
       "kind": "item",
@@ -8345,8 +8366,11 @@
       "id": 7916,
       "name": "Щит",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 188,
+      "sha256": "c86bb2099786c1c300897e827137cbae76e5bf41e6bd3fdf7e3b386b91e34b39",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7916/icon/c86bb2099786c1c300897e827137cbae76e5bf41e6bd3fdf7e3b386b91e34b39.webp"
     },
     {
       "kind": "item",
@@ -8364,8 +8388,11 @@
       "id": 7917,
       "name": "Быстрый Гонзалвес",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 188,
+      "sha256": "db280d771de1c8874c488c565030cc9d7b96dc03ed2c6b83963f296264d7400a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7917/icon/db280d771de1c8874c488c565030cc9d7b96dc03ed2c6b83963f296264d7400a.webp"
     },
     {
       "kind": "item",
@@ -8383,8 +8410,11 @@
       "id": 7918,
       "name": "Суперклей",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 188,
+      "sha256": "0ccb2ad08b36098b70de622c7952713113d8eb56345365df2634347024177c0e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7918/icon/0ccb2ad08b36098b70de622c7952713113d8eb56345365df2634347024177c0e.webp"
     },
     {
       "kind": "item",
@@ -8402,8 +8432,11 @@
       "id": 7919,
       "name": "Меч",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 188,
+      "sha256": "33a0605128989739d6e6f628731ded8435fe89c02fadd9b42b46e207806e5874",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7919/icon/33a0605128989739d6e6f628731ded8435fe89c02fadd9b42b46e207806e5874.webp"
     },
     {
       "kind": "item",
@@ -8421,8 +8454,11 @@
       "id": 7920,
       "name": "Разряд",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 188,
+      "sha256": "cec5fd0931484382d78fc7d2980bbb5acc1bf84a7d8abe124a54c0b6a7123215",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7920/icon/cec5fd0931484382d78fc7d2980bbb5acc1bf84a7d8abe124a54c0b6a7123215.webp"
     },
     {
       "kind": "item",
@@ -20163,7 +20199,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1367,
+    "publishedSlots": 1379,
     "readySlots": 0,
     "totalSlots": 1848
   }
