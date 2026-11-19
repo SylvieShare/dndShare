@@ -6562,8 +6562,11 @@
       "id": 7834,
       "name": "Коготь в ступне",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 182,
+      "sha256": "55a08f75d8ce8f12c0edf6f03cf90fc9e61c726788a615efeafd826e7c7a953c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7834/icon/55a08f75d8ce8f12c0edf6f03cf90fc9e61c726788a615efeafd826e7c7a953c.webp"
     },
     {
       "kind": "item",
@@ -6581,8 +6584,11 @@
       "id": 7835,
       "name": "Прицел",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 182,
+      "sha256": "16d7f772b20b49b4eff523f297d677fd4987d672282680119f4e22331d78bf93",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7835/icon/16d7f772b20b49b4eff523f297d677fd4987d672282680119f4e22331d78bf93.webp"
     },
     {
       "kind": "item",
@@ -6600,8 +6606,11 @@
       "id": 7836,
       "name": "Техволосы",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 182,
+      "sha256": "a2906a634fc1827929d43f01e62d99d285110234c17d7f97735841ce461646e6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7836/icon/a2906a634fc1827929d43f01e62d99d285110234c17d7f97735841ce461646e6.webp"
     },
     {
       "kind": "item",
@@ -6619,8 +6628,11 @@
       "id": 7837,
       "name": "Техсканер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 182,
+      "sha256": "d9a69a388255ec2a8d7be0d5346ecadcc0ebe55918392c52400b1ce247fac6e6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7837/icon/d9a69a388255ec2a8d7be0d5346ecadcc0ebe55918392c52400b1ce247fac6e6.webp"
     },
     {
       "kind": "item",
@@ -6638,8 +6650,11 @@
       "id": 7838,
       "name": "ТелеОптика",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 182,
+      "sha256": "35a428c7e1457ecf66d2c17593fc886ee30b8dd316b265e390cb80dabe9c7505",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7838/icon/35a428c7e1457ecf66d2c17593fc886ee30b8dd316b265e390cb80dabe9c7505.webp"
     },
     {
       "kind": "item",
@@ -6657,8 +6672,11 @@
       "id": 7839,
       "name": "Кисть-инструмент",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 182,
+      "sha256": "577a6a8f7f20243927541b1d0e86f0891fcb7cb0ff1754fb60bad4a7e0ed69cd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7839/icon/577a6a8f7f20243927541b1d0e86f0891fcb7cb0ff1754fb60bad4a7e0ed69cd.webp"
     },
     {
       "kind": "item",
@@ -6676,8 +6694,11 @@
       "id": 7840,
       "name": "Блокираторы токсинов",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 182,
+      "sha256": "8597594a297371e044105802ce9e600254c544bf15c9055ba212d9de5ed22a3d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7840/icon/8597594a297371e044105802ce9e600254c544bf15c9055ba212d9de5ed22a3d.webp"
     },
     {
       "kind": "item",
@@ -6695,8 +6716,11 @@
       "id": 7841,
       "name": "Вампиры",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 182,
+      "sha256": "00bb241fd74f00998dda0db53a0bf5f101d9f9c6a76f3c92c858f2854e07e59f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7841/icon/00bb241fd74f00998dda0db53a0bf5f101d9f9c6a76f3c92c858f2854e07e59f.webp"
     },
     {
       "kind": "item",
@@ -6714,8 +6738,11 @@
       "id": 7842,
       "name": "Виртуальность",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 182,
+      "sha256": "48170ebecd5ed34ecd09670969814742970066f012a0e0fce2d722be645a6253",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7842/icon/48170ebecd5ed34ecd09670969814742970066f012a0e0fce2d722be645a6253.webp"
     },
     {
       "kind": "item",
@@ -6733,8 +6760,11 @@
       "id": 7843,
       "name": "Анализатор стрессовых изменений голоса",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 182,
+      "sha256": "eea10d41ce10f903a25c335b9cf3839809940f87e89546bfbe40bdb6e0881793",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7843/icon/eea10d41ce10f903a25c335b9cf3839809940f87e89546bfbe40bdb6e0881793.webp"
     },
     {
       "kind": "item",
@@ -6752,8 +6782,11 @@
       "id": 7844,
       "name": "Перепончатые ступни",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 182,
+      "sha256": "5067d33e6e0342181cc0b8a12a66b83effa1010a16656aa830b90f17af91268d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7844/icon/5067d33e6e0342181cc0b8a12a66b83effa1010a16656aa830b90f17af91268d.webp"
     },
     {
       "kind": "item",
@@ -6771,8 +6804,11 @@
       "id": 7845,
       "name": "Росомахи",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 182,
+      "sha256": "65a9ce3d17cb2c9a662a9f315577df3463772ab8dfd3d07afd95afa7a9293024",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7845/icon/65a9ce3d17cb2c9a662a9f315577df3463772ab8dfd3d07afd95afa7a9293024.webp"
     },
     {
       "kind": "item",
@@ -19947,7 +19983,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1295,
+    "publishedSlots": 1307,
     "readySlots": 0,
     "totalSlots": 1848
   }
