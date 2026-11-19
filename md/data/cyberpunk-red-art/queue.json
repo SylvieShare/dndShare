@@ -6298,8 +6298,11 @@
       "id": 7822,
       "name": "Вплетение в кожу",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 181,
+      "sha256": "175b7cf9baf8fb206778b007948fad4ccf3c984e7b37277d55b5da9eef722b87",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7822/icon/175b7cf9baf8fb206778b007948fad4ccf3c984e7b37277d55b5da9eef722b87.webp"
     },
     {
       "kind": "item",
@@ -6317,8 +6320,11 @@
       "id": 7823,
       "name": "Часы на коже",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 181,
+      "sha256": "6fd53e3005cc97d5e21952446295e15eb91a9d8f55e151fffa5ef593c7796cbb",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7823/icon/6fd53e3005cc97d5e21952446295e15eb91a9d8f55e151fffa5ef593c7796cbb.webp"
     },
     {
       "kind": "item",
@@ -6336,8 +6342,11 @@
       "id": 7824,
       "name": "Мясорубка",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 181,
+      "sha256": "e4c4f8e384d7e71557e6350056f2f8f10db76edfea37e22982fd16fe4795e814",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7824/icon/e4c4f8e384d7e71557e6350056f2f8f10db76edfea37e22982fd16fe4795e814.webp"
     },
     {
       "kind": "item",
@@ -6355,8 +6364,11 @@
       "id": 7825,
       "name": "Standard Bodysculpt",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 181,
+      "sha256": "95490d823e0886aba9fc572c3c36cdc2f808808dcb8cedfc3cbb37c508df5ed3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7825/icon/95490d823e0886aba9fc572c3c36cdc2f808808dcb8cedfc3cbb37c508df5ed3.webp"
     },
     {
       "kind": "item",
@@ -6374,8 +6386,11 @@
       "id": 7826,
       "name": "Стандартная ступня",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 181,
+      "sha256": "8966db0e419f96c3306926e7905dcdfec80b58ab31a4ba221405afae4d9991df",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7826/icon/8966db0e419f96c3306926e7905dcdfec80b58ab31a4ba221405afae4d9991df.webp"
     },
     {
       "kind": "item",
@@ -6393,8 +6408,11 @@
       "id": 7827,
       "name": "Стандартная кисть",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 181,
+      "sha256": "1a5e1551525787ede29c2f8cf69d99c6b2975f2369100cb688a5c7df72035054",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7827/icon/1a5e1551525787ede29c2f8cf69d99c6b2975f2369100cb688a5c7df72035054.webp"
     },
     {
       "kind": "item",
@@ -6412,8 +6430,11 @@
       "id": 7828,
       "name": "Подкожная броня",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 181,
+      "sha256": "6078119d94f616756fa2ec21e135698db4945db7fa8569f2cd12bf117f1ed838",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7828/icon/6078119d94f616756fa2ec21e135698db4945db7fa8569f2cd12bf117f1ed838.webp"
     },
     {
       "kind": "item",
@@ -6431,8 +6452,11 @@
       "id": 7829,
       "name": "Подкожный хват",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 181,
+      "sha256": "4739bdbafd68de3fdc892c7cd4a4ed29865c29ecfc6689bda90e428e1006bc36",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7829/icon/4739bdbafd68de3fdc892c7cd4a4ed29865c29ecfc6689bda90e428e1006bc36.webp"
     },
     {
       "kind": "item",
@@ -6450,8 +6474,11 @@
       "id": 7830,
       "name": "Подкожный карман",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 181,
+      "sha256": "d7210ad8693d1897f008d6ca994cff31dcd928d1857fea88890f5a1c2fc18229",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7830/icon/d7210ad8693d1897f008d6ca994cff31dcd928d1857fea88890f5a1c2fc18229.webp"
     },
     {
       "kind": "item",
@@ -6469,8 +6496,11 @@
       "id": 7831,
       "name": "Покрытие «Суперхром®» (киберрука)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 181,
+      "sha256": "143db4d0c9a08c678dd3cbd9f6b0efc38f95bf87a95d190c3ded21d67a0c6135",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7831/icon/143db4d0c9a08c678dd3cbd9f6b0efc38f95bf87a95d190c3ded21d67a0c6135.webp"
     },
     {
       "kind": "item",
@@ -6488,8 +6518,11 @@
       "id": 7832,
       "name": "Покрытие «Суперхром®» (кибернога)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 181,
+      "sha256": "bb3e03b4942d50b75cc733284be70d84ef8251459ae6aac202b7494f0b9939c6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7832/icon/bb3e03b4942d50b75cc733284be70d84ef8251459ae6aac202b7494f0b9939c6.webp"
     },
     {
       "kind": "item",
@@ -6507,8 +6540,11 @@
       "id": 7833,
       "name": "Тактильный усилитель",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 181,
+      "sha256": "b4e393d881543e2d5a2397d04f2b7e4906fdddbd9542035dd6032ad988847a2a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7833/icon/b4e393d881543e2d5a2397d04f2b7e4906fdddbd9542035dd6032ad988847a2a.webp"
     },
     {
       "kind": "item",
@@ -19911,7 +19947,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1283,
+    "publishedSlots": 1295,
     "readySlots": 0,
     "totalSlots": 1848
   }
