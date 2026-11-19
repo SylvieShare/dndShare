@@ -5392,8 +5392,11 @@
       "id": 7780,
       "name": "Светотату",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 178,
+      "sha256": "91ce0f83e00115966fea1d1fbf9f8c76404ee7522aa12349e03d75fe127e700e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7780/icon/91ce0f83e00115966fea1d1fbf9f8c76404ee7522aa12349e03d75fe127e700e.webp"
     },
     {
       "kind": "item",
@@ -5411,8 +5414,11 @@
       "id": 7781,
       "name": "Слабое освещение/ИК/УФ",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 178,
+      "sha256": "62db6ea6d6b50cd6b7333a761382f34418694cce58d1a4d40af18bdede590740",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7781/icon/62db6ea6d6b50cd6b7333a761382f34418694cce58d1a4d40af18bdede590740.webp"
     },
     {
       "kind": "item",
@@ -5544,8 +5550,11 @@
       "id": 7788,
       "name": "Медсканер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 178,
+      "sha256": "ce2db7df2e2523d6abea09b333831ac87f9d5e93604c330a5e661235e28841f8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7788/icon/ce2db7df2e2523d6abea09b333831ac87f9d5e93604c330a5e661235e28841f8.webp"
     },
     {
       "kind": "item",
@@ -5563,8 +5572,11 @@
       "id": 7789,
       "name": "Щепка памяти",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 178,
+      "sha256": "dce6bcc15b83aebf642866d07542279316de02fd1dd0ae7cc83f6e56b8c0d7aa",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7789/icon/dce6bcc15b83aebf642866d07542279316de02fd1dd0ae7cc83f6e56b8c0d7aa.webp"
     },
     {
       "kind": "item",
@@ -5582,8 +5594,11 @@
       "id": 7790,
       "name": "МикроОптика",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 178,
+      "sha256": "bbf80ac6e724f06403ae8d1ff3281d57cccbe837bf384c4d02a09de9e5c8baac",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7790/icon/bbf80ac6e724f06403ae8d1ff3281d57cccbe837bf384c4d02a09de9e5c8baac.webp"
     },
     {
       "kind": "item",
@@ -5601,8 +5616,11 @@
       "id": 7791,
       "name": "МикроВидео",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 178,
+      "sha256": "d1a5ba5107f7667f7047091fc39744b118048b69c833d07efde602aac410281c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7791/icon/d1a5ba5107f7667f7047091fc39744b118048b69c833d07efde602aac410281c.webp"
     },
     {
       "kind": "item",
@@ -5620,8 +5638,11 @@
       "id": 7792,
       "name": "Сексуальный имплант «Полуночная дама»",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 178,
+      "sha256": "d2a3a8d7586f1ab0666a30088d73de2c449b2d65168097eb91fd41e254840559",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7792/icon/d2a3a8d7586f1ab0666a30088d73de2c449b2d65168097eb91fd41e254840559.webp"
     },
     {
       "kind": "item",
@@ -5639,8 +5660,11 @@
       "id": 7793,
       "name": "Сексуальный имплант «Мистер жеребец»",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 178,
+      "sha256": "0358fd307ec3b1c62ef83c53d127560c3800fef3f896d640b25b1923f661a457",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7793/icon/0358fd307ec3b1c62ef83c53d127560c3800fef3f896d640b25b1923f661a457.webp"
     },
     {
       "kind": "item",
@@ -5658,8 +5682,11 @@
       "id": 7794,
       "name": "Крепление МультиОптик",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 178,
+      "sha256": "9b4947641a81791e7c1afa808ad3fc4f6192b508c4821eb6d20db33014110f03",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7794/icon/9b4947641a81791e7c1afa808ad3fc4f6192b508c4821eb6d20db33014110f03.webp"
     },
     {
       "kind": "item",
@@ -5677,8 +5704,11 @@
       "id": 7795,
       "name": "Носовые фильтры",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 178,
+      "sha256": "9be43f6cb988372d0e50e6846b0950bd82d007bb9e93a387faa080955d0b1666",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7795/icon/9be43f6cb988372d0e50e6846b0950bd82d007bb9e93a387faa080955d0b1666.webp"
     },
     {
       "kind": "item",
@@ -5696,8 +5726,11 @@
       "id": 7796,
       "name": "Нейронная связь",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 178,
+      "sha256": "e8bc7548173bc3da652fc2e7dbabda261412f60a55f056b9784c7ff9f455810d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7796/icon/e8bc7548173bc3da652fc2e7dbabda261412f60a55f056b9784c7ff9f455810d.webp"
     },
     {
       "kind": "item",
@@ -5715,8 +5748,11 @@
       "id": 7797,
       "name": "Усилитель обоняния",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 178,
+      "sha256": "01e1462cb322db02d2dbaacafcca5dd9abace60f2ce66c8b0882e2ee2056f9ba",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7797/icon/01e1462cb322db02d2dbaacafcca5dd9abace60f2ce66c8b0882e2ee2056f9ba.webp"
     },
     {
       "kind": "item",
@@ -19803,7 +19839,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1247,
+    "publishedSlots": 1259,
     "readySlots": 0,
     "totalSlots": 1848
   }
