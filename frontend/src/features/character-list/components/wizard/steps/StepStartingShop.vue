@@ -1,98 +1,81 @@
 <template>
   <div class="shop-step">
-    <section class="wealth-card">
-      <div class="wealth-copy">
-        <span class="wealth-kicker">Начальное богатство · {{ startingWealthFormulaLabel }}</span>
-        <strong>{{ state.startingWealthRoll?.gold || 0 }} зм</strong>
-        <div v-if="state.startingWealthRoll?.rolls?.length" class="wealth-rolls">
-          <span v-for="(roll, index) in state.startingWealthRoll.rolls" :key="index">{{ roll }}</span>
-          <small>× {{ state.startingWealthRoll.multiplier }}</small>
+    <WizardShop :items="startingShopItems" :loading="shopLoading" :categories="categories" :category-of="categoryOf">
+      <template #item="{ item }">
+        <div class="shop-item">
+          <ItemReferenceRow
+            :item="item"
+            :count="purchaseQuantity(item)"
+            :params="item.params"
+            roomy-weapon
+            @activate="viewItem = item"
+            @details="viewItem = item"
+            show-details
+          />
+          <button
+            type="button"
+            class="shop-add"
+            :disabled="!canBuyShopItem(item)"
+            :title="canBuyShopItem(item) ? `Купить за ${priceLabel(item)}` : 'Не хватает монет'"
+            @click="buy(item)"
+          >
+            <Plus :size="15" aria-hidden="true" />
+            {{ priceLabel(item) }}
+          </button>
         </div>
-      </div>
-      <button v-if="fixedStartingGold == null" type="button" class="reroll" @click="requestReroll">
-        <Dices :size="17" aria-hidden="true" />
-        Перебросить
-      </button>
-      <div class="wealth-totals">
-        <span><small>Потрачено</small>{{ shopSpentLabel }}</span>
-        <span class="remaining"><small>Останется в кошельке</small>{{ shopRemainingLabel }}</span>
-      </div>
-    </section>
-
-    <div class="shop-layout">
-      <section class="shop-catalogue">
-        <div class="shop-toolbar">
-          <label class="shop-search">
-            <Search :size="16" aria-hidden="true" />
-            <input v-model="query" placeholder="Найти снаряжение…" />
-          </label>
-          <div class="shop-tabs" role="tablist" aria-label="Категории магазина">
-            <button
-              v-for="category in categories"
-              :key="category.id"
-              type="button"
-              :class="{ active: activeType === category.id }"
-              @click="activeType = category.id"
-            >{{ category.label }} <small>{{ category.count }}</small></button>
-          </div>
-        </div>
-
-        <LoadingState v-if="shopLoading" class="shop-empty" label="Загружаем каталог…" compact />
-        <div v-else-if="!visibleItems.length" class="shop-empty">В этой категории ничего не найдено.</div>
-        <div v-else class="shop-items">
-          <div v-for="item in visibleItems" :key="item.id" class="shop-item">
-            <ItemReferenceRow
-              :item="item"
-              :count="purchaseQuantity(item)"
-              :params="item.params"
-              roomy-weapon
-              @activate="viewItem = item"
-              @details="viewItem = item"
-              show-details
-            />
-            <button
-              type="button"
-              class="shop-add"
-              :disabled="!canBuyShopItem(item)"
-              :title="canBuyShopItem(item) ? `Купить за ${priceLabel(item)}` : 'Не хватает монет'"
-              @click="buy(item)"
-            >
-              <Plus :size="15" aria-hidden="true" />
-              {{ priceLabel(item) }}
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <aside class="cart">
-        <div class="cart-heading">
-          <div>
-            <span>Корзина</span>
-            <small>{{ cartCountLabel }}</small>
-          </div>
-          <ShoppingBasket :size="20" aria-hidden="true" />
-        </div>
-        <div v-if="!state.startingShopCart.length" class="cart-empty">Добавляйте предметы из каталога. Покупки сразу считаются в бюджете.</div>
-        <div v-else class="cart-items">
-          <div v-for="entry in state.startingShopCart" :key="`${entry.item_id}:${JSON.stringify(entry.params)}`" class="cart-item">
-            <button class="cart-name" type="button" @click="viewItem = entry">{{ instanceName(entry) }}</button>
-            <span class="cart-price">{{ priceLabel(entry) }}{{ packagingNote(entry) ? ` / ${purchaseQuantity(entry)} шт.` : '' }}</span>
-            <div class="cart-quantity">
-              <button type="button" aria-label="Уменьшить" @click="bumpShopItem(entry, -1)">−</button>
-              <strong>{{ entry.count }}</strong>
-              <button type="button" aria-label="Увеличить" :disabled="!canBuyShopItem(entry)" @click="bumpShopItem(entry, 1)">+</button>
+      </template>
+      <template #budget>
+        <section class="wealth-card">
+          <MultiToggle v-if="startingWealthFormulaLabel" :model-value="wealthMode" aria-label="Способ определения богатства" :options="wealthOptions" @update:model-value="requestReroll" />
+          <div class="wealth-copy">
+            <span class="wealth-kicker">Начальное богатство{{ wealthMode === 'roll' ? ' · ' + startingWealthFormulaLabel : '' }}</span>
+            <strong>{{ state.startingWealthRoll?.gold || 0 }} зм</strong>
+            <div v-if="state.startingWealthRoll?.rolls?.length" class="wealth-rolls">
+              <SystemDie v-for="(roll, index) in state.startingWealthRoll.rolls" :key="index" :sides="4" :value="roll" :size="34" :animated="false" />
+              <small>× {{ state.startingWealthRoll.multiplier }}</small>
             </div>
-            <button class="cart-remove" type="button" aria-label="Убрать" @click="removeShopItem(entry)">
-              <X :size="14" aria-hidden="true" />
-            </button>
           </div>
-        </div>
-        <div class="cart-footer">
-          <span>Итого <strong>{{ shopSpentLabel }}</strong></span>
-          <span>Остаток <strong>{{ shopRemainingLabel }}</strong></span>
-        </div>
-      </aside>
-    </div>
+          <button v-if="wealthMode === 'roll'" type="button" class="reroll" @click="requestReroll('roll')">
+            <Dices :size="17" aria-hidden="true" />
+            Перебросить
+          </button>
+          <div class="wealth-totals">
+            <span><small>Потрачено</small>{{ shopSpentLabel }}</span>
+            <span class="remaining"><small>Останется в кошельке</small>{{ shopRemainingLabel }}</span>
+          </div>
+        </section>
+      </template>
+      <template #cart>
+        <aside class="cart">
+          <div class="cart-heading">
+            <div>
+              <span>Корзина</span>
+              <small>{{ cartCountLabel }}</small>
+            </div>
+            <ShoppingBasket :size="20" aria-hidden="true" />
+          </div>
+          <div v-if="!state.startingShopCart.length" class="cart-empty">Добавляйте предметы из каталога. Покупки сразу считаются в бюджете.</div>
+          <div v-else class="cart-items">
+            <div v-for="entry in state.startingShopCart" :key="`${entry.item_id}:${JSON.stringify(entry.params)}`" class="cart-item">
+              <button class="cart-name" type="button" @click="viewItem = entry"><WizardShopItemIcon :item="entry" :size="30" :fallback="icons[entry.typeId]" />{{ instanceName(entry) }}</button>
+              <span class="cart-price">{{ priceLabel(entry) }}{{ packagingNote(entry) ? ` / ${purchaseQuantity(entry)} шт.` : '' }}</span>
+              <div class="cart-quantity">
+                <button type="button" aria-label="Уменьшить" @click="bumpShopItem(entry, -1)">−</button>
+                <strong>{{ entry.count }}</strong>
+                <button type="button" aria-label="Увеличить" :disabled="!canBuyShopItem(entry)" @click="bumpShopItem(entry, 1)">+</button>
+              </div>
+              <button class="cart-remove" type="button" aria-label="Убрать" @click="removeShopItem(entry)">
+                <X :size="14" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+          <div class="cart-footer">
+            <span>Итого <strong>{{ shopSpentLabel }}</strong></span>
+            <span>Остаток <strong>{{ shopRemainingLabel }}</strong></span>
+          </div>
+        </aside>
+      </template>
+    </WizardShop>
 
     <MagicEquipmentInstanceModal v-if="pendingPurchase" :item="pendingPurchase" @close="pendingPurchase = null" @confirm="confirmPurchase" />
     <ItemViewModal
@@ -104,9 +87,9 @@
     />
     <ConfirmDialog
       v-if="rerollConfirmOpen"
-      title="Перебросить начальное богатство?"
+      title="Изменить начальное богатство?"
       message="Текущая корзина очистится, и бюджет будет рассчитан заново."
-      confirm-label="Перебросить"
+      confirm-label="Изменить"
       @cancel="rerollConfirmOpen = false"
       @confirm="confirmReroll"
     />
@@ -114,10 +97,13 @@
 </template>
 
 <script setup>
-import { LoadingState } from '@sylvieshare/share-ui'
+import { MultiToggle } from '@sylvieshare/share-ui'
 import { computed, inject, ref } from 'vue'
-import { Dices, Plus, Search, ShoppingBasket, X } from '@lucide/vue'
+import { Dices, Plus, ShoppingBasket, X, Backpack, Wrench, Sword, Shield, FlaskConical, Car, WandSparkles } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
+import WizardShop from '../WizardShop.vue'
+import SystemDie from '@/shared/ui/SystemDie.vue'
+import WizardShopItemIcon from '../WizardShopItemIcon.vue'
 import MagicEquipmentInstanceModal from '@/features/items/components/MagicEquipmentInstanceModal.vue'
 import { initialChargeStocks } from '@/shared/lib/itemInitialCharges'
 import { magicEquipmentKinds } from '@/features/items/lib/magicEquipmentBases'
@@ -127,7 +113,7 @@ import { formatCopper, itemCostCopper } from '@/features/character-editor/settin
 import { packagingNote, purchaseQuantity } from '@/features/items/lib/itemPackaging'
 
 const {
-  state, shopLoading, startingShopItems, startingWealthFormulaLabel, fixedStartingGold,
+  state, shopLoading, startingShopItems, startingWealthFormulaLabel,
   shopSpentLabel, shopRemainingLabel,
   addShopItem, removeShopItem, bumpShopItem, canBuyShopItem, rerollStartingWealth,
 } = inject('createWizard')
@@ -141,42 +127,37 @@ const TYPE_LABELS = [
   { id: 13, label: 'Транспорт' },
   { id: 19, label: 'Магические предметы' },
 ]
-const activeType = ref(2)
-const query = ref('')
+const icons = { 2: Backpack, 14: Wrench, 1: Sword, 12: Shield, 10: FlaskConical, 13: Car, 19: WandSparkles }
+const categories = TYPE_LABELS.map(group => ({ ...group, icon: icons[group.id] }))
+const categoryOf = item => Number(item.typeId)
+const wealthMode = computed(() => state.startingWealthRoll?.rolls?.length ? 'roll' : 'fixed')
+const wealthOptions = [{ value: 'fixed', label: 'По умолчанию' }, { value: 'roll', label: 'Бросок' }]
+const pendingMode = ref('roll')
 const viewItem = ref(null)
 const pendingPurchase = ref(null)
 function buy(item) { if (magicEquipmentKinds(item).length || initialChargeStocks(item.data).length) pendingPurchase.value = item; else addShopItem(item) }
 function confirmPurchase(params) { addShopItem({ ...pendingPurchase.value, params }); pendingPurchase.value = null }
 const rerollConfirmOpen = ref(false)
-const categories = computed(() => TYPE_LABELS.map((category) => ({
-  ...category,
-  count: startingShopItems.value.filter((item) => Number(item.typeId) === category.id).length,
-})))
-const visibleItems = computed(() => {
-  const needle = query.value.trim().toLocaleLowerCase('ru')
-  return startingShopItems.value.filter((item) => Number(item.typeId) === activeType.value
-    && (!needle || `${item.name} ${item.nameEn || ''}`.toLocaleLowerCase('ru').includes(needle)))
-})
 const cartCount = computed(() => state.startingShopCart.reduce((sum, entry) => sum + Math.max(1, Number(entry.count) || 1), 0))
 const cartCountLabel = computed(() => cartCount.value ? `${cartCount.value} шт.` : 'Пока пусто')
 const priceLabel = (item) => formatCopper(itemCostCopper(item))
 const instanceName = (entry) => entry.params?.length_ft != null ? `${entry.name} · ${entry.params.length_ft} фт.` : entry.name
 
-function requestReroll() {
+function requestReroll(mode) {
+  pendingMode.value = mode
   if (state.startingShopCart.length) rerollConfirmOpen.value = true
-  else rerollStartingWealth()
+  else rerollStartingWealth(pendingMode.value)
 }
-function confirmReroll() { rerollConfirmOpen.value = false; rerollStartingWealth() }
+function confirmReroll() { rerollConfirmOpen.value = false; rerollStartingWealth(pendingMode.value) }
 </script>
 
 <style scoped>
 .shop-step { display: flex; flex-direction: column; gap: 14px; }
-.wealth-card { display: grid; grid-template-columns: 1fr auto; gap: 12px 18px; padding: 16px 18px; border: 1px solid color-mix(in srgb, var(--warning) 38%, var(--border)); border-radius: calc(var(--r-md) + 3px); background: radial-gradient(circle at 8% 0%, color-mix(in srgb, var(--warning) 15%, transparent), transparent 38%), var(--surface); }
+.wealth-card { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px 18px; padding: 16px 18px; border: 1px solid color-mix(in srgb, var(--warning) 38%, var(--border)); border-radius: calc(var(--r-md) + 3px); background: radial-gradient(circle at 8% 0%, color-mix(in srgb, var(--warning) 15%, transparent), transparent 38%), var(--surface); }
 .wealth-copy { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; }
 .wealth-kicker { width: 100%; color: var(--warning); font-size: 10px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
 .wealth-copy strong { color: var(--text-1); font-family: var(--font-display); font-size: 30px; }
 .wealth-rolls { display: flex; align-items: center; gap: 5px; }
-.wealth-rolls span { min-width: 25px; padding: 4px 6px; border: 1px solid color-mix(in srgb, var(--warning) 34%, var(--border)); border-radius: 7px; color: var(--text-1); background: var(--bg); font-size: 12px; font-weight: 800; text-align: center; }
 .wealth-rolls small { color: var(--text-muted); font-size: 11px; }
 .reroll { align-self: center; display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface-raised); color: var(--text-1); font: inherit; font-size: 12px; font-weight: 650; cursor: pointer; }
 .reroll:hover { border-color: var(--warning); color: var(--warning); }
@@ -184,21 +165,11 @@ function confirmReroll() { rerollConfirmOpen.value = false; rerollStartingWealth
 .wealth-totals span { display: flex; flex-direction: column; gap: 2px; padding: 9px 11px; border-radius: var(--r-sm); background: color-mix(in srgb, var(--bg) 80%, transparent); color: var(--text-1); font-size: 14px; font-weight: 750; }
 .wealth-totals small { color: var(--text-muted); font-size: 9px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
 .wealth-totals .remaining { color: var(--success); }
-.shop-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 34%); align-items: start; gap: 12px; }
-.shop-catalogue, .cart { min-width: 0; border: 1px solid var(--border); border-radius: calc(var(--r-md) + 2px); background: color-mix(in srgb, var(--surface) 72%, transparent); }
-.shop-toolbar { position: sticky; top: 0; z-index: 2; display: flex; flex-direction: column; gap: 8px; padding: 11px; border-bottom: 1px solid var(--border); border-radius: inherit; background: color-mix(in srgb, var(--surface-raised) 94%, transparent); }
-.shop-search { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--r-md); color: var(--text-muted); background: var(--bg); }
-.shop-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--text-1); font: inherit; font-size: 12px; }
-.shop-tabs { display: flex; gap: 5px; overflow-x: auto; }
-.shop-tabs button { flex: none; padding: 6px 9px; border: 0; border-radius: 999px; background: var(--surface); color: var(--text-2); font: inherit; font-size: 10px; cursor: pointer; }
-.shop-tabs button.active { background: var(--accent); color: var(--text-on-accent); font-weight: 750; }
-.shop-tabs small { opacity: .72; }
-.shop-items { display: flex; flex-direction: column; gap: 7px; max-height: 570px; padding: 9px; overflow-y: auto; }
+.cart { min-width: 0; border: 1px solid var(--border); border-radius: calc(var(--r-md) + 2px); background: color-mix(in srgb, var(--surface) 72%, transparent); }
 .shop-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; }
 .shop-add { display: flex; align-items: center; justify-content: center; gap: 5px; min-width: 84px; padding: 0 9px; border: 1px solid color-mix(in srgb, var(--success) 38%, var(--border)); border-radius: var(--r-md); background: color-mix(in srgb, var(--success) 10%, var(--surface)); color: var(--success); font: inherit; font-size: 10px; font-weight: 750; cursor: pointer; white-space: nowrap; }
 .shop-add:hover:not(:disabled) { background: color-mix(in srgb, var(--success) 18%, var(--surface)); }
 .shop-add:disabled { opacity: .35; cursor: not-allowed; }
-.shop-empty { padding: 36px 16px; color: var(--text-muted); font-size: 12px; text-align: center; }
 .cart { position: sticky; top: 12px; overflow: hidden; }
 .cart-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 13px 14px; border-bottom: 1px solid var(--border); color: var(--accent); }
 .cart-heading > div { display: flex; flex-direction: column; gap: 2px; }
@@ -208,7 +179,7 @@ function confirmReroll() { rerollConfirmOpen.value = false; rerollStartingWealth
 .cart-items { display: flex; flex-direction: column; max-height: 470px; overflow-y: auto; }
 .cart-item { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 4px 8px; padding: 10px 12px; }
 .cart-item + .cart-item { border-top: 1px solid var(--border); }
-.cart-name { min-width: 0; padding: 0; border: 0; background: none; color: var(--text-1); font: inherit; font-size: 12px; font-weight: 650; text-align: left; cursor: pointer; }
+.cart-name { display: flex; align-items: center; gap: 6px; min-width: 0; padding: 0; border: 0; background: none; color: var(--text-1); font: inherit; font-size: 12px; font-weight: 650; text-align: left; cursor: pointer; }
 .cart-name:hover { color: var(--accent); }
 .cart-price { color: var(--warning); font-size: 10px; font-weight: 700; white-space: nowrap; }
 .cart-quantity { grid-column: 1 / 3; display: flex; align-items: center; gap: 5px; }
@@ -220,6 +191,5 @@ function confirmReroll() { rerollConfirmOpen.value = false; rerollStartingWealth
 .cart-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 11px 12px; border-top: 1px solid var(--border); background: var(--surface-raised); }
 .cart-footer span { display: flex; flex-direction: column; gap: 2px; color: var(--text-muted); font-size: 9px; text-transform: uppercase; }
 .cart-footer strong { color: var(--text-1); font-size: 12px; text-transform: none; }
-@media (max-width: 820px) { .shop-layout { grid-template-columns: 1fr; } .cart { position: static; order: -1; } .cart-items, .shop-items { max-height: none; } }
 @media (max-width: 540px) { .wealth-card { grid-template-columns: 1fr; } .reroll { justify-self: start; } .wealth-totals { grid-column: 1; grid-template-columns: 1fr; } .shop-item { grid-template-columns: minmax(0, 1fr); } .shop-add { min-height: 34px; } }
 </style>

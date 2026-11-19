@@ -1,36 +1,17 @@
 <template>
-  <div class="cc" :class="{ 'cc--embedded': embedded }">
-    <CharacterCreationHeader
-      class="cc-head"
-      :scroll-source="mainRef"
-      :show-incomplete="!isFullyValid"
-      :creating="creating"
-      :incomplete-disabled="initializing || !!bootstrapError"
-      @close="exit"
-      @reset="resetOpen = true"
-      @create-incomplete="createIncomplete"
-    />
-
-    <div class="cc-body">
-      <CreateStepRail
-        class="cc-rail"
-        :steps="steps"
-        :current="current"
-        :reachable="maxReachable"
-        @go="goTo"
-      />
-
-      <main ref="mainRef" class="cc-main" :class="{ 'cc-main--invalid': invalidPulse }">
-        <p v-if="wz.catalogueNotice.value" role="status">{{ wz.catalogueNotice.value }}</p>
-        <div v-if="bootstrapError" role="alert">{{ bootstrapError }} <button class="btn ghost" @click="initialize(false)">Повторить загрузку</button></div>
-        <transition name="cc-fade" mode="out-in">
-          <component :is="stepComponent" :key="stepKey" />
-        </transition>
-      </main>
-    </div>
-
-    <footer class="cc-foot">
-      <div class="cc-foot-main">
+  <WizardFrame
+    :embedded="embedded" :creating="creating" :steps="steps"
+    :main-class="{ 'cc-main--invalid': invalidPulse }"
+    :current="current" :reachable="maxReachable" :show-incomplete="!isFullyValid" :incomplete-disabled="initializing || !!bootstrapError"
+    @create-incomplete="createIncomplete"
+    @scroll-source="mainRef = $event" @go="goTo" @close="exit" @reset="resetOpen = true"
+  >
+    <p v-if="wz.catalogueNotice.value" role="status">{{ wz.catalogueNotice.value }}</p>
+    <div v-if="bootstrapError" role="alert">{{ bootstrapError }} <button class="btn ghost" @click="initialize(false)">Повторить загрузку</button></div>
+    <transition name="cc-fade" mode="out-in">
+      <WizardStepOutlet :key="stepKey" :step="steps[current]" />
+    </transition>
+    <template #actions>
         <button class="btn ghost" @click="back">{{ current === 0 ? 'Отмена' : 'Назад' }}</button>
         <span v-if="error" class="cc-error" role="alert">{{ error }}</span>
         <span v-else-if="blockReason && !isLast" class="cc-reason">{{ blockReason }}</span>
@@ -41,42 +22,40 @@
             <button class="btn create" :disabled="creating || initializing || !!bootstrapError" @click="createNow"><LoadingIndicator v-if="creating" label="Создание…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ creating ? 'Создание…' : 'Создать персонажа' }}</button>
           </template>
         </div>
-      </div>
-    </footer>
-
-    <CharacterSheetModal
-      v-if="previewDraft"
-      :draft="previewDraft"
-      :z-index="3200"
-      @close="previewDraft = null"
-    />
-
-    <ConfirmDialog
-      v-if="confirmOpen"
-      title="Создать персонажа?"
-      message="Часть полей не заполнена — их можно дозаполнить позже на листе. Создать как есть?"
-      confirm-label="Создать"
-      @cancel="confirmOpen = false"
-      @confirm="submit"
-    />
-
-    <ConfirmDialog
-      v-if="resetOpen"
-      title="Начать сначала?"
-      message="Все выборы будут сброшены, и создание начнётся заново."
-      confirm-label="Сбросить"
-      @cancel="resetOpen = false"
-      @confirm="doReset"
-    />
-  </div>
+    </template>
+    <template #dialogs>
+      <CharacterSheetModal
+        v-if="previewDraft"
+        :draft="previewDraft"
+        :z-index="3200"
+        @close="previewDraft = null"
+      />
+      <ConfirmDialog
+        v-if="confirmOpen"
+        title="Создать персонажа?"
+        message="Часть полей не заполнена — их можно дозаполнить позже на листе. Создать как есть?"
+        confirm-label="Создать"
+        @cancel="confirmOpen = false"
+        @confirm="submit"
+      />
+      <ConfirmDialog
+        v-if="resetOpen"
+        title="Начать сначала?"
+        message="Все выборы будут сброшены, и создание начнётся заново."
+        confirm-label="Сбросить"
+        @cancel="resetOpen = false"
+        @confirm="doReset"
+      />
+    </template>
+  </WizardFrame>
 </template>
 
 <script setup>
+import WizardStepOutlet from '../components/wizard/WizardStepOutlet.vue'
+import WizardFrame from '../components/wizard/WizardFrame.vue'
 import { LoadingIndicator } from '@sylvieshare/share-ui'
-import CharacterCreationHeader from '../components/CharacterCreationHeader.vue'
 import { computed, onMounted, provide, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import CreateStepRail from '@/features/character-list/components/wizard/CreateStepRail.vue'
 import StepBackground from '@/features/character-list/components/wizard/steps/StepBackground.vue'
 import StepClass from '@/features/character-list/components/wizard/steps/StepClass.vue'
 import StepStartingShop from '@/features/character-list/components/wizard/steps/StepStartingShop.vue'
@@ -131,10 +110,6 @@ const isComplete = computed(() =>
   && !!state.background && backgroundItemChoicesComplete.value
   && !!state.name.trim() && scoresComplete.value)
 
-const STEP_COMPONENTS = {
-  version: StepVersion, race: StepRace, class: StepClass, background: StepBackground,
-  stats: StepStats, shop: StepStartingShop, persona: StepPersona,
-}
 
 const internalCreating = ref(false)
 const creating = computed(() => props.creating || internalCreating.value)
@@ -152,19 +127,18 @@ const statMethodLabel = computed(() => ({
   roll: 'Бросок кубиков',
 })[state.statMethod] || '')
 const steps = computed(() => [
-  { key: 'version', title: 'Версия', summary: state.version ? `D&D 5e · ${state.version}` : '' },
-  { key: 'race', title: 'Раса', summary: [state.race?.name, state.subrace?.name].filter(Boolean).join(' · ') },
-  { key: 'class', title: 'Класс', summary: [state.charClass?.name, state.subclass?.name].filter(Boolean).join(' · ') },
-  { key: 'background', title: 'Предыстория', summary: state.background?.name || '' },
-  { key: 'stats', title: 'Характеристики', summary: statMethodLabel.value },
+  { key: 'version', title: 'Версия', component: StepVersion, summary: state.version ? `D&D 5e · ${state.version}` : '' },
+  { key: 'race', title: 'Раса', component: StepRace, summary: [state.race?.name, state.subrace?.name].filter(Boolean).join(' · ') },
+  { key: 'class', title: 'Класс', component: StepClass, summary: [state.charClass?.name, state.subclass?.name].filter(Boolean).join(' · ') },
+  { key: 'background', title: 'Предыстория', component: StepBackground, summary: state.background?.name || '' },
+  { key: 'stats', title: 'Характеристики', component: StepStats, summary: statMethodLabel.value },
   ...(state.buyStartingEquipment
-    ? [{ key: 'shop', title: 'Магазин', summary: `${shopSpentLabel.value} · остаток ${shopRemainingLabel.value}` }]
+    ? [{ key: 'shop', title: 'Магазин', component: StepStartingShop, summary: `${shopSpentLabel.value} · остаток ${shopRemainingLabel.value}` }]
     : []),
-  { key: 'persona', title: 'Личность', summary: state.name.trim() || state.persona.alignment || '' },
+  { key: 'persona', title: 'Личность', component: StepPersona, summary: state.name.trim() || state.persona.alignment || '' },
 ])
 const current = computed(() => state.step)
 const stepKey = computed(() => steps.value[current.value]?.key)
-const stepComponent = computed(() => STEP_COMPONENTS[stepKey.value])
 const isLast = computed(() => current.value >= steps.value.length - 1)
 
 // The step list is dynamic (Выборы/Магия appear/disappear) — keep the index valid.
@@ -370,19 +344,18 @@ async function initialize(restoreDraft = true) {
 onMounted(() => initialize())
 </script>
 
-<style scoped src="../components/wizard/creationWorkspace.css"></style>
 <style scoped>
-.cc-main, .cc-foot-main {
+:deep(.cc-main), :deep(.cc-foot-main) {
   border-inline: 1px solid color-mix(in srgb, var(--border-strong) 62%, transparent);
 }
-.cc-foot-main {
+:deep(.cc-foot-main) {
   border-top-color: color-mix(in srgb, var(--border-strong) 72%, transparent);
 }
 .cc-reason { font-size: 12px; color: var(--text-muted); }
 .cc-error { max-width: 520px; color: var(--danger); font-size: 12px; }
 .btn { border: none; border-radius: 9px; padding: 10px 22px; font: inherit; font-weight: 600; cursor: pointer; }
 .btn.disabled { opacity: .48; cursor: pointer; }
-.cc-main--invalid { animation: cc-invalid .6s ease; }
+:deep(.cc-main--invalid) { animation: cc-invalid .6s ease; }
 @keyframes cc-invalid { 0%, 100% { box-shadow: none; } 35% { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--danger) 72%, transparent); } }
 .btn.ghost { background: transparent; color: var(--text-2); box-shadow: inset 0 0 0 1px var(--border-strong); }
 .btn.ghost:hover { color: var(--text-1); }
@@ -396,7 +369,7 @@ onMounted(() => initialize())
 
 
 @media (max-width: 640px) {
-  .cc-main, .cc-foot-main { border-inline: none; }
+  :deep(.cc-main), :deep(.cc-foot-main) { border-inline: none; }
   .cc-error { order: -1; flex: 0 0 100%; max-width: none; }
   .btn { padding: 10px 18px; }
   .btn.soft { padding-inline: 10px; }

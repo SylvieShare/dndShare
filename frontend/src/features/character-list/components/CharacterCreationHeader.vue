@@ -3,7 +3,7 @@
     <template #identity>
       <ActionButton class="cc-x" variant="quiet" icon-only title="Закрыть" aria-label="Закрыть создание персонажа" @click="emit('close')"><template #icon><X :size="20" /></template></ActionButton>
       <span class="creation-title">
-        <component :is="red ? Cpu : WandSparkles" class="creation-title-icon" :size="22" aria-hidden="true" />
+        <component :is="icon || WandSparkles" class="creation-title-icon" :size="22" aria-hidden="true" />
         <span>Создание персонажа</span>
       </span>
     </template>
@@ -23,9 +23,9 @@
 </template>
 <script setup>
 import { ActionButton } from '@sylvieshare/share-ui'
-import { Cpu, RotateCcw, UserRoundPlus, WandSparkles, X } from '@lucide/vue'
+import { RotateCcw, UserRoundPlus, WandSparkles, X } from '@lucide/vue'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
-defineProps({ scrollSource: Object, red: Boolean, showIncomplete: Boolean, incompleteDisabled: Boolean, creating: Boolean })
+defineProps({ scrollSource: Object, icon: [Object, Function], showIncomplete: Boolean, incompleteDisabled: Boolean, creating: Boolean })
 const emit = defineEmits(['close', 'reset', 'create-incomplete'])
 </script>
 <style scoped>

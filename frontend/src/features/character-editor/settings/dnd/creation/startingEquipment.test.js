@@ -10,7 +10,7 @@ import {
 
 const CLASS_NAMES = [
   'Варвар', 'Бард', 'Жрец', 'Друид', 'Воин', 'Монах',
-  'Паладин', 'Следопыт', 'Плут', 'Чародей', 'Колдун', 'Волшебник',
+  'Изобретатель', 'Паладин', 'Следопыт', 'Плут', 'Чародей', 'Колдун', 'Волшебник',
 ]
 
 function firstChoices(profile) {
@@ -47,11 +47,11 @@ describe('PHB starting equipment', () => {
     ])
   })
 
-  it('covers all twelve base classes in Russian', () => {
+  it('covers the twelve core classes and the artificer in Russian', () => {
     const profiles = CLASS_NAMES.map((name) => startingEquipmentProfile({ name }))
     expect(profiles.every(Boolean)).toBe(true)
-    expect(new Set(profiles.map((profile) => profile.key)).size).toBe(12)
-    expect(STARTING_EQUIPMENT_CLASS_KEYS).toHaveLength(12)
+    expect(new Set(profiles.map((profile) => profile.key)).size).toBe(CLASS_NAMES.length)
+    expect(STARTING_EQUIPMENT_CLASS_KEYS).toHaveLength(CLASS_NAMES.length)
     expect(startingEquipmentProfile({ name: 'Разбойник' })?.key).toBe('rogue')
   })
 

@@ -79,11 +79,12 @@ export default { name: 'ViewListCharacters' }
 </script>
 
 <script setup>
+import { creationSystems } from '../creationSystems'
 import CharacterListSkeleton from '../components/CharacterListSkeleton.vue'
 import PageHeaderPortal from '@/shared/ui/PageHeaderPortal.vue'
 import HeaderCreateAction from '@/shared/ui/HeaderCreateAction.vue'
 import { ActionMenu, ActionMenuItem, LoadingState } from '@sylvieshare/share-ui'
-import { Cpu, Moon, RotateCcw, Swords } from '@lucide/vue'
+import { RotateCcw } from '@lucide/vue'
 import { computed, onActivated, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CharBox from "@/features/character-list/components/CharBox"
@@ -111,11 +112,6 @@ const templates = computed(() => templateStore.all)
 const modalTemplates = ref([])
 const loadingSystems = ref(false)
 const systemLoadError = ref(false)
-const creationSystems = [
-  { system: 'dnd5e', label: 'D&D 5e', icon: Swords, wizard: true },
-  { system: 'cyberpunk-red', label: 'Cyberpunk RED', icon: Cpu, wizard: true },
-  { system: 'vtm-v20', label: 'Vampire V20', icon: Moon, wizard: false },
-]
 const createOptions = computed(() => creationSystems.flatMap(option => {
   const template = templates.value.find(template => resolveSetting(template)?.system === option.system)
   return template ? [{ ...option, template }] : []
@@ -193,7 +189,7 @@ async function loadSystems() {
 }
 
 function chooseSystem(option) {
-  if (option.wizard) {
+  if (option.workspace) {
     router.push({ path: '/chars/new', query: { system: option.system } })
   } else {
     modalTemplates.value = [option.template]

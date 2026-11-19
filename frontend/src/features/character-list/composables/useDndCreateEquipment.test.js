@@ -14,6 +14,22 @@ function wizardState() {
 }
 
 describe('class equipment branch switching', () => {
+  it.each([
+    ['2014', 'Монах', {}, 12, 5, 1],
+    ['2014', 'Изобретатель', {}, 125, 5, 10],
+    ['2024', 'Волшебник', { starting_gold: 55 }, 55, 4, 10],
+  ])('uses the class budget and dice for %s %s', (version, name, data, gold, dice, multiplier) => {
+    const state = wizardState()
+    Object.assign(state, { version, charClass: { id: 9, name, data } })
+    const equipment = useDndCreateEquipment({ state, sourceSuffix: () => '' })
+    equipment.setBuyStartingEquipment(true)
+    expect(state.startingWealthRoll).toMatchObject({ gold, rolls: [] })
+    equipment.rerollStartingWealth()
+    expect(state.startingWealthRoll.rolls).toHaveLength(dice)
+    expect(state.startingWealthRoll.gold).toBe(state.startingWealthRoll.rolls.reduce((sum, n) => sum + n) * multiplier)
+    equipment.rerollStartingWealth('fixed')
+    expect(equipment.startingWealthCopper.value).toBe(gold * 100)
+  })
   it('buys and removes complete packages while persisting piece counts and charging once', () => {
     const state = wizardState()
     state.buyStartingEquipment = true

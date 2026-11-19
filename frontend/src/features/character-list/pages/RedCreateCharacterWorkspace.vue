@@ -1,54 +1,37 @@
 <template>
-  <div class="cc red-wizard" :class="{ 'cc--embedded': embedded }">
-    <CharacterCreationHeader
-      class="cc-head"
-      red
-      :scroll-source="mainRef"
-      :show-incomplete="!fullyValid"
-      :creating="creating"
-      :incomplete-disabled="!available"
-      @close="exit"
-      @reset="resetOpen = true"
-      @create-incomplete="requestIncomplete"
-    />
-    <div class="cc-body">
-      <CreateStepRail
-        class="cc-rail"
-        :steps="steps"
-        :current="step"
-        :reachable="reachableStep"
-        @go="goTo"
+  <WizardFrame
+    :embedded="embedded" :creating="creating" :steps="steps"
+    class="red-wizard" main-class="red-wizard-main" :icon="Cpu"
+    :current="step" :reachable="reachableStep" :show-incomplete="!fullyValid" :incomplete-disabled="!available"
+    @create-incomplete="requestIncomplete"
+    @scroll-source="mainRef = $event" @go="goTo" @close="exit" @reset="resetOpen = true"
+  >
+    <p v-if="displayError" class="red-danger" role="alert">
+      {{ displayError }}
+      <ActionButton v-if="catalogue.error.value" @click="catalogue.load">Повторить</ActionButton>
+    </p>
+    <LoadingState v-if="loading || catalogue.loading.value && !catalogue.items.value.length" label="Загрузка создания персонажа…" />
+    <Transition v-else name="cc-fade" mode="out-in">
+      <RedCreationSteps
+        :key="stepKey"
+        :draft="draft"
+        :step="steps[step]"
+        :role-expanded="roleExpanded"
+        :items="catalogue.items.value"
+        :art="art"
+        :validation="wizard.validation.value"
+        :shopping="wizard.shopping.value"
+        :skill-values="wizard.skillValues.value"
+        @patch="patch"
+        @method="requestChange('method', $event)"
+        @role="selectRole"
+        @browse-roles="roleExpanded = false"
+        @roll-stats="wizard.rollStats"
+        @native-language="nativeLanguage"
+        @specialization="specialization"
       />
-      <main ref="mainRef" class="cc-main red-wizard-main">
-        <p v-if="displayError" class="red-danger" role="alert">
-          {{ displayError }}
-          <ActionButton v-if="catalogue.error.value" @click="catalogue.load">Повторить</ActionButton>
-        </p>
-        <LoadingState v-if="loading || catalogue.loading.value && !catalogue.items.value.length" label="Загрузка создания персонажа…" />
-        <Transition v-else name="cc-fade" mode="out-in">
-          <RedCreationSteps
-            :key="stepKey"
-            :draft="draft"
-            :step="stepKey"
-            :role-expanded="roleExpanded"
-            :items="catalogue.items.value"
-            :art="art"
-            :validation="wizard.validation.value"
-            :shopping="stepKey === 'equipment' ? wizard.equipmentShopping.value : wizard.shopping.value"
-            :skill-values="wizard.skillValues.value"
-            @patch="patch"
-            @method="requestChange('method', $event)"
-            @role="selectRole"
-            @browse-roles="roleExpanded = false"
-            @roll-stats="wizard.rollStats"
-            @native-language="nativeLanguage"
-            @specialization="specialization"
-          />
-        </Transition>
-      </main>
-    </div>
-    <footer class="cc-foot">
-      <div class="cc-foot-main">
+    </Transition>
+    <template #actions>
         <p v-if="blockReason" class="red-step-reason" role="status">{{ blockReason }}</p>
         <ActionButton variant="quiet" @click="step > 0 ? step-- : exit()">
           {{ step ? "Назад" : "Отмена" }}
@@ -61,46 +44,49 @@
             {{ creating ? "Создание…" : step < lastStep ? "Далее" : "Создать персонажа" }}
           </ActionButton>
         </div>
-      </div>
-    </footer>
-    <CharacterSheetModal
-      v-if="previewDraft"
-      :draft="previewDraft"
-      @close="previewDraft = null"
-    />
-    <ConfirmDialog
-      v-if="incompleteOpen"
-      title="Создать неполноценного персонажа?"
-      message="Можно закончить настройку в листе. Неуказанные характеристики получат минимальные значения. Недопустимые настройки и покупки могут быть исключены."
-      confirm-label="Создать"
-      @cancel="incompleteOpen = false"
-      @confirm="create({ incomplete: true })"
-    />
-    <ConfirmDialog
-      v-if="pendingChange"
-      :title="pendingChange.kind === 'role' ? 'Изменить роль?' : 'Изменить способ создания?'"
-      :message="pendingChange.kind === 'role'
-        ? 'Навыки, специальные настройки и стартовый комплект будут пересобраны под новую роль.'
-        : 'Навыки будут пересобраны, а характеристики и бюджет будут рассчитываться по новому способу.'"
-      confirm-label="Изменить"
-      @cancel="pendingChange = null"
-      @confirm="applyChange"
-    />
-    <ConfirmDialog
-      v-if="resetOpen"
-      title="Сбросить черновик RED?"
-      message="Выборы этого черновика будут удалены. Сохранённые персонажи останутся."
-      confirm-label="Сбросить"
-      @cancel="resetOpen = false"
-      @confirm="
-        wizard.reset();
-        roleExpanded = false;
-        resetOpen = false;
-      "
-    />
-  </div>
+    </template>
+    <template #dialogs>
+      <CharacterSheetModal
+        v-if="previewDraft"
+        :draft="previewDraft"
+        @close="previewDraft = null"
+      />
+      <ConfirmDialog
+        v-if="incompleteOpen"
+        title="Создать неполноценного персонажа?"
+        message="Можно закончить настройку в листе. Неуказанные характеристики получат минимальные значения. Недопустимые настройки и покупки могут быть исключены."
+        confirm-label="Создать"
+        @cancel="incompleteOpen = false"
+        @confirm="create({ incomplete: true })"
+      />
+      <ConfirmDialog
+        v-if="pendingChange"
+        :title="pendingChange.kind === 'role' ? 'Изменить роль?' : 'Изменить способ создания?'"
+        :message="pendingChange.kind === 'role'
+          ? 'Навыки, специальные настройки и стартовый комплект будут пересобраны под новую роль.'
+          : 'Навыки будут пересобраны, а характеристики и бюджет будут рассчитываться по новому способу.'"
+        confirm-label="Изменить"
+        @cancel="pendingChange = null"
+        @confirm="applyChange"
+      />
+      <ConfirmDialog
+        v-if="resetOpen"
+        title="Сбросить черновик RED?"
+        message="Выборы этого черновика будут удалены. Сохранённые персонажи останутся."
+        confirm-label="Сбросить"
+        @cancel="resetOpen = false"
+        @confirm="
+          wizard.reset();
+          roleExpanded = false;
+          resetOpen = false;
+        "
+      />
+    </template>
+  </WizardFrame>
 </template>
 <script setup>
+import WizardFrame from '../components/wizard/WizardFrame.vue'
+import { Cpu } from '@lucide/vue'
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { ActionButton, ConfirmDialog, LoadingState } from "@sylvieshare/share-ui";
@@ -116,8 +102,6 @@ import {
 import { RED_ROLES } from "@/features/character-editor/settings/cyberpunk-red/catalogue";
 import { useRedCreationArt } from "../composables/useRedCreationArt";
 import { redCreationStepError } from "../composables/redCreationStepValidation";
-import CharacterCreationHeader from "../components/CharacterCreationHeader.vue";
-import CreateStepRail from "../components/wizard/CreateStepRail.vue";
 import RedCreationSteps from "../components/wizard/red/RedCreationSteps.vue";
 import CharacterSheetModal from "@/features/character-editor/components/CharacterSheetModal.vue";
 const props = defineProps({
@@ -316,11 +300,10 @@ defineExpose({ clearDraft: wizard.clearDraft });
 <style
   src="../../character-editor/components/sheet/cyberpunk-red/redSheet.css"
 ></style>
-<style scoped src="../components/wizard/creationWorkspace.css"></style>
 <style scoped>
-.red-wizard-main { padding-block-start: var(--spacing-medium); }
-.red-wizard-main > [role="alert"] { margin: 0 0 var(--spacing-medium); }
-.cc-foot-main { flex-wrap: wrap; }
+:deep(.red-wizard-main) { padding-block-start: var(--spacing-medium); }
+:deep(.red-wizard-main) > [role="alert"] { margin: 0 0 var(--spacing-medium); }
+:deep(.cc-foot-main) { flex-wrap: wrap; }
 .red-step-reason {
   flex: 1 1 100%;
   margin: 0;

@@ -19,8 +19,7 @@ export const RED_CREATE_STEPS = [
   { key: "method", title: "Способ создания" },
   { key: "stats", title: "Характеристики" },
   { key: "skills", title: "Навыки" },
-  { key: "equipment", title: "Снаряжение" },
-  { key: "cyberware", title: "Киберимпланты" },
+  { key: "equipment", title: "Магазин" },
   { key: "finish", title: "Завершение" },
 ];
 const legacyStepKeys = ["method", "role", "lifepath", "stats", "skills", "equipment", "cyberware", "finish"];
@@ -57,8 +56,9 @@ export function useRedCreateWizard(items) {
       ["complete", "streetrat", "edgerunner"].includes(saved.draft.method)
     ) {
       draft.value = { ...initial(), ...saved.draft };
-      const stepKey = saved.stepKey ?? legacyStepKeys[saved.step];
-      migratedDraft = saved.draft.schemaVersion === 1 || (saved.stepKey == null && stepKey != null);
+      const savedKey = saved.stepKey ?? legacyStepKeys[saved.step];
+      const stepKey = savedKey === "cyberware" ? "equipment" : savedKey;
+      migratedDraft = savedKey !== stepKey || saved.draft.schemaVersion === 1 || (saved.stepKey == null && stepKey != null);
       step.value = Math.max(0, RED_CREATE_STEPS.findIndex(entry => entry.key === stepKey));
       if (!Array.isArray(draft.value.statRolls) || (
         saved.draft.schemaVersion === 1 && draft.value.statRolls.every(die => die === 1)
@@ -115,7 +115,6 @@ export function useRedCreateWizard(items) {
   if (migratedDraft) saveDraft();
   watch([draft, step], saveDraft, { deep: true });
   const shopping = computed(() => redShoppingSummary(draft.value, items.value));
-  const equipmentShopping = computed(() => redShoppingSummary(draft.value, items.value, { equipmentOnly: true }));
   const validation = computed(() => validateRedCreation(draft.value));
   function changeRole(role) {
     draft.value.role = role;
@@ -165,7 +164,6 @@ export function useRedCreateWizard(items) {
     draft,
     step,
     shopping,
-    equipmentShopping,
     validation,
     storageError,
     reset,

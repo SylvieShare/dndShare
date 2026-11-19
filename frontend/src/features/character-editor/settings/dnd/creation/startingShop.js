@@ -3,6 +3,7 @@ import { purchaseQuantity } from '@/features/items/lib/itemPackaging'
 const COPPER_PER_COIN = { 1: 1, 2: 10, 3: 100, 4: 50, 5: 1000 }
 
 const STARTING_WEALTH = {
+  artificer: { dice: 5, multiplier: 10 },
   bard: { dice: 5, multiplier: 10 },
   barbarian: { dice: 2, multiplier: 10 },
   fighter: { dice: 5, multiplier: 10 },

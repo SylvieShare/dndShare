@@ -42,8 +42,8 @@ export function redCreationErrorText(error) {
 }
 
 export function redCreationStepError(step, draft, validation, items) {
-  if (step === 'equipment' || step === 'cyberware') {
-    return items.length ? redStartingGearError(draft, items, { equipmentOnly: step === 'equipment' }) : ''
+  if (step === 'equipment') {
+    return items.length ? redStartingGearError(draft, items) : ''
   }
   const error = validation.errors.find(error => fields[step]?.includes(error.path.split('.')[0]))
   return error ? redCreationErrorText(error) : ''

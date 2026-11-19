@@ -19,6 +19,7 @@ import {
   itemCostCopper,
   rollStartingWealth,
   startingWealthFormula,
+  startingWealthRule,
 } from '@/features/character-editor/settings/dnd/creation/startingShop'
 
 const CATALOGUE_TYPE_IDS = [1, 2, 10, 12, 13, 14, 19]
@@ -106,9 +107,15 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
     .map((item) => ({ ...item, params: defaultInstanceParams(typeById(item.typeId), item) }))
     .filter((item) => itemCostCopper(item) != null)
     .sort((a, b) => a.name.localeCompare(b.name, 'ru')))
-  const fixedStartingGold = computed(() => state.version === '2024' ? Number(state.charClass?.data?.starting_gold) || 0 : null)
-  const startingWealthFormulaLabel = computed(() => fixedStartingGold.value == null ? startingWealthFormula(baseClassEquipmentProfile.value?.key) : `${fixedStartingGold.value} зм`)
-  const newWealth = () => fixedStartingGold.value == null ? rollStartingWealth(baseClassEquipmentProfile.value?.key) : { gold: fixedStartingGold.value, rolls: [], multiplier: 1 }
+  const wealthClass = computed(() => startingEquipmentProfile(state.charClass, '2014')?.key)
+  const startingWealthFormulaLabel = computed(() => startingWealthFormula(wealthClass.value))
+  const fixedStartingGold = computed(() => {
+    const configured = state.charClass?.data?.starting_gold
+    if (configured != null) return Number(configured)
+    const rule = startingWealthRule(wealthClass.value)
+    return rule ? Math.floor(rule.dice * 2.5 * rule.multiplier) : 0
+  })
+  const newWealth = () => ({ gold: fixedStartingGold.value, rolls: [], multiplier: 1 })
   const startingWealthCopper = computed(() => Math.max(0, Number(state.startingWealthRoll?.gold) || 0) * 100)
   const shopSpentCopper = computed(() => cartCostCopper(state.startingShopCart))
   const shopRemainingCopper = computed(() => Math.max(0, startingWealthCopper.value - shopSpentCopper.value))
@@ -147,8 +154,8 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
     if (entry) entry.count = Math.max(1, entry.count + delta)
   }
 
-  function rerollStartingWealth() {
-    state.startingWealthRoll = newWealth()
+  function rerollStartingWealth(mode = 'roll') {
+    state.startingWealthRoll = mode === 'roll' ? rollStartingWealth(wealthClass.value) : newWealth()
     state.startingShopCart = []
   }
   function setBuyStartingEquipment(enabled) {

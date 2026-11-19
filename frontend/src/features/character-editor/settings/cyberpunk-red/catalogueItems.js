@@ -9,6 +9,9 @@ export function redCatalogueItem(row) {
         facts: row.data.facts || {},
         page: row.contentSources?.[0]?.page,
         description: row.data.description || "",
+        iconImageUrl: row.iconImageUrl,
+        svg: row.svg,
+        iconSvgId: row.iconSvgId,
         coverImageUrl: row.coverImageUrl,
       }
     : row;

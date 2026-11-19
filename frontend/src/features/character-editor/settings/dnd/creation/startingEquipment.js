@@ -35,6 +35,17 @@ const longbow = [item('Длинный лук'), item('Стрела', 20)]
 const longbowWithQuiver = [item('Длинный лук'), item('Колчан'), item('Стрела', 20)]
 
 const PROFILES = {
+  artificer: {
+    groups: [group('armor', [
+      option('studded', 'Проклёпанная кожа', [item('Проклёпанная кожа')]),
+      option('scale', 'Чешуйчатый доспех', [item('Чешуйчатый доспех')]),
+    ])],
+    fixed: [...crossbow, item('Воровские инструменты'), item('Набор исследователя подземелий')],
+    fixedPicks: [
+      pick('weapon_1', 'Первое простое оружие', SIMPLE_WEAPONS),
+      pick('weapon_2', 'Второе простое оружие', SIMPLE_WEAPONS),
+    ],
+  },
   barbarian: {
     groups: [
       group('weapon_1', [
@@ -170,6 +181,7 @@ const PROFILES = {
 }
 
 const ALIASES = {
+  artificer: ['artificer', 'изобретатель'],
   barbarian: ['barbarian', 'варвар'],
   bard: ['bard', 'бард'],
   cleric: ['cleric', 'жрец'],

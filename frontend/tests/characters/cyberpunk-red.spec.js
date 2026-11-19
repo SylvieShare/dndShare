@@ -34,7 +34,7 @@ async function fixture(page){
    '/api/templates':{templates:[{id:1,name:'DND5'},{id:2,name:'VTM20'},{id:3,name:'CYBERPUNK_RED'}]},
    '/api/cyberpunk-red/catalogue':{items,revision:core.revision,groups:core.groups},
    '/api/chars':{chars:[response()],sessionsByChar:{}},
-   '/api/item-types':{types:[{name:'Киберимпланты',coverImageUrl:cover}]},
+   '/api/item-types':{types:[{name:'Снаряжение',coverImageUrl:cover},{name:'Киберимпланты',coverImageUrl:cover}]},
    '/api/items/by-ids':{items:[]},
    '/api/suggest/types':{items:[{id:36,name:'Методы создания'},{id:34,name:'Характеристики',coverImageUrl:cover},{id:38,name:'Навыки',coverImageUrl:cover}]},
    '/api/suggest/36':{items:[{code:'complete',coverImageUrl:cover}]},
@@ -228,7 +228,7 @@ for(const width of [390,840,1440]){
    await next.click()
    await expect(main.getByRole('heading',{name:'Навыки',exact:true}).first()).toBeVisible()
    await expect(page.locator('.red-step-reason')).toContainText('86 очков навыков')
-   await expect(railStep('Снаряжение')).toBeDisabled()
+   await expect(railStep('Магазин')).toBeDisabled()
    const initial=main.locator('.skills-step-specializations')
    await expect(initial.getByRole('heading',{name:'Начальные специализации'})).toBeVisible()
    await expect(initial.locator('input').first()).toBeVisible()
@@ -328,13 +328,19 @@ for(const width of [390,840,1440]){
    await expect(skillCards.first().locator('.skill-title-fit')).toHaveAttribute('data-fit-wrapping','false')
   }
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
-  await rail.getByText('Киберимпланты',{exact:true}).click()
-  await expect(page.getByRole('heading',{name:'Киберимпланты',exact:true})).toBeVisible()
+  await rail.getByText('Магазин',{exact:true}).click()
+  await expect(page.getByRole('heading',{name:'Магазин',exact:true})).toBeVisible()
   await expect(page.locator('.creation-cover')).toHaveJSProperty('naturalWidth',50)
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
+  const shop=main.locator('.wizard-shop')
+  await shop.locator('.categories').getByRole('button',{name:/Киберимпланты/}).click()
+  await shop.locator('.shop-entry button').first().click()
+  await expect(shop.getByText('Расположение',{exact:true})).toBeVisible()
+  await shop.getByRole('button',{name:'Убрать',exact:true}).click()
   await rail.getByText('Завершение',{exact:true}).click()
   await expect(page.getByRole('button',{name:'Создать персонажа',exact:true})).toBeDisabled()
-  await page.locator('.red-wizard-main input').fill('Новый RED')
+  await expect(main.getByRole('heading',{name:'Готовность персонажа'})).toBeVisible()
+  await main.getByRole('textbox').fill('Новый RED')
   await page.getByRole('button',{name:'Создать персонажа',exact:true}).click()
   await expect(page).toHaveURL(new RegExp(`/char/${uuid}$`))
   expect(state.getData().values.creation.complete).toBe(true)
@@ -389,18 +395,18 @@ test('RED blocks incompatible implants and can save an incomplete sheet', async 
     ],
   }
   await page.addInitScript(({storageKey,draft})=>{
-    if(!localStorage.getItem(storageKey)) localStorage.setItem(storageKey,JSON.stringify({draft,stepKey:'finish'}))
+    if(!localStorage.getItem(storageKey)) localStorage.setItem(storageKey,JSON.stringify({draft,stepKey:'cyberware'}))
   },{storageKey,draft})
   await page.setViewportSize({width:390,height:950})
   await page.goto('/chars/new?system=cyberpunk-red')
   const main = page.locator('.red-wizard-main')
-  await expect(main.getByRole('heading',{name:'Киберимпланты',exact:true})).toBeVisible()
+  await expect(main.getByRole('heading',{name:'Магазин',exact:true})).toBeVisible()
   await expect(page.locator('.red-step-reason')).toContainText('требуется основная установка')
   await expect(page.getByRole('button',{name:'Далее',exact:true})).toBeDisabled()
   const incomplete = page.getByRole('button',{name:'Создать неполноценного',exact:true}).filter({visible:true})
   await incomplete.click()
   await page.getByRole('button',{name:'Отмена',exact:true}).last().click()
-  await expect(main.getByRole('heading',{name:'Киберимпланты',exact:true})).toBeVisible()
+  await expect(main.getByRole('heading',{name:'Магазин',exact:true})).toBeVisible()
   await incomplete.click()
   await page.getByRole('button',{name:'Создать',exact:true}).click()
   await expect(page).toHaveURL(new RegExp(`/char/${uuid}$`))
