@@ -3418,8 +3418,11 @@
       "id": 7687,
       "name": "Контактные линзы (спортивки)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 172,
+      "sha256": "265b0cf599d8523a62083c5072b0a744c654b8425588655dfcd523315e8c58fa",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7687/icon/265b0cf599d8523a62083c5072b0a744c654b8425588655dfcd523315e8c58fa.webp"
     },
     {
       "kind": "item",
@@ -3437,8 +3440,11 @@
       "id": 7688,
       "name": "Обувь (спортивки)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 172,
+      "sha256": "f0f1b7823c292055fd110f2b10b7cc9dd1aaa78fed92c4ac079d6e254aac8316",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7688/icon/f0f1b7823c292055fd110f2b10b7cc9dd1aaa78fed92c4ac079d6e254aac8316.webp"
     },
     {
       "kind": "item",
@@ -3456,8 +3462,11 @@
       "id": 7689,
       "name": "Очки (спортивки)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 172,
+      "sha256": "58d4b01b53d7ff3be3c01d27b12cbeaf8afae5cbbe5ca6f0fdf3897b3f349ed3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7689/icon/58d4b01b53d7ff3be3c01d27b12cbeaf8afae5cbbe5ca6f0fdf3897b3f349ed3.webp"
     },
     {
       "kind": "item",
@@ -3475,8 +3484,11 @@
       "id": 7690,
       "name": "Головной убор (спортивки)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 172,
+      "sha256": "6d85d6d000255ce4c7084941d44cf6a96e82adae4c561a9bac2d2f4a551c8101",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7690/icon/6d85d6d000255ce4c7084941d44cf6a96e82adae4c561a9bac2d2f4a551c8101.webp"
     },
     {
       "kind": "item",
@@ -3494,8 +3506,11 @@
       "id": 7691,
       "name": "Верхняя одежда (спортивки)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 172,
+      "sha256": "933aa18004ed6688ebbf439e831143dd5fb884997e2ae0aef85409b84fb63a9f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7691/icon/933aa18004ed6688ebbf439e831143dd5fb884997e2ae0aef85409b84fb63a9f.webp"
     },
     {
       "kind": "item",
@@ -3513,8 +3528,11 @@
       "id": 7692,
       "name": "Украшение (спортивки)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 172,
+      "sha256": "eb76eb07fc958d58eb7af927c391765ceca9301b27bbb5fe51029410706e260b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7692/icon/eb76eb07fc958d58eb7af927c391765ceca9301b27bbb5fe51029410706e260b.webp"
     },
     {
       "kind": "item",
@@ -3532,8 +3550,11 @@
       "id": 7693,
       "name": "Зеркальные очки (спортивки)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 172,
+      "sha256": "931537304680c495b2e4f10726007aacb61c01c23a4d4d191efdd7984aeeb719",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7693/icon/931537304680c495b2e4f10726007aacb61c01c23a4d4d191efdd7984aeeb719.webp"
     },
     {
       "kind": "item",
@@ -3551,8 +3572,11 @@
       "id": 7694,
       "name": "Верх (спортивки)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 172,
+      "sha256": "b4d968ac46436527d276b9a4884d6463b733dc1670af52d0dc2e489a5928fd26",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7694/icon/b4d968ac46436527d276b9a4884d6463b733dc1670af52d0dc2e489a5928fd26.webp"
     },
     {
       "kind": "item",
@@ -3570,8 +3594,11 @@
       "id": 7695,
       "name": "Низ (одеяния кочевников)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 172,
+      "sha256": "8edbc24af814c0548953823d009fc8424439813f4e178b64408765a2530eddd6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7695/icon/8edbc24af814c0548953823d009fc8424439813f4e178b64408765a2530eddd6.webp"
     },
     {
       "kind": "item",
@@ -3589,8 +3616,11 @@
       "id": 7696,
       "name": "Контактные линзы (одеяния кочевников)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 172,
+      "sha256": "f8e59d701c03c6c20ec7ee2157cb62a94fdb648a2f5ebd0bb57538972b197e50",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7696/icon/f8e59d701c03c6c20ec7ee2157cb62a94fdb648a2f5ebd0bb57538972b197e50.webp"
     },
     {
       "kind": "item",
@@ -3608,8 +3638,11 @@
       "id": 7697,
       "name": "Обувь (одеяния кочевников)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 172,
+      "sha256": "0d998e64d1d92c33385437dedde12ee4cfb59e830e73d98a112e2f812142756f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7697/icon/0d998e64d1d92c33385437dedde12ee4cfb59e830e73d98a112e2f812142756f.webp"
     },
     {
       "kind": "item",
@@ -3627,8 +3660,11 @@
       "id": 7698,
       "name": "Очки (одеяния кочевников)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 172,
+      "sha256": "55f13b5efa5826e0b13a0afc73286c160ab4cbb4fa12917207f4a71550b9eae8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7698/icon/55f13b5efa5826e0b13a0afc73286c160ab4cbb4fa12917207f4a71550b9eae8.webp"
     },
     {
       "kind": "item",
@@ -19587,7 +19623,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1175,
+    "publishedSlots": 1187,
     "readySlots": 0,
     "totalSlots": 1848
   }
