@@ -8594,8 +8594,11 @@
       "id": 7922,
       "name": "Менеджер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 202,
+      "sha256": "d27741d0ece70a52ea480d147ee8f0d40b25a71a2c19b0b5f5995246473a7a4d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7922/icon/d27741d0ece70a52ea480d147ee8f0d40b25a71a2c19b0b5f5995246473a7a4d.webp"
     },
     {
       "kind": "item",
@@ -12405,8 +12408,11 @@
       "id": 8097,
       "name": "Антибиотик",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 202,
+      "sha256": "eecf2fbd2ee1d88bf4c2907fd1bf254575e48177004ec6f7c63cf56a38651245",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8097/icon/eecf2fbd2ee1d88bf4c2907fd1bf254575e48177004ec6f7c63cf56a38651245.webp"
     },
     {
       "kind": "item",
@@ -12424,8 +12430,11 @@
       "id": 8098,
       "name": "Быстрый детокс",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 202,
+      "sha256": "c62c0a2453c7b6235563851a8e423f67dabbb450d7cb6c81b504483311f69633",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8098/icon/c62c0a2453c7b6235563851a8e423f67dabbb450d7cb6c81b504483311f69633.webp"
     },
     {
       "kind": "item",
@@ -12443,8 +12452,11 @@
       "id": 8099,
       "name": "Спидхил",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 202,
+      "sha256": "dc5e2e4b37844b8da211a132bbe430cc5f3acf65e53fb57c7ab612bf9af59b2c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8099/icon/dc5e2e4b37844b8da211a132bbe430cc5f3acf65e53fb57c7ab612bf9af59b2c.webp"
     },
     {
       "kind": "item",
@@ -12462,8 +12474,11 @@
       "id": 8100,
       "name": "Стимулятор",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 202,
+      "sha256": "927ec7ba7e61cd40e951030eec42450a97574e18bb616b40707ac63a3c6bc9ff",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8100/icon/927ec7ba7e61cd40e951030eec42450a97574e18bb616b40707ac63a3c6bc9ff.webp"
     },
     {
       "kind": "item",
@@ -12481,8 +12496,11 @@
       "id": 8101,
       "name": "Всплеск",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 202,
+      "sha256": "34256caee3c4acfd6b68e3389ae985d986cf7c65acb87b2b87270d8c61ffb4ae",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8101/icon/34256caee3c4acfd6b68e3389ae985d986cf7c65acb87b2b87270d8c61ffb4ae.webp"
     },
     {
       "kind": "item",
@@ -12698,8 +12716,11 @@
       "id": 8111,
       "name": "Корпоративный дом",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 202,
+      "sha256": "e08300f021121d396a0e4a7d0c1a182c79242cae2af8659fd1c88a5ac7a11022",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8111/icon/e08300f021121d396a0e4a7d0c1a182c79242cae2af8659fd1c88a5ac7a11022.webp"
     },
     {
       "kind": "item",
@@ -12717,8 +12738,11 @@
       "id": 8112,
       "name": "Корпоративный особняк",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 202,
+      "sha256": "e5d05ccf7c6b523e3f68b62e7713ca9a8172c3c512f6c2110d9c018028894b93",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8112/icon/e5d05ccf7c6b523e3f68b62e7713ca9a8172c3c512f6c2110d9c018028894b93.webp"
     },
     {
       "kind": "item",
@@ -12736,8 +12760,11 @@
       "id": 8113,
       "name": "Киббл",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 202,
+      "sha256": "00d67febad91b1f2ac715b566c192c441809179a3d966482b923f39701c207ac",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8113/icon/00d67febad91b1f2ac715b566c192c441809179a3d966482b923f39701c207ac.webp"
     },
     {
       "kind": "item",
@@ -12755,8 +12782,11 @@
       "id": 8114,
       "name": "Дешёвый полуфабрикат",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 202,
+      "sha256": "7d8e408d7f8e6681bed465fa84afaf55b466859930b8307cd475b1225eb808b1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8114/icon/7d8e408d7f8e6681bed465fa84afaf55b466859930b8307cd475b1225eb808b1.webp"
     },
     {
       "kind": "item",
@@ -12774,8 +12804,11 @@
       "id": 8115,
       "name": "Хороший полуфабрикат",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 202,
+      "sha256": "2b0450b80935f7c2552ed6c3fc58d0c90f6b9245e50ba711adaf333a41947563",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8115/icon/2b0450b80935f7c2552ed6c3fc58d0c90f6b9245e50ba711adaf333a41947563.webp"
     },
     {
       "kind": "item",
@@ -12793,8 +12826,11 @@
       "id": 8116,
       "name": "Свежая еда",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 202,
+      "sha256": "69ec2f34b53f18d61f7155dc9d029d8964f48057a64f6b591011fb23b6154a93",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8116/icon/69ec2f34b53f18d61f7155dc9d029d8964f48057a64f6b591011fb23b6154a93.webp"
     },
     {
       "kind": "item",
@@ -20667,7 +20703,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1535,
+    "publishedSlots": 1547,
     "readySlots": 0,
     "totalSlots": 1848
   }
