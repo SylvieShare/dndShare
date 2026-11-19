@@ -5770,8 +5770,11 @@
       "id": 7798,
       "name": "Редактор боли",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 179,
+      "sha256": "c28707274c58e4586d66db29e604af035a7f28e6687c57afd580edd2693ea44e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7798/icon/c28707274c58e4586d66db29e604af035a7f28e6687c57afd580edd2693ea44e.webp"
     },
     {
       "kind": "item",
@@ -5789,8 +5792,11 @@
       "id": 7799,
       "name": "Пластиковое покрытие (киберрука)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 179,
+      "sha256": "9073ead236fbce1d3f2c39671b01adb086137753a4eac9ee6b45988175112f3e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7799/icon/9073ead236fbce1d3f2c39671b01adb086137753a4eac9ee6b45988175112f3e.webp"
     },
     {
       "kind": "item",
@@ -5808,8 +5814,11 @@
       "id": 7800,
       "name": "Пластиковое покрытие (кибернога)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 179,
+      "sha256": "b6eecb9e2f00c61d07d2dc246721f98486cb118273b695f03d0290d1541600db",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7800/icon/b6eecb9e2f00c61d07d2dc246721f98486cb118273b695f03d0290d1541600db.webp"
     },
     {
       "kind": "item",
@@ -5827,8 +5836,11 @@
       "id": 7801,
       "name": "Выдвижной гранатомёт",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 179,
+      "sha256": "fd0d2511532517cbfa819fffee192503a85de3054bdadb03e2aaa9d6887b0d9d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7801/icon/fd0d2511532517cbfa819fffee192503a85de3054bdadb03e2aaa9d6887b0d9d.webp"
     },
     {
       "kind": "item",
@@ -5846,8 +5858,11 @@
       "id": 7802,
       "name": "Выдвижное оружие ближнего боя",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 179,
+      "sha256": "9b476150f7d283fff2aecfd6eb6441d173bbbc041a745499a3bdbd77c96f2449",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7802/icon/9b476150f7d283fff2aecfd6eb6441d173bbbc041a745499a3bdbd77c96f2449.webp"
     },
     {
       "kind": "item",
@@ -5865,8 +5880,11 @@
       "id": 7803,
       "name": "Выдвижное оружие дальнего боя",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 179,
+      "sha256": "94cc6b1b6060d5b49efa349bd184115992cd42a795bfee3989ce70a4fc4f62da",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7803/icon/94cc6b1b6060d5b49efa349bd184115992cd42a795bfee3989ce70a4fc4f62da.webp"
     },
     {
       "kind": "item",
@@ -5884,8 +5902,11 @@
       "id": 7804,
       "name": "Выдвижной щит",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 179,
+      "sha256": "0fd1b6732d7c78ffed3c7312331ad8fdbfb1fd4fec87e37a7caedbe585791541",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7804/icon/0fd1b6732d7c78ffed3c7312331ad8fdbfb1fd4fec87e37a7caedbe585791541.webp"
     },
     {
       "kind": "item",
@@ -5903,8 +5924,11 @@
       "id": 7805,
       "name": "Быстросменный шарнир",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 179,
+      "sha256": "9affeab3a668cd22508d1517a4ff2ef15690cb40bb0da53baff490e0d3d9c766",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7805/icon/9affeab3a668cd22508d1517a4ff2ef15690cb40bb0da53baff490e0d3d9c766.webp"
     },
     {
       "kind": "item",
@@ -5922,8 +5946,11 @@
       "id": 7806,
       "name": "Антирадар",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 179,
+      "sha256": "d09a0247baa63695c7c338ce997578d76c295e5d5087ddbe9584d232cb366892",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7806/icon/d09a0247baa63695c7c338ce997578d76c295e5d5087ddbe9584d232cb366892.webp"
     },
     {
       "kind": "item",
@@ -5941,8 +5968,11 @@
       "id": 7807,
       "name": "Радар/Сонар",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 179,
+      "sha256": "7879e0c501a3ac02d3ac887da688323def18c447b90e82dae534b4bad2d5f327",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7807/icon/7879e0c501a3ac02d3ac887da688323def18c447b90e82dae534b4bad2d5f327.webp"
     },
     {
       "kind": "item",
@@ -5960,8 +5990,11 @@
       "id": 7808,
       "name": "Детектор излучения",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 179,
+      "sha256": "4b5e3d3e180cc5882516e0ceaf8509d04d8a2f436ebd525dcca450f4eea6a859",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7808/icon/4b5e3d3e180cc5882516e0ceaf8509d04d8a2f436ebd525dcca450f4eea6a859.webp"
     },
     {
       "kind": "item",
@@ -5979,8 +6012,11 @@
       "id": 7809,
       "name": "Радиокоммуникатор",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 179,
+      "sha256": "faf6104b80384772459d408b1127fcabebf5b345fd74f9d7baf0b709ac60c1ff",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7809/icon/faf6104b80384772459d408b1127fcabebf5b345fd74f9d7baf0b709ac60c1ff.webp"
     },
     {
       "kind": "item",
@@ -19839,7 +19875,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1259,
+    "publishedSlots": 1271,
     "readySlots": 0,
     "totalSlots": 1848
   }
