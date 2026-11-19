@@ -476,10 +476,11 @@
       "id": 7553,
       "name": "Стрела (экспансивная)",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 160,
-      "sha256": "db09199943e1a09bcddf9c69ba213ffcd091b46cee1c226fdc89f909f2ed7ad5"
+      "sha256": "db09199943e1a09bcddf9c69ba213ffcd091b46cee1c226fdc89f909f2ed7ad5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7553/icon/db09199943e1a09bcddf9c69ba213ffcd091b46cee1c226fdc89f909f2ed7ad5.webp"
     },
     {
       "kind": "item",
@@ -497,10 +498,11 @@
       "id": 7554,
       "name": "Стрела (зажигательная)",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 160,
-      "sha256": "c6eef7acebc0053637ec92d7189fc24fc7fe812161eabc6ad958a03e19bcdb17"
+      "sha256": "c6eef7acebc0053637ec92d7189fc24fc7fe812161eabc6ad958a03e19bcdb17",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7554/icon/c6eef7acebc0053637ec92d7189fc24fc7fe812161eabc6ad958a03e19bcdb17.webp"
     },
     {
       "kind": "item",
@@ -518,10 +520,11 @@
       "id": 7555,
       "name": "Стрела (с ядом)",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 160,
-      "sha256": "8b0e849e1c6f8f306f1921c100a79b2e20486a7607178a3dc50a1e62656d24a3"
+      "sha256": "8b0e849e1c6f8f306f1921c100a79b2e20486a7607178a3dc50a1e62656d24a3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7555/icon/8b0e849e1c6f8f306f1921c100a79b2e20486a7607178a3dc50a1e62656d24a3.webp"
     },
     {
       "kind": "item",
@@ -539,10 +542,11 @@
       "id": 7556,
       "name": "Стрела (резиновая)",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 160,
-      "sha256": "77f0e87e961280628f15221704e06416eef5eb555a0000fbac192016168630d5"
+      "sha256": "77f0e87e961280628f15221704e06416eef5eb555a0000fbac192016168630d5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7556/icon/77f0e87e961280628f15221704e06416eef5eb555a0000fbac192016168630d5.webp"
     },
     {
       "kind": "item",
@@ -560,10 +564,11 @@
       "id": 7557,
       "name": "Стрела (усыпляющая)",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 160,
-      "sha256": "805e25f300b5bc889f7ca5e5317dddff5b86c13477b64f4f35518abf2ea6c512"
+      "sha256": "805e25f300b5bc889f7ca5e5317dddff5b86c13477b64f4f35518abf2ea6c512",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7557/icon/805e25f300b5bc889f7ca5e5317dddff5b86c13477b64f4f35518abf2ea6c512.webp"
     },
     {
       "kind": "item",
@@ -581,10 +586,11 @@
       "id": 7558,
       "name": "Стрела (умная)",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 160,
-      "sha256": "1ccb4e592354db0854d76f5196fd621e9d5e34d0b1673bb1881ac7705a62b3f7"
+      "sha256": "1ccb4e592354db0854d76f5196fd621e9d5e34d0b1673bb1881ac7705a62b3f7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7558/icon/1ccb4e592354db0854d76f5196fd621e9d5e34d0b1673bb1881ac7705a62b3f7.webp"
     },
     {
       "kind": "item",
@@ -602,10 +608,11 @@
       "id": 7559,
       "name": "Аккумулятор",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 160,
-      "sha256": "31a01a9287a5a98ad06a6dbd5756d0275440cbf207d37b71b4dd4c2469965d59"
+      "sha256": "31a01a9287a5a98ad06a6dbd5756d0275440cbf207d37b71b4dd4c2469965d59",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7559/icon/31a01a9287a5a98ad06a6dbd5756d0275440cbf207d37b71b4dd4c2469965d59.webp"
     },
     {
       "kind": "item",
@@ -623,10 +630,11 @@
       "id": 7560,
       "name": "Граната (бронебойная)",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 160,
-      "sha256": "e510204b3d193cc5477db4e611e7747be6fb3b8369d7aeb22fa404e433c8cb1f"
+      "sha256": "e510204b3d193cc5477db4e611e7747be6fb3b8369d7aeb22fa404e433c8cb1f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7560/icon/e510204b3d193cc5477db4e611e7747be6fb3b8369d7aeb22fa404e433c8cb1f.webp"
     },
     {
       "kind": "item",
@@ -644,10 +652,11 @@
       "id": 7561,
       "name": "Граната (с биотоксином)",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 160,
-      "sha256": "6a631b37e59c78de21ac624f0d65e28820b4d31f7ced4e7214a5ea4147548825"
+      "sha256": "6a631b37e59c78de21ac624f0d65e28820b4d31f7ced4e7214a5ea4147548825",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7561/icon/6a631b37e59c78de21ac624f0d65e28820b4d31f7ced4e7214a5ea4147548825.webp"
     },
     {
       "kind": "item",
@@ -665,10 +674,11 @@
       "id": 7562,
       "name": "Граната (ЭМИ)",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 160,
-      "sha256": "48a041a0cbb18f79962a51043b294ef83c62001ac0c76091622e3bccd8441a9d"
+      "sha256": "48a041a0cbb18f79962a51043b294ef83c62001ac0c76091622e3bccd8441a9d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7562/icon/48a041a0cbb18f79962a51043b294ef83c62001ac0c76091622e3bccd8441a9d.webp"
     },
     {
       "kind": "item",
@@ -686,10 +696,11 @@
       "id": 7563,
       "name": "Граната (светошумовая)",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 160,
-      "sha256": "39a608505ed14596e4426717fcbcada97180664dda9ba98b6e2ec9646e0ece91"
+      "sha256": "39a608505ed14596e4426717fcbcada97180664dda9ba98b6e2ec9646e0ece91",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7563/icon/39a608505ed14596e4426717fcbcada97180664dda9ba98b6e2ec9646e0ece91.webp"
     },
     {
       "kind": "item",
@@ -707,10 +718,11 @@
       "id": 7564,
       "name": "Граната (зажигательная)",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 160,
-      "sha256": "5f19eae0bbb07d27f4cdd3e387216af4a16b4a1370238bdde84c977a0bc4bb1b"
+      "sha256": "5f19eae0bbb07d27f4cdd3e387216af4a16b4a1370238bdde84c977a0bc4bb1b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7564/icon/5f19eae0bbb07d27f4cdd3e387216af4a16b4a1370238bdde84c977a0bc4bb1b.webp"
     },
     {
       "kind": "item",
@@ -19179,7 +19191,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1031,
+    "publishedSlots": 1043,
     "readySlots": 0,
     "totalSlots": 1848
   }
