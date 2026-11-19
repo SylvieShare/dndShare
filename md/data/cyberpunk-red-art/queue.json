@@ -4128,8 +4128,11 @@
       "id": 7719,
       "name": "Оторванная кисть",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 199,
+      "sha256": "bc80739c7cd9b451f260eb49f7590a6a3abf3188bcd3f321d785bca7749ffaf4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7719/icon/bc80739c7cd9b451f260eb49f7590a6a3abf3188bcd3f321d785bca7749ffaf4.webp"
     },
     {
       "kind": "item",
@@ -4147,8 +4150,11 @@
       "id": 7720,
       "name": "Оторванная нога",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 199,
+      "sha256": "2df9e8de45b21f244c05a64d528a9457133be9c0c4dee42b7b81e61581daff13",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7720/icon/2df9e8de45b21f244c05a64d528a9457133be9c0c4dee42b7b81e61581daff13.webp"
     },
     {
       "kind": "item",
@@ -4166,8 +4172,11 @@
       "id": 7721,
       "name": "Инородное тело",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 199,
+      "sha256": "ddce35bc6f8a3ba28de3fab56b3e27410041e649a5086d1537dbde9fe32e90dc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7721/icon/ddce35bc6f8a3ba28de3fab56b3e27410041e649a5086d1537dbde9fe32e90dc.webp"
     },
     {
       "kind": "item",
@@ -4185,8 +4194,11 @@
       "id": 7722,
       "name": "Повреждение позвоночника",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 199,
+      "sha256": "e46c3e9afe912b665b06e682d367baaf12b47236465167a6c40ae21cfe3cc790",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7722/icon/e46c3e9afe912b665b06e682d367baaf12b47236465167a6c40ae21cfe3cc790.webp"
     },
     {
       "kind": "item",
@@ -4204,8 +4216,11 @@
       "id": 7723,
       "name": "Разрыв мышцы",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 199,
+      "sha256": "4ac45bdffd7875cf41e6255d489ad33f1bccded92bb632b93033d08e4a293a28",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7723/icon/4ac45bdffd7875cf41e6255d489ad33f1bccded92bb632b93033d08e4a293a28.webp"
     },
     {
       "kind": "item",
@@ -4223,8 +4238,11 @@
       "id": 7724,
       "name": "Повреждение мозга",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 199,
+      "sha256": "fff67ae05e55b1b40a94784c4cc91754cb7e827fa3319e45557760a7bb7b317b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7724/icon/fff67ae05e55b1b40a94784c4cc91754cb7e827fa3319e45557760a7bb7b317b.webp"
     },
     {
       "kind": "item",
@@ -4242,8 +4260,11 @@
       "id": 7725,
       "name": "Перелом челюсти",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 199,
+      "sha256": "e8fb3c1fd284a75f140cce24a646e9755f3062ec3e780c1cc2e75dd56be889e0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7725/icon/e8fb3c1fd284a75f140cce24a646e9755f3062ec3e780c1cc2e75dd56be889e0.webp"
     },
     {
       "kind": "item",
@@ -4261,8 +4282,11 @@
       "id": 7726,
       "name": "Контузия",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 199,
+      "sha256": "d4cbc80a03d40c159b5546385474d2ad43b310e25be9811223847579d0c8684e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7726/icon/d4cbc80a03d40c159b5546385474d2ad43b310e25be9811223847579d0c8684e.webp"
     },
     {
       "kind": "item",
@@ -4280,8 +4304,11 @@
       "id": 7727,
       "name": "Перелом черепа",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 199,
+      "sha256": "51f451f331327df5ee7dae13e475bd10423d400f5432763e7dab5f835c4807cc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7727/icon/51f451f331327df5ee7dae13e475bd10423d400f5432763e7dab5f835c4807cc.webp"
     },
     {
       "kind": "item",
@@ -4299,8 +4326,11 @@
       "id": 7728,
       "name": "Травма трахеи",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 199,
+      "sha256": "862cbebd0bb241529b9ef08dc7d572a9792dd1f49af8c8725ff7c0c2aed5445e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7728/icon/862cbebd0bb241529b9ef08dc7d572a9792dd1f49af8c8725ff7c0c2aed5445e.webp"
     },
     {
       "kind": "item",
@@ -4318,8 +4348,11 @@
       "id": 7729,
       "name": "Повреждение уха",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 199,
+      "sha256": "831a1793e5f8619e19d9f5f8475259d093e44d7394f2477aeb49a97794857cef",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7729/icon/831a1793e5f8619e19d9f5f8475259d093e44d7394f2477aeb49a97794857cef.webp"
     },
     {
       "kind": "item",
@@ -4337,8 +4370,11 @@
       "id": 7730,
       "name": "Повреждение глаза",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 199,
+      "sha256": "0705befb9f8231dd386e82dbb5d6482719f0a64d09074cfbc07bc754dce47cbe",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7730/icon/0705befb9f8231dd386e82dbb5d6482719f0a64d09074cfbc07bc754dce47cbe.webp"
     },
     {
       "kind": "item",
@@ -20559,7 +20595,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1499,
+    "publishedSlots": 1511,
     "readySlots": 0,
     "totalSlots": 1848
   }

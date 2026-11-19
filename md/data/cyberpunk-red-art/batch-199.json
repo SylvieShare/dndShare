@@ -1,0 +1,525 @@
+{
+  "batch": 199,
+  "sourceId": 3,
+  "system": "Cyberpunk RED",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-199",
+  "assets": [
+    {
+      "key": "item-7719-icon",
+      "target": {
+        "kind": "item",
+        "id": 7719,
+        "typeId": 24,
+        "name": "Оторванная кисть"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Dismembered Hand\" (Оторванная кисть), the \"criticalinjury-dismembered-hand\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2cf76cf2-5b91-41cf-9f4d-c9263a12ba39.png",
+      "original": "originals/item-7719.png",
+      "final": "final/item-7719.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "9f2df3bad234b2f91b65f36647f45a483b25ff5d0d47ce322b93f09979d967dc",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "bc80739c7cd9b451f260eb49f7590a6a3abf3188bcd3f321d785bca7749ffaf4",
+      "bytes": 15012,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51120,
+        "objectKey": "system-item-media/v1/items/7719/icon/bc80739c7cd9b451f260eb49f7590a6a3abf3188bcd3f321d785bca7749ffaf4.webp",
+        "fileSize": 15012
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7719/icon/bc80739c7cd9b451f260eb49f7590a6a3abf3188bcd3f321d785bca7749ffaf4.webp"
+    },
+    {
+      "key": "item-7720-icon",
+      "target": {
+        "kind": "item",
+        "id": 7720,
+        "typeId": 24,
+        "name": "Оторванная нога"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Dismembered Leg\" (Оторванная нога), the \"criticalinjury-dismembered-leg\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0c3bdc32-3620-425f-8f69-4bc15f9b0732.png",
+      "original": "originals/item-7720.png",
+      "final": "final/item-7720.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "699b4f0f3709bd2e20655d0d2fed9f931841393ad0d7e51dbf3840dd7416fd00",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "2df9e8de45b21f244c05a64d528a9457133be9c0c4dee42b7b81e61581daff13",
+      "bytes": 12852,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51121,
+        "objectKey": "system-item-media/v1/items/7720/icon/2df9e8de45b21f244c05a64d528a9457133be9c0c4dee42b7b81e61581daff13.webp",
+        "fileSize": 12852
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7720/icon/2df9e8de45b21f244c05a64d528a9457133be9c0c4dee42b7b81e61581daff13.webp"
+    },
+    {
+      "key": "item-7721-icon",
+      "target": {
+        "kind": "item",
+        "id": 7721,
+        "typeId": 24,
+        "name": "Инородное тело"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Foreign Object\" (Инородное тело), the \"criticalinjury-foreign-object\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ece53016-b3cd-431b-95b7-2d931b61f5f7.png",
+      "original": "originals/item-7721.png",
+      "final": "final/item-7721.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "804fb4b427bacad6f061808e91f4c992e9726c2b9c66286b8dc3fe3b1f08eaf3",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "ddce35bc6f8a3ba28de3fab56b3e27410041e649a5086d1537dbde9fe32e90dc",
+      "bytes": 13976,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51122,
+        "objectKey": "system-item-media/v1/items/7721/icon/ddce35bc6f8a3ba28de3fab56b3e27410041e649a5086d1537dbde9fe32e90dc.webp",
+        "fileSize": 13976
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7721/icon/ddce35bc6f8a3ba28de3fab56b3e27410041e649a5086d1537dbde9fe32e90dc.webp"
+    },
+    {
+      "key": "item-7722-icon",
+      "target": {
+        "kind": "item",
+        "id": 7722,
+        "typeId": 24,
+        "name": "Повреждение позвоночника"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Spinal Injury\" (Повреждение позвоночника), the \"criticalinjury-spinal-injury\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-955e968f-6e8a-4b41-b7cc-055835ef26e9.png",
+      "original": "originals/item-7722.png",
+      "final": "final/item-7722.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "34fd20801531d0955e2318def2d6ff18baff1374e947d69671f6202da3f1ad4c",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "e46c3e9afe912b665b06e682d367baaf12b47236465167a6c40ae21cfe3cc790",
+      "bytes": 14296,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51123,
+        "objectKey": "system-item-media/v1/items/7722/icon/e46c3e9afe912b665b06e682d367baaf12b47236465167a6c40ae21cfe3cc790.webp",
+        "fileSize": 14296
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7722/icon/e46c3e9afe912b665b06e682d367baaf12b47236465167a6c40ae21cfe3cc790.webp"
+    },
+    {
+      "key": "item-7723-icon",
+      "target": {
+        "kind": "item",
+        "id": 7723,
+        "typeId": 24,
+        "name": "Разрыв мышцы"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Torn Muscle\" (Разрыв мышцы), the \"criticalinjury-torn-muscle\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a631969f-3715-48bc-a4be-ffe54307fc13.png",
+      "original": "originals/item-7723.png",
+      "final": "final/item-7723.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "771c7a787a22c6c5eb7770b6bf9366147e79c4872ed5f87f9616648c6157dc21",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "4ac45bdffd7875cf41e6255d489ad33f1bccded92bb632b93033d08e4a293a28",
+      "bytes": 14054,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51124,
+        "objectKey": "system-item-media/v1/items/7723/icon/4ac45bdffd7875cf41e6255d489ad33f1bccded92bb632b93033d08e4a293a28.webp",
+        "fileSize": 14054
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7723/icon/4ac45bdffd7875cf41e6255d489ad33f1bccded92bb632b93033d08e4a293a28.webp"
+    },
+    {
+      "key": "item-7724-icon",
+      "target": {
+        "kind": "item",
+        "id": 7724,
+        "typeId": 25,
+        "name": "Повреждение мозга"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Brain Injury\" (Повреждение мозга), the \"criticalinjury-brain-injury\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b712447f-aff3-4a53-b4f7-0ab1a5ec0821.png",
+      "original": "originals/item-7724.png",
+      "final": "final/item-7724.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "498497f0e1a4f5e6ea0218f88c0996c18d22337c254bbab6c5e06f5251a4ac9d",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "fff67ae05e55b1b40a94784c4cc91754cb7e827fa3319e45557760a7bb7b317b",
+      "bytes": 13478,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51125,
+        "objectKey": "system-item-media/v1/items/7724/icon/fff67ae05e55b1b40a94784c4cc91754cb7e827fa3319e45557760a7bb7b317b.webp",
+        "fileSize": 13478
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7724/icon/fff67ae05e55b1b40a94784c4cc91754cb7e827fa3319e45557760a7bb7b317b.webp"
+    },
+    {
+      "key": "item-7725-icon",
+      "target": {
+        "kind": "item",
+        "id": 7725,
+        "typeId": 25,
+        "name": "Перелом челюсти"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Broken Jaw\" (Перелом челюсти), the \"criticalinjury-broken-jaw\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-61d88f5a-6e6a-40a9-acfe-5c557203f067.png",
+      "original": "originals/item-7725.png",
+      "final": "final/item-7725.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "8fd125f4ed0f44d9c7ee57a8bba057a9220c3ce3aac1dd6792d02df1a6030d1d",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "e8fb3c1fd284a75f140cce24a646e9755f3062ec3e780c1cc2e75dd56be889e0",
+      "bytes": 14084,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51126,
+        "objectKey": "system-item-media/v1/items/7725/icon/e8fb3c1fd284a75f140cce24a646e9755f3062ec3e780c1cc2e75dd56be889e0.webp",
+        "fileSize": 14084
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7725/icon/e8fb3c1fd284a75f140cce24a646e9755f3062ec3e780c1cc2e75dd56be889e0.webp"
+    },
+    {
+      "key": "item-7726-icon",
+      "target": {
+        "kind": "item",
+        "id": 7726,
+        "typeId": 25,
+        "name": "Контузия"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Concussion\" (Контузия), the \"criticalinjury-concussion\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-639ef310-2e90-468e-90c4-ef93ba2679f3.png",
+      "original": "originals/item-7726.png",
+      "final": "final/item-7726.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "bfecd84f7a932a5d88db9f3c5ee1208eb0c50012da4f3e6417847965680239a9",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "d4cbc80a03d40c159b5546385474d2ad43b310e25be9811223847579d0c8684e",
+      "bytes": 13060,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51127,
+        "objectKey": "system-item-media/v1/items/7726/icon/d4cbc80a03d40c159b5546385474d2ad43b310e25be9811223847579d0c8684e.webp",
+        "fileSize": 13060
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7726/icon/d4cbc80a03d40c159b5546385474d2ad43b310e25be9811223847579d0c8684e.webp"
+    },
+    {
+      "key": "item-7727-icon",
+      "target": {
+        "kind": "item",
+        "id": 7727,
+        "typeId": 25,
+        "name": "Перелом черепа"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Cracked Skull\" (Перелом черепа), the \"criticalinjury-cracked-skull\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5a25aecc-1343-49cc-9a42-27282e47e918.png",
+      "original": "originals/item-7727.png",
+      "final": "final/item-7727.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "5a18e90cff1b9ba1e797243cb8233b7f2ee5ba62c946c7db1850cf55d7944e2c",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "51f451f331327df5ee7dae13e475bd10423d400f5432763e7dab5f835c4807cc",
+      "bytes": 12670,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51128,
+        "objectKey": "system-item-media/v1/items/7727/icon/51f451f331327df5ee7dae13e475bd10423d400f5432763e7dab5f835c4807cc.webp",
+        "fileSize": 12670
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7727/icon/51f451f331327df5ee7dae13e475bd10423d400f5432763e7dab5f835c4807cc.webp"
+    },
+    {
+      "key": "item-7728-icon",
+      "target": {
+        "kind": "item",
+        "id": 7728,
+        "typeId": 25,
+        "name": "Травма трахеи"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Crushed Windpipe\" (Травма трахеи), the \"criticalinjury-crushed-windpipe\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2253cd71-fb83-4d65-a0f2-7cece0dfdf65.png",
+      "original": "originals/item-7728.png",
+      "final": "final/item-7728.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "7b5c740e45050a2ba89f3716c0522ade0237f190057d22cb40400455de1b9665",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "862cbebd0bb241529b9ef08dc7d572a9792dd1f49af8c8725ff7c0c2aed5445e",
+      "bytes": 13220,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51129,
+        "objectKey": "system-item-media/v1/items/7728/icon/862cbebd0bb241529b9ef08dc7d572a9792dd1f49af8c8725ff7c0c2aed5445e.webp",
+        "fileSize": 13220
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7728/icon/862cbebd0bb241529b9ef08dc7d572a9792dd1f49af8c8725ff7c0c2aed5445e.webp"
+    },
+    {
+      "key": "item-7729-icon",
+      "target": {
+        "kind": "item",
+        "id": 7729,
+        "typeId": 25,
+        "name": "Повреждение уха"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Damaged Ear\" (Повреждение уха), the \"criticalinjury-damaged-ear\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ec07ade4-e617-4aa8-b21e-de28b0c05081.png",
+      "original": "originals/item-7729.png",
+      "final": "final/item-7729.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "d6513997a4a3aa83612a654963387d758aaa475bb0a3517e06ea596c499588ad",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "831a1793e5f8619e19d9f5f8475259d093e44d7394f2477aeb49a97794857cef",
+      "bytes": 14718,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51130,
+        "objectKey": "system-item-media/v1/items/7729/icon/831a1793e5f8619e19d9f5f8475259d093e44d7394f2477aeb49a97794857cef.webp",
+        "fileSize": 14718
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7729/icon/831a1793e5f8619e19d9f5f8475259d093e44d7394f2477aeb49a97794857cef.webp"
+    },
+    {
+      "key": "item-7730-icon",
+      "target": {
+        "kind": "item",
+        "id": 7730,
+        "typeId": 25,
+        "name": "Повреждение глаза"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Damaged Eye\" (Повреждение глаза), the \"criticalinjury-damaged-eye\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c6eef489-7b79-4c40-b0d6-46ba11aecf14.png",
+      "original": "originals/item-7730.png",
+      "final": "final/item-7730.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "fe4acd561e83bbf07d1741713ea5e05f5ce5126c5b1ac9a354d97b12a6da5a24",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "0705befb9f8231dd386e82dbb5d6482719f0a64d09074cfbc07bc754dce47cbe",
+      "bytes": 14240,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51131,
+        "objectKey": "system-item-media/v1/items/7730/icon/0705befb9f8231dd386e82dbb5d6482719f0a64d09074cfbc07bc754dce47cbe.webp",
+        "fileSize": 14240
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7730/icon/0705befb9f8231dd386e82dbb5d6482719f0a64d09074cfbc07bc754dce47cbe.webp"
+    }
+  ]
+}
