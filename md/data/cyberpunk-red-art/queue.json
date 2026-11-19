@@ -2010,8 +2010,11 @@
       "id": 7623,
       "name": "Низ (Азия поп)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 166,
+      "sha256": "caeae41bcb1c8bedca4789ef7dde8ba0a656c5424049d2d3a3eaaaea78f5ef7c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7623/icon/caeae41bcb1c8bedca4789ef7dde8ba0a656c5424049d2d3a3eaaaea78f5ef7c.webp"
     },
     {
       "kind": "item",
@@ -2029,8 +2032,11 @@
       "id": 7624,
       "name": "Контактные линзы (Азия поп)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 166,
+      "sha256": "5fd2640abb88768e32a9128de06d7bfacc7da8a3489978bffce824cd0570fd53",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7624/icon/5fd2640abb88768e32a9128de06d7bfacc7da8a3489978bffce824cd0570fd53.webp"
     },
     {
       "kind": "item",
@@ -2048,8 +2054,11 @@
       "id": 7625,
       "name": "Обувь (Азия поп)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 166,
+      "sha256": "11a40fdf1a9e9f193d783f877fc023d76bca2f9570a3f0cd2fd6204abde4e234",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7625/icon/11a40fdf1a9e9f193d783f877fc023d76bca2f9570a3f0cd2fd6204abde4e234.webp"
     },
     {
       "kind": "item",
@@ -2067,8 +2076,11 @@
       "id": 7626,
       "name": "Очки (Азия поп)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 166,
+      "sha256": "d1d9237bbc0e2b6b6d24c455be371408c5ff1d7edbf140fd13753f41813f84a9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7626/icon/d1d9237bbc0e2b6b6d24c455be371408c5ff1d7edbf140fd13753f41813f84a9.webp"
     },
     {
       "kind": "item",
@@ -11637,8 +11649,11 @@
       "id": 8121,
       "name": "Лич",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 166,
+      "sha256": "cdc0c27bb697ac1040fa13285ad3f0bfdce182fe8dfb001ba96e9d46030f66a6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8121/icon/cdc0c27bb697ac1040fa13285ad3f0bfdce182fe8dfb001ba96e9d46030f66a6.webp"
     },
     {
       "kind": "item",
@@ -11656,8 +11671,11 @@
       "id": 8122,
       "name": "Ворон",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 166,
+      "sha256": "4459aefe0d5d139b6d5a571c69da40287250ea2e3fe366be99c1d49412135823",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8122/icon/4459aefe0d5d139b6d5a571c69da40287250ea2e3fe366be99c1d49412135823.webp"
     },
     {
       "kind": "item",
@@ -11675,8 +11693,11 @@
       "id": 8123,
       "name": "Скорпион",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 166,
+      "sha256": "d78707ca8112555a8df92ac79e2184da9fe2aa43606ea950ab18c295e0f4ac24",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8123/icon/d78707ca8112555a8df92ac79e2184da9fe2aa43606ea950ab18c295e0f4ac24.webp"
     },
     {
       "kind": "item",
@@ -11694,8 +11715,11 @@
       "id": 8124,
       "name": "Скунс",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 166,
+      "sha256": "61d9f5d510e6dc88ed5e7770f807c7d7db2d50b8d519a2ded354fba9558177f9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8124/icon/61d9f5d510e6dc88ed5e7770f807c7d7db2d50b8d519a2ded354fba9558177f9.webp"
     },
     {
       "kind": "item",
@@ -11713,8 +11737,11 @@
       "id": 8125,
       "name": "Висп",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 166,
+      "sha256": "5e50080a23e0b6edc7f519e9540c3ff99183e04ee94d737243744f7a1043b3fc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8125/icon/5e50080a23e0b6edc7f519e9540c3ff99183e04ee94d737243744f7a1043b3fc.webp"
     },
     {
       "kind": "item",
@@ -11732,8 +11759,11 @@
       "id": 8126,
       "name": "Дракон",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 166,
+      "sha256": "4442725f24f1d92dd71a6c50df94b61f2c60190db45f0581cf7d60715fbda64f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8126/icon/4442725f24f1d92dd71a6c50df94b61f2c60190db45f0581cf7d60715fbda64f.webp"
     },
     {
       "kind": "item",
@@ -11751,8 +11781,11 @@
       "id": 8127,
       "name": "Убийца",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 166,
+      "sha256": "73ee471113bc2fedb6130a6fc5e69d942c6c103d9bf058601772b5aecd8617ea",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8127/icon/73ee471113bc2fedb6130a6fc5e69d942c6c103d9bf058601772b5aecd8617ea.webp"
     },
     {
       "kind": "item",
@@ -11770,8 +11803,11 @@
       "id": 8128,
       "name": "Саблезубый",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 166,
+      "sha256": "cdd5a537fab68bf8a6f54a56f67199a32368e6bd50341f56b6a118e6a950e109",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8128/icon/cdd5a537fab68bf8a6f54a56f67199a32368e6bd50341f56b6a118e6a950e109.webp"
     },
     {
       "kind": "item",
@@ -19371,7 +19407,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1103,
+    "publishedSlots": 1115,
     "readySlots": 0,
     "totalSlots": 1848
   }
