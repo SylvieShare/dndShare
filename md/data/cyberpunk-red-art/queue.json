@@ -410,8 +410,11 @@
       "id": 7550,
       "name": "Стрела (бронебойная)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 159,
+      "sha256": "ab31cfabe2f35cc0ca434f48f9ddd42c8142606e65a246631a918b745da46420",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7550/icon/ab31cfabe2f35cc0ca434f48f9ddd42c8142606e65a246631a918b745da46420.webp"
     },
     {
       "kind": "item",
@@ -429,8 +432,11 @@
       "id": 7551,
       "name": "Стрела (стандартная)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 159,
+      "sha256": "0461d97ddd0e86fcbfe40297626cca5fe3f24a27a9a53e3f03a9ea054c0745b8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7551/icon/0461d97ddd0e86fcbfe40297626cca5fe3f24a27a9a53e3f03a9ea054c0745b8.webp"
     },
     {
       "kind": "item",
@@ -448,8 +454,11 @@
       "id": 7552,
       "name": "Стрела (с биотоксином)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 159,
+      "sha256": "b630632ac205a92129f0fe0d87f7d201e54ff1921fa36ab3b28928f170dcc897",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7552/icon/b630632ac205a92129f0fe0d87f7d201e54ff1921fa36ab3b28928f170dcc897.webp"
     },
     {
       "kind": "item",
@@ -6620,8 +6629,10 @@
       "id": 7874,
       "name": "Питательный батончик",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 157,
+      "sha256": "05bf3e220a6f2d2f3e07ec50f2be855643668eaa65bf0badf3f006ec7f5a139b"
     },
     {
       "kind": "item",
@@ -6639,8 +6650,10 @@
       "id": 7875,
       "name": "Светящаяся краска",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 157,
+      "sha256": "28dec4be1bdb8c5f9fa1000c25e37795be2ea82b25ec7019cd5e342a0d701339"
     },
     {
       "kind": "item",
@@ -6658,8 +6671,10 @@
       "id": 7876,
       "name": "Светящаяся палочка",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 157,
+      "sha256": "ce72049dd00c389c09600041e857f35c20811241d2a1fc9a2cb294378183c228"
     },
     {
       "kind": "item",
@@ -6677,8 +6692,10 @@
       "id": 7877,
       "name": "Крюк-кошка",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 157,
+      "sha256": "ddce209a8ab7c8be82594953cf7e45f521a999cc36e5828007d86f6cfd82bf9b"
     },
     {
       "kind": "item",
@@ -6696,8 +6713,10 @@
       "id": 7878,
       "name": "Наручники",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 157,
+      "sha256": "dfd64dc846f738cf5daa628da20a72f5e2d454b0c6c85c1a03598c04cb301d63"
     },
     {
       "kind": "item",
@@ -6715,8 +6734,10 @@
       "id": 7879,
       "name": "Радиопеленгатор",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 157,
+      "sha256": "1a061c26a78d79c5300c04b6535cf39509851d87de85ff6f55768d701711d9a2"
     },
     {
       "kind": "item",
@@ -6734,8 +6755,10 @@
       "id": 7880,
       "name": "Надувная кровать и спальный мешок",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 157,
+      "sha256": "683db0d9de4116288ff73f92d253c08469a5b63c698782bf4026dad707cfab2d"
     },
     {
       "kind": "item",
@@ -6753,8 +6776,10 @@
       "id": 7881,
       "name": "Пачка комбикорма",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 157,
+      "sha256": "497d101f08f693e2ad8b1fc7afe6b48998e972bc9b2ed4ee387b83ac4f7e2ad7"
     },
     {
       "kind": "item",
@@ -6772,8 +6797,10 @@
       "id": 7882,
       "name": "Прямоходный остов β (бета)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 157,
+      "sha256": "b434c96ab5d8ea962ae401b44bae7d8ffcbeac26f39273afb45c3023ff50392c"
     },
     {
       "kind": "item",
@@ -6791,8 +6818,10 @@
       "id": 7883,
       "name": "Прямоходный остов ∑ (сигма)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 157,
+      "sha256": "c89e0f4bc4ade0f6619c8cc9c745e70733641b73e616b90971a48ee0638ecee5"
     },
     {
       "kind": "item",
@@ -6810,8 +6839,10 @@
       "id": 7884,
       "name": "Набор медвежатника",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 157,
+      "sha256": "35805991002095c476cba604987bf50c9d69e70e8fd2f75d0c6247d64363e4ed"
     },
     {
       "kind": "item",
@@ -6829,8 +6860,10 @@
       "id": 7885,
       "name": "Медсканер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 157,
+      "sha256": "471321daf8e386c2aaa18bf3fb1059eae7c739b7538073489d7dca8fb37a919e"
     },
     {
       "kind": "item",
@@ -6848,8 +6881,10 @@
       "id": 7886,
       "name": "Сумка медтехника",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 158,
+      "sha256": "0b4e8e4f6e14bb5ec73caf798220411f383b0da474b60d1562af6acded7ecb69"
     },
     {
       "kind": "item",
@@ -6867,8 +6902,10 @@
       "id": 7887,
       "name": "Щепка памяти",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 158,
+      "sha256": "f351b878be67f1dedca1489f8099f512c125ad85142a7ac6d4f211ef97af8467"
     },
     {
       "kind": "item",
@@ -6886,8 +6923,10 @@
       "id": 7888,
       "name": "ИРП",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 158,
+      "sha256": "8a7082c1ef881e235da02a104c91dc5daa1a7f8c0415d90230ca65af9be793fc"
     },
     {
       "kind": "item",
@@ -6905,8 +6944,10 @@
       "id": 7889,
       "name": "Набор личной гигиены",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 158,
+      "sha256": "69e04a1a8cc92a59062ff0810cf220dd7e252df690c5013e834d1b5f58dd95bc"
     },
     {
       "kind": "item",
@@ -6924,8 +6965,10 @@
       "id": 7890,
       "name": "Карманный усилитель",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 158,
+      "sha256": "e1b4d81cd91d8c83eaada8e0c39c3a191495d52aadc46d26e4ea025315c32c08"
     },
     {
       "kind": "item",
@@ -6943,8 +6986,10 @@
       "id": 7891,
       "name": "Антирадар",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 158,
+      "sha256": "4789ecdae1fe0d858ec8af6ab119b948cc7441ed26f272907ff946f787dd6668"
     },
     {
       "kind": "item",
@@ -6962,8 +7007,10 @@
       "id": 7892,
       "name": "Радиационный костюм",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 158,
+      "sha256": "6f9bb740e41f1a014f6fcb583081dc523e173903fbfd0ea349337b0eaedeb1d8"
     },
     {
       "kind": "item",
@@ -6981,8 +7028,10 @@
       "id": 7893,
       "name": "Радиокоммуникатор",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 158,
+      "sha256": "2c4b7e1a8f7e9274e195db3ece95bbca8d084a2aa38f7090136834a1c8c58870"
     },
     {
       "kind": "item",
@@ -7000,8 +7049,10 @@
       "id": 7894,
       "name": "Радиоприёмник/Музыкальный плеер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 158,
+      "sha256": "875a17ce18f852a459394960752b16ee710301529e270e8508b56119fe724399"
     },
     {
       "kind": "item",
@@ -7019,8 +7070,10 @@
       "id": 7895,
       "name": "Сигнальная шашка",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 158,
+      "sha256": "79838870d7c18aa71ff5f470a9c327ec635e9adb7cbee53acff6065d9c30ac56"
     },
     {
       "kind": "item",
@@ -7038,8 +7091,10 @@
       "id": 7896,
       "name": "Верёвка (60 м/ярд)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 158,
+      "sha256": "7f7e210be63bd36e6cc5cef36ab4a3cf357175b015cc223d00395090d30c98af"
     },
     {
       "kind": "item",
@@ -7057,8 +7112,10 @@
       "id": 7897,
       "name": "Скремблер/Дескремблер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 158,
+      "sha256": "92ce045dc0a47aa44a9921d7f493887fea9c6092a58755ffe46acdf1de0483f2"
     },
     {
       "kind": "item",
@@ -7076,8 +7133,11 @@
       "id": 7898,
       "name": "Сумка техника",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 159,
+      "sha256": "edc6eab88a812c6d7119aefa1c2769cfb6bd697f20b2992204034d22d438e276",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7898/icon/edc6eab88a812c6d7119aefa1c2769cfb6bd697f20b2992204034d22d438e276.webp"
     },
     {
       "kind": "item",
@@ -7095,8 +7155,11 @@
       "id": 7899,
       "name": "Техсканер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 159,
+      "sha256": "8f2a24a0cde48d07bf9327c029c04cb03ffcdd624cc5089d5586c5a860ac188b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7899/icon/8f2a24a0cde48d07bf9327c029c04cb03ffcdd624cc5089d5586c5a860ac188b.webp"
     },
     {
       "kind": "item",
@@ -7114,8 +7177,11 @@
       "id": 7900,
       "name": "Техтул",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 159,
+      "sha256": "f04bf99d65b8a1b42cc704a204fc9e88a8798001295f104544096da7ecd6187c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7900/icon/f04bf99d65b8a1b42cc704a204fc9e88a8798001295f104544096da7ecd6187c.webp"
     },
     {
       "kind": "item",
@@ -7133,8 +7199,11 @@
       "id": 7901,
       "name": "Палатка и набор для кемпинга",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 159,
+      "sha256": "2c3815e5137c4f4b28bb3151164e1287314c4f24d035d3c0d758c33a0ff86ab7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7901/icon/2c3815e5137c4f4b28bb3151164e1287314c4f24d035d3c0d758c33a0ff86ab7.webp"
     },
     {
       "kind": "item",
@@ -7152,8 +7221,11 @@
       "id": 7902,
       "name": "Радиомаячок",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 159,
+      "sha256": "5b50a80ec04fcb0f12d186ac59e4c66960ff07427c967f9bb4e60cbd547dfb7e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7902/icon/5b50a80ec04fcb0f12d186ac59e4c66960ff07427c967f9bb4e60cbd547dfb7e.webp"
     },
     {
       "kind": "item",
@@ -7171,8 +7243,11 @@
       "id": 7903,
       "name": "Ампула с биотоксином",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 159,
+      "sha256": "b8e02395a8e7c85b23e3a3cc6c9a04e7114ad24be26ef8310e21c5ade95ee727",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7903/icon/b8e02395a8e7c85b23e3a3cc6c9a04e7114ad24be26ef8310e21c5ade95ee727.webp"
     },
     {
       "kind": "item",
@@ -7190,8 +7265,11 @@
       "id": 7904,
       "name": "Ампула с ядом",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 159,
+      "sha256": "49fcacb46c0b608c3f1af89dd0d04d4b5915165085874dc421dfd24349720259",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7904/icon/49fcacb46c0b608c3f1af89dd0d04d4b5915165085874dc421dfd24349720259.webp"
     },
     {
       "kind": "item",
@@ -7209,8 +7287,11 @@
       "id": 7905,
       "name": "Видеокамера",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 159,
+      "sha256": "c8dda56ebd7201dfa5bb338ba9f2aacd0b423b112e3e459e3d770182491ba733",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7905/icon/c8dda56ebd7201dfa5bb338ba9f2aacd0b423b112e3e459e3d770182491ba733.webp"
     },
     {
       "kind": "item",
@@ -7228,8 +7309,11 @@
       "id": 7906,
       "name": "Очки виртуальности",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 159,
+      "sha256": "aa0c5da419d526eaced8c2dd01a42259e80c8446b07612262776b353e949e0a5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7906/icon/aa0c5da419d526eaced8c2dd01a42259e80c8446b07612262776b353e949e0a5.webp"
     },
     {
       "kind": "item",
@@ -19047,7 +19131,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 995,
+    "publishedSlots": 1007,
     "readySlots": 0,
     "totalSlots": 1848
   }
