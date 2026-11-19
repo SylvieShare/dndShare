@@ -3682,8 +3682,11 @@
       "id": 7699,
       "name": "Головной убор (одеяния кочевников)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 173,
+      "sha256": "70253ac4f0379bb58ce80a0b44084948cf1ee7018631c4e18975c91a0083ab2e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7699/icon/70253ac4f0379bb58ce80a0b44084948cf1ee7018631c4e18975c91a0083ab2e.webp"
     },
     {
       "kind": "item",
@@ -3701,8 +3704,11 @@
       "id": 7700,
       "name": "Верхняя одежда (одеяния кочевников)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 173,
+      "sha256": "5fd37af6abbcf7ea3c89945d2fb5aaa26fe2a36614ccb52f2e6f5661c96e4a07",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7700/icon/5fd37af6abbcf7ea3c89945d2fb5aaa26fe2a36614ccb52f2e6f5661c96e4a07.webp"
     },
     {
       "kind": "item",
@@ -3720,8 +3726,11 @@
       "id": 7701,
       "name": "Украшение (одеяния кочевников)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 173,
+      "sha256": "7b982a1bc31672e2d43e2a0f9831a404c2900488d7e2acc1110f51fc61878181",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7701/icon/7b982a1bc31672e2d43e2a0f9831a404c2900488d7e2acc1110f51fc61878181.webp"
     },
     {
       "kind": "item",
@@ -3739,8 +3748,11 @@
       "id": 7702,
       "name": "Зеркальные очки (одеяния кочевников)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 173,
+      "sha256": "54dff8bbe64f7031042d954c0cdc448d8391704be4f4d7e347038dcfec85045a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7702/icon/54dff8bbe64f7031042d954c0cdc448d8391704be4f4d7e347038dcfec85045a.webp"
     },
     {
       "kind": "item",
@@ -3758,8 +3770,11 @@
       "id": 7703,
       "name": "Верх (одеяния кочевников)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 173,
+      "sha256": "2d80bd801616998dda4e4ef21839fea3ee548bed6ec76f41b41dc21817e0372e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7703/icon/2d80bd801616998dda4e4ef21839fea3ee548bed6ec76f41b41dc21817e0372e.webp"
     },
     {
       "kind": "item",
@@ -3777,8 +3792,11 @@
       "id": 7704,
       "name": "Низ (городской эпатаж)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 173,
+      "sha256": "de4ded770688d443f17d31e93577cdbf9755d1f09fab08c5afdce1a3097713de",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7704/icon/de4ded770688d443f17d31e93577cdbf9755d1f09fab08c5afdce1a3097713de.webp"
     },
     {
       "kind": "item",
@@ -3796,8 +3814,11 @@
       "id": 7705,
       "name": "Контактные линзы (городской эпатаж)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 173,
+      "sha256": "0f7631f763ca9fd3c223bf522298456e58f677c24d7f128ef864c67957219547",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7705/icon/0f7631f763ca9fd3c223bf522298456e58f677c24d7f128ef864c67957219547.webp"
     },
     {
       "kind": "item",
@@ -3815,8 +3836,11 @@
       "id": 7706,
       "name": "Обувь (городской эпатаж)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 173,
+      "sha256": "77b093ecfdb9effddfdd33555f5cb099c5bcf16b34d4d2d8feb0ced3b06bc7f2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7706/icon/77b093ecfdb9effddfdd33555f5cb099c5bcf16b34d4d2d8feb0ced3b06bc7f2.webp"
     },
     {
       "kind": "item",
@@ -3834,8 +3858,11 @@
       "id": 7707,
       "name": "Очки (городской эпатаж)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 173,
+      "sha256": "a537205590d5128f3297637d80bb11b6e0ac07d47084d3db6c4a93cc264302c1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7707/icon/a537205590d5128f3297637d80bb11b6e0ac07d47084d3db6c4a93cc264302c1.webp"
     },
     {
       "kind": "item",
@@ -3853,8 +3880,11 @@
       "id": 7708,
       "name": "Головной убор (городской эпатаж)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 173,
+      "sha256": "8f1083aa4f4b6c007e3039d542655c5866596cad7b581b1ed7fbbba4601bbeb2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7708/icon/8f1083aa4f4b6c007e3039d542655c5866596cad7b581b1ed7fbbba4601bbeb2.webp"
     },
     {
       "kind": "item",
@@ -3872,8 +3902,11 @@
       "id": 7709,
       "name": "Верхняя одежда (городской эпатаж)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 173,
+      "sha256": "a70e76133fd9853327f3756c65b5242e41675c541eba7d0a922523480c76fa3e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7709/icon/a70e76133fd9853327f3756c65b5242e41675c541eba7d0a922523480c76fa3e.webp"
     },
     {
       "kind": "item",
@@ -3891,8 +3924,11 @@
       "id": 7710,
       "name": "Украшение (городской эпатаж)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 173,
+      "sha256": "fd5aa906e1ef22c4cda167c8bee62c182405d8ba084799513bee7e388170422f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7710/icon/fd5aa906e1ef22c4cda167c8bee62c182405d8ba084799513bee7e388170422f.webp"
     },
     {
       "kind": "item",
@@ -19623,7 +19659,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1187,
+    "publishedSlots": 1199,
     "readySlots": 0,
     "totalSlots": 1848
   }

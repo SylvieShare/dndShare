@@ -1,0 +1,526 @@
+{
+  "batch": 173,
+  "sourceId": 3,
+  "system": "Cyberpunk RED",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-173",
+  "assets": [
+    {
+      "key": "item-7699-icon",
+      "target": {
+        "kind": "item",
+        "id": 7699,
+        "typeId": 23,
+        "name": "Головной убор (одеяния кочевников)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Nomad Leathers Hat\" (Головной убор (одеяния кочевников)), the \"clothing-nomad-leathers-hat\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-adb9e76b-6e98-448f-b672-a2ffe064bfd6.png",
+      "original": "originals/item-7699.png",
+      "final": "final/item-7699.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "e6d325d07cd7c3202ecd3227fd4c10a978820be09a34ed49d910fb98970521fc",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "70253ac4f0379bb58ce80a0b44084948cf1ee7018631c4e18975c91a0083ab2e",
+      "bytes": 13874,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50808,
+        "objectKey": "system-item-media/v1/items/7699/icon/70253ac4f0379bb58ce80a0b44084948cf1ee7018631c4e18975c91a0083ab2e.webp",
+        "fileSize": 13874
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7699/icon/70253ac4f0379bb58ce80a0b44084948cf1ee7018631c4e18975c91a0083ab2e.webp"
+    },
+    {
+      "key": "item-7700-icon",
+      "target": {
+        "kind": "item",
+        "id": 7700,
+        "typeId": 23,
+        "name": "Верхняя одежда (одеяния кочевников)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Nomad Leathers Jacket\" (Верхняя одежда (одеяния кочевников)), the \"clothing-nomad-leathers-jacket\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0724e2b7-deab-4b3a-856b-1eb52b86dd2c.png",
+      "original": "originals/item-7700.png",
+      "final": "final/item-7700.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "69c04768d9cc7fae93b517339e2bd99d1dacec1459c8670694495f3b389857da",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "5fd37af6abbcf7ea3c89945d2fb5aaa26fe2a36614ccb52f2e6f5661c96e4a07",
+      "bytes": 19130,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50809,
+        "objectKey": "system-item-media/v1/items/7700/icon/5fd37af6abbcf7ea3c89945d2fb5aaa26fe2a36614ccb52f2e6f5661c96e4a07.webp",
+        "fileSize": 19130
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7700/icon/5fd37af6abbcf7ea3c89945d2fb5aaa26fe2a36614ccb52f2e6f5661c96e4a07.webp"
+    },
+    {
+      "key": "item-7701-icon",
+      "target": {
+        "kind": "item",
+        "id": 7701,
+        "typeId": 23,
+        "name": "Украшение (одеяния кочевников)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: ONE standalone necklace of a 2045 road nomad, jewelry only: a short loop of braided oxblood leather cord, a large worn brass wheel-bearing pendant, three split chrome beads and a teal enamel inset. Centered empty loop; no mannequin, jacket, clothes, torso, or person.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-49e10b09-567e-4abb-82d6-46358d171ed1.png",
+      "original": "originals/item-7701.png",
+      "final": "final/item-7701.webp",
+      "width": 128,
+      "height": 128,
+      "rejectedOriginal": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-95092229-b0e0-41d3-b736-ab64a19d4794.png",
+      "originalSha256": "e1f62d0cdc6be7d4b645dd0467c4ce1ac8c5b37f8a4c836cc91314e32222d427",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "7b982a1bc31672e2d43e2a0f9831a404c2900488d7e2acc1110f51fc61878181",
+      "bytes": 10930,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50810,
+        "objectKey": "system-item-media/v1/items/7701/icon/7b982a1bc31672e2d43e2a0f9831a404c2900488d7e2acc1110f51fc61878181.webp",
+        "fileSize": 10930
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7701/icon/7b982a1bc31672e2d43e2a0f9831a404c2900488d7e2acc1110f51fc61878181.webp"
+    },
+    {
+      "key": "item-7702-icon",
+      "target": {
+        "kind": "item",
+        "id": 7702,
+        "typeId": 23,
+        "name": "Зеркальные очки (одеяния кочевников)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Nomad Leathers Mirrorshades\" (Зеркальные очки (одеяния кочевников)), the \"clothing-nomad-leathers-mirrorshades\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-75d96b47-2d19-408f-a547-97f81c25844a.png",
+      "original": "originals/item-7702.png",
+      "final": "final/item-7702.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "af21d446db6050ef712e2de266e897811cfb8f5e9043fd1926402dc1eeb4f545",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "54dff8bbe64f7031042d954c0cdc448d8391704be4f4d7e347038dcfec85045a",
+      "bytes": 9172,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50811,
+        "objectKey": "system-item-media/v1/items/7702/icon/54dff8bbe64f7031042d954c0cdc448d8391704be4f4d7e347038dcfec85045a.webp",
+        "fileSize": 9172
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7702/icon/54dff8bbe64f7031042d954c0cdc448d8391704be4f4d7e347038dcfec85045a.webp"
+    },
+    {
+      "key": "item-7703-icon",
+      "target": {
+        "kind": "item",
+        "id": 7703,
+        "typeId": 23,
+        "name": "Верх (одеяния кочевников)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Nomad Leathers Top\" (Верх (одеяния кочевников)), the \"clothing-nomad-leathers-top\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0e549a07-421a-4f11-87c6-3cd736fdbd4c.png",
+      "original": "originals/item-7703.png",
+      "final": "final/item-7703.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "613db8000736adc193062054a61ecb259d9843c263570a0d8b105cf458e6333e",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "2d80bd801616998dda4e4ef21839fea3ee548bed6ec76f41b41dc21817e0372e",
+      "bytes": 19148,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50812,
+        "objectKey": "system-item-media/v1/items/7703/icon/2d80bd801616998dda4e4ef21839fea3ee548bed6ec76f41b41dc21817e0372e.webp",
+        "fileSize": 19148
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7703/icon/2d80bd801616998dda4e4ef21839fea3ee548bed6ec76f41b41dc21817e0372e.webp"
+    },
+    {
+      "key": "item-7704-icon",
+      "target": {
+        "kind": "item",
+        "id": 7704,
+        "typeId": 23,
+        "name": "Низ (городской эпатаж)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Urban Flash Bottoms\" (Низ (городской эпатаж)), the \"clothing-urban-flash-bottoms\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-16a21a35-7fac-407e-8949-36d506ffcc16.png",
+      "original": "originals/item-7704.png",
+      "final": "final/item-7704.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "9a453ba20d294fc039cc308deb4e60a17ea3f40e501e1c02b80ef9a589842c41",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "de4ded770688d443f17d31e93577cdbf9755d1f09fab08c5afdce1a3097713de",
+      "bytes": 14798,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50813,
+        "objectKey": "system-item-media/v1/items/7704/icon/de4ded770688d443f17d31e93577cdbf9755d1f09fab08c5afdce1a3097713de.webp",
+        "fileSize": 14798
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7704/icon/de4ded770688d443f17d31e93577cdbf9755d1f09fab08c5afdce1a3097713de.webp"
+    },
+    {
+      "key": "item-7705-icon",
+      "target": {
+        "kind": "item",
+        "id": 7705,
+        "typeId": 23,
+        "name": "Контактные линзы (городской эпатаж)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Urban Flash Contact Lenses\" (Контактные линзы (городской эпатаж)), the \"clothing-urban-flash-contact-lenses\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-dbd9ca29-bab2-442c-b19d-a1e06902a1c1.png",
+      "original": "originals/item-7705.png",
+      "final": "final/item-7705.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "c4bd6e8220d919f2294bf54f7ea6b6d4a19f1fc164faba0ba1827a81208b6032",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "0f7631f763ca9fd3c223bf522298456e58f677c24d7f128ef864c67957219547",
+      "bytes": 18388,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50814,
+        "objectKey": "system-item-media/v1/items/7705/icon/0f7631f763ca9fd3c223bf522298456e58f677c24d7f128ef864c67957219547.webp",
+        "fileSize": 18388
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7705/icon/0f7631f763ca9fd3c223bf522298456e58f677c24d7f128ef864c67957219547.webp"
+    },
+    {
+      "key": "item-7706-icon",
+      "target": {
+        "kind": "item",
+        "id": 7706,
+        "typeId": 23,
+        "name": "Обувь (городской эпатаж)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Urban Flash Footwear\" (Обувь (городской эпатаж)), the \"clothing-urban-flash-footwear\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c72985f5-eaf4-4cd8-8a99-948cacdab7e1.png",
+      "original": "originals/item-7706.png",
+      "final": "final/item-7706.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "4c8b134ef730c6c42720fac7831eb6e5f974c93928bf63f961f78be43bae4455",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "77b093ecfdb9effddfdd33555f5cb099c5bcf16b34d4d2d8feb0ced3b06bc7f2",
+      "bytes": 18110,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50815,
+        "objectKey": "system-item-media/v1/items/7706/icon/77b093ecfdb9effddfdd33555f5cb099c5bcf16b34d4d2d8feb0ced3b06bc7f2.webp",
+        "fileSize": 18110
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7706/icon/77b093ecfdb9effddfdd33555f5cb099c5bcf16b34d4d2d8feb0ced3b06bc7f2.webp"
+    },
+    {
+      "key": "item-7707-icon",
+      "target": {
+        "kind": "item",
+        "id": 7707,
+        "typeId": 23,
+        "name": "Очки (городской эпатаж)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Urban Flash Glasses\" (Очки (городской эпатаж)), the \"clothing-urban-flash-glasses\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1fe4a431-6345-4196-a0d5-771389da6c69.png",
+      "original": "originals/item-7707.png",
+      "final": "final/item-7707.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "d600024fb0b74f1527f2851e3cf260957220b4df033793fea9d6fce48d26a62c",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "a537205590d5128f3297637d80bb11b6e0ac07d47084d3db6c4a93cc264302c1",
+      "bytes": 8528,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50816,
+        "objectKey": "system-item-media/v1/items/7707/icon/a537205590d5128f3297637d80bb11b6e0ac07d47084d3db6c4a93cc264302c1.webp",
+        "fileSize": 8528
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7707/icon/a537205590d5128f3297637d80bb11b6e0ac07d47084d3db6c4a93cc264302c1.webp"
+    },
+    {
+      "key": "item-7708-icon",
+      "target": {
+        "kind": "item",
+        "id": 7708,
+        "typeId": 23,
+        "name": "Головной убор (городской эпатаж)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Urban Flash Hat\" (Головной убор (городской эпатаж)), the \"clothing-urban-flash-hat\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-397f64b3-31c1-4fa4-9ffc-d5a225297597.png",
+      "original": "originals/item-7708.png",
+      "final": "final/item-7708.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "c7886a3c266ee15340678df8cd2d66696b33dda613bde74fc9e661270e65f5b0",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "8f1083aa4f4b6c007e3039d542655c5866596cad7b581b1ed7fbbba4601bbeb2",
+      "bytes": 12370,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50817,
+        "objectKey": "system-item-media/v1/items/7708/icon/8f1083aa4f4b6c007e3039d542655c5866596cad7b581b1ed7fbbba4601bbeb2.webp",
+        "fileSize": 12370
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7708/icon/8f1083aa4f4b6c007e3039d542655c5866596cad7b581b1ed7fbbba4601bbeb2.webp"
+    },
+    {
+      "key": "item-7709-icon",
+      "target": {
+        "kind": "item",
+        "id": 7709,
+        "typeId": 23,
+        "name": "Верхняя одежда (городской эпатаж)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Urban Flash Jacket\" (Верхняя одежда (городской эпатаж)), the \"clothing-urban-flash-jacket\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2638f274-ed2d-4248-be15-af118ea41e6e.png",
+      "original": "originals/item-7709.png",
+      "final": "final/item-7709.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "307c95fccd627eadb7abb85e6a49100bffc52a3939ae95d68a030e380ef399c8",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "a70e76133fd9853327f3756c65b5242e41675c541eba7d0a922523480c76fa3e",
+      "bytes": 17716,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50818,
+        "objectKey": "system-item-media/v1/items/7709/icon/a70e76133fd9853327f3756c65b5242e41675c541eba7d0a922523480c76fa3e.webp",
+        "fileSize": 17716
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7709/icon/a70e76133fd9853327f3756c65b5242e41675c541eba7d0a922523480c76fa3e.webp"
+    },
+    {
+      "key": "item-7710-icon",
+      "target": {
+        "kind": "item",
+        "id": 7710,
+        "typeId": 23,
+        "name": "Украшение (городской эпатаж)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Urban Flash Jewelry\" (Украшение (городской эпатаж)), the \"clothing-urban-flash-jewelry\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-10958bd8-15a3-43b3-9b9c-a5a6ae039fa4.png",
+      "original": "originals/item-7710.png",
+      "final": "final/item-7710.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "3811b55b42d9b1c05ed7e2460db38058e136b1b12d9c3a7347e8e7a1f8847ed8",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "fd5aa906e1ef22c4cda167c8bee62c182405d8ba084799513bee7e388170422f",
+      "bytes": 18444,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50819,
+        "objectKey": "system-item-media/v1/items/7710/icon/fd5aa906e1ef22c4cda167c8bee62c182405d8ba084799513bee7e388170422f.webp",
+        "fileSize": 18444
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7710/icon/fd5aa906e1ef22c4cda167c8bee62c182405d8ba084799513bee7e388170422f.webp"
+    }
+  ]
+}
