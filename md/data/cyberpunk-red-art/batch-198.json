@@ -1,0 +1,525 @@
+{
+  "batch": 198,
+  "sourceId": 3,
+  "system": "Cyberpunk RED",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-198",
+  "assets": [
+    {
+      "key": "item-7621-icon",
+      "target": {
+        "kind": "item",
+        "id": 7621,
+        "typeId": 21,
+        "name": "Вплетение в кожу"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Skin Weave\" (Вплетение в кожу), the \"armor-skin-weave\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3296b6a9-a0e2-4a45-aee0-b6865f4985b9.png",
+      "original": "originals/item-7621.png",
+      "final": "final/item-7621.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "b863bc667d44492d33f6d770fa357511e5dbde425e3a05d97ed7bbc6fa10a837",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "8fe2b7339a44f9c93ec08fe8c3b996639f6bd83ab2e6dbb963f09bd617652aa2",
+      "bytes": 16060,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51108,
+        "objectKey": "system-item-media/v1/items/7621/icon/8fe2b7339a44f9c93ec08fe8c3b996639f6bd83ab2e6dbb963f09bd617652aa2.webp",
+        "fileSize": 16060
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7621/icon/8fe2b7339a44f9c93ec08fe8c3b996639f6bd83ab2e6dbb963f09bd617652aa2.webp"
+    },
+    {
+      "key": "item-7622-icon",
+      "target": {
+        "kind": "item",
+        "id": 7622,
+        "typeId": 21,
+        "name": "Подкожная броня"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Subdermal Armor\" (Подкожная броня), the \"armor-subdermal-armor\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b83fe59a-2cc6-4795-9dd1-6770f2d8b92c.png",
+      "original": "originals/item-7622.png",
+      "final": "final/item-7622.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "7ba0fd329ccc50e5f3a9c16b27629e7278d72468144e73071cfaaaa39b980c18",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "42d6c89c06ed7638db04abe36b5d69d82d5123f34dceb403937566ba61f45f62",
+      "bytes": 15558,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51109,
+        "objectKey": "system-item-media/v1/items/7622/icon/42d6c89c06ed7638db04abe36b5d69d82d5123f34dceb403937566ba61f45f62.webp",
+        "fileSize": 15558
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7622/icon/42d6c89c06ed7638db04abe36b5d69d82d5123f34dceb403937566ba61f45f62.webp"
+    },
+    {
+      "key": "item-7713-icon",
+      "target": {
+        "kind": "item",
+        "id": 7713,
+        "typeId": 24,
+        "name": "Перелом руки"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Broken Arm\" (Перелом руки), the \"criticalinjury-broken-arm\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3cee285e-e3ef-403c-a73a-8c0ee4a14e10.png",
+      "original": "originals/item-7713.png",
+      "final": "final/item-7713.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "a84078f0ffaf4be6fbd86ff03a831aef369942e20d474302862b996bcea98102",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "63d0536523a562ccb957290bafcc989d88828ec7ea2be1295a759574a56cb688",
+      "bytes": 13936,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51110,
+        "objectKey": "system-item-media/v1/items/7713/icon/63d0536523a562ccb957290bafcc989d88828ec7ea2be1295a759574a56cb688.webp",
+        "fileSize": 13936
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7713/icon/63d0536523a562ccb957290bafcc989d88828ec7ea2be1295a759574a56cb688.webp"
+    },
+    {
+      "key": "item-7714-icon",
+      "target": {
+        "kind": "item",
+        "id": 7714,
+        "typeId": 24,
+        "name": "Перелом ноги"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Broken Leg\" (Перелом ноги), the \"criticalinjury-broken-leg\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-125799df-ea70-45cf-a8cb-834eb1c61abe.png",
+      "original": "originals/item-7714.png",
+      "final": "final/item-7714.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "2e31793162174de4910e95291518e910cbedf36f5ef2e2bf1868103b996e6788",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "5e9bdc5a70ee5d4ddfb36dd44fdfdf4dda837ba2cb24bd68ddd59e3a4816b04f",
+      "bytes": 14768,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51111,
+        "objectKey": "system-item-media/v1/items/7714/icon/5e9bdc5a70ee5d4ddfb36dd44fdfdf4dda837ba2cb24bd68ddd59e3a4816b04f.webp",
+        "fileSize": 14768
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7714/icon/5e9bdc5a70ee5d4ddfb36dd44fdfdf4dda837ba2cb24bd68ddd59e3a4816b04f.webp"
+    },
+    {
+      "key": "item-7715-icon",
+      "target": {
+        "kind": "item",
+        "id": 7715,
+        "typeId": 24,
+        "name": "Перелом рёбер"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Broken Ribs\" (Перелом рёбер), the \"criticalinjury-broken-ribs\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-63a14009-d820-41d1-9cd7-b06e1ddac8eb.png",
+      "original": "originals/item-7715.png",
+      "final": "final/item-7715.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "47ba567df2ed9e9965d6b27684a27631f0f678753cb243423114eba29e9ac28f",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "41a8d79d5b898d59ddf2ee154df99cc5c45b82cd4df0faaecc0e191fdae2daf2",
+      "bytes": 15146,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51112,
+        "objectKey": "system-item-media/v1/items/7715/icon/41a8d79d5b898d59ddf2ee154df99cc5c45b82cd4df0faaecc0e191fdae2daf2.webp",
+        "fileSize": 15146
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7715/icon/41a8d79d5b898d59ddf2ee154df99cc5c45b82cd4df0faaecc0e191fdae2daf2.webp"
+    },
+    {
+      "key": "item-7716-icon",
+      "target": {
+        "kind": "item",
+        "id": 7716,
+        "typeId": 24,
+        "name": "Разрыв лёгкого"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Collapsed Lung\" (Разрыв лёгкого), the \"criticalinjury-collapsed-lung\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a8eea0a8-b2da-40b8-a784-9e86a677ec6e.png",
+      "original": "originals/item-7716.png",
+      "final": "final/item-7716.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "8bd0bdab531cdd61e192d548f6f15ea038f2143cebc3e1ced36cd0be35536634",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "2681023eb0bbb46d4214bf348ae973c8bfe5ca97b5c922d2362f415fc28d4f44",
+      "bytes": 12938,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51113,
+        "objectKey": "system-item-media/v1/items/7716/icon/2681023eb0bbb46d4214bf348ae973c8bfe5ca97b5c922d2362f415fc28d4f44.webp",
+        "fileSize": 12938
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7716/icon/2681023eb0bbb46d4214bf348ae973c8bfe5ca97b5c922d2362f415fc28d4f44.webp"
+    },
+    {
+      "key": "item-7717-icon",
+      "target": {
+        "kind": "item",
+        "id": 7717,
+        "typeId": 24,
+        "name": "Перелом пальцев"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Crushed Fingers\" (Перелом пальцев), the \"criticalinjury-crushed-fingers\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0d6e30da-a6b9-4ad1-8ca0-0782bf18e6cd.png",
+      "original": "originals/item-7717.png",
+      "final": "final/item-7717.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "fe35e7ac26a7464ae7433475666a675c707f040acff5bade66b8e4e9ffd8871c",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "430d90571d7981cbd2a7ab1cd52b9d4603752b9c62ae833558dd8b67742b41ea",
+      "bytes": 13408,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51114,
+        "objectKey": "system-item-media/v1/items/7717/icon/430d90571d7981cbd2a7ab1cd52b9d4603752b9c62ae833558dd8b67742b41ea.webp",
+        "fileSize": 13408
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7717/icon/430d90571d7981cbd2a7ab1cd52b9d4603752b9c62ae833558dd8b67742b41ea.webp"
+    },
+    {
+      "key": "item-7718-icon",
+      "target": {
+        "kind": "item",
+        "id": 7718,
+        "typeId": 24,
+        "name": "Оторванная рука"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Dismembered Arm\" (Оторванная рука), the \"criticalinjury-dismembered-arm\" catalogue variant. A symbolic non-graphic clinical chart pictogram: a compact slate medical monitor with one stylized body-region silhouette and an amber marker at the affected region. No wounds, blood or medical instructions.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-95faaee2-bcd8-40df-9c11-36710c059e54.png",
+      "original": "originals/item-7718.png",
+      "final": "final/item-7718.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "3d3b27cfecad9a2bcaac0e58dc9d2d533638e64f36371832ab538e553ad4a07f",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "1978ec591803f6246052d0556e304e6b25460e3844f5922c0e1f94f437b132dd",
+      "bytes": 12606,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51115,
+        "objectKey": "system-item-media/v1/items/7718/icon/1978ec591803f6246052d0556e304e6b25460e3844f5922c0e1f94f437b132dd.webp",
+        "fileSize": 12606
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7718/icon/1978ec591803f6246052d0556e304e6b25460e3844f5922c0e1f94f437b132dd.webp"
+    },
+    {
+      "key": "item-8093-icon",
+      "target": {
+        "kind": "item",
+        "id": 8093,
+        "typeId": 37,
+        "name": "Очень тяжёлое оружие ближнего боя (плохое)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Very Heavy Melee (Poor)\" (Очень тяжёлое оружие ближнего боя (плохое)), the \"weapon-very-heavy-melee-poor\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-475940a3-d67d-4fe7-8b71-b09dddd3cf43.png",
+      "original": "originals/item-8093.png",
+      "final": "final/item-8093.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "7e6dd8419b12e44a551b965b6e879ac61a47cd2fdf3bfe0cfc16eb0c67f18802",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "8b9921da3b7516be00d9b470677e546520be7f4390a8c2926768cadbb1af994d",
+      "bytes": 8816,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51116,
+        "objectKey": "system-item-media/v1/items/8093/icon/8b9921da3b7516be00d9b470677e546520be7f4390a8c2926768cadbb1af994d.webp",
+        "fileSize": 8816
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8093/icon/8b9921da3b7516be00d9b470677e546520be7f4390a8c2926768cadbb1af994d.webp"
+    },
+    {
+      "key": "item-8094-icon",
+      "target": {
+        "kind": "item",
+        "id": 8094,
+        "typeId": 37,
+        "name": "Пистолет сверхкрупного калибра"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: A closed, compact but chunky squared charcoal retail carrying case for a very heavy pistol in a cyberpunk game inventory. Two large crimson latches, recessed dark rubber handle, brushed steel edge band and one cream diamond pictogram. Only the closed case exterior is visible.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-99bd607f-0a82-40b8-acea-8d97887b594d.png",
+      "original": "originals/item-8094.png",
+      "final": "final/item-8094.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "596f25c9bcfc864f80fd568b0f513d33de8557a3bb4cefae0cb90e5fea3e65db",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "27525cadb041c279b11eaac72474f590199f854363b591694232705b6419ffcb",
+      "bytes": 13642,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51117,
+        "objectKey": "system-item-media/v1/items/8094/icon/27525cadb041c279b11eaac72474f590199f854363b591694232705b6419ffcb.webp",
+        "fileSize": 13642
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8094/icon/27525cadb041c279b11eaac72474f590199f854363b591694232705b6419ffcb.webp"
+    },
+    {
+      "key": "item-8095-icon",
+      "target": {
+        "kind": "item",
+        "id": 8095,
+        "typeId": 37,
+        "name": "Пистолет сверхкрупного калибра (отличное)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Very Heavy Pistol (Excellent)\" (Пистолет сверхкрупного калибра (отличное)), the \"weapon-very-heavy-pistol-excellent\" catalogue variant. Fictional inventory art, depicting the collectible’s distinctive external silhouette in profile as a small game item. No hands, person, target, action, inset or internal parts. No technical labels or diagrams.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-33f330f6-1aa9-4857-8011-61e84cbb9d0a.png",
+      "original": "originals/item-8095.png",
+      "final": "final/item-8095.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "1416a8066294b1a65b659023f1c5b42a8efed4d90d6bf1276ee3c01a69e5af83",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "09469d26581a8dbc91b6db70a0679a5bd4051a079c00ac4ece8cb06172f56c81",
+      "bytes": 9374,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51118,
+        "objectKey": "system-item-media/v1/items/8095/icon/09469d26581a8dbc91b6db70a0679a5bd4051a079c00ac4ece8cb06172f56c81.webp",
+        "fileSize": 9374
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8095/icon/09469d26581a8dbc91b6db70a0679a5bd4051a079c00ac4ece8cb06172f56c81.webp"
+    },
+    {
+      "key": "item-8096-icon",
+      "target": {
+        "kind": "item",
+        "id": 8096,
+        "typeId": 37,
+        "name": "Пистолет сверхкрупного калибра (плохое)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: A battered compact square dull olive carrying case for the poor-quality very heavy pistol inventory entry. Frayed plum webbing handle, ochre corner patch and three broad edge scuffs. Closed plain exterior, no contents, lettering or diagram.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9b2da0d5-736a-454a-835f-03cf709cdd65.png",
+      "original": "originals/item-8096.png",
+      "final": "final/item-8096.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "b0b25a0033afca928139d5309e48b1aa42a6189675bcd098bdbc588742157580",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "6dc2fc54c61773c7ee58a85e3d6101f69ab97b0f35f6cd4997457e2103f7a026",
+      "bytes": 14380,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 51119,
+        "objectKey": "system-item-media/v1/items/8096/icon/6dc2fc54c61773c7ee58a85e3d6101f69ab97b0f35f6cd4997457e2103f7a026.webp",
+        "fileSize": 14380
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8096/icon/6dc2fc54c61773c7ee58a85e3d6101f69ab97b0f35f6cd4997457e2103f7a026.webp"
+    }
+  ]
+}

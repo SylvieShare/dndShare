@@ -1972,8 +1972,11 @@
       "id": 7621,
       "name": "Вплетение в кожу",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 198,
+      "sha256": "8fe2b7339a44f9c93ec08fe8c3b996639f6bd83ab2e6dbb963f09bd617652aa2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7621/icon/8fe2b7339a44f9c93ec08fe8c3b996639f6bd83ab2e6dbb963f09bd617652aa2.webp"
     },
     {
       "kind": "item",
@@ -1991,8 +1994,11 @@
       "id": 7622,
       "name": "Подкожная броня",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 198,
+      "sha256": "42d6c89c06ed7638db04abe36b5d69d82d5123f34dceb403937566ba61f45f62",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7622/icon/42d6c89c06ed7638db04abe36b5d69d82d5123f34dceb403937566ba61f45f62.webp"
     },
     {
       "kind": "item",
@@ -3990,8 +3996,11 @@
       "id": 7713,
       "name": "Перелом руки",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 198,
+      "sha256": "63d0536523a562ccb957290bafcc989d88828ec7ea2be1295a759574a56cb688",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7713/icon/63d0536523a562ccb957290bafcc989d88828ec7ea2be1295a759574a56cb688.webp"
     },
     {
       "kind": "item",
@@ -4009,8 +4018,11 @@
       "id": 7714,
       "name": "Перелом ноги",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 198,
+      "sha256": "5e9bdc5a70ee5d4ddfb36dd44fdfdf4dda837ba2cb24bd68ddd59e3a4816b04f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7714/icon/5e9bdc5a70ee5d4ddfb36dd44fdfdf4dda837ba2cb24bd68ddd59e3a4816b04f.webp"
     },
     {
       "kind": "item",
@@ -4028,8 +4040,11 @@
       "id": 7715,
       "name": "Перелом рёбер",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 198,
+      "sha256": "41a8d79d5b898d59ddf2ee154df99cc5c45b82cd4df0faaecc0e191fdae2daf2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7715/icon/41a8d79d5b898d59ddf2ee154df99cc5c45b82cd4df0faaecc0e191fdae2daf2.webp"
     },
     {
       "kind": "item",
@@ -4047,8 +4062,11 @@
       "id": 7716,
       "name": "Разрыв лёгкого",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 198,
+      "sha256": "2681023eb0bbb46d4214bf348ae973c8bfe5ca97b5c922d2362f415fc28d4f44",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7716/icon/2681023eb0bbb46d4214bf348ae973c8bfe5ca97b5c922d2362f415fc28d4f44.webp"
     },
     {
       "kind": "item",
@@ -4066,8 +4084,11 @@
       "id": 7717,
       "name": "Перелом пальцев",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 198,
+      "sha256": "430d90571d7981cbd2a7ab1cd52b9d4603752b9c62ae833558dd8b67742b41ea",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7717/icon/430d90571d7981cbd2a7ab1cd52b9d4603752b9c62ae833558dd8b67742b41ea.webp"
     },
     {
       "kind": "item",
@@ -4085,8 +4106,11 @@
       "id": 7718,
       "name": "Оторванная рука",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 198,
+      "sha256": "1978ec591803f6246052d0556e304e6b25460e3844f5922c0e1f94f437b132dd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7718/icon/1978ec591803f6246052d0556e304e6b25460e3844f5922c0e1f94f437b132dd.webp"
     },
     {
       "kind": "item",
@@ -12221,8 +12245,11 @@
       "id": 8093,
       "name": "Очень тяжёлое оружие ближнего боя (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 198,
+      "sha256": "8b9921da3b7516be00d9b470677e546520be7f4390a8c2926768cadbb1af994d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8093/icon/8b9921da3b7516be00d9b470677e546520be7f4390a8c2926768cadbb1af994d.webp"
     },
     {
       "kind": "item",
@@ -12240,8 +12267,11 @@
       "id": 8094,
       "name": "Пистолет сверхкрупного калибра",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 198,
+      "sha256": "27525cadb041c279b11eaac72474f590199f854363b591694232705b6419ffcb",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8094/icon/27525cadb041c279b11eaac72474f590199f854363b591694232705b6419ffcb.webp"
     },
     {
       "kind": "item",
@@ -12259,8 +12289,11 @@
       "id": 8095,
       "name": "Пистолет сверхкрупного калибра (отличное)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 198,
+      "sha256": "09469d26581a8dbc91b6db70a0679a5bd4051a079c00ac4ece8cb06172f56c81",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8095/icon/09469d26581a8dbc91b6db70a0679a5bd4051a079c00ac4ece8cb06172f56c81.webp"
     },
     {
       "kind": "item",
@@ -12278,8 +12311,11 @@
       "id": 8096,
       "name": "Пистолет сверхкрупного калибра (плохое)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 198,
+      "sha256": "6dc2fc54c61773c7ee58a85e3d6101f69ab97b0f35f6cd4997457e2103f7a026",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8096/icon/6dc2fc54c61773c7ee58a85e3d6101f69ab97b0f35f6cd4997457e2103f7a026.webp"
     },
     {
       "kind": "item",
@@ -20523,7 +20559,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1487,
+    "publishedSlots": 1499,
     "readySlots": 0,
     "totalSlots": 1848
   }
