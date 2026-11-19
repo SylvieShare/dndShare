@@ -1,0 +1,267 @@
+{
+  "batch": 155,
+  "sourceId": 3,
+  "system": "Cyberpunk RED",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-155",
+  "assets": [
+    {
+      "key": "item-7856-icon",
+      "target": {
+        "kind": "item",
+        "id": 7856,
+        "typeId": 29,
+        "name": "Агент"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: slate-grey personal AI pocket communicator, pale cyan screen with simple assistant silhouette and one ochre hardware button",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a5b7a839-6441-4b56-b7ac-dbc0d147b702.png",
+      "original": "originals/item-7856.png",
+      "final": "final/item-7856.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "b8ba9712af508c5e0ec684518158c7e6f9272c6b9ff16e823023b0f7359146be",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "03c164beead9adc604e89bfe2357835b50a78de7ab25a2a7950635df6d6a71bc",
+      "bytes": 12166,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Contact sheet inspected on light and dark backgrounds at 128px and 64px; distinct subject, clear silhouette, correct framing and transparent exterior.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50598,
+        "objectKey": "system-item-media/v1/items/7856/icon/03c164beead9adc604e89bfe2357835b50a78de7ab25a2a7950635df6d6a71bc.webp",
+        "fileSize": 12166
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7856/icon/03c164beead9adc604e89bfe2357835b50a78de7ab25a2a7950635df6d6a71bc.webp"
+    },
+    {
+      "key": "item-7857-icon",
+      "target": {
+        "kind": "item",
+        "id": 7857,
+        "typeId": 29,
+        "name": "Пневмошприц"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: ivory and teal medical airhypo with a capped rounded nozzle, squat enclosed cartridge, clean silhouette",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f58fca06-1f2c-479c-be00-7e154d74e9b6.png",
+      "original": "originals/item-7857.png",
+      "final": "final/item-7857.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "8a43bc613fcb7078ef235189fc8062849c21728457f963de98b7cb9bfaa5af69",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "aacf87034581defd6310921b71d75e33885265be2765795eee0fd14914296cb6",
+      "bytes": 11524,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Contact sheet inspected on light and dark backgrounds at 128px and 64px; distinct subject, clear silhouette, correct framing and transparent exterior.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50599,
+        "objectKey": "system-item-media/v1/items/7857/icon/aacf87034581defd6310921b71d75e33885265be2765795eee0fd14914296cb6.webp",
+        "fileSize": 11524
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7857/icon/aacf87034581defd6310921b71d75e33885265be2765795eee0fd14914296cb6.webp"
+    },
+    {
+      "key": "item-7858-icon",
+      "target": {
+        "kind": "item",
+        "id": 7858,
+        "typeId": 29,
+        "name": "Антисмоговый респиратор"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: olive anti-smog respirator, black face seal and matching twin teal-grey filter pods, no wearer",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c5d3669f-c007-498f-b208-1f164be9acd1.png",
+      "original": "originals/item-7858.png",
+      "final": "final/item-7858.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "87026c25d3cb31f28f58022ac1c526a697c759da4a7a6ec9fdcdace7e198cadf",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "52fca795839e6d1b21635e477c9d2dfd745e56df493d9a9a220d8ea38326e8dc",
+      "bytes": 16040,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Contact sheet inspected on light and dark backgrounds at 128px and 64px; distinct subject, clear silhouette, correct framing and transparent exterior.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50600,
+        "objectKey": "system-item-media/v1/items/7858/icon/52fca795839e6d1b21635e477c9d2dfd745e56df493d9a9a220d8ea38326e8dc.webp",
+        "fileSize": 16040
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7858/icon/52fca795839e6d1b21635e477c9d2dfd745e56df493d9a9a220d8ea38326e8dc.webp"
+    },
+    {
+      "key": "item-7859-icon",
+      "target": {
+        "kind": "item",
+        "id": 7859,
+        "typeId": 29,
+        "name": "Диктофон"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: graphite handheld audio recorder with twin silver microphone tips, a red recording button and small teal waveform display",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a6adcc35-c5fc-4e11-b32b-9ee3899bac79.png",
+      "original": "originals/item-7859.png",
+      "final": "final/item-7859.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "1909e9eb4bb49dcf53473630c1925fa6784ad3bb0bbd89ef1e6c9cb565265364",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "2f31ae1abee51ed77d8e31d732ab711a74b0e2f6e2c3ef016e8f90b08614f747",
+      "bytes": 12338,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Contact sheet inspected on light and dark backgrounds at 128px and 64px; distinct subject, clear silhouette, correct framing and transparent exterior.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50601,
+        "objectKey": "system-item-media/v1/items/7859/icon/2f31ae1abee51ed77d8e31d732ab711a74b0e2f6e2c3ef016e8f90b08614f747.webp",
+        "fileSize": 12338
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7859/icon/2f31ae1abee51ed77d8e31d732ab711a74b0e2f6e2c3ef016e8f90b08614f747.webp"
+    },
+    {
+      "key": "item-7860-icon",
+      "target": {
+        "kind": "item",
+        "id": 7860,
+        "typeId": 29,
+        "name": "Противошумные наушники"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: orange-trimmed graphite padded protective ear defenders, sturdy adjustable headband and two chunky sealed cups",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-568cc06e-95eb-46ca-82ad-8d6749f06aeb.png",
+      "original": "originals/item-7860.png",
+      "final": "final/item-7860.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "1cbed7c14d0c2025a165704540dbad20475eb97bb784eacbf105de180b800156",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "701ccccc51f7ce55f9d73e8fd45d53ca8395092450f28a0f3bf85d8c49f7f767",
+      "bytes": 19246,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Contact sheet inspected on light and dark backgrounds at 128px and 64px; distinct subject, clear silhouette, correct framing and transparent exterior.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50602,
+        "objectKey": "system-item-media/v1/items/7860/icon/701ccccc51f7ce55f9d73e8fd45d53ca8395092450f28a0f3bf85d8c49f7f767.webp",
+        "fileSize": 19246
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7860/icon/701ccccc51f7ce55f9d73e8fd45d53ca8395092450f28a0f3bf85d8c49f7f767.webp"
+    },
+    {
+      "key": "item-7861-icon",
+      "target": {
+        "kind": "item",
+        "id": 7861,
+        "typeId": 29,
+        "name": "Бинокль"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: compact graphite binoculars, two aligned optical barrels, teal glass and textured rubber grips",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0cea525a-4a35-4c5e-b9d9-ac0296856482.png",
+      "original": "originals/item-7861.png",
+      "final": "final/item-7861.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "79259daf5a8d30255e471ba070d64a657bc4241ca55089641937f5ca86741415",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "a42df58ede05b6e35518f9b255d5c02036d1417e388ef93a2808e53a4c3a4b4a",
+      "bytes": 15084,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Contact sheet inspected on light and dark backgrounds at 128px and 64px; distinct subject, clear silhouette, correct framing and transparent exterior.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50603,
+        "objectKey": "system-item-media/v1/items/7861/icon/a42df58ede05b6e35518f9b255d5c02036d1417e388ef93a2808e53a4c3a4b4a.webp",
+        "fileSize": 15084
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7861/icon/a42df58ede05b6e35518f9b255d5c02036d1417e388ef93a2808e53a4c3a4b4a.webp"
+    }
+  ]
+}

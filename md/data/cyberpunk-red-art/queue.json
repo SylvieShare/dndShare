@@ -6224,8 +6224,11 @@
       "id": 7856,
       "name": "Агент",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 155,
+      "sha256": "03c164beead9adc604e89bfe2357835b50a78de7ab25a2a7950635df6d6a71bc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7856/icon/03c164beead9adc604e89bfe2357835b50a78de7ab25a2a7950635df6d6a71bc.webp"
     },
     {
       "kind": "item",
@@ -6243,8 +6246,11 @@
       "id": 7857,
       "name": "Пневмошприц",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 155,
+      "sha256": "aacf87034581defd6310921b71d75e33885265be2765795eee0fd14914296cb6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7857/icon/aacf87034581defd6310921b71d75e33885265be2765795eee0fd14914296cb6.webp"
     },
     {
       "kind": "item",
@@ -6262,8 +6268,11 @@
       "id": 7858,
       "name": "Антисмоговый респиратор",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 155,
+      "sha256": "52fca795839e6d1b21635e477c9d2dfd745e56df493d9a9a220d8ea38326e8dc",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7858/icon/52fca795839e6d1b21635e477c9d2dfd745e56df493d9a9a220d8ea38326e8dc.webp"
     },
     {
       "kind": "item",
@@ -6281,8 +6290,11 @@
       "id": 7859,
       "name": "Диктофон",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 155,
+      "sha256": "2f31ae1abee51ed77d8e31d732ab711a74b0e2f6e2c3ef016e8f90b08614f747",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7859/icon/2f31ae1abee51ed77d8e31d732ab711a74b0e2f6e2c3ef016e8f90b08614f747.webp"
     },
     {
       "kind": "item",
@@ -6300,8 +6312,11 @@
       "id": 7860,
       "name": "Противошумные наушники",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 155,
+      "sha256": "701ccccc51f7ce55f9d73e8fd45d53ca8395092450f28a0f3bf85d8c49f7f767",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7860/icon/701ccccc51f7ce55f9d73e8fd45d53ca8395092450f28a0f3bf85d8c49f7f767.webp"
     },
     {
       "kind": "item",
@@ -6319,8 +6334,11 @@
       "id": 7861,
       "name": "Бинокль",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 155,
+      "sha256": "a42df58ede05b6e35518f9b255d5c02036d1417e388ef93a2808e53a4c3a4b4a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7861/icon/a42df58ede05b6e35518f9b255d5c02036d1417e388ef93a2808e53a4c3a4b4a.webp"
     },
     {
       "kind": "item",
@@ -18993,7 +19011,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 977,
+    "publishedSlots": 983,
     "readySlots": 0,
     "totalSlots": 1848
   }
