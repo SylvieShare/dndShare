@@ -4392,8 +4392,11 @@
       "id": 7731,
       "name": "Инородное тело (голова)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 200,
+      "sha256": "815d5435080f625a793acf527afe6b517d467726d3a5e8be312e6c43f63a2f18",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7731/icon/815d5435080f625a793acf527afe6b517d467726d3a5e8be312e6c43f63a2f18.webp"
     },
     {
       "kind": "item",
@@ -4411,8 +4414,11 @@
       "id": 7732,
       "name": "Потеря уха",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 200,
+      "sha256": "ed7680e256f6c6beb30192bea6c69a77b20be8a84adcd7ba3385a1229960a3c0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7732/icon/ed7680e256f6c6beb30192bea6c69a77b20be8a84adcd7ba3385a1229960a3c0.webp"
     },
     {
       "kind": "item",
@@ -4430,8 +4436,11 @@
       "id": 7733,
       "name": "Потеря глаза",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 200,
+      "sha256": "358608dfbf915c516165427959f67d4eb9a7396c1b770be08aff31846ce75af2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7733/icon/358608dfbf915c516165427959f67d4eb9a7396c1b770be08aff31846ce75af2.webp"
     },
     {
       "kind": "item",
@@ -4449,8 +4458,11 @@
       "id": 7734,
       "name": "Травма шеи",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 200,
+      "sha256": "3c8c8f99309e32b18e5f206b145f17539b56153f4dfb6a869c1db2ade3836e66",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7734/icon/3c8c8f99309e32b18e5f206b145f17539b56153f4dfb6a869c1db2ade3836e66.webp"
     },
     {
       "kind": "item",
@@ -5040,8 +5052,11 @@
       "id": 7761,
       "name": "Exposed Covering (Cyber Arm)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 200,
+      "sha256": "aac33c30aa691936c7fb9fb47ce344f7b4fe1835d374023f70784a349de0764b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7761/icon/aac33c30aa691936c7fb9fb47ce344f7b4fe1835d374023f70784a349de0764b.webp"
     },
     {
       "kind": "item",
@@ -5059,8 +5074,11 @@
       "id": 7762,
       "name": "Exposed Covering (Cyber Leg)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 200,
+      "sha256": "f575ca530f52e8ddcb822d16ce53debe757b833b4cdc988767e8bce77a99bb52",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7762/icon/f575ca530f52e8ddcb822d16ce53debe757b833b4cdc988767e8bce77a99bb52.webp"
     },
     {
       "kind": "item",
@@ -5496,8 +5514,11 @@
       "id": 7782,
       "name": "Мясная рука",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 200,
+      "sha256": "737f2a08c863cd11083cadd35efc5af34cc1677ccfe9c528f3ed9447a933e7bb",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7782/icon/737f2a08c863cd11083cadd35efc5af34cc1677ccfe9c528f3ed9447a933e7bb.webp"
     },
     {
       "kind": "item",
@@ -5515,8 +5536,11 @@
       "id": 7783,
       "name": "Meat Foot",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 200,
+      "sha256": "3de287400e306c12e23a8fb6902e716780344569bf278f03c2e22ee3e5661201",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7783/icon/3de287400e306c12e23a8fb6902e716780344569bf278f03c2e22ee3e5661201.webp"
     },
     {
       "kind": "item",
@@ -5534,8 +5558,11 @@
       "id": 7784,
       "name": "Meat Hand",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 200,
+      "sha256": "d289566f4d9a2ae004a20259baa5aa314e0438d29e4fd9ba1e7ad7588a627aaf",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7784/icon/d289566f4d9a2ae004a20259baa5aa314e0438d29e4fd9ba1e7ad7588a627aaf.webp"
     },
     {
       "kind": "item",
@@ -5553,8 +5580,11 @@
       "id": 7785,
       "name": "Мясная нога",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 200,
+      "sha256": "3747c5f4b8b5fddfb1d605bb3b963b5809e08684c3027c808e681b3ae48af635",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7785/icon/3747c5f4b8b5fddfb1d605bb3b963b5809e08684c3027c808e681b3ae48af635.webp"
     },
     {
       "kind": "item",
@@ -5572,8 +5602,11 @@
       "id": 7786,
       "name": "Киберрука медицинского назначения",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 200,
+      "sha256": "a2fe3689fc54fee86db21c27414265203746ff906b3d7d4224a12881457a3a92",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7786/icon/a2fe3689fc54fee86db21c27414265203746ff906b3d7d4224a12881457a3a92.webp"
     },
     {
       "kind": "item",
@@ -5591,8 +5624,11 @@
       "id": 7787,
       "name": "Кибернога медицинского назначения",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 200,
+      "sha256": "302a06b0fed28a7afc20016dd9682e992a616a543622c379056bb33fb7a0bcbe",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7787/icon/302a06b0fed28a7afc20016dd9682e992a616a543622c379056bb33fb7a0bcbe.webp"
     },
     {
       "kind": "item",
@@ -20595,7 +20631,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1511,
+    "publishedSlots": 1523,
     "readySlots": 0,
     "totalSlots": 1848
   }
