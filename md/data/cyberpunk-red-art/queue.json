@@ -9017,8 +9017,11 @@
       "id": 7949,
       "name": "Барабанный магазин (снайперская винтовка)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 185,
+      "sha256": "a3d1ba7e5ae80bd02f9a5e1d5e8af41b5be7d7fadf4768ffaec583ec60bb2f6e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7949/icon/a3d1ba7e5ae80bd02f9a5e1d5e8af41b5be7d7fadf4768ffaec583ec60bb2f6e.webp"
     },
     {
       "kind": "item",
@@ -9036,8 +9039,11 @@
       "id": 7950,
       "name": "Барабанный магазин (пистолет сверхкрупного калибра)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 185,
+      "sha256": "a00ffaed24050583c2f37ed4f63de7fa5759fbd1cb1f9844fc54dd3f783722c6",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7950/icon/a00ffaed24050583c2f37ed4f63de7fa5759fbd1cb1f9844fc54dd3f783722c6.webp"
     },
     {
       "kind": "item",
@@ -9055,8 +9061,11 @@
       "id": 7951,
       "name": "Улучшенная интеграция разъёмов интерфейса",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 185,
+      "sha256": "d7c3550b406d0fa9e6531cad8df4438cba94389363aecc4f5cd97d3ec8149c19",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7951/icon/d7c3550b406d0fa9e6531cad8df4438cba94389363aecc4f5cd97d3ec8149c19.webp"
     },
     {
       "kind": "item",
@@ -9074,8 +9083,11 @@
       "id": 7952,
       "name": "Увеличенный магазин (штурмовая винтовка)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 185,
+      "sha256": "d9d7a4c15374c614706e5fbb50a73bf6d7f14dd4864f0ac754567cc9ec7535a1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7952/icon/d9d7a4c15374c614706e5fbb50a73bf6d7f14dd4864f0ac754567cc9ec7535a1.webp"
     },
     {
       "kind": "item",
@@ -9093,8 +9105,11 @@
       "id": 7953,
       "name": "Увеличенный магазин (гранатомёт)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 185,
+      "sha256": "ad546cfc050a7fe4c739d3ec1669ecb60878072ce4228cc6dfacceb345a2158e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7953/icon/ad546cfc050a7fe4c739d3ec1669ecb60878072ce4228cc6dfacceb345a2158e.webp"
     },
     {
       "kind": "item",
@@ -9112,8 +9127,11 @@
       "id": 7954,
       "name": "Увеличенный магазин (пистолет крупного калибра)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 185,
+      "sha256": "c590432e8c50b5399e5ff8f42f179eb30e6c67a8bf522091edb475860be01e65",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7954/icon/c590432e8c50b5399e5ff8f42f179eb30e6c67a8bf522091edb475860be01e65.webp"
     },
     {
       "kind": "item",
@@ -9131,8 +9149,11 @@
       "id": 7955,
       "name": "Увеличенный магазин (ПП крупного калибра)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 185,
+      "sha256": "c47dab70b9d975c22f5b2a28ac6288c538ea65fa622fa96fe747e4e6146bf013",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7955/icon/c47dab70b9d975c22f5b2a28ac6288c538ea65fa622fa96fe747e4e6146bf013.webp"
     },
     {
       "kind": "item",
@@ -9150,8 +9171,11 @@
       "id": 7956,
       "name": "Увеличенный магазин (пистолет среднего калибра)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 185,
+      "sha256": "1982f37abbd11a679685935d5d092c830f85a642b59a7a7122f8ebeb9b1315d1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7956/icon/1982f37abbd11a679685935d5d092c830f85a642b59a7a7122f8ebeb9b1315d1.webp"
     },
     {
       "kind": "item",
@@ -9169,8 +9193,11 @@
       "id": 7957,
       "name": "Увеличенный магазин (ракетница)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 185,
+      "sha256": "b6d5782dcb81fff69f356b2556e9dfc78778274fec8f610d6882b09f111d2223",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7957/icon/b6d5782dcb81fff69f356b2556e9dfc78778274fec8f610d6882b09f111d2223.webp"
     },
     {
       "kind": "item",
@@ -9188,8 +9215,11 @@
       "id": 7958,
       "name": "Увеличенный магазин (дробовик)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 185,
+      "sha256": "453305471d20972187fb30fcf3e46ab444422e74c63fbba9a5bed354f82c582b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7958/icon/453305471d20972187fb30fcf3e46ab444422e74c63fbba9a5bed354f82c582b.webp"
     },
     {
       "kind": "item",
@@ -9207,8 +9237,11 @@
       "id": 7959,
       "name": "Увеличенный магазин (ПП)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 185,
+      "sha256": "84b12a635b4e1da8787e9876968269cd358df1d62de8d0def558f5a08aa3aa6e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7959/icon/84b12a635b4e1da8787e9876968269cd358df1d62de8d0def558f5a08aa3aa6e.webp"
     },
     {
       "kind": "item",
@@ -9226,8 +9259,11 @@
       "id": 7960,
       "name": "Увеличенный магазин (снайперская винтовка)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 185,
+      "sha256": "bea85e8515d53b7e66312f2a931673b951e98f84495d92509be67637d45b7c35",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7960/icon/bea85e8515d53b7e66312f2a931673b951e98f84495d92509be67637d45b7c35.webp"
     },
     {
       "kind": "item",
@@ -20055,7 +20091,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1331,
+    "publishedSlots": 1343,
     "readySlots": 0,
     "totalSlots": 1848
   }

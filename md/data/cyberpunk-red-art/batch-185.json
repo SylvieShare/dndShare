@@ -1,0 +1,525 @@
+{
+  "batch": 185,
+  "sourceId": 3,
+  "system": "Cyberpunk RED",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-185",
+  "assets": [
+    {
+      "key": "item-7949-icon",
+      "target": {
+        "kind": "item",
+        "id": 7949,
+        "typeId": 35,
+        "name": "Барабанный магазин (снайперская винтовка)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Drum Magazine (Sniper Rifle)\" (Барабанный магазин (снайперская винтовка)), the \"itemupgrade-drum-magazine-sniper-rifle\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-58841898-b426-4fd8-8009-b8eabc9c2bd8.png",
+      "original": "originals/item-7949.png",
+      "final": "final/item-7949.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "e7cd24369e3005d0f90aba1ce1d20c46e3d9b2a83c685e66bb5ca1a88c8587e1",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "a3d1ba7e5ae80bd02f9a5e1d5e8af41b5be7d7fadf4768ffaec583ec60bb2f6e",
+      "bytes": 15196,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50952,
+        "objectKey": "system-item-media/v1/items/7949/icon/a3d1ba7e5ae80bd02f9a5e1d5e8af41b5be7d7fadf4768ffaec583ec60bb2f6e.webp",
+        "fileSize": 15196
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7949/icon/a3d1ba7e5ae80bd02f9a5e1d5e8af41b5be7d7fadf4768ffaec583ec60bb2f6e.webp"
+    },
+    {
+      "key": "item-7950-icon",
+      "target": {
+        "kind": "item",
+        "id": 7950,
+        "typeId": 35,
+        "name": "Барабанный магазин (пистолет сверхкрупного калибра)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Drum Magazine (Very Heavy Pistol)\" (Барабанный магазин (пистолет сверхкрупного калибра)), the \"itemupgrade-drum-magazine-very-heavy-pistol\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-769a95b1-4351-4d9e-b01f-38662977b07c.png",
+      "original": "originals/item-7950.png",
+      "final": "final/item-7950.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "c4ce1bfc2ec7fee5600ca041badffbb1df4994cb569f9f23b5ef2b7c5b946f4b",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "a00ffaed24050583c2f37ed4f63de7fa5759fbd1cb1f9844fc54dd3f783722c6",
+      "bytes": 12078,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50953,
+        "objectKey": "system-item-media/v1/items/7950/icon/a00ffaed24050583c2f37ed4f63de7fa5759fbd1cb1f9844fc54dd3f783722c6.webp",
+        "fileSize": 12078
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7950/icon/a00ffaed24050583c2f37ed4f63de7fa5759fbd1cb1f9844fc54dd3f783722c6.webp"
+    },
+    {
+      "key": "item-7951-icon",
+      "target": {
+        "kind": "item",
+        "id": 7951,
+        "typeId": 35,
+        "name": "Улучшенная интеграция разъёмов интерфейса"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Enhanced Interface Plug Integration\" (Улучшенная интеграция разъёмов интерфейса), the \"itemupgrade-enhanced-interface-plug-integration\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f30d7168-47e0-41ba-93de-5ef85af09740.png",
+      "original": "originals/item-7951.png",
+      "final": "final/item-7951.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "b95f2f783d5d096b8fc3f233facbd78f391c8ba56e7f22e7fbd309008e391d02",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "d7c3550b406d0fa9e6531cad8df4438cba94389363aecc4f5cd97d3ec8149c19",
+      "bytes": 13192,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50954,
+        "objectKey": "system-item-media/v1/items/7951/icon/d7c3550b406d0fa9e6531cad8df4438cba94389363aecc4f5cd97d3ec8149c19.webp",
+        "fileSize": 13192
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7951/icon/d7c3550b406d0fa9e6531cad8df4438cba94389363aecc4f5cd97d3ec8149c19.webp"
+    },
+    {
+      "key": "item-7952-icon",
+      "target": {
+        "kind": "item",
+        "id": 7952,
+        "typeId": 35,
+        "name": "Увеличенный магазин (штурмовая винтовка)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Extended Magazine (Assault Rifle) — visual reference for the subject only: A single CLOSED elongated protective equipment pouch on a worn storage bench. Render only the defining object, head or emblem as a compact isolated icon; omit the reference scenery\" (Увеличенный магазин (штурмовая винтовка)), the \"itemupgrade-extended-magazine-assault-rifle\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-adbc6ff9-e0f7-4455-b3ec-b40c26616006.png",
+      "original": "originals/item-7952.png",
+      "final": "final/item-7952.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "ce61227d812bd8605cd0d3444dca204223f0d462b8d16a8a6808ca9bc7357945",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "d9d7a4c15374c614706e5fbb50a73bf6d7f14dd4864f0ac754567cc9ec7535a1",
+      "bytes": 11056,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50955,
+        "objectKey": "system-item-media/v1/items/7952/icon/d9d7a4c15374c614706e5fbb50a73bf6d7f14dd4864f0ac754567cc9ec7535a1.webp",
+        "fileSize": 11056
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7952/icon/d9d7a4c15374c614706e5fbb50a73bf6d7f14dd4864f0ac754567cc9ec7535a1.webp"
+    },
+    {
+      "key": "item-7953-icon",
+      "target": {
+        "kind": "item",
+        "id": 7953,
+        "typeId": 35,
+        "name": "Увеличенный магазин (гранатомёт)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: An unopened ordinary shop parcel representing Увеличенный магазин (гранатомёт) in a fictional RPG inventory. Only the external shipping package, flat cream rectangular case with an orange carry loop and one circular pictogram. No actual weapon, magazine, projectile, measurements, internals, exploded view, text or diagram.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-21a23fed-55a3-4481-8920-1b4d58108c4c.png",
+      "original": "originals/item-7953.png",
+      "final": "final/item-7953.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "284a708fe73ac0ffded69da6f69329536e910cd3c7e2cd776b1d7fd89c5371ed",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "ad546cfc050a7fe4c739d3ec1669ecb60878072ce4228cc6dfacceb345a2158e",
+      "bytes": 12654,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50956,
+        "objectKey": "system-item-media/v1/items/7953/icon/ad546cfc050a7fe4c739d3ec1669ecb60878072ce4228cc6dfacceb345a2158e.webp",
+        "fileSize": 12654
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7953/icon/ad546cfc050a7fe4c739d3ec1669ecb60878072ce4228cc6dfacceb345a2158e.webp"
+    },
+    {
+      "key": "item-7954-icon",
+      "target": {
+        "kind": "item",
+        "id": 7954,
+        "typeId": 35,
+        "name": "Увеличенный магазин (пистолет крупного калибра)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Extended Magazine (Heavy Pistol)\" (Увеличенный магазин (пистолет крупного калибра)), the \"itemupgrade-extended-magazine-heavy-pistol\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f1a415e4-006f-4454-bad8-94b89212b2aa.png",
+      "original": "originals/item-7954.png",
+      "final": "final/item-7954.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "baf23bebd2c4cb3ec8879f828c4a68ab4d7485eaaf403f695a4abfef7dde7e77",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "c590432e8c50b5399e5ff8f42f179eb30e6c67a8bf522091edb475860be01e65",
+      "bytes": 9350,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50957,
+        "objectKey": "system-item-media/v1/items/7954/icon/c590432e8c50b5399e5ff8f42f179eb30e6c67a8bf522091edb475860be01e65.webp",
+        "fileSize": 9350
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7954/icon/c590432e8c50b5399e5ff8f42f179eb30e6c67a8bf522091edb475860be01e65.webp"
+    },
+    {
+      "key": "item-7955-icon",
+      "target": {
+        "kind": "item",
+        "id": 7955,
+        "typeId": 35,
+        "name": "Увеличенный магазин (ПП крупного калибра)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: An unopened ordinary shop parcel representing Увеличенный магазин (ПП крупного калибра) in a fictional RPG inventory. Only the external shipping package, long dark plum equipment carton with yellow edge plates and a pale triangular pictogram. No actual weapon, magazine, projectile, measurements, internals, exploded view, text or diagram.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-292219dc-71c2-45b4-8719-446e0cbe080e.png",
+      "original": "originals/item-7955.png",
+      "final": "final/item-7955.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "7690a063d5ed87913eb0a9a5c4e79fc99649f3c2d5c87a49a9cd0e541342bd80",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "c47dab70b9d975c22f5b2a28ac6288c538ea65fa622fa96fe747e4e6146bf013",
+      "bytes": 10262,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50958,
+        "objectKey": "system-item-media/v1/items/7955/icon/c47dab70b9d975c22f5b2a28ac6288c538ea65fa622fa96fe747e4e6146bf013.webp",
+        "fileSize": 10262
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7955/icon/c47dab70b9d975c22f5b2a28ac6288c538ea65fa622fa96fe747e4e6146bf013.webp"
+    },
+    {
+      "key": "item-7956-icon",
+      "target": {
+        "kind": "item",
+        "id": 7956,
+        "typeId": 35,
+        "name": "Увеличенный магазин (пистолет среднего калибра)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Extended Magazine (Medium Pistol)\" (Увеличенный магазин (пистолет среднего калибра)), the \"itemupgrade-extended-magazine-medium-pistol\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-63847560-a528-48eb-95c1-6378d8f3a1a6.png",
+      "original": "originals/item-7956.png",
+      "final": "final/item-7956.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "0b5eb162b0afc39995bf854094d5c368f847bdcf6844215bedb1094b807009fe",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "1982f37abbd11a679685935d5d092c830f85a642b59a7a7122f8ebeb9b1315d1",
+      "bytes": 9478,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50959,
+        "objectKey": "system-item-media/v1/items/7956/icon/1982f37abbd11a679685935d5d092c830f85a642b59a7a7122f8ebeb9b1315d1.webp",
+        "fileSize": 9478
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7956/icon/1982f37abbd11a679685935d5d092c830f85a642b59a7a7122f8ebeb9b1315d1.webp"
+    },
+    {
+      "key": "item-7957-icon",
+      "target": {
+        "kind": "item",
+        "id": 7957,
+        "typeId": 35,
+        "name": "Увеличенный магазин (ракетница)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Extended Magazine (Rocket Launcher)\" (Увеличенный магазин (ракетница)), the \"itemupgrade-extended-magazine-rocket-launcher\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-67d4e9ff-2b60-4aab-8246-4867475ab4b0.png",
+      "original": "originals/item-7957.png",
+      "final": "final/item-7957.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "4d2bc632de526d43a950499fd3af106772a30ee0db2a34e427d43363b12a3e0c",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "b6d5782dcb81fff69f356b2556e9dfc78778274fec8f610d6882b09f111d2223",
+      "bytes": 17662,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50960,
+        "objectKey": "system-item-media/v1/items/7957/icon/b6d5782dcb81fff69f356b2556e9dfc78778274fec8f610d6882b09f111d2223.webp",
+        "fileSize": 17662
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7957/icon/b6d5782dcb81fff69f356b2556e9dfc78778274fec8f610d6882b09f111d2223.webp"
+    },
+    {
+      "key": "item-7958-icon",
+      "target": {
+        "kind": "item",
+        "id": 7958,
+        "typeId": 35,
+        "name": "Увеличенный магазин (дробовик)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Extended Magazine (Shotgun) — visual reference for the subject only: A SINGLE fictional cyberpunk EXTENDED MAGAZINE for a shotgun, thick broad curved box body. Render only the defining object, head or emblem as a compact isolated icon; omit the reference scenery\" (Увеличенный магазин (дробовик)), the \"itemupgrade-extended-magazine-shotgun\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9e90a9b7-99cd-447c-8a8b-94c2bb1fafd8.png",
+      "original": "originals/item-7958.png",
+      "final": "final/item-7958.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "02a18c0fbfd5bd74e3e0c18fdddd84446ddab029245e2f95f3ed0e562412246e",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "453305471d20972187fb30fcf3e46ab444422e74c63fbba9a5bed354f82c582b",
+      "bytes": 12430,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50961,
+        "objectKey": "system-item-media/v1/items/7958/icon/453305471d20972187fb30fcf3e46ab444422e74c63fbba9a5bed354f82c582b.webp",
+        "fileSize": 12430
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7958/icon/453305471d20972187fb30fcf3e46ab444422e74c63fbba9a5bed354f82c582b.webp"
+    },
+    {
+      "key": "item-7959-icon",
+      "target": {
+        "kind": "item",
+        "id": 7959,
+        "typeId": 35,
+        "name": "Увеличенный магазин (ПП)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Extended Magazine (SMG)\" (Увеличенный магазин (ПП)), the \"itemupgrade-extended-magazine-smg\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e9ea2d9c-60ca-4b1b-b8ac-1eaecf966e1c.png",
+      "original": "originals/item-7959.png",
+      "final": "final/item-7959.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "ba0567309966d1381619e4b0f0dfe49448c9f2bdcb4c35dcf2db0488458b0378",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "84b12a635b4e1da8787e9876968269cd358df1d62de8d0def558f5a08aa3aa6e",
+      "bytes": 8776,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50962,
+        "objectKey": "system-item-media/v1/items/7959/icon/84b12a635b4e1da8787e9876968269cd358df1d62de8d0def558f5a08aa3aa6e.webp",
+        "fileSize": 8776
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7959/icon/84b12a635b4e1da8787e9876968269cd358df1d62de8d0def558f5a08aa3aa6e.webp"
+    },
+    {
+      "key": "item-7960-icon",
+      "target": {
+        "kind": "item",
+        "id": 7960,
+        "typeId": 35,
+        "name": "Увеличенный магазин (снайперская винтовка)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Extended Magazine (Sniper Rifle)\" (Увеличенный магазин (снайперская винтовка)), the \"itemupgrade-extended-magazine-sniper-rifle\" catalogue variant. A bold original design faithful to the named variant: for clothing render the named garment or accessory without a wearer in its distinctive fashion style, for cyberware depict a clean standalone manufactured prosthesis or accessory, for programs and abstract records render a distinctive symbolic 2045 emblem. Clearly differentiated silhouette, value grouping and restrained colors matched to its function, good at small size.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-cab1699b-f5b6-4382-b5d2-261e8abd1d0e.png",
+      "original": "originals/item-7960.png",
+      "final": "final/item-7960.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "fa569655ef3155d7e043b6c87f1de15987018947a8d8caed2dc7f467703a76ee",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "bea85e8515d53b7e66312f2a931673b951e98f84495d92509be67637d45b7c35",
+      "bytes": 11232,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50963,
+        "objectKey": "system-item-media/v1/items/7960/icon/bea85e8515d53b7e66312f2a931673b951e98f84495d92509be67637d45b7c35.webp",
+        "fileSize": 11232
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7960/icon/bea85e8515d53b7e66312f2a931673b951e98f84495d92509be67637d45b7c35.webp"
+    }
+  ]
+}
