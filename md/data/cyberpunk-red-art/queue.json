@@ -1532,8 +1532,11 @@
       "id": 7601,
       "name": "Для пистолета сверхкрупного калибра (экспансивный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 164,
+      "sha256": "758bf626664926112c6bd67a69fc37190adef9ce283f4e5db421970e89f50c34",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7601/icon/758bf626664926112c6bd67a69fc37190adef9ce283f4e5db421970e89f50c34.webp"
     },
     {
       "kind": "item",
@@ -1551,8 +1554,11 @@
       "id": 7602,
       "name": "Для пистолета сверхкрупного калибра (зажигательный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 164,
+      "sha256": "4ca1514f72862ae8b15c8775a7b39ef010638a552e4bcbcf5ea09a70166cb9c1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7602/icon/4ca1514f72862ae8b15c8775a7b39ef010638a552e4bcbcf5ea09a70166cb9c1.webp"
     },
     {
       "kind": "item",
@@ -1570,8 +1576,11 @@
       "id": 7603,
       "name": "Для пистолета сверхкрупного калибра (резиновый)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 164,
+      "sha256": "67019b6e218ffdb1e32cd3475568b02f076837baa720534ee6c32c5affda3553",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7603/icon/67019b6e218ffdb1e32cd3475568b02f076837baa720534ee6c32c5affda3553.webp"
     },
     {
       "kind": "item",
@@ -1589,8 +1598,11 @@
       "id": 7604,
       "name": "Для пистолета сверхкрупного калибра (умный)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 164,
+      "sha256": "451f188ef93c99cd026a68422bede0fa3ba7037ce081e4e99aacd539e9cf5915",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7604/icon/451f188ef93c99cd026a68422bede0fa3ba7037ce081e4e99aacd539e9cf5915.webp"
     },
     {
       "kind": "item",
@@ -1608,8 +1620,11 @@
       "id": 7605,
       "name": "Комбинезон «Бодивейт»",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 164,
+      "sha256": "0943c57785fbeedd0dee5c4873904573324c684e175de610a39f4f43716e0dae",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7605/icon/0943c57785fbeedd0dee5c4873904573324c684e175de610a39f4f43716e0dae.webp"
     },
     {
       "kind": "item",
@@ -1627,8 +1642,11 @@
       "id": 7606,
       "name": "Пулестойкий щит",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 164,
+      "sha256": "b4e96e50d6ceb56251cd8524cc5d51f50665b654c9bb87d05259b60a7c4dd3be",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7606/icon/b4e96e50d6ceb56251cd8524cc5d51f50665b654c9bb87d05259b60a7c4dd3be.webp"
     },
     {
       "kind": "item",
@@ -1646,8 +1664,11 @@
       "id": 7607,
       "name": "Костюм сапёра",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 164,
+      "sha256": "0aa30ad73dfcb86b60d141a4a49b9c7e119bdf510a38822297e9bb357b6bdd32",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7607/icon/0aa30ad73dfcb86b60d141a4a49b9c7e119bdf510a38822297e9bb357b6bdd32.webp"
     },
     {
       "kind": "item",
@@ -1665,8 +1686,11 @@
       "id": 7608,
       "name": "Шлем сапёра",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 164,
+      "sha256": "550743db5f289d6c85695cc196a00ac23becccabda9eea604f0e7f67d604f88c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7608/icon/550743db5f289d6c85695cc196a00ac23becccabda9eea604f0e7f67d604f88c.webp"
     },
     {
       "kind": "item",
@@ -1684,8 +1708,11 @@
       "id": 7609,
       "name": "Тяжёлый бронекостюм",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 164,
+      "sha256": "95191e987666a08c89d929d0dc3361612f91e6a1b1039be7053c7dabeafefb36",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7609/icon/95191e987666a08c89d929d0dc3361612f91e6a1b1039be7053c7dabeafefb36.webp"
     },
     {
       "kind": "item",
@@ -1703,8 +1730,11 @@
       "id": 7610,
       "name": "Тяжёлый бронешлем",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 164,
+      "sha256": "911a91107409dce64f557b74fbfc718a29e303bfb869700b207d757f96ed409b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7610/icon/911a91107409dce64f557b74fbfc718a29e303bfb869700b207d757f96ed409b.webp"
     },
     {
       "kind": "item",
@@ -1722,8 +1752,11 @@
       "id": 7611,
       "name": "Кевларовый жилет",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 164,
+      "sha256": "592e07e0e6f7c2d6c6e0754793cec9782264cf875cf9486e1120b25e99725570",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7611/icon/592e07e0e6f7c2d6c6e0754793cec9782264cf875cf9486e1120b25e99725570.webp"
     },
     {
       "kind": "item",
@@ -1741,8 +1774,11 @@
       "id": 7612,
       "name": "Кевларовый шлем",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 164,
+      "sha256": "995a2d6999b39297e506a62a7d16ecd301940e808af75e78dc243556d343e302",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7612/icon/995a2d6999b39297e506a62a7d16ecd301940e808af75e78dc243556d343e302.webp"
     },
     {
       "kind": "item",
@@ -19299,7 +19335,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1079,
+    "publishedSlots": 1091,
     "readySlots": 0,
     "totalSlots": 1848
   }
