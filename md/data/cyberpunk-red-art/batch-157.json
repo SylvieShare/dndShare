@@ -1,0 +1,525 @@
+{
+  "batch": 157,
+  "sourceId": 3,
+  "system": "Cyberpunk RED",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-157",
+  "assets": [
+    {
+      "key": "item-7874-icon",
+      "target": {
+        "kind": "item",
+        "id": 7874,
+        "typeId": 29,
+        "name": "Питательный батончик"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Food Stick\" (Питательный батончик), inventory record gear-food-stick. Show the distinctive form and variant implied by the item name in the fictional Cyberpunk RED game; a single unmistakable object or a compact representative emblem for an intangible concept. For clothing use an unworn garment/accessory cutout in the named fashion style. For ammo use a sealed retail packet with a pictogram for the game effect. No instructions, internal cutaways, action scene or gore. Distinguish related items by silhouette, materials and a restrained accent hue.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-424d82ed-3e86-48f4-bbd4-49fb4880e95d.png",
+      "original": "originals/item-7874.png",
+      "final": "final/item-7874.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "57252462502795932f81292374a927ab6ba5cd5004e283f73e0e4371d3f53967",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "05bf3e220a6f2d2f3e07ec50f2be855643668eaa65bf0badf3f006ec7f5a139b",
+      "bytes": 10680,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50628,
+        "objectKey": "system-item-media/v1/items/7874/icon/05bf3e220a6f2d2f3e07ec50f2be855643668eaa65bf0badf3f006ec7f5a139b.webp",
+        "fileSize": 10680
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7874/icon/05bf3e220a6f2d2f3e07ec50f2be855643668eaa65bf0badf3f006ec7f5a139b.webp"
+    },
+    {
+      "key": "item-7875-icon",
+      "target": {
+        "kind": "item",
+        "id": 7875,
+        "typeId": 29,
+        "name": "Светящаяся краска"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Glow Paint\" (Светящаяся краска), inventory record gear-glow-paint. Show the distinctive form and variant implied by the item name in the fictional Cyberpunk RED game; a single unmistakable object or a compact representative emblem for an intangible concept. For clothing use an unworn garment/accessory cutout in the named fashion style. For ammo use a sealed retail packet with a pictogram for the game effect. No instructions, internal cutaways, action scene or gore. Distinguish related items by silhouette, materials and a restrained accent hue.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-14a617c4-91d3-4e5c-9697-72a65708a8e5.png",
+      "original": "originals/item-7875.png",
+      "final": "final/item-7875.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "62955adf2948902554aa2e4ca0a447832a6aeb72c0850fc040566e5eacd74ea7",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "28dec4be1bdb8c5f9fa1000c25e37795be2ea82b25ec7019cd5e342a0d701339",
+      "bytes": 9504,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50629,
+        "objectKey": "system-item-media/v1/items/7875/icon/28dec4be1bdb8c5f9fa1000c25e37795be2ea82b25ec7019cd5e342a0d701339.webp",
+        "fileSize": 9504
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7875/icon/28dec4be1bdb8c5f9fa1000c25e37795be2ea82b25ec7019cd5e342a0d701339.webp"
+    },
+    {
+      "key": "item-7876-icon",
+      "target": {
+        "kind": "item",
+        "id": 7876,
+        "typeId": 29,
+        "name": "Светящаяся палочка"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Glow Stick\" (Светящаяся палочка), inventory record gear-glow-stick. Show the distinctive form and variant implied by the item name in the fictional Cyberpunk RED game; a single unmistakable object or a compact representative emblem for an intangible concept. For clothing use an unworn garment/accessory cutout in the named fashion style. For ammo use a sealed retail packet with a pictogram for the game effect. No instructions, internal cutaways, action scene or gore. Distinguish related items by silhouette, materials and a restrained accent hue.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-55476638-2b9a-426f-a982-d3cedcf71434.png",
+      "original": "originals/item-7876.png",
+      "final": "final/item-7876.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "018f1c7e0551de2d9750ab80af3cd2f4b6b5abb7792d75d4cc47472e357395d9",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "ce72049dd00c389c09600041e857f35c20811241d2a1fc9a2cb294378183c228",
+      "bytes": 8752,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50630,
+        "objectKey": "system-item-media/v1/items/7876/icon/ce72049dd00c389c09600041e857f35c20811241d2a1fc9a2cb294378183c228.webp",
+        "fileSize": 8752
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7876/icon/ce72049dd00c389c09600041e857f35c20811241d2a1fc9a2cb294378183c228.webp"
+    },
+    {
+      "key": "item-7877-icon",
+      "target": {
+        "kind": "item",
+        "id": 7877,
+        "typeId": 29,
+        "name": "Крюк-кошка"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Grapple Gun\" (Крюк-кошка), inventory record gear-grapple-gun. Show the distinctive form and variant implied by the item name in the fictional Cyberpunk RED game; a single unmistakable object or a compact representative emblem for an intangible concept. For clothing use an unworn garment/accessory cutout in the named fashion style. For ammo use a sealed retail packet with a pictogram for the game effect. No instructions, internal cutaways, action scene or gore. Distinguish related items by silhouette, materials and a restrained accent hue.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2e3dd06f-f855-482b-90ae-b3d700edc0ea.png",
+      "original": "originals/item-7877.png",
+      "final": "final/item-7877.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "30da5f1a24a1a8e571506de1364bcc3c4500434cabecfa4592a70c4a2ccc2ddc",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "ddce209a8ab7c8be82594953cf7e45f521a999cc36e5828007d86f6cfd82bf9b",
+      "bytes": 12902,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50631,
+        "objectKey": "system-item-media/v1/items/7877/icon/ddce209a8ab7c8be82594953cf7e45f521a999cc36e5828007d86f6cfd82bf9b.webp",
+        "fileSize": 12902
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7877/icon/ddce209a8ab7c8be82594953cf7e45f521a999cc36e5828007d86f6cfd82bf9b.webp"
+    },
+    {
+      "key": "item-7878-icon",
+      "target": {
+        "kind": "item",
+        "id": 7878,
+        "typeId": 29,
+        "name": "Наручники"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Handcuffs\" (Наручники), inventory record gear-handcuffs. Show the distinctive form and variant implied by the item name in the fictional Cyberpunk RED game; a single unmistakable object or a compact representative emblem for an intangible concept. For clothing use an unworn garment/accessory cutout in the named fashion style. For ammo use a sealed retail packet with a pictogram for the game effect. No instructions, internal cutaways, action scene or gore. Distinguish related items by silhouette, materials and a restrained accent hue.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3b271bf9-8205-4991-abe2-d07f3d993750.png",
+      "original": "originals/item-7878.png",
+      "final": "final/item-7878.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "7d6e4895b30e5f624882a1e8c08060a5d135a5cf762e342d93c685996808997c",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "dfd64dc846f738cf5daa628da20a72f5e2d454b0c6c85c1a03598c04cb301d63",
+      "bytes": 14002,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50632,
+        "objectKey": "system-item-media/v1/items/7878/icon/dfd64dc846f738cf5daa628da20a72f5e2d454b0c6c85c1a03598c04cb301d63.webp",
+        "fileSize": 14002
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7878/icon/dfd64dc846f738cf5daa628da20a72f5e2d454b0c6c85c1a03598c04cb301d63.webp"
+    },
+    {
+      "key": "item-7879-icon",
+      "target": {
+        "kind": "item",
+        "id": 7879,
+        "typeId": 29,
+        "name": "Радиопеленгатор"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Homing Tracer\" (Радиопеленгатор), inventory record gear-homing-tracer. Show the distinctive form and variant implied by the item name in the fictional Cyberpunk RED game; a single unmistakable object or a compact representative emblem for an intangible concept. For clothing use an unworn garment/accessory cutout in the named fashion style. For ammo use a sealed retail packet with a pictogram for the game effect. No instructions, internal cutaways, action scene or gore. Distinguish related items by silhouette, materials and a restrained accent hue.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-af650b32-4255-474f-a1c0-d4924ca6731a.png",
+      "original": "originals/item-7879.png",
+      "final": "final/item-7879.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "a47c39260b304f73201f1851e355ffe4d83ab0e0a54f2038eda7e79c60c827a9",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "1a061c26a78d79c5300c04b6535cf39509851d87de85ff6f55768d701711d9a2",
+      "bytes": 15890,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50633,
+        "objectKey": "system-item-media/v1/items/7879/icon/1a061c26a78d79c5300c04b6535cf39509851d87de85ff6f55768d701711d9a2.webp",
+        "fileSize": 15890
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7879/icon/1a061c26a78d79c5300c04b6535cf39509851d87de85ff6f55768d701711d9a2.webp"
+    },
+    {
+      "key": "item-7880-icon",
+      "target": {
+        "kind": "item",
+        "id": 7880,
+        "typeId": 29,
+        "name": "Надувная кровать и спальный мешок"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Inflatable Bed & Sleep-bag\" (Надувная кровать и спальный мешок), inventory record gear-inflatable-bed-sleep-bag. Show the distinctive form and variant implied by the item name in the fictional Cyberpunk RED game; a single unmistakable object or a compact representative emblem for an intangible concept. For clothing use an unworn garment/accessory cutout in the named fashion style. For ammo use a sealed retail packet with a pictogram for the game effect. No instructions, internal cutaways, action scene or gore. Distinguish related items by silhouette, materials and a restrained accent hue.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f9449a1e-5d28-440e-81c3-99564c52135c.png",
+      "original": "originals/item-7880.png",
+      "final": "final/item-7880.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "9800817d6059a02efcbd0cf36063012bf618b0286d40602b43fff575db003da4",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "683db0d9de4116288ff73f92d253c08469a5b63c698782bf4026dad707cfab2d",
+      "bytes": 13244,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50634,
+        "objectKey": "system-item-media/v1/items/7880/icon/683db0d9de4116288ff73f92d253c08469a5b63c698782bf4026dad707cfab2d.webp",
+        "fileSize": 13244
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7880/icon/683db0d9de4116288ff73f92d253c08469a5b63c698782bf4026dad707cfab2d.webp"
+    },
+    {
+      "key": "item-7881-icon",
+      "target": {
+        "kind": "item",
+        "id": 7881,
+        "typeId": 29,
+        "name": "Пачка комбикорма"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: a flat charcoal-and-turquoise sealed ration pouch for HUMAN street food, original affordable emergency nutrition, a torn corner with three small brown grain cubes visible. Simple bowl and spoon emblem. No animals, no pets, no dog food, no lettering.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-57032d1d-4a54-4501-8491-e380e40afcb4.png",
+      "original": "originals/item-7881.png",
+      "final": "final/item-7881.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "43b7266efb7e4eef15f0612d320f666cd80b995b1d5635c37c4cb87286b44691",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "497d101f08f693e2ad8b1fc7afe6b48998e972bc9b2ed4ee387b83ac4f7e2ad7",
+      "bytes": 16922,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50635,
+        "objectKey": "system-item-media/v1/items/7881/icon/497d101f08f693e2ad8b1fc7afe6b48998e972bc9b2ed4ee387b83ac4f7e2ad7.webp",
+        "fileSize": 16922
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7881/icon/497d101f08f693e2ad8b1fc7afe6b48998e972bc9b2ed4ee387b83ac4f7e2ad7.webp"
+    },
+    {
+      "key": "item-7882-icon",
+      "target": {
+        "kind": "item",
+        "id": 7882,
+        "typeId": 29,
+        "name": "Прямоходный остов β (бета)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Linear Frame β (Beta)\" (Прямоходный остов β (бета)), inventory record gear-linear-frame-beta. Show the distinctive form and variant implied by the item name in the fictional Cyberpunk RED game; a single unmistakable object or a compact representative emblem for an intangible concept. For clothing use an unworn garment/accessory cutout in the named fashion style. For ammo use a sealed retail packet with a pictogram for the game effect. No instructions, internal cutaways, action scene or gore. Distinguish related items by silhouette, materials and a restrained accent hue.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a51968d9-7224-45df-9b0a-c9a0016d86e8.png",
+      "original": "originals/item-7882.png",
+      "final": "final/item-7882.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "9b276fc914b41d012f1b7a690ab88b9a0af52bd5a4747740365e713f82bd9d38",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "b434c96ab5d8ea962ae401b44bae7d8ffcbeac26f39273afb45c3023ff50392c",
+      "bytes": 10618,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50636,
+        "objectKey": "system-item-media/v1/items/7882/icon/b434c96ab5d8ea962ae401b44bae7d8ffcbeac26f39273afb45c3023ff50392c.webp",
+        "fileSize": 10618
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7882/icon/b434c96ab5d8ea962ae401b44bae7d8ffcbeac26f39273afb45c3023ff50392c.webp"
+    },
+    {
+      "key": "item-7883-icon",
+      "target": {
+        "kind": "item",
+        "id": 7883,
+        "typeId": 29,
+        "name": "Прямоходный остов ∑ (сигма)"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Linear Frame ∑ (Sigma)\" (Прямоходный остов ∑ (сигма)), inventory record gear-linear-frame-sigma. Show the distinctive form and variant implied by the item name in the fictional Cyberpunk RED game; a single unmistakable object or a compact representative emblem for an intangible concept. For clothing use an unworn garment/accessory cutout in the named fashion style. For ammo use a sealed retail packet with a pictogram for the game effect. No instructions, internal cutaways, action scene or gore. Distinguish related items by silhouette, materials and a restrained accent hue.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-90a73290-a490-4dd5-8bc8-d7f4bdcb3cb6.png",
+      "original": "originals/item-7883.png",
+      "final": "final/item-7883.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "368ebf16ddf1c88d593009309a70cd791c0134093b0862f969017df2971f7246",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "c89e0f4bc4ade0f6619c8cc9c745e70733641b73e616b90971a48ee0638ecee5",
+      "bytes": 11956,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50637,
+        "objectKey": "system-item-media/v1/items/7883/icon/c89e0f4bc4ade0f6619c8cc9c745e70733641b73e616b90971a48ee0638ecee5.webp",
+        "fileSize": 11956
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7883/icon/c89e0f4bc4ade0f6619c8cc9c745e70733641b73e616b90971a48ee0638ecee5.webp"
+    },
+    {
+      "key": "item-7884-icon",
+      "target": {
+        "kind": "item",
+        "id": 7884,
+        "typeId": 29,
+        "name": "Набор медвежатника"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Lock Picking Set\" (Набор медвежатника), inventory record gear-lock-picking-set. Show the distinctive form and variant implied by the item name in the fictional Cyberpunk RED game; a single unmistakable object or a compact representative emblem for an intangible concept. For clothing use an unworn garment/accessory cutout in the named fashion style. For ammo use a sealed retail packet with a pictogram for the game effect. No instructions, internal cutaways, action scene or gore. Distinguish related items by silhouette, materials and a restrained accent hue.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3e890438-1b85-4e71-9daa-00574f05f25b.png",
+      "original": "originals/item-7884.png",
+      "final": "final/item-7884.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "b969aedc43fbeb9e06ecff32c3d4d0f7d0279b907f3866d0f16af520027d94b1",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "35805991002095c476cba604987bf50c9d69e70e8fd2f75d0c6247d64363e4ed",
+      "bytes": 12992,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50638,
+        "objectKey": "system-item-media/v1/items/7884/icon/35805991002095c476cba604987bf50c9d69e70e8fd2f75d0c6247d64363e4ed.webp",
+        "fileSize": 12992
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7884/icon/35805991002095c476cba604987bf50c9d69e70e8fd2f75d0c6247d64363e4ed.webp"
+    },
+    {
+      "key": "item-7885-icon",
+      "target": {
+        "kind": "item",
+        "id": 7885,
+        "typeId": 29,
+        "name": "Медсканер"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "One original 2045 Cyberpunk RED inventory icon, for a small RPG catalogue. Isolated fully visible single subject on genuinely transparent background, square composition with 8% margin. Thick confident deep-plum outer ink contour, a few finer inner marks, broad clean two-step cel-shading, bold recognizable silhouette at 48px, restrained high-contrast colors. No border, badge, lettering, numbers, tabletop, scenery, cast shadow, halo, or detached marks. Exterior view only. Subject: \"Medscanner\" (Медсканер), inventory record gear-medscanner. Show the distinctive form and variant implied by the item name in the fictional Cyberpunk RED game; a single unmistakable object or a compact representative emblem for an intangible concept. For clothing use an unworn garment/accessory cutout in the named fashion style. For ammo use a sealed retail packet with a pictogram for the game effect. No instructions, internal cutaways, action scene or gore. Distinguish related items by silhouette, materials and a restrained accent hue.",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3f44986a-2506-40b7-a320-19e882661ac8.png",
+      "original": "originals/item-7885.png",
+      "final": "final/item-7885.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "b6778b0e80ed67f88ebbf555252529eb3a5abd927067c1cb533eb682e04745dc",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "471321daf8e386c2aaa18bf3fb1059eae7c739b7538073489d7dca8fb37a919e",
+      "bytes": 14186,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "review": "Reviewed on a light and dark background at 128 and 64 pixels; subject, alpha and silhouette checked.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50639,
+        "objectKey": "system-item-media/v1/items/7885/icon/471321daf8e386c2aaa18bf3fb1059eae7c739b7538073489d7dca8fb37a919e.webp",
+        "fileSize": 14186
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7885/icon/471321daf8e386c2aaa18bf3fb1059eae7c739b7538073489d7dca8fb37a919e.webp"
+    }
+  ]
+}

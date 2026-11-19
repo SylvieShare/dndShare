@@ -476,8 +476,10 @@
       "id": 7553,
       "name": "Стрела (экспансивная)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 160,
+      "sha256": "db09199943e1a09bcddf9c69ba213ffcd091b46cee1c226fdc89f909f2ed7ad5"
     },
     {
       "kind": "item",
@@ -495,8 +497,10 @@
       "id": 7554,
       "name": "Стрела (зажигательная)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 160,
+      "sha256": "c6eef7acebc0053637ec92d7189fc24fc7fe812161eabc6ad958a03e19bcdb17"
     },
     {
       "kind": "item",
@@ -514,8 +518,10 @@
       "id": 7555,
       "name": "Стрела (с ядом)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 160,
+      "sha256": "8b0e849e1c6f8f306f1921c100a79b2e20486a7607178a3dc50a1e62656d24a3"
     },
     {
       "kind": "item",
@@ -533,8 +539,10 @@
       "id": 7556,
       "name": "Стрела (резиновая)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 160,
+      "sha256": "77f0e87e961280628f15221704e06416eef5eb555a0000fbac192016168630d5"
     },
     {
       "kind": "item",
@@ -552,8 +560,10 @@
       "id": 7557,
       "name": "Стрела (усыпляющая)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 160,
+      "sha256": "805e25f300b5bc889f7ca5e5317dddff5b86c13477b64f4f35518abf2ea6c512"
     },
     {
       "kind": "item",
@@ -571,8 +581,10 @@
       "id": 7558,
       "name": "Стрела (умная)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 160,
+      "sha256": "1ccb4e592354db0854d76f5196fd621e9d5e34d0b1673bb1881ac7705a62b3f7"
     },
     {
       "kind": "item",
@@ -590,8 +602,10 @@
       "id": 7559,
       "name": "Аккумулятор",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 160,
+      "sha256": "31a01a9287a5a98ad06a6dbd5756d0275440cbf207d37b71b4dd4c2469965d59"
     },
     {
       "kind": "item",
@@ -609,8 +623,10 @@
       "id": 7560,
       "name": "Граната (бронебойная)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 160,
+      "sha256": "e510204b3d193cc5477db4e611e7747be6fb3b8369d7aeb22fa404e433c8cb1f"
     },
     {
       "kind": "item",
@@ -628,8 +644,10 @@
       "id": 7561,
       "name": "Граната (с биотоксином)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 160,
+      "sha256": "6a631b37e59c78de21ac624f0d65e28820b4d31f7ced4e7214a5ea4147548825"
     },
     {
       "kind": "item",
@@ -647,8 +665,10 @@
       "id": 7562,
       "name": "Граната (ЭМИ)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 160,
+      "sha256": "48a041a0cbb18f79962a51043b294ef83c62001ac0c76091622e3bccd8441a9d"
     },
     {
       "kind": "item",
@@ -666,8 +686,10 @@
       "id": 7563,
       "name": "Граната (светошумовая)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 160,
+      "sha256": "39a608505ed14596e4426717fcbcada97180664dda9ba98b6e2ec9646e0ece91"
     },
     {
       "kind": "item",
@@ -685,8 +707,10 @@
       "id": 7564,
       "name": "Граната (зажигательная)",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "exported",
+      "sourceId": 3,
+      "batch": 160,
+      "sha256": "5f19eae0bbb07d27f4cdd3e387216af4a16b4a1370238bdde84c977a0bc4bb1b"
     },
     {
       "kind": "item",
@@ -6629,10 +6653,11 @@
       "id": 7874,
       "name": "Питательный батончик",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 157,
-      "sha256": "05bf3e220a6f2d2f3e07ec50f2be855643668eaa65bf0badf3f006ec7f5a139b"
+      "sha256": "05bf3e220a6f2d2f3e07ec50f2be855643668eaa65bf0badf3f006ec7f5a139b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7874/icon/05bf3e220a6f2d2f3e07ec50f2be855643668eaa65bf0badf3f006ec7f5a139b.webp"
     },
     {
       "kind": "item",
@@ -6650,10 +6675,11 @@
       "id": 7875,
       "name": "Светящаяся краска",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 157,
-      "sha256": "28dec4be1bdb8c5f9fa1000c25e37795be2ea82b25ec7019cd5e342a0d701339"
+      "sha256": "28dec4be1bdb8c5f9fa1000c25e37795be2ea82b25ec7019cd5e342a0d701339",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7875/icon/28dec4be1bdb8c5f9fa1000c25e37795be2ea82b25ec7019cd5e342a0d701339.webp"
     },
     {
       "kind": "item",
@@ -6671,10 +6697,11 @@
       "id": 7876,
       "name": "Светящаяся палочка",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 157,
-      "sha256": "ce72049dd00c389c09600041e857f35c20811241d2a1fc9a2cb294378183c228"
+      "sha256": "ce72049dd00c389c09600041e857f35c20811241d2a1fc9a2cb294378183c228",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7876/icon/ce72049dd00c389c09600041e857f35c20811241d2a1fc9a2cb294378183c228.webp"
     },
     {
       "kind": "item",
@@ -6692,10 +6719,11 @@
       "id": 7877,
       "name": "Крюк-кошка",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 157,
-      "sha256": "ddce209a8ab7c8be82594953cf7e45f521a999cc36e5828007d86f6cfd82bf9b"
+      "sha256": "ddce209a8ab7c8be82594953cf7e45f521a999cc36e5828007d86f6cfd82bf9b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7877/icon/ddce209a8ab7c8be82594953cf7e45f521a999cc36e5828007d86f6cfd82bf9b.webp"
     },
     {
       "kind": "item",
@@ -6713,10 +6741,11 @@
       "id": 7878,
       "name": "Наручники",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 157,
-      "sha256": "dfd64dc846f738cf5daa628da20a72f5e2d454b0c6c85c1a03598c04cb301d63"
+      "sha256": "dfd64dc846f738cf5daa628da20a72f5e2d454b0c6c85c1a03598c04cb301d63",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7878/icon/dfd64dc846f738cf5daa628da20a72f5e2d454b0c6c85c1a03598c04cb301d63.webp"
     },
     {
       "kind": "item",
@@ -6734,10 +6763,11 @@
       "id": 7879,
       "name": "Радиопеленгатор",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 157,
-      "sha256": "1a061c26a78d79c5300c04b6535cf39509851d87de85ff6f55768d701711d9a2"
+      "sha256": "1a061c26a78d79c5300c04b6535cf39509851d87de85ff6f55768d701711d9a2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7879/icon/1a061c26a78d79c5300c04b6535cf39509851d87de85ff6f55768d701711d9a2.webp"
     },
     {
       "kind": "item",
@@ -6755,10 +6785,11 @@
       "id": 7880,
       "name": "Надувная кровать и спальный мешок",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 157,
-      "sha256": "683db0d9de4116288ff73f92d253c08469a5b63c698782bf4026dad707cfab2d"
+      "sha256": "683db0d9de4116288ff73f92d253c08469a5b63c698782bf4026dad707cfab2d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7880/icon/683db0d9de4116288ff73f92d253c08469a5b63c698782bf4026dad707cfab2d.webp"
     },
     {
       "kind": "item",
@@ -6776,10 +6807,11 @@
       "id": 7881,
       "name": "Пачка комбикорма",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 157,
-      "sha256": "497d101f08f693e2ad8b1fc7afe6b48998e972bc9b2ed4ee387b83ac4f7e2ad7"
+      "sha256": "497d101f08f693e2ad8b1fc7afe6b48998e972bc9b2ed4ee387b83ac4f7e2ad7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7881/icon/497d101f08f693e2ad8b1fc7afe6b48998e972bc9b2ed4ee387b83ac4f7e2ad7.webp"
     },
     {
       "kind": "item",
@@ -6797,10 +6829,11 @@
       "id": 7882,
       "name": "Прямоходный остов β (бета)",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 157,
-      "sha256": "b434c96ab5d8ea962ae401b44bae7d8ffcbeac26f39273afb45c3023ff50392c"
+      "sha256": "b434c96ab5d8ea962ae401b44bae7d8ffcbeac26f39273afb45c3023ff50392c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7882/icon/b434c96ab5d8ea962ae401b44bae7d8ffcbeac26f39273afb45c3023ff50392c.webp"
     },
     {
       "kind": "item",
@@ -6818,10 +6851,11 @@
       "id": 7883,
       "name": "Прямоходный остов ∑ (сигма)",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 157,
-      "sha256": "c89e0f4bc4ade0f6619c8cc9c745e70733641b73e616b90971a48ee0638ecee5"
+      "sha256": "c89e0f4bc4ade0f6619c8cc9c745e70733641b73e616b90971a48ee0638ecee5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7883/icon/c89e0f4bc4ade0f6619c8cc9c745e70733641b73e616b90971a48ee0638ecee5.webp"
     },
     {
       "kind": "item",
@@ -6839,10 +6873,11 @@
       "id": 7884,
       "name": "Набор медвежатника",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 157,
-      "sha256": "35805991002095c476cba604987bf50c9d69e70e8fd2f75d0c6247d64363e4ed"
+      "sha256": "35805991002095c476cba604987bf50c9d69e70e8fd2f75d0c6247d64363e4ed",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7884/icon/35805991002095c476cba604987bf50c9d69e70e8fd2f75d0c6247d64363e4ed.webp"
     },
     {
       "kind": "item",
@@ -6860,10 +6895,11 @@
       "id": 7885,
       "name": "Медсканер",
       "slot": "icon",
-      "status": "exported",
+      "status": "published",
       "sourceId": 3,
       "batch": 157,
-      "sha256": "471321daf8e386c2aaa18bf3fb1059eae7c739b7538073489d7dca8fb37a919e"
+      "sha256": "471321daf8e386c2aaa18bf3fb1059eae7c739b7538073489d7dca8fb37a919e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7885/icon/471321daf8e386c2aaa18bf3fb1059eae7c739b7538073489d7dca8fb37a919e.webp"
     },
     {
       "kind": "item",
@@ -19131,7 +19167,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 1007,
+    "publishedSlots": 1019,
     "readySlots": 0,
     "totalSlots": 1848
   }
