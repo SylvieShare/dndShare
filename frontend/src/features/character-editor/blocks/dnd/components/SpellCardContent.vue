@@ -43,7 +43,7 @@ const itemType = computed(() => itemTypes.getType(Number(props.item?.typeId) || 
 .sp-meta {display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--spacing-small)}
 .sp-meta>.spell-metadata {flex:1 1 var(--layout-spell-metric-min);min-width:0}
 .sp-components {flex:none;align-self:flex-start;margin-inline-start:auto}
-.sp-name-row {display:flex;flex-direction:column;align-items:flex-start;gap:var(--spacing-compact);min-width:0}
+.sp-name-row {display:flex;flex-direction:column;align-items:flex-start;gap:var(--spacing-xs);min-width:0}
 .sp-title-row {min-width:0;max-width:100%;overflow-wrap:anywhere}
 .sp-prepared {display:inline-block;max-width:100%;color:var(--accent-soft);font-family:var(--type-context-family);font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-weight:700;overflow-wrap:anywhere}
 .sp-name {flex-shrink:0;max-width:100%;min-width:0;color:var(--text-1);font-family:var(--type-spell-name-family);font-size:var(--type-spell-name-size);font-weight:var(--type-spell-name-weight);line-height:var(--type-spell-name-line-height);overflow-wrap:anywhere}
