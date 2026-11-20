@@ -1,6 +1,6 @@
 <template>
   <span class="action-target-preview" :style="{ '--action-target-groups': groups.length }" aria-hidden="true">
-    <SessionSelectionPortraits :groups="groups" />
+    <SessionSelectionPortraits :groups="groups" compact />
   </span>
 </template>
 
@@ -18,7 +18,8 @@ const groups = computed(() => selectedRosterGroups(props.items, props.encounter)
 
 <style scoped>
 .action-target-preview {
+  --selection-portrait-size: 20px;
   display: flex;
-  inline-size: calc(var(--layout-selection-summary-icon) * min(var(--action-target-groups), 3));
+  inline-size: calc(var(--selection-portrait-size) * min(var(--action-target-groups), 3));
 }
 </style>

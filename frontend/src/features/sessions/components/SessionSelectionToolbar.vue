@@ -7,9 +7,9 @@
         <ActionButton v-if="actionsVisible || selection.selected.length" class="roster-actions-trigger" variant="quiet"
           layout="stacked" :disabled="!selection.selected.length"
           aria-label="Сбросить выбор" title="Сбросить выбор" @click="selection.clear">
-          <template #icon><ListX :size="16" aria-hidden="true" /></template>
-          <span class="roster-action-label">Сбросить<br />выбор</span>
-          <span class="roster-action-label-short">Сброс</span>
+          <template #icon><ListX class="roster-clear-selection" :size="16" aria-hidden="true" /></template>
+          <span class="roster-action-label roster-clear-selection">Сбросить<br />выбор</span>
+          <span class="roster-action-label-short roster-clear-selection">Сброс</span>
         </ActionButton>
       </div>
       <div class="roster-selection-actions-row">
@@ -24,7 +24,7 @@
           <RowActionMenu ref="menu" title="Действия с выбранными" :width="320" follow-anchor :disabled="!hasActions">
             <template #trigger="{ open }">
               <ActionButton class="roster-actions-trigger" variant="secondary" layout="stacked" :disabled="!hasActions" aria-haspopup="menu" :aria-expanded="open">
-                <template #icon><ListFilter :size="16" aria-hidden="true" /></template>
+                <template #icon><Ellipsis :size="16" aria-hidden="true" /></template>
                 Действия
               </ActionButton>
             </template>
@@ -89,7 +89,7 @@
 <script setup>
 import { computed, ref, shallowRef, watch } from 'vue'
 import { ActionButton, AppModalFrame, CompactCheckbox, FormActionButtons, FormField, FormNumberInput, RowActionMenu } from '@sylvieshare/share-ui'
-import { Eraser, HeartCrack, ListFilter, ListX, LogOut, Skull, Sparkles, Swords } from '@lucide/vue'
+import { Ellipsis, Eraser, HeartCrack, ListX, LogOut, Skull, Sparkles, Swords } from '@lucide/vue'
 import EncounterChallengeMenu from './EncounterChallengeMenu.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
@@ -183,6 +183,7 @@ async function apply() {
   text-align: center;
   white-space: nowrap;
 }
+.roster-clear-selection { color: color-mix(in srgb, var(--danger) 65%, var(--text-1)); }
 .roster-action-label-short { display: none; }
 @container (max-width: 240px) {
   .roster-action-label { display: none; }

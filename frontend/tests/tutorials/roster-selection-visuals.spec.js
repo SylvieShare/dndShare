@@ -164,7 +164,19 @@ for(const width of [390,834,1440])test(`combat selection icons and stage waterma
   const damage = menu.getByRole('menuitem', { name: 'Нанести урон: 2', exact: true })
   await expect(damage.locator('.selection-summary-item')).toHaveCount(1)
   await expect(damage.locator('.selection-summary-quantity')).toHaveText('2')
-  await expect(damage.locator('.selection-summary-portrait')).toHaveCSS('width', '32px')
+  await expect(summary.locator('.selection-summary-portrait')).toHaveCSS('width', '32px')
+  await expect(damage.locator('.selection-summary-portrait')).toHaveCSS('width', '20px')
+  const rowGeometry = await damage.evaluate(row => {
+    const portrait = row.querySelector('.selection-summary-portrait').getBoundingClientRect()
+    const badge = row.querySelector('.selection-summary-quantity').getBoundingClientRect()
+    return {
+      height: row.offsetHeight,
+      standardHeight: parseFloat(getComputedStyle(row).minHeight),
+      badgeFits: badge.top >= portrait.top && badge.bottom <= portrait.bottom,
+    }
+  })
+  expect(rowGeometry.height).toBe(rowGeometry.standardHeight)
+  expect(rowGeometry.badgeFits).toBe(true)
   await menu.getByRole('menuitem',{name:'Добавить на сцену: 2',exact:true}).click()
   await expect(first.locator('.roster-stage-backdrop')).toHaveAccessibleName('На сцене')
   await expect(first.locator('.session-roster-tile[aria-current="true"]')).toHaveCount(0)

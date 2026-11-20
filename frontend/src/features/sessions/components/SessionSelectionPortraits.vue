@@ -1,5 +1,5 @@
 <template>
-  <span class="selection-summary-icons">
+  <span class="selection-summary-icons" :class="{ 'selection-summary-icons--compact': compact }">
     <span class="selection-summary-stack" :style="{ '--selection-summary-intervals': Math.max(1, groups.length - 1) }">
       <span
         v-for="(group, index) in groups"
@@ -22,16 +22,16 @@
 <script setup>
 import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
 import SessionCreatureAvatar from './SessionCreatureAvatar.vue'
-defineProps({ groups: { type: Array, required: true } })
+defineProps({ groups: { type: Array, required: true }, compact: Boolean })
 </script>
 <style scoped>
 .selection-summary-icons {
   container-type: inline-size;
-  flex: 1 1 var(--layout-selection-summary-icon);
+  flex: 1 1 var(--selection-portrait-size, var(--layout-selection-summary-icon));
   min-width: 0;
 }
 .selection-summary-stack {
-  --creature-avatar-size: min(var(--layout-selection-summary-icon), 100cqi);
+  --creature-avatar-size: min(var(--selection-portrait-size, var(--layout-selection-summary-icon)), 100cqi);
   --selection-summary-step: clamp(
     0px,
     calc((100cqi - var(--creature-avatar-size)) / var(--selection-summary-intervals)),
@@ -70,5 +70,15 @@ defineProps({ groups: { type: Array, required: true } })
   border-radius: var(--radius-small);
   background: var(--surface-active);
   color: var(--text-1);
+}
+.selection-summary-icons--compact .selection-summary-item { position: relative; }
+.selection-summary-icons--compact .selection-summary-quantity {
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block-end: 0;
+  min-inline-size: min(100%, var(--spacing-medium));
+  block-size: var(--spacing-medium);
+  margin-block-start: 0;
+  line-height: 1;
 }
 </style>
