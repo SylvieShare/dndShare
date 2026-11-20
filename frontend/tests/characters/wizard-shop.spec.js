@@ -2,9 +2,10 @@ import { test, expect } from '@playwright/test'
 
 const icon = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><circle cx="12" cy="12" r="8"/></svg>'
 const rope = { id: 901, name: 'Верёвка', typeId: 2, iconImageUrl: icon, data: { available_in_starting_shop: true, cost: { value: 1, suggest_id: 3 } } }
-for (const width of [390, 840, 1440]) {
+for (const width of [390, 840, 932, 1440]) {
   test('D&D shop, dice and cart at ' + width, async ({ page }, info) => {
-    await page.setViewportSize({ width, height: 920 })
+    await page.setViewportSize({ width, height: width === 932 ? 704 : 920 })
+    const singleColumn = width === 390 || width === 932
     await page.route(url => url.pathname.startsWith('/api/'), route => {
       const url = new URL(route.request().url())
       const catalogues = { 2: Array.from({length: 30}, (_, index) => ({ ...rope, id: rope.id + index })), 9: [{ id: 12, typeId: 9, name: 'Воин', data: {} }] }
@@ -32,9 +33,11 @@ for (const width of [390, 840, 1440]) {
     await expect(page.locator('.cc-main')).toHaveCSS('border-left-width', width <= 640 ? '0px' : '1px')
     const catalogue = await shop.locator('.catalogue').boundingBox()
     const summary = await shop.locator('.shop-summary').boundingBox()
-    if (width === 390) expect(summary.y).toBeGreaterThan(catalogue.y)
-    else expect(summary.x).toBeGreaterThanOrEqual(catalogue.x + catalogue.width)
-    if (width > 620) {
+    if (singleColumn) {
+      expect(catalogue.y).toBeGreaterThanOrEqual(summary.y + summary.height)
+    } else {
+      expect(summary.y).toBe(catalogue.y)
+      expect(summary.x).toBeGreaterThanOrEqual(catalogue.x + catalogue.width)
       const list = shop.locator('.shop-rows')
       const bottomGap = await list.evaluate(el =>
         document.querySelector('.cc-foot').getBoundingClientRect().top - el.getBoundingClientRect().bottom)
@@ -45,6 +48,7 @@ for (const width of [390, 840, 1440]) {
     }
     await shop.locator('.shop-add').first().click()
     await expect(shop.locator('.cart-name img')).toBeVisible()
+    if (singleColumn) await page.locator('.cc-main').evaluate(el => { el.scrollTop = 0 })
     await info.attach('shop-' + width, { body: await page.screenshot(), contentType: 'image/png' })
     await shop.getByRole('radio', { name: 'Бросок' }).click()
     await page.getByRole('button', { name: 'Отмена', exact: true }).last().click()

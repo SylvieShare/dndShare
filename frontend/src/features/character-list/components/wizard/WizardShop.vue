@@ -2,6 +2,19 @@
   <div class="wizard-shop">
     <h2 class="sheet-section-title">Магазин</h2>
     <div class="shop-columns">
+      <div class="shop-summary">
+        <section class="wealth-card"><slot name="budget" /></section>
+        <aside class="cart">
+          <div class="cart-heading">
+            <div><span>Корзина</span><small>{{ cartCount ? cartCount + ' шт.' : 'Пока пусто' }}</small></div>
+            <ShoppingBasket :size="20" aria-hidden="true" />
+          </div>
+          <div v-if="cartCount" class="cart-items"><slot name="cart" /></div>
+          <div v-else class="cart-empty">Добавляйте предметы из каталога. Покупки сразу считаются в бюджете.</div>
+          <div v-if="$slots.totals" class="cart-footer"><slot name="totals" /></div>
+        </aside>
+        <slot name="extras" />
+      </div>
       <section class="catalogue" aria-label="Каталог магазина">
         <FormTextInput v-model:value="query" placeholder="Найти предмет…" aria-label="Поиск предмета" />
         <div class="categories" role="group" aria-label="Категории магазина">
@@ -18,19 +31,6 @@
         </div>
         <p v-else>Предметы не найдены.</p>
       </section>
-      <div class="shop-summary">
-        <section class="wealth-card"><slot name="budget" /></section>
-        <aside class="cart">
-          <div class="cart-heading">
-            <div><span>Корзина</span><small>{{ cartCount ? cartCount + ' шт.' : 'Пока пусто' }}</small></div>
-            <ShoppingBasket :size="20" aria-hidden="true" />
-          </div>
-          <div v-if="cartCount" class="cart-items"><slot name="cart" /></div>
-          <div v-else class="cart-empty">Добавляйте предметы из каталога. Покупки сразу считаются в бюджете.</div>
-          <div v-if="$slots.totals" class="cart-footer"><slot name="totals" /></div>
-        </aside>
-        <slot name="extras" />
-      </div>
     </div>
   </div>
 </template>
@@ -67,7 +67,15 @@ const current = computed(() => groups.value.find(group => group.id === selected.
 <style scoped>
 .wizard-shop > h2 { margin: 0; }
 .wizard-shop { min-width: 0; container-type: inline-size; display: grid; gap: var(--spacing-medium); }
-.shop-columns { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(250px, 1fr); gap: var(--spacing-medium); align-items: start; }
+.shop-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(250px, 1fr);
+  grid-template-areas: "catalogue summary";
+  gap: var(--spacing-medium);
+  align-items: start;
+}
+.catalogue { grid-area: catalogue; }
+.shop-summary { grid-area: summary; }
 .catalogue, .shop-summary { display: grid; min-width: 0; gap: var(--spacing-medium); }
 .categories { display: flex; flex-wrap: wrap; gap: 4px; }
 .categories button { display: inline-flex; align-items: center; gap: 4px; padding: 6px 8px; background: var(--surface); color: var(--text-2); border: 0; border-radius: var(--r-md); font: inherit; font-size: 12px; cursor: pointer; }
@@ -81,7 +89,10 @@ const current = computed(() => groups.value.find(group => group.id === selected.
   .shop-rows { min-height: 0; }
 }
 @container (max-width: 620px) {
-  .shop-columns { grid-template-columns: minmax(0, 1fr); }
+  .shop-columns {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "summary" "catalogue";
+  }
   .shop-rows { max-height: 48dvh; }
 }
 </style>

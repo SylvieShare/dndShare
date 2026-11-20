@@ -335,6 +335,11 @@ for(const width of [390,840,1440]){
   const widthOfBorder = await main.evaluate(node => getComputedStyle(node).borderLeftWidth)
   expect(widthOfBorder).toBe(width <= 640 ? '0px' : '1px')
   const shop=main.locator('.wizard-shop')
+  if(width===390){
+   const kit=await shop.locator('.kit-panel').boundingBox()
+   const search=await shop.getByRole('textbox',{name:'Поиск предмета'}).boundingBox()
+   expect(search.y).toBeGreaterThanOrEqual(kit.y+kit.height)
+  }
   await shop.locator('.categories').getByRole('button',{name:/Киберимпланты/}).click()
   await expect(shop.locator('.categories button[aria-pressed=true] img')).toHaveAttribute('src',cover)
   await expect(shop.locator('.wealth-copy img[alt="евродоллары"]')).toHaveJSProperty('naturalWidth',128)
