@@ -9,6 +9,23 @@ from configure_mcp import SERVER, TOOLS, configure
 
 
 class NativeMCPTest(unittest.TestCase):
+    def test_each_application_preserves_the_other_report_connection(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target = root / 'config.toml'
+            dnd = root / 'dnd.json'
+            haven = root / 'haven.json'
+            dnd.write_text(json.dumps({'baseUrl': 'https://dndshare.ru'}))
+            haven.write_text(json.dumps({
+                'baseUrl': 'https://havenshare.ru', 'agentServer': 'havenshare_reports',
+            }))
+            configure(target, dnd, 'python', 'dnd-helper.py')
+            before = tomllib.loads(target.read_text())['mcp_servers'][SERVER]
+            configure(target, haven, 'python', 'haven-helper.py')
+            after = tomllib.loads(target.read_text())['mcp_servers']
+            self.assertEqual(after[SERVER], before)
+            self.assertEqual(after['havenshare_reports']['url'], 'https://havenshare.ru/mcp')
+
     def test_configuration_preserves_existing_settings_and_is_idempotent(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

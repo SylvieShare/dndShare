@@ -1,12 +1,15 @@
 """Keep one outbound stream open and queue each event into one local Codex chat."""
 import argparse
+import hashlib
 import json
 import logging
 from logging.handlers import RotatingFileHandler
 import os
 from pathlib import Path
 import re
+import secrets
 import shutil
+import socket
 import subprocess
 import time
 import urllib.error
@@ -35,10 +38,11 @@ def message_for(event, config):
               'answered': 'Получен ответ на вопрос по багрепорту', 'reopened': 'Багрепорт возвращён в работу',
               'serious-approved': 'Подтверждено изменение по багрепорту', 'recovered': 'Восстановлен прерванный багрепорт'}
     key = event_key(event)
+    procedure = config.get('agentProcedure', AGENT_PROCEDURE)
     approval = 'Обработка одобрена.' if event['approved'] else 'Заявка пока ожидает одобрения ADMIN.'
     return (f"{labels[event['kind']]} №{event['reportId']}. {approval}\n"
             f"Событие: {key}.\n"
-            f"Проверь актуальный статус и обработай по {AGENT_PROCEDURE} из origin/main.")
+            f"Проверь актуальный статус и обработай по {procedure} из origin/main.")
 
 
 def event_key(event):
@@ -47,15 +51,65 @@ def event_key(event):
 
 
 def enqueue(event, config):
-    result = subprocess.run([resolve_codex(config), 'queue', '--thread', config['threadId'],
-                             '--message', message_for(event, config), '--resume', '-C', config['projectDirectory']],
+    command = [resolve_codex(config), 'queue', '--thread', config['threadId'],
+               '--message', message_for(event, config), '--resume']
+    env = dict(os.environ, CODEX_HOME=config['codexHome'])
+    endpoint = config.get('_resume_endpoint')
+    if endpoint:
+        command.extend(['--remote', endpoint, '--remote-auth-token-env', 'SHARE_REPORT_RESUME_TOKEN'])
+        env['SHARE_REPORT_RESUME_TOKEN'] = config['_resume_token']
+    else:
+        command.extend(['-C', config['projectDirectory']])
+    result = subprocess.run(command,
                             capture_output=True, text=True, encoding='utf-8', errors='replace', timeout=30,
-                            env=dict(os.environ, CODEX_HOME=config['codexHome']),
+                            env=env,
                             creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
     accepted = re.search(r'Queued message ([a-f0-9-]{36}) for thread ([a-f0-9-]{36})\.', result.stdout)
     if result.returncode or not accepted or accepted[2] != config['threadId']:
         raise RuntimeError('Codex did not confirm message queueing')
+    if endpoint and 'could not resume thread' in result.stderr:
+        raise RuntimeError('Private Codex server did not resume the chat')
     return accepted[1]
+
+
+def start_private_server(config):
+    # The app uses this socket only on the owner's machine. The token is
+    # ephemeral, and the child receives its hash rather than the secret.
+    with socket.socket() as probe:
+        probe.bind(('127.0.0.1', 0))
+        address = probe.getsockname()
+    endpoint = f'ws://127.0.0.1:{address[1]}'
+    token = secrets.token_urlsafe(32)
+    process = subprocess.Popen([
+        resolve_codex(config), 'app-server', '--listen', endpoint,
+        '--ws-auth', 'capability-token', '--ws-token-sha256',
+        hashlib.sha256(token.encode()).hexdigest(),
+    ], cwd=config['projectDirectory'], env=dict(os.environ, CODEX_HOME=config['codexHome']),
+        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+    try:
+        deadline = time.monotonic() + 12
+        while time.monotonic() < deadline and process.poll() is None:
+            try:
+                with socket.create_connection(address, timeout=.3):
+                    return process, dict(config, _resume_endpoint=endpoint, _resume_token=token)
+            except OSError:
+                time.sleep(.1)
+        raise RuntimeError('Private Codex server did not become ready')
+    except BaseException:
+        terminate_server(process)
+        raise
+
+
+def terminate_server(process):
+    if process is None or process.poll() is not None:
+        return
+    process.terminate()
+    try:
+        process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait(timeout=5)
 
 
 def deliver(state, event, config, queue=enqueue):
@@ -90,20 +144,33 @@ def run(config):
         state = State(directory)
         client = Client(config)
         delay = 1
+        runtime = config
+        server = None
+
+        def connected():
+            status = {'status': 'connected', 'pid': os.getpid(), 'cursor': state.cursor, 'time': time.time()}
+            if server is not None:
+                status['resumeServerPid'] = server.pid
+            write_json(directory / 'health.json', status)
+
         try:
             while True:
                 try:
-                    bootstrap(state, client, config)
-                    write_json(directory / 'health.json', {'status': 'connected', 'pid': os.getpid(), 'cursor': state.cursor, 'time': time.time()})
+                    if config.get('privateAppServer') and (server is None or server.poll() is not None):
+                        server, runtime = start_private_server(config)
+                    bootstrap(state, client, runtime)
+                    connected()
                     logging.info('connected cursor=%s', state.cursor)
                     last_probe = time.monotonic()
                     for event in client.events(state.cursor):
-                        if event is not None: deliver(state, event, config)
+                        if server is not None and server.poll() is not None:
+                            raise RuntimeError('Private Codex server exited')
+                        if event is not None: deliver(state, event, runtime)
                         # Queue reads recover expired claims; the DB trigger emits their event.
                         if time.monotonic() - last_probe >= 30:
                             client.value('error_reports_list', {'summaryOnly': True})
                             last_probe = time.monotonic()
-                        write_json(directory / 'health.json', {'status': 'connected', 'pid': os.getpid(), 'cursor': state.cursor, 'time': time.time()})
+                        connected()
                         delay = 1
                 except (OSError, ValueError, RuntimeError, KeyError, ProtocolError) as error:
                     code = error.code if isinstance(error, urllib.error.HTTPError) else None
@@ -114,7 +181,9 @@ def run(config):
                     logging.error('reconnecting type=%s', type(error).__name__)
                 time.sleep(delay)
                 delay = min(15, delay * 2)
-        finally: state.close()
+        finally:
+            terminate_server(server)
+            state.close()
 
 
 if __name__ == '__main__':

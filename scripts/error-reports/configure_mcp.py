@@ -22,9 +22,12 @@ def configure(destination, dispatcher_config, python_executable, helper):
     raw = destination.read_text(encoding='utf-8-sig') if destination.exists() else ''
     parsed = tomllib.loads(raw)
     settings = json.loads(Path(dispatcher_config).read_text(encoding='utf-8-sig'))
+    server = settings.get('agentServer', SERVER)
+    if not re.fullmatch(r'[a-z][a-z0-9_-]{1,40}_reports', server):
+        raise ValueError('Invalid report MCP server name')
     command = ' '.join(json.dumps(str(part).replace('\\', '/'), ensure_ascii=False)
                        for part in [python_executable, '-X', 'utf8', helper, '--config', dispatcher_config])
-    existing = parsed.get('mcp_servers', {}).get(SERVER)
+    existing = parsed.get('mcp_servers', {}).get(server)
     expected = {'url': settings['baseUrl'].rstrip('/') + '/mcp', 'http_headers_helper': command,
                 'enabled_tools': TOOLS, 'enabled': True, 'startup_timeout_sec': 20,
                 'tool_timeout_sec': 60, 'default_tools_approval_mode': 'auto'}
@@ -34,7 +37,7 @@ def configure(destination, dispatcher_config, python_executable, helper):
             return False
         if existing != previous:
             raise ValueError('An MCP entry with this name already has different settings; preserve it for review')
-    addition = '\n\n[mcp_servers.' + SERVER + ']\n'
+    addition = '\n\n[mcp_servers.' + server + ']\n'
     for key, value in expected.items():
         addition += key + ' = ' + json.dumps(value, ensure_ascii=False) + '\n'
     if existing is not None:
@@ -45,8 +48,8 @@ def configure(destination, dispatcher_config, python_executable, helper):
         updated = raw.rstrip() + addition
     tomllib.loads(updated)
     if destination.exists():
-        shutil.copy2(destination, destination.with_name(destination.name + '.before-dndshare-' + str(time.time_ns()) + '.bak'))
-    temporary = destination.with_name(destination.name + '.dndshare.tmp')
+        shutil.copy2(destination, destination.with_name(destination.name + '.before-reports-' + str(time.time_ns()) + '.bak'))
+    temporary = destination.with_name(destination.name + '.reports.tmp')
     temporary.write_text(updated, encoding='utf-8')
     os.replace(temporary, destination)
     return True
@@ -59,4 +62,4 @@ if __name__ == '__main__':
     parser.add_argument('--helper', required=True)
     args = parser.parse_args()
     changed = configure(args.codex_config, args.dispatcher_config, sys.executable, args.helper)
-    print(json.dumps({'server': SERVER, 'configured': True, 'changed': changed}))
+    print(json.dumps({'configured': True, 'changed': changed}))

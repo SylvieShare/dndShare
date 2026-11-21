@@ -60,6 +60,14 @@ claim и не выполняет завершённую работу повто�
 .\scripts\error-reports\install.ps1 -ThreadId CHAT_UUID -ProjectDirectory C:\Projects\dndshare -TokenEnvFile C:\Projects\dndshare\.env -Start
 ~~~
 
+Для другого приложения указываются `-AppId`, собственный `-BaseUrl` и
+`-AgentProcedure`. У каждого приложения отдельные credentials, MCP-подключение,
+состояние диспетчера и экземпляр задачи Windows.
+
+Флаг `-PrivateAppServer` запускает для этого диспетчера отдельный Codex app-server
+на loopback с временным секретом. Используйте его, если локальный daemon
+недоступен. Очередь продолжает записываться в тот же чат.
+
 Без Start установка подготавливает конфигурацию и отключённую задачу до
 подтверждённого запуска. Файлы устанавливаются в LocalAppData/dndshare/report-dispatch.
 Настройки содержат только пути, URL и id чата. MCP_AUTH_TOKEN читается из заданного
