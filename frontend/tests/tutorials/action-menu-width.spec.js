@@ -91,3 +91,48 @@ test('read-only single-action menus fit and keep editing unavailable',async({pag
   await expect(menu).toHaveCount(0)
   expect(api.writes).toHaveLength(0)
 })
+
+test.describe('inventory menu motion', () => {
+  test.use({ hasTouch: true, reducedMotion: 'no-preference' })
+
+  test('inventory item menu enters with scale and opacity and reopens on tap', async ({ page }, info) => {
+    await page.setViewportSize({ width: 475, height: 751 })
+    const api = await fixture(page)
+    api.document().values.items.sections = [{ id: 'bag', name: 'Рюкзак', items: [{ uid: 'pouch', item_id: 42, count: 1 }] }]
+    await page.route('**/api/items/by-ids?**', route => route.fulfill({
+      json: { items: [{ id: 42, name: 'Кошель', typeId: 2, iconImageUrl: '/static/tab-magic.svg', data: {} }] },
+    }))
+    await page.route('**/api/handbook/sync?**', route => route.fulfill({
+      json: { protocol: 1, entries: [], hasMore: false, cursor: 'empty', visibleIds: [], metadata: { types: [], suggests: {}, suggestTypes: [], books: [] } },
+    }))
+    await page.goto('/char/test?tab=inventory')
+    const tile = page.locator('.inventory-bag-item:visible').filter({ hasText: 'Кошель' })
+    await expect(tile).toHaveCount(1)
+    await tile.scrollIntoViewIfNeeded()
+    await page.evaluate(() => {
+      window.inventoryEntrance = {}
+      document.addEventListener('transitionrun', event => {
+        if (!event.target.matches('.ram-popover.share-popover-action-enter-active')) return
+        const animation = event.target.getAnimations().find(animation => animation.transitionProperty === event.propertyName)
+        const start = animation?.effect.getKeyframes()[0]?.[event.propertyName]
+        if (event.propertyName === 'opacity') window.inventoryEntrance.opacity = Number(start)
+        if (event.propertyName === 'transform' && start) window.inventoryEntrance.scale = Number(new DOMMatrix(start).a.toFixed(2))
+      })
+    })
+    const menu = page.getByRole('menu', { name: 'Действия: Кошель', exact: true })
+    await tile.tap()
+    await expect(menu).toBeVisible()
+    await expect.poll(() => page.evaluate(() => window.inventoryEntrance)).toEqual({ opacity: 0, scale: .88 })
+    await expect(menu).toHaveCSS('opacity', '1')
+    await expect(menu).toHaveCSS('transform', 'none')
+    await page.screenshot({ path: info.outputPath('inventory-menu-475.png') })
+
+    await tile.tap()
+    await expect(menu).toHaveCount(0)
+    await tile.tap()
+    await expect(menu.getByRole('button', { name: 'Открыть описание' })).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(menu).toHaveCount(0)
+    expect(api.writes).toEqual([])
+  })
+})
