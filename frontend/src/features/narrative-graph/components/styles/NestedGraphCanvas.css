@@ -4,7 +4,8 @@
   overflow: hidden;
   cursor: grab;
   touch-action: none;
-  background: var(--app-canvas-bg);
+  --graph-grid-step: calc(var(--app-canvas-dot-size) * var(--graph-grid-zoom));
+  background-size: var(--graph-grid-step) var(--graph-grid-step);
   pointer-events: auto;
 }
 .nested-graph-canvas--panning { cursor: grabbing; }

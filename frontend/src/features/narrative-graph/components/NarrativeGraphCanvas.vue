@@ -1,7 +1,8 @@
 <template>
   <div
     ref="viewport"
-    class="nested-graph-canvas"
+    class="nested-graph-canvas share-app-canvas"
+    :style="canvasBackground"
     :class="{
       'nested-graph-canvas--panning': gesture?.type === 'pan',
       'nested-graph-canvas--selecting': gesture?.type === 'selection',
@@ -221,6 +222,10 @@ let lastNodeClick = null
 let viewportResizeObserver = null
 const preparedGraphKey = ref(null)
 
+const canvasBackground = computed(() => ({
+  '--app-canvas-position': `${pan.value.x}px ${pan.value.y}px`,
+  '--graph-grid-zoom': zoom.value,
+}))
 const worldStyle = computed(() => ({ transform: `translate(${pan.value.x}px, ${pan.value.y}px) scale(${zoom.value})` }))
 const { nodeDimensions, nodeStyle, refreshNodeObservers, resetDimensions } = useNarrativeNodeGeometry({ props, viewport, pan, zoom, viewportRevision, safeFrame: () => safeFrame() })
 const nodeMap = computed(() => new Map(props.nodes.map(node => [node.id, node])))

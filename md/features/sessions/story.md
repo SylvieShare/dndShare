@@ -16,8 +16,8 @@ Pinch меняет только обзор, отменяя начатый пер
 ## Подготовленные локации и NPC
 
 `Локации`, `NPC`, `Задания` and `Материалы` are DM-only primary central workspaces, not extra permanent
-side panels. Their surfaces sit over the same tokenized dot field as the story
-canvas. The selected mode is stored per session in local storage; `view`,
+side panels. They use the flat application canvas. The selected mode is stored
+per session in local storage; `view`,
 `location`, `npc`, `material` and `quest` query parameters preserve a shareable selection. Combat is
 still a temporary overlay. Opening it from either world workspace keeps that
 workspace mounted underneath and closing combat returns to the same mode and
@@ -225,9 +225,9 @@ A DM drags any non-interactive
 part of a row to reorder arcs; arrow controls are not used. Each row has a
 pencil but no dedicated drag-handle dots; it opens `ArcEditorModal`, whose edit mode also owns the confirmed
 delete action. `SessionGraphCanvas` uses the
-application-wide canvas background and dot-color tokens, supports pan/zoom and
-stores a viewport per graph in local storage; its 24px base grid repositions and
-scales with that viewport. Every graph constrains the camera center to the
+application canvas tokens and enables a dotted grid in the Story tab. It
+supports pan and zoom and stores a viewport per graph in local storage. The
+24px grid moves and scales with that viewport. Every graph constrains the camera center to the
 bounding box of its cards plus `320px` horizontal and `240px` vertical world
 space, using the safe frame between the side rails; saved legacy viewports,
 zooming and rail resizes are clamped by the same rule. Empty graphs remain

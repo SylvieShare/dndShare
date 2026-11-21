@@ -5,12 +5,32 @@ import { pinch, wheelOut, scale, frame } from './fixtures/pinch.js'
 test.use({ hasTouch: true, viewport: { width: 704, height: 932 } })
 test.beforeEach(async ({ page }) => { page.on('pageerror', error => { throw error }) })
 
-test('story graph pinches in and out without moving nodes and retains wheel zoom', async ({ page }) => {
+async function expectGridTracksWorld(host) {
+  const grid = await host.evaluate(canvas => {
+    const style = getComputedStyle(canvas)
+    const world = canvas.querySelector('.nested-graph-world')
+    const matrix = new DOMMatrix(getComputedStyle(world).transform)
+    return {
+      step: style.backgroundSize.split(' ').map(parseFloat),
+      offset: style.backgroundPosition.split(' ').map(parseFloat),
+      expectedStep: parseFloat(style.getPropertyValue('--app-canvas-dot-size')) * matrix.a,
+      expectedOffset: [matrix.e, matrix.f],
+    }
+  })
+  expect(grid.step).toHaveLength(2)
+  for (const step of grid.step) expect(step).toBeCloseTo(grid.expectedStep, 2)
+  expect(grid.offset[0]).toBeCloseTo(grid.expectedOffset[0], 2)
+  expect(grid.offset[1]).toBeCloseTo(grid.expectedOffset[1], 2)
+}
+
+test('story graph pinches in and out without moving nodes and retains wheel zoom', async ({ page }, info) => {
   const writes = []
   page.on('request', request => { if (request.method() !== 'GET' && /\/(chapter|scene|block)-graph/.test(request.url())) writes.push(request.url()) })
   await sessionLayout(page, { url: '/sessions/test' })
   const host = page.locator('.nested-graph-canvas'), world = host.locator('.nested-graph-world')
   await expect(host).toBeVisible()
+  await expect(host).toHaveCSS('background-image', /radial-gradient/)
+  await expectGridTracksWorld(host)
   const before = await scale(world)
   const nodes = await host.locator('.nested-graph-node').evaluateAll(nodes => nodes.map(node => [node.style.left, node.style.top]))
   await pinch(page, host)
@@ -21,8 +41,16 @@ test('story graph pinches in and out without moving nodes and retains wheel zoom
   const reduced = await scale(world)
   await wheelOut(page, host)
   expect(await scale(world)).toBeLessThan(reduced)
+  await expectGridTracksWorld(host)
   expect(await host.locator('.nested-graph-node').evaluateAll(nodes => nodes.map(node => [node.style.left, node.style.top]))).toEqual(nodes)
   expect(writes).toEqual([])
+  await page.screenshot({ path: info.outputPath('story-grid-704.png'), animations: 'disabled' })
+
+  await page.getByRole('button', { name: 'Хроника', exact: true }).click()
+  await expect(page.locator('.chapter-canvas-stage')).toHaveCSS('background-image', 'none')
+  await page.getByRole('button', { name: 'Сюжет', exact: true }).click()
+  await expect(host).toBeVisible()
+  await expect(host).toHaveCSS('background-image', /radial-gradient/)
 })
 
 test('world pinch in point placement mode does not add or move route points', async ({ page }) => {

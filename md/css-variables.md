@@ -30,7 +30,7 @@ The dark UI uses one application canvas plus a compact surface scale. Do not cre
 | --- | --- | --- |
 | `--bg` | `#1a1a1e` | Application canvas, forms and the main navigation rail. |
 | `--app-canvas-bg` | `var(--bg)` | Shared routed-page and session-canvas background. |
-| `--app-canvas-dot-color` | transparent | Ordinary pages have no dot grid. |
+| `--app-canvas-dot-color` | 42% of `--border-strong` | Share-ui color for the story graph's dots. |
 | `--app-canvas-dot-size` | `24px` | Shared static dot-grid step; session zoom scales the same base step. |
 | `--app-canvas-pattern` | none | Flat application canvas. |
 | `--surface` | `#26262b` | Cards, tiles and unified content panels on `--bg`. |
@@ -40,8 +40,8 @@ The dark UI uses one application canvas plus a compact surface scale. Do not cre
 | `--popover-bg` | `#2b2b30` | Dropdowns, tooltips and detached popovers. |
 | `--scrim` | black at 62% | Modal/overlay dimming. |
 
-Routed screens, including the session's pannable story and chapter views, inherit
-the flat `--app-canvas-bg`. Full-page features stay transparent unless their working
+Routed screens inherit the flat `--app-canvas-bg`. The session Story tab
+enables the dotted pattern on its graph. Full-page features stay transparent unless their working
 canvas requires an opaque background: the character-creation wizard uses `--bg`,
 while handbook list rows use `--surface`. The global header and session command
 bar use `--subheader`; forms, editors and modal bodies use `--bg`. Workspace
