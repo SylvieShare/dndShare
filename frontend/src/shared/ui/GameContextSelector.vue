@@ -25,7 +25,7 @@
       :id="menuId"
       v-model:open="open"
       :anchor="trigger"
-      placement="bottom-start"
+      :placement="placement"
       :min-width="0"
       :offset="8"
       transition-preset="action-menu"
@@ -79,7 +79,10 @@ import { useGameContextStore } from '@/stores/gameContext'
 import { gameContextOptions, gameContextPresentation } from '@/shared/lib/gameContextPresentation'
 import GameContextEmblem from './GameContextEmblem.vue'
 
-defineProps({ compact: { type: Boolean, default: false } })
+defineProps({
+  compact: { type: Boolean, default: false },
+  placement: { type: String, default: 'bottom-start' },
+})
 
 const store = useGameContextStore()
 const open = ref(false)

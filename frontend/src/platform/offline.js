@@ -11,6 +11,7 @@ import { reportSyncProblem, resolveSyncProblem, resetSyncProblems, reportRecover
 export const localState = reactive({ online: true, syncing: false, accountId: null, ready: false })
 let database, network, controller, scope = 'public:', refreshTimer, bootPromise
 let accountEpoch = 0
+let confirmedGameContext = null
 const json = value => new Response(JSON.stringify(value), { headers: { 'Content-Type': 'application/json', 'X-DnDShare-Local': '1' } })
 const cacheKey = url => `${scope}http:${url.pathname}${[...url.searchParams].length ? '?' + [...url.searchParams].sort(([a], [b]) => a.localeCompare(b)).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&') : ''}`
 const isLive = path => /\/(changes|events|stream)(\/|$)/.test(path) || path.startsWith('/api/session') || path.startsWith('/api/user/')
@@ -43,6 +44,7 @@ async function observedNetwork(input, init = {}) {
 
 export async function clearLocalAccount({ session = true } = {}) {
   accountEpoch++
+  confirmedGameContext = null
   localState.accountId = null
   scope = 'public:'
   resetSyncProblems()
@@ -57,7 +59,21 @@ export async function clearLocalAccount({ session = true } = {}) {
   if (isAndroid && session) await nativeStore.clearSession()
 }
 
-async function identity(payload, login = false, epoch = accountEpoch) {
+function withGameContext(payload, gameContext) {
+  return { ...payload, user: { ...payload.user, gameContext } }
+}
+
+async function saveConfirmedGameContext(db, gameContext) {
+  const accountId = localState.accountId
+  if (!accountId || !gameContext?.sourceVersionId) return
+  const change = { accountId, gameContext }
+  confirmedGameContext = change
+  const saved = await db.get('identity')
+  if (confirmedGameContext !== change || saved?.payload?.user?.id !== accountId) return
+  await db.batch([{ key: 'identity', value: { ...saved, payload: withGameContext(saved.payload, gameContext) } }])
+}
+
+async function identity(payload, login = false, epoch = accountEpoch, gameContextWhenRequested = confirmedGameContext) {
   if (epoch !== accountEpoch) return
   if (!payload?.auth || !payload.user?.id) {
     if (localState.accountId) await clearLocalAccount()
@@ -66,6 +82,10 @@ async function identity(payload, login = false, epoch = accountEpoch) {
   const previous = await database.get('identity')
   if (epoch !== accountEpoch) return
   if (previous?.payload.user.id && previous.payload.user.id !== payload.user.id) await clearLocalAccount({ session: false })
+  // An auth refresh started before a confirmed selection can carry the old edition.
+  if (!login && confirmedGameContext?.accountId === payload.user.id && confirmedGameContext !== gameContextWhenRequested) {
+    payload = withGameContext(payload, confirmedGameContext.gameContext)
+  }
   scope = `account:${payload.user.id}:`
   localState.accountId = payload.user.id
   // A local identity unlocks only downloaded data; the server checks all online rights.
@@ -133,6 +153,7 @@ async function cachedFetch(input, init = {}) {
   init = { ...init, headers: apiHeaders(init.headers || input.headers) }
   const method = (init.method || input.method || 'GET').toUpperCase()
   const epoch = accountEpoch, db = accountDatabase(epoch)
+  const gameContextWhenRequested = confirmedGameContext
   const auth = url.pathname === '/api/user/checkAuth'
   const key = cacheKey(url)
   const cached = method === 'GET' ? await database.get(key) : null
@@ -143,7 +164,7 @@ async function cachedFetch(input, init = {}) {
         if (epoch !== accountEpoch) return
         if (!response.ok) { if (response.status === 401) { await clearLocalAccount(); location.reload() } return }
         const payload = await response.json()
-        await identity(payload, false, epoch)
+        await identity(payload, false, epoch, gameContextWhenRequested)
         resolveSyncProblem(requestSource(input, init))
         if (!payload.auth) location.reload()
       }).catch(error => {
@@ -201,8 +222,13 @@ async function cachedFetch(input, init = {}) {
           }
         }
       }
-      if (auth || url.pathname === '/api/user/auth' || url.pathname === '/api/user/registration') await identity(payload, !auth, epoch)
-      else if (method === 'GET' && !isLive(url.pathname)) await db.batch([{ key, value: { payload, time: Date.now() } }])
+      if (auth || url.pathname === '/api/user/auth' || url.pathname === '/api/user/registration') {
+        await identity(payload, !auth, epoch, gameContextWhenRequested)
+      } else if (method === 'PUT' && url.pathname === '/api/account/game-context') {
+        await saveConfirmedGameContext(db, payload.gameContext)
+      } else if (method === 'GET' && !isLive(url.pathname)) {
+        await db.batch([{ key, value: { payload, time: Date.now() } }])
+      }
     }
     if (response.ok && method === 'DELETE' && /^\/api\/items\/\d+$/.test(url.pathname)) await saveCatalogueMutation(db, scope, null, url.pathname.split('/').at(-1))
     if (response.ok) resolveSyncProblem(requestSource(input, init))

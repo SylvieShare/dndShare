@@ -78,6 +78,32 @@ it('reports API incompatibility and releases all scheduled work on logout', asyn
   expect(characterRequests()).toBe(count)
   expect(problems.localSyncProblems.event).toBeNull()
 })
+it('keeps the confirmed game context in the local identity through an older auth refresh', async () => {
+  const saved = await harness.database.get('identity')
+  const previous = { auth: true, user: { id: 1, gameContext: { sourceVersionId: 1 } } }
+  const gameContext = { sourceVersionId: 2 }
+  await harness.database.batch([{ key: 'identity', value: { ...saved, payload: previous } }])
+  let finishAuth
+  transport.mockImplementation(async input => {
+    if (input === '/api/user/checkAuth') return new Promise(resolve => { finishAuth = resolve })
+    if (input === '/api/account/game-context') return Response.json({ gameContext })
+    return Response.json({})
+  })
+
+  const cached = await window.fetch('/api/user/checkAuth').then(response => response.json())
+  expect(cached).toEqual(previous)
+  await window.fetch('/api/account/game-context', { method: 'PUT' })
+  expect(await harness.database.get('identity')).toEqual({
+    expiresAt: saved.expiresAt, payload: { auth: true, user: { id: 1, gameContext } },
+  })
+
+  finishAuth(Response.json({ auth: true, user: { ...previous.user, login: 'tester' } }))
+  await vi.advanceTimersByTimeAsync(0)
+  expect(await harness.database.get('identity')).toEqual({
+    expiresAt: saved.expiresAt, payload: { auth: true, user: { id: 1, login: 'tester', gameContext } },
+  })
+})
+
 it.each([{ path: '/api/late', cached: false }, { path: '/api/late', cached: true }, { path: '/api/user/checkAuth', cached: true }])('does not restore account data when $path (cached: $cached) arrives after logout', async ({ path, cached }) => {
   const key = `account:1:http:${path}`
   if (cached) await harness.database.batch([{ key, value: { payload: { old: true } } }])

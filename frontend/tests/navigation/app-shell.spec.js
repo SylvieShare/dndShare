@@ -36,7 +36,8 @@ for (const width of [320, 390, 599, 600, 834, 1199, 1200, 1440]) {
       await expect(header).toHaveCSS('border-bottom-width', '0px')
       await expect(header).toHaveCSS('box-shadow', 'none')
       await expect(header.locator('.handbook-heading')).toHaveText('Справочник')
-      await expect(header.locator('.header-context')).toHaveText('D&D 5e · 2014')
+      await expect(header.getByRole('button', { name: 'Игровая система: D&D 5e · 2014', exact: true })).toBeVisible()
+      await expect(header.locator('.header-context')).toHaveCount(0)
       expect((await header.boundingBox()).height).toBe(64)
       await expect(rail).toHaveCount(0)
       expect((await page.locator('.page-transition-stage').boundingBox()).x).toBe(0)
@@ -61,6 +62,74 @@ for (const width of [320, 390, 599, 600, 834, 1199, 1200, 1440]) {
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
   })
 }
+
+test('handbook header switches editions and systems without changing a linked collection edition', async ({ page }, info) => {
+  await page.setViewportSize({ width: 475, height: 751 })
+  const editions = [
+    { id: 1, name: 'dnd5e', versions: [{ id: 1, version: '2014' }, { id: 2, version: '2024' }] },
+    { id: 2, name: 'Cyberpunk RED', versions: [{ id: 3, version: '1.0' }] },
+  ]
+  const implants = { id: 30, sourceId: 2, name: 'Киберимпланты', countItems: 7, fields: [] }
+  const saved = []
+  const requestedEditions = []
+  let selected = 1
+  await page.route('**/api/user/checkAuth', route => route.fulfill({
+    json: { auth: true, user: { id: 1, login: 'tester', roles: [], hasCharacters: true, gameContext: { sourceVersionId: selected } } },
+  }))
+  await page.route('**/api/sources', route => route.fulfill({ json: { sources: editions } }))
+  await page.route(url => url.pathname === '/api/item-types', route => {
+    const edition = new URL(route.request().url()).searchParams.get('sourceVersionId')
+    const scoped = edition === '3' ? [implants] : edition === '2' ? [{ ...types[0], countItems: 31 }] : types
+    return route.fulfill({ json: { types: edition ? scoped : [...types, implants] } })
+  })
+  await page.route('**/api/account/game-context', route => {
+    const body = route.request().postDataJSON()
+    expect(route.request().method()).toBe('PUT')
+    selected = body.sourceVersionId
+    saved.push(selected)
+    return route.fulfill({ json: { gameContext: { sourceVersionId: selected } } })
+  })
+  await page.route('**/api/items?**', route => {
+    requestedEditions.push(new URL(route.request().url()).searchParams.get('sourceVersionId'))
+    return route.fulfill({ json: { items: [] } })
+  })
+  await page.goto('/handbook')
+  const header = page.locator('.app-header')
+  const selector = header.getByRole('button', { name: /^Игровая система:/ })
+  const menu = page.getByRole('menu', { name: 'Система и редакция' })
+  const cards = page.locator('.hb-collection-card')
+  await expect(cards).toHaveCount(1)
+  await expect(cards.first()).toContainText('12')
+  await expect(selector).toHaveAccessibleName('Игровая система: D&D 5e · 2014')
+  const [title, button] = await Promise.all([header.locator('.handbook-heading').boundingBox(), selector.boundingBox()])
+  expect(button.x).toBeGreaterThanOrEqual(title.x + title.width)
+  expect(button.x + button.width).toBeLessThanOrEqual(475)
+  await page.screenshot({ path: info.outputPath('handbook-selector-475.png') })
+
+  await selector.click()
+  await expect(menu.getByRole('menuitemradio', { name: 'D&D 5e · 2014' })).toHaveAttribute('aria-checked', 'true')
+  await menu.getByRole('menuitemradio', { name: 'D&D 5e · 2024' }).click()
+  await expect(menu).toHaveCount(0)
+  await expect(selector).toBeFocused()
+  await expect(cards.first()).toContainText('31')
+
+  await selector.click()
+  await menu.getByRole('menuitemradio', { name: 'Cyberpunk RED · 1.0' }).click()
+  await expect(menu).toHaveCount(0)
+  await expect(selector).toHaveAccessibleName('Игровая система: Cyberpunk RED · 1.0')
+  await expect(cards.first()).toContainText('Киберимпланты')
+  expect(saved).toEqual([2, 3])
+  await page.reload()
+  await expect(selector).toHaveAccessibleName('Игровая система: Cyberpunk RED · 1.0')
+
+  await page.goto('/handbook?type=5&sourceVersionId=1')
+  await expect(selector).toHaveCount(0)
+  await expect(header.locator('.handbook-heading')).toContainText('Заклинания')
+  await expect.poll(() => requestedEditions).toContain('1')
+  await header.getByRole('link', { name: 'Справочник', exact: true }).click()
+  await expect(selector).toHaveAccessibleName('Игровая система: Cyberpunk RED · 1.0')
+  await expect(cards.first()).toContainText('Киберимпланты')
+})
 
 test('drawer closes on desktop resize without overwriting the desktop preference', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })

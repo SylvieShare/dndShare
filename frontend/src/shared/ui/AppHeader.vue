@@ -12,10 +12,11 @@
       <MobileHeaderBack v-if="mobileBackTarget && (!isHandbook || route.query.item)" :to="mobileBackTarget" :icon-only="isHandbook" />
       <div class="header-heading">
         <slot name="title"><h1 class="header-title">{{ title }}</h1></slot>
-        <span v-if="contextLabel && compact" class="header-context">{{ contextLabel }}</span>
+        <span v-if="contextLabel && compact && !isHandbookRoot" class="header-context">{{ contextLabel }}</span>
       </div>
     </template>
     <template #actions>
+      <GameContextSelector v-if="isHandbookRoot" class="header-game-context" placement="bottom-end" />
       <div id="app-header-actions" class="header-actions" />
       <span v-if="headerContext.chip" class="header-chip"
         :style="headerContext.chip.color ? { '--chip-color': headerContext.chip.color } : {}">
@@ -31,6 +32,7 @@ import { useRoute } from 'vue-router'
 import { Menu } from '@lucide/vue'
 import { useAppLayout } from '@/shared/composables/useAppLayout'
 import WorkspaceHeader from './WorkspaceHeader.vue'
+import GameContextSelector from './GameContextSelector.vue'
 import MobileHeaderBack from '@/shared/ui/MobileHeaderBack.vue'
 import { resolveMobileBackTarget } from '@/shared/lib/mobileBack'
 import { gameContextPresentation } from '@/shared/lib/gameContextPresentation'
@@ -54,6 +56,7 @@ const effectiveHeaderHidden = computed(() => headerCollapsible.value && uiStore.
 const mobileBackTarget = computed(() => resolveMobileBackTarget(route))
 const headerContext = computed(() => uiStore.resolveHeader(route.name, route.meta?.title, false))
 const isHandbook = computed(() => route.meta?.section === 'handbook')
+const isHandbookRoot = computed(() => route.name === 'Handbook' && !route.query.type && !route.query.item)
 const sectionTitles = { handbook: 'Справочник', rules: 'Правила игрока' }
 const title = computed(() => sectionTitles[route.meta?.section] || headerContext.value.title)
 const contextLabel = computed(() => {
@@ -79,6 +82,7 @@ const contextLabel = computed(() => {
 .header-title { margin:0;font-family:var(--type-workspace-title-family);letter-spacing:var(--type-workspace-title-tracking);font-size:var(--type-workspace-title-size);line-height:var(--type-workspace-title-line-height);font-weight:var(--type-workspace-title-weight); }
 .header-context { color: var(--text-2); font-family: var(--type-context-family); letter-spacing: var(--type-context-tracking); font-size: var(--type-context-size); line-height: var(--type-context-line-height); font-weight: var(--type-context-weight); }
 .header-title, .header-context { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.header-game-context { width: max-content; max-width: min(40vw, 240px); }
 .header-actions { display: flex; align-items: center; flex: 0 0 auto; }
 .header-actions:empty { display: none; }
 .header-chip { color: var(--chip-color, var(--text-2)); font-size: 12px; flex-shrink: 0; }

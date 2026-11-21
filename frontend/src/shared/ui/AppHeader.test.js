@@ -25,14 +25,20 @@ async function renderHeader(path = '/handbook', props = {}) {
 }
 
 describe('app header', () => {
-  it('shows the page and game context with a drawer trigger', async () => {
+  it('shows the system selector and a drawer trigger on the handbook home', async () => {
     const html = await renderHeader('/handbook', { menuOpen: true })
     expect(html).toContain('Справочник')
-    expect(html).toContain('D&amp;D 5e · 2014')
+    expect(html).toContain('aria-label="Игровая система: D&amp;D 5e · 2014"')
+    expect(html).not.toContain('class="header-context"')
     expect(html).toContain('aria-label="Открыть меню"')
     expect(html).toContain('aria-expanded="true"')
     expect(html).not.toContain('brand-menu')
     expect(html).not.toContain('Обновить')
+  })
+  it('shows the passive context on a handbook collection', async () => {
+    const html = await renderHeader('/handbook?type=5&sourceVersionId=1')
+    expect(html).toContain('class="header-context"')
+    expect(html).not.toContain('class="game-context-trigger"')
   })
   it('keeps the page title and action outlet in one header row', async () => {
     const html = await renderHeader('/chars')
