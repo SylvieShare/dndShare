@@ -32,7 +32,7 @@ for (const width of [320, 390, 599, 600, 834, 1199, 1200, 1440]) {
       await expect.poll(async () => (await desktop.boundingBox()).width).toBe(224)
       await expect(page.getByRole('button', { name: 'Открыть меню' })).toHaveCount(0)
     } else {
-      await expect(header).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)')
+      await expect(header).toHaveClass(/workspace-header--solid/)
       await expect(header).toHaveCSS('border-bottom-width', '0px')
       await expect(header).toHaveCSS('box-shadow', 'none')
       await expect(header.locator('.handbook-heading')).toHaveText('Справочник')
@@ -46,7 +46,7 @@ for (const width of [320, 390, 599, 600, 834, 1199, 1200, 1440]) {
       await expect(drawer.getByRole('link', { name: 'Персонажи', exact: true })).toBeVisible()
       await expect(drawer.getByRole('link', { name: 'Админка', exact: true })).toHaveCount(0)
       const panel = drawer.locator('.desktop-sidebar--drawer')
-      expect((await panel.boundingBox()).width).toBeLessThanOrEqual(288)
+      expect(await panel.evaluate(element => element.offsetWidth)).toBeLessThanOrEqual(288)
       const stageBefore = await page.locator('.page-transition-stage').boundingBox()
       await page.keyboard.press('Escape')
       await expect(drawer).toBeHidden()

@@ -261,7 +261,7 @@ so list swipes are handled before the surrounding dismissible sheet gesture.
 Вертикальная прокрутка и жесты на интерактивных элементах
 остаются доступны.
 The outer handbook and centered page wrappers stay transparent so the shared
-application canvas dot pattern remains visible around the opaque navigation,
+application background remains visible around the opaque navigation,
 list and detail surfaces. Handbook workspaces fill the available viewport below
 the mobile application header; on desktop they extend to the bottom because the
 application header is replaced by the sidebar.

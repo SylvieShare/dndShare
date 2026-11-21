@@ -137,7 +137,7 @@ combat switches this state automatically. A blackout hides current content
 without discarding it, so the header control can reveal it again; `cut` and
 `fade` are the deliberately small transition set. Rain, fog, embers, snow and
 storm are visual layers rendered only by the player display. `Очистить` returns
-the display to a visible idle state with the same dotted canvas background;
+the display to a visible idle state with the shared flat background.
 `Затемнить` remains the explicit action that covers the player screen in black.
 The screen title and session name are rendered only for that idle state. During
 material playback the asset occupies the whole viewport without a card frame or
@@ -148,7 +148,7 @@ performs a control sync every 45 seconds and temporarily falls back to jittered
 polling with exponential backoff while SSE is disconnected. Each event reloads
 the latest database snapshot, so coalesced or missed events cannot lose state.
 
-`Материалы` is a central DM library over the same dotted workspace background.
+`Материалы` is a central DM library over the same flat workspace background.
 It uses the same `SessionLibraryWorkspace` shell, safe areas, sidebar surface
 and detail geometry as locations and NPCs. A material has one of five explicit
 types: image, video, plain text, styled note or map. Notes can use parchment,
@@ -212,7 +212,7 @@ carry the pointer.
 `--border-strong` bottom divider and a short downward shadow, not a `BaseTile`.
 The desktop application sidebar uses the same surface and a short rightward
 shadow throughout the application, in both expanded and collapsed states. Together
-they separate navigation from the darker dotted workspace without extra margins.
+they separate navigation from the darker workspace without extra margins.
 `SessionToolbarIdentity` owns the editable name,
 status menu and arc switcher; `SessionToolbarMusic` owns the compact player and
 overflow measurement. Current-chapter focus, zoom and contextual creation stay

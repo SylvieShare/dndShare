@@ -6,7 +6,7 @@
     </AppHeader>
   </div>
   <AppDrawer v-if="compact" id="app-navigation-drawer" v-model="menuOpen" aria-label="Меню приложения"
-    :show-close="false" :width="layoutTokens.drawer" :z-index="100" swipe-to-close>
+    :show-close="false" :width="layoutTokens.drawer" :z-index="100" swipe-to-open swipe-to-close>
     <DesktopSidebar ref="drawerSidebar" mode="drawer" @close-menu="menuOpen = false" @navigate="menuOpen = false" />
   </AppDrawer>
   <AppAuthDialogs />
@@ -22,7 +22,6 @@ import HandbookHeading from '@/features/handbook/components/HandbookHeading.vue'
 import AppAuthDialogs from '@/features/auth/components/AppAuthDialogs.vue'
 import DesktopSidebar from './DesktopSidebar.vue'
 import { useAppLayout } from '@/shared/composables/useAppLayout'
-import { useAppDrawerGesture } from '@/shared/composables/useAppDrawerGesture'
 import { useAccountStore } from '@/stores/account'
 
 const { compact } = useAppLayout()
@@ -54,7 +53,6 @@ watch(compact, () => { menuOpen.value = false })
 watch(() => account.authStatus, status => {
   if (status === 'process') menuOpen.value = false
 })
-useAppDrawerGesture(() => compact.value && !menuOpen.value, openMenu)
 </script>
 
 <style scoped>

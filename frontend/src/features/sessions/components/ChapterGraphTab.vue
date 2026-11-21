@@ -559,7 +559,6 @@ function chapterPayload(chapter, patch = {}) {
 
 <style scoped>
 .chapter-graph-tab { container-type: inline-size; position: relative; display: flex; flex: 1; min-height: 0; flex-direction: column; overflow: hidden; }
-.chapter-canvas-stage--story { --app-canvas-dot-color: var(--app-story-canvas-dot-color); --app-canvas-pattern: var(--app-story-canvas-pattern); }
 .chapter-canvas-stage { margin-top: calc(-1 * var(--chapter-chrome-height, 64px)); position: relative; display: flex; flex: 1; min-height: 0; overflow: hidden; }
 .chapter-graph-loading { display: grid; flex: 1; place-items: center; color: var(--text-muted); font-size: 13px; }
 .chapter-action-error { position: absolute; z-index: 30; top: calc(var(--chapter-chrome-height,64px) + 4px); left: 50%; max-width: 520px; padding: 7px 12px; border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent); border-radius: 7px; background: var(--popover-bg); color: var(--danger); font-size: 11px; transform: translateX(-50%); box-shadow: var(--shadow-lg); }

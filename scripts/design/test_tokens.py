@@ -45,7 +45,7 @@ class TokenContractTests(unittest.TestCase):
     def test_invalid_accessibility_geometry_and_fonts_fail_early(self):
         maximum_column = load()['layout']['sheet-stats-column']
         for group, name, value in [('layout', 'sheet-stats-column-min', maximum_column + 1), ('layout', 'touch-min', 40), ('layout', 'tablet', 1200),
-                                   ('collection', 'min-height', 16), ('canvas', 'opacity', 2),
+                                   ('collection', 'min-height', 16),
                                    ('list', 'metric-min', 100), ('list', 'icon', 100),
                                    ('motion', 'enter', 1.5), ('motion', 'sheet-health-pulse-fast', 6001),
                                    ('spacing', 'xs', True), ('radius', 'tile', float('nan'))]:

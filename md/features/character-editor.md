@@ -232,8 +232,7 @@ Escape, отмена жеста и отпускание вне ячеек отм
 Fixed equipment utilities and personality groups use independent surfaces,
 spell parameters/slots use separate `MorphTile` cards, and diary collections keep
 their own cards while notes have a dedicated surface. The desktop character
-page uses the same subtle 24px dot pattern as the session chapter canvas on its
-global `--bg` backdrop; the central tab remains transparent, and its cards do
+page uses the flat application background. The central tab stays transparent and its cards do
 not merge back into one large tile. Desktop tab labels share
 the same muted, fixed-weight typography so the active, fully rounded 3px underline
 changes state without shifting label geometry; the tab group has no outer

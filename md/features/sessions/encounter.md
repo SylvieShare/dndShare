@@ -230,8 +230,7 @@ scene keeps its home group and selection; deleting an NPC prunes its selection.
 
 ### Reserve tabs
 
-The combat workspace uses a plain background; the story dot pattern remains
-on the plot canvas. NPC reserves live in the persistent left sidebar on every
+The combat workspace and plot canvas both use a plain background. NPC reserves live in the persistent left sidebar on every
 session tab, immediately below Players and above contextual map/world tools, even before opening
 combat. The selected reserve and its panel stay mounted across workspace changes.
 `EncounterNpcDialogs` is hosted by the session page: adding handbook/simple NPCs,

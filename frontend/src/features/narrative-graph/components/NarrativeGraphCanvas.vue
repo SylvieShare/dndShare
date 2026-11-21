@@ -17,7 +17,6 @@
     @contextmenu="onContextMenu"
     @wheel.prevent="onWheel"
   >
-    <div class="nested-graph-grid" :style="gridStyle" />
     <div v-if="selectionFrameStyle" class="nested-graph-selection-frame" :style="selectionFrameStyle" />
     <div class="nested-graph-world" :style="worldStyle">
       <svg class="nested-graph-edges" aria-hidden="true">
@@ -223,10 +222,6 @@ let viewportResizeObserver = null
 const preparedGraphKey = ref(null)
 
 const worldStyle = computed(() => ({ transform: `translate(${pan.value.x}px, ${pan.value.y}px) scale(${zoom.value})` }))
-const gridStyle = computed(() => ({
-  backgroundPosition: `${pan.value.x}px ${pan.value.y}px`,
-  backgroundSize: `${24 * zoom.value}px ${24 * zoom.value}px`,
-}))
 const { nodeDimensions, nodeStyle, refreshNodeObservers, resetDimensions } = useNarrativeNodeGeometry({ props, viewport, pan, zoom, viewportRevision, safeFrame: () => safeFrame() })
 const nodeMap = computed(() => new Map(props.nodes.map(node => [node.id, node])))
 const {

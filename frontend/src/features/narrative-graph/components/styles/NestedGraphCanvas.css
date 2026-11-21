@@ -4,18 +4,13 @@
   overflow: hidden;
   cursor: grab;
   touch-action: none;
+  background: var(--app-canvas-bg);
   pointer-events: auto;
 }
 .nested-graph-canvas--panning { cursor: grabbing; }
 .nested-graph-canvas--selecting { cursor: crosshair; }
 .nested-graph-canvas--linking { cursor: crosshair; }
 .nested-graph-canvas--locked { cursor: default; }
-.nested-graph-grid {
-  position: absolute;
-  inset: 0;
-  background-color: var(--app-canvas-bg);
-  background-image: radial-gradient(circle, var(--app-canvas-dot-color) 1px, transparent 1px);
-}
 .nested-graph-selection-frame {
   position: absolute;
   z-index: 25;

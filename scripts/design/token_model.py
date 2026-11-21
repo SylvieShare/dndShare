@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / 'design/tokens.json'
-GROUPS = {'layout', 'spacing', 'radius', 'collection', 'canvas', 'list', 'motion', 'chrome'}
+GROUPS = {'layout', 'spacing', 'radius', 'collection', 'list', 'motion', 'chrome'}
 FAMILIES = {'display', 'prose', 'ui'}
 # Match the ranges declared by local @font-face and native font resources.
 FONT_WEIGHTS = {'display': (500, 700), 'prose': (400, 700), 'ui': (100, 900)}
@@ -38,7 +38,6 @@ REQUIRED = {
                'weapon-roll-option-width', 'weapon-roll-option-icon', 'weapon-roll-option-height', 'roll-effect-option-width',
                'money-calculator-width', 'inventory-cell-min', 'inventory-cell-gap', 'menu-action-size', 'menu-summary-min', 'inventory-menu-width'},
     'collection': {'min-height', 'padding', 'emblem', 'art-inset', 'grid-gap'},
-    'canvas': {'step', 'radius', 'opacity'},
     'spacing': {'xs', 'compact', 'small', 'label', 'medium', 'large', 'page', 'section'},
     'list': {'min-height', 'icon', 'gap', 'padding-end', 'metric-min', 'metric-max', 'metric-padding-max', 'body-top', 'body-bottom', 'row-margin', 'row-gap'},
     'motion': {'enter', 'exit', 'navigation', 'feedback', 'distance', 'morph-open', 'morph-close', 'sheet-health-pulse', 'sheet-health-pulse-fast', 'weapon-drag-hold', 'encounter-drag-hold'},
@@ -96,8 +95,6 @@ def validate(data):
         raise ValueError('Motion durations must be whole milliseconds')
     if data['motion']['sheet-health-pulse-fast'] >= data['motion']['sheet-health-pulse']:
         raise ValueError('Low-health pulse must be faster than the full-health pulse')
-    if not 0 < data['canvas']['opacity'] <= 1:
-        raise ValueError('Canvas opacity must be in (0,1]')
     if data['chrome']['blur'] <= 0:
         raise ValueError('Chrome blur must be positive')
     if not 0 < data['chrome']['tint'] <= 1:

@@ -134,7 +134,7 @@
   or `words`; `displayScale` is an integer percentage from 75 through 125.
   Modes are `idle`, `material`, `combat`; effects are `none`, `rain`,
   `fog`, `embers`, `snow`, `storm`; transitions are `cut` or `fade`. An explicit
-  `idle,visible:true` is the cleared dotted canvas, while `visible:false` is the
+  `idle,visible:true` is the cleared player display, while `visible:false` is the
   intentional blackout.
   The GET and PUT responses also include the permanent `displayCode` for the
   standalone display link.
