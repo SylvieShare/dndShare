@@ -3,7 +3,9 @@
   <!-- The character LIST is kept alive so returning from a character page restores
        its scroll position and avoids a refetch flash. -->
   <div
+    ref="pageStage"
     class="page-transition-stage share-app-canvas"
+    :data-workspace-scroll="usesAppPageScroll ? '' : undefined"
     :class="{
       'page-transition-stage--print': isPrintRoute,
       'page-transition-stage--standalone': isStandaloneRoute,
@@ -29,7 +31,7 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AppNavigationShell from '@/shared/ui/AppNavigationShell.vue'
 import AppNotifications from '@/features/notifications/components/AppNotifications.vue'
@@ -51,6 +53,18 @@ const isPrintRoute = computed(() => !!route.meta?.printView)
 const isStandaloneRoute = computed(() => isPrintRoute.value || !!route.meta?.standaloneView)
 const showsApplicationServices = computed(() => !isStandaloneRoute.value || !!route.meta?.applicationServices)
 const pageTransitionMode = computed(() => (isMobile.value ? undefined : 'out-in'))
+const usesAppPageScroll = computed(() => !isStandaloneRoute.value && route.meta?.mobileHeader !== 'hidden')
+const pageStage = ref(null)
+let characterListScroll = 0
+
+watch(() => route.path, async (path, previousPath) => {
+  const stage = pageStage.value
+  if (document.documentElement.dataset.platform !== 'android' || !stage) return
+  if (previousPath === '/chars') characterListScroll = stage.scrollTop
+  await nextTick()
+  if (route.path !== path || route.hash || !usesAppPageScroll.value) return
+  stage.scrollTop = path === '/chars' ? characterListScroll : 0
+})
 
 let applicationServicesStarted = false
 watch(showsApplicationServices, enabled => {
@@ -76,6 +90,24 @@ body {
 #app {
   width: 100%;
   color: var(--text-1);
+}
+
+/* Android stretches the root scroll surface as a whole. Keep the shell out
+ * of the route scroller so local elasticity affects only its content. */
+html[data-platform="android"] #app:has(> .page-transition-stage[data-workspace-scroll]) {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: clip;
+}
+
+html[data-platform="android"] #app > .app-header-shell { flex: none; }
+
+html[data-platform="android"] #app > .page-transition-stage[data-workspace-scroll] {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
 }
 
 ::selection {

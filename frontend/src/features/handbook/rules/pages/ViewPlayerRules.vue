@@ -174,7 +174,10 @@ watch(routeScrollTarget, async () => {
   const anchorId = String(route.hash || '').replace(/^#/, '')
   const target = anchorId ? document.getElementById(anchorId) : null
   if (target) target.scrollIntoView({ block: 'start' })
-  else window.scrollTo({ top: 0, left: 0 })
+  else {
+    const scroller = document.querySelector('html[data-platform="android"] .page-transition-stage[data-workspace-scroll]') || window
+    scroller.scrollTo({ top: 0, left: 0 })
+  }
 }, { immediate: true })
 
 onBeforeUnmount(() => uiStore.clearHeaderContext(headerOwner))
