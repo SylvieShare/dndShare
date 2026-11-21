@@ -30,50 +30,69 @@ test('Android applies a pending update from the sessions list after the invite d
   await page.route('**/api/sessions', route => route.fulfill({ json: [] }))
   await page.route('**/api/build-info', route => route.fulfill({ json: { backend: { version: '0.9.4', build: 22, apiContract: 1 }, frontend: release.frontend } }))
   await page.goto('/sessions')
+
   const code = page.getByRole('textbox', { name: 'Код приглашения', exact: true })
-  const panel = page.getByRole('dialog', { name: 'Версии приложения', exact: true })
-  const restart = panel.getByRole('button', { name: 'Перезапустить и обновить', exact: true })
-  const openVersions = async () => {
-    await page.getByRole('button', { name: 'Открыть меню', exact: true }).click()
-    await page.getByRole('button', { name: /^Версии: фронт/ }).click()
-    await expect(restart).toBeEnabled()
-  }
+  const restart = updateButton(page)
+  const alert = page.getByRole('alert').filter({ hasText: 'Закройте форму' })
   await code.fill('ABCDE-12345')
-  await openVersions()
+  await openSidebar(page)
   await restart.click()
-  await expect(panel.getByRole('alert')).toBeVisible()
+  await expect(alert).toBeVisible()
   expect(await page.evaluate(() => window.__updateApplies)).toEqual([])
   await page.keyboard.press('Escape')
   await page.getByRole('button', { name: 'Закрыть меню', exact: true }).click()
   await expect(code).toHaveValue('ABCDE-12345')
   await code.clear()
-  await openVersions()
+  await openSidebar(page)
   await restart.click()
   await expect.poll(() => page.evaluate(() => window.__updateApplies)).toEqual([{ bootToken: 'current-boot' }])
-  await expect(panel.getByRole('alert')).toHaveCount(0)
+  await expect(alert).toHaveCount(0)
 })
 
-for (const width of [390, 834, 1440]) test(`sidebar reports the actual frontend and live backend at ${width}`, async ({ page }) => {
+const updateButton = page => page.getByRole('button', { name: 'Обновить и перезапустить', exact: true })
+const openSidebar = page => page.getByRole('button', { name: 'Открыть меню', exact: true }).click()
+const versionControl = page => page.getByRole('button', { name: /^Версии:/ })
+
+for (const width of [390, 834, 1440]) test(`sidebar offers a page reload only for a newer frontend build at ${width}`, async ({ page }) => {
   await page.setViewportSize({ width, height: 1000 })
   await fixture(page)
-  await page.route('**/api/build-info', route => route.fulfill({ json: { backend: { version: '0.9.4', build: 22, commitSha: 'a'.repeat(40), apiContract: 1 }, frontend: { version: '9.0.0', build: 999 } } }))
-  await page.route('**/api/handbook/sync?**', route => route.fulfill({ json: { protocol: 1, entries: [], hasMore: false, cursor: 'empty', visibleIds: [], metadata: { types: [], suggests: {}, suggestTypes: [], books: [] } } }))
+  let offeredBuild = release.frontend.build + 1
+  await page.route('**/api/build-info', route => route.fulfill({ json: {
+    backend: { version: '0.9.4', build: 22, apiContract: 1 },
+    frontend: { version: '9.0.0', build: offeredBuild },
+  } }))
   await page.goto('/chars')
-  if (width < 1200) await page.getByRole('button', { name: 'Открыть меню', exact: true }).click()
-  const versions = page.getByRole('button', { name: new RegExp(`Версии: фронт ${release.frontend.version}, бэк 0.9.4`) })
-  await expect(versions).toBeVisible({ timeout: 15000 })
-  await expect(versions).toContainText(`Фронт ${release.frontend.version}`)
-  await expect(versions).toContainText('Бэк 0.9.4')
-  await expect(versions).not.toContainText('9.0.0')
-  await versions.click()
-  const panel = page.getByRole('dialog', { name: 'Версии приложения', exact: true })
-  await expect(panel).toContainText('Бэкенд 0.9.4')
-  await expect(panel).toContainText('aaaaaaaa')
-  await page.keyboard.press('Escape')
+  if (width < 1200) await openSidebar(page)
+
+  const update = updateButton(page)
+  const account = page.getByRole('button', { name: 'tester', exact: true })
+  await expect(update).toBeVisible()
+  await expect(account).toBeVisible()
+  const updateBox = await update.boundingBox()
+  const accountBox = await account.boundingBox()
+  expect(updateBox.x).toBeGreaterThanOrEqual(accountBox.x + accountBox.width)
+  expect(Math.abs(updateBox.y + updateBox.height / 2 - accountBox.y - accountBox.height / 2)).toBeLessThan(1)
+  await expect(versionControl(page)).toHaveCount(0)
+
+  const navOrder = await page.locator('.desktop-sidebar .share-sidebar-nav').evaluate(nav =>
+    [...nav.children].map(element => element.className).filter(name => /sidebar-search|game-context|separator/.test(name)))
+  expect(navOrder).toEqual([
+    expect.stringContaining('sidebar-search'),
+    'game-context',
+    'sidebar-search-separator',
+  ])
+
   if (width >= 1200) {
     await page.getByRole('button', { name: 'Свернуть панель', exact: true }).click()
-    await expect(versions).toBeVisible()
-    await versions.click()
-    await expect(panel).toBeVisible()
+    await expect(update).toBeVisible()
   }
+
+  offeredBuild = release.frontend.build
+  const reload = page.waitForEvent('framenavigated', frame => frame === page.mainFrame())
+  await update.click()
+  await reload
+  if (width < 1200) await openSidebar(page)
+  await expect(account).toBeVisible()
+  await expect(update).toHaveCount(0)
+  await expect(versionControl(page)).toHaveCount(0)
 })

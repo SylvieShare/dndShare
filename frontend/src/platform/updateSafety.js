@@ -1,6 +1,6 @@
 export function updateSafePoint(document, pathname, mutations = 0, explicit = false) {
-  if (mutations || document.querySelector('[aria-busy="true"],input:invalid,[aria-invalid="true"]')) return false
-  if ([...document.querySelectorAll('[role="dialog"],[role="menu"]')].some(element => !element.querySelector('[data-build-version-details]') && !element.querySelector('.desktop-sidebar'))) return false
+  if (mutations || document.querySelector('[aria-busy="true"]:not([data-frontend-update-trigger]),input:invalid,[aria-invalid="true"]')) return false
+  if ([...document.querySelectorAll('[role="dialog"],[role="menu"]')].some(element => !element.querySelector('.desktop-sidebar'))) return false
   if (document.activeElement?.matches('input,textarea,select,[contenteditable="true"]')) return false
   if (explicit && /^\/sessions\/?$/.test(pathname)) return !document.querySelector('[data-session-join-unfinished]')
   if (/^\/(?:sessions?|maps|map-screen|screen|world-maps|chars\/new|admin)(?:\/|$)/.test(pathname)) return false

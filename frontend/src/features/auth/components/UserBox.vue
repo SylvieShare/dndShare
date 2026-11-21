@@ -28,6 +28,8 @@ const authStatus = computed(() => useAccountStore().authStatus)
   align-items: center;
 }
 
+.user-box > div { min-width: 0; width: 100%; }
+
 .fade-enter-active { transition: opacity 0.15s ease; }
 .fade-leave-active { transition: opacity 0.1s ease; }
 .fade-enter-from,

@@ -25,9 +25,6 @@
 
     <template #default="{ expanded, toggle }">
       <ActiveSessionShortcuts />
-      <GameContextSelector :compact="!expanded" />
-      <div class="sidebar-context-separator" />
-
       <SidebarNavItem
         v-if="!expanded"
         as="button"
@@ -37,6 +34,8 @@
         @click="openSearch(toggle)"
       />
       <HeaderSearch v-else ref="searchRef" class="sidebar-search" />
+
+      <GameContextSelector :compact="!expanded" />
 
       <div class="sidebar-search-separator" />
 
@@ -62,13 +61,16 @@
     </template>
 
     <template #account="{ expanded }">
-      <div class="sidebar-account-content"><BuildVersions :expanded="expanded" /><UserBox :expanded="expanded" /></div>
+      <div class="sidebar-account-content" :class="{ 'sidebar-account-content--inline': expanded && accountStore.authStatus === 'success' }">
+        <UserBox :expanded="expanded" />
+        <FrontendUpdateAction />
+      </div>
     </template>
   </AppSidebar>
 </template>
 
 <script setup>
-import BuildVersions from '@/shared/ui/BuildVersions.vue'
+import FrontendUpdateAction from '@/shared/ui/FrontendUpdateAction.vue'
 import ActiveSessionShortcuts from '@/features/sessions/components/ActiveSessionShortcuts.vue'
 import { computed, nextTick, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
@@ -130,7 +132,15 @@ defineExpose({ focusSearch: () => searchRef.value?.focus() })
 
 <style scoped>
 :global(html[data-platform="android"] .desktop-sidebar--drawer) { padding-top:var(--native-safe-top, 0px);box-sizing:border-box }
-.sidebar-account-content { display:flex;flex-direction:column;width:100%;min-width:0 }
+.sidebar-account-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  justify-items: start;
+  gap: 4px;
+  width: 100%;
+}
+.sidebar-account-content--inline { grid-template-columns: minmax(0, 1fr) auto; }
 .sidebar-menu-trigger {
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: 44px; height: 48px; border: 0; border-radius: 9px; padding: 0;
@@ -175,12 +185,6 @@ defineExpose({ focusSearch: () => searchRef.value?.focus() })
 .sidebar-search-separator {
   height: 1px;
   margin: 4px 2px 6px;
-  background: var(--border);
-}
-
-.sidebar-context-separator {
-  height: 1px;
-  margin: 6px 2px 4px;
   background: var(--border);
 }
 
