@@ -22,9 +22,9 @@
         <span v-if="selectedElement?.text" class="selected-text">{{ selectedElement.text }}</span>
       </div>
       <div class="screenshot-field">
-        <span class="selected-label">Скриншот области</span>
+        <span v-if="!isAndroid" class="selected-label">Скриншот области</span>
         <div class="screenshot-previews">
-          <figure class="screenshot-preview-card screenshot-preview-card-element">
+          <figure v-if="!isAndroid" class="screenshot-preview-card screenshot-preview-card-element">
             <figcaption>
               <strong>Скриншот элемента</strong>
               <span>Выбранная область и контекст</span>
@@ -93,6 +93,7 @@
 
 <script setup>
 import { AppModalFrame, FormActionButtons, FormField, FormTextarea } from '@sylvieshare/share-ui'
+import { isAndroid } from '@/platform/storage'
 import { useErrorReporter } from '../composables/useErrorReporter'
 const {
   selecting, formOpen, submitting, description,

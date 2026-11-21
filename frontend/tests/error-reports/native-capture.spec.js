@@ -1,13 +1,26 @@
 import { expect, test } from '@playwright/test'
+import { readFileSync } from 'node:fs'
+import { fixture } from '../tutorials/fixtures/character-layout.js'
+
+const release = JSON.parse(readFileSync(new URL('../../../release/versions.json', import.meta.url), 'utf8'))
 
 async function nativeFixture(page, mode = 'success') {
   await page.addInitScript(({ mode }) => {
     window.CapacitorCustomPlatform = { name: 'android' }
     window.__nativeCalls = []
     window.__nativeMode = mode
+    const plugins = {
+      ReportCapture: ['captureViewport'],
+      LocalStore: ['get', 'scan', 'batch', 'clear'],
+      FrontendUpdater: ['getStatus', 'ready', 'check', 'checkpoint'],
+    }
     window.Capacitor = {
-      PluginHeaders: [{ name: 'ReportCapture', methods: [{ name: 'captureViewport', rtype: 'promise' }] }],
+      PluginHeaders: Object.entries(plugins).map(([name, methods]) => ({
+        name, methods: methods.map(name => ({ name, rtype: 'promise' })),
+      })),
       nativePromise: async (plugin, method) => {
+        if (plugin === 'LocalStore') return method === 'scan' ? { entries: [] } : {}
+        if (plugin === 'FrontendUpdater') return { android: { version: '0.3.8' }, active: { bundleId: 'builtin' }, pending: false }
         if (plugin !== 'ReportCapture' || method !== 'captureViewport') throw Error('Unexpected bridge call')
         window.__nativeCalls.push({ picker: !!document.querySelector('.selection-hint'), form: !!document.getElementById('error-report-form') })
         const image = document.createElement('canvas')
@@ -20,34 +33,38 @@ async function nativeFixture(page, mode = 'success') {
       },
     }
   }, { mode })
-  await page.goto('/tests/error-reports/fixtures/native-capture.html')
-  await expect(page.locator('#report-target')).toBeVisible()
+  await fixture(page)
+  await page.route('**/api/sessions', route => route.fulfill({ json: [] }))
+  await page.route('**/api/build-info', route => route.fulfill({
+    json: { backend: { ...release.backend, apiContract: release.contracts.api }, frontend: release.frontend },
+  }))
+  await page.goto('/sessions')
+  await expect(page.getByRole('textbox', { name: 'Код приглашения' })).toBeVisible()
 }
 
 async function selectTarget(page) {
   await page.keyboard.press('Alt+Shift+E')
   await expect(page.locator('.selection-hint')).toBeVisible()
-  await page.locator('#report-target').click()
+  await page.getByRole('textbox', { name: 'Код приглашения' }).click()
 }
 
-test('Android captures a clean viewport once and retains it across context changes and submit retry', async ({ page }) => {
+test('Android attaches just one clean viewport and retains it across submit retry', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 900 })
+  await nativeFixture(page)
   let attempts = 0
   let submitted
   await page.route('**/api/error-reports', route => {
     submitted = route.request().postDataJSON()
     return ++attempts === 1 ? route.fulfill({ status: 503, json: {} }) : route.fulfill({ status: 201, json: { id: 1 } })
   })
-  await nativeFixture(page)
   await selectTarget(page)
   const dialog = page.getByRole('dialog', { name: 'Что работает неправильно?' })
   const screen = dialog.getByAltText('Скриншот экрана приложения')
   await expect(screen).toBeVisible()
-  await expect(dialog.getByAltText('Скриншот выбранного элемента')).toBeVisible()
+  await expect(dialog.getByAltText('Скриншот выбранного элемента')).toHaveCount(0)
+  await expect(dialog.getByRole('button', { name: 'Взять больше контекста' })).toHaveCount(0)
   expect(await page.evaluate(() => window.__nativeCalls)).toEqual([{ picker: false, form: false }])
   const original = await screen.getAttribute('src')
-  await dialog.getByRole('button', { name: 'Взять больше контекста' }).click()
-  await expect(dialog.getByRole('button', { name: 'Взять меньше контекста' })).toBeEnabled()
   await dialog.getByRole('textbox').fill('Ошибка на экране приложения')
   await dialog.getByRole('button', { name: 'Отправить', exact: true }).click()
   await expect(dialog.getByText('Не удалось отправить заявку. Попробуйте ещё раз.')).toBeVisible()
@@ -55,14 +72,17 @@ test('Android captures a clean viewport once and retains it across context chang
   await dialog.getByRole('button', { name: 'Отправить', exact: true }).click()
   await expect(dialog).toHaveCount(0)
   expect(submitted.viewportScreenshot).toBe(original)
-  expect(submitted.screenshot).toMatch(/^data:image\/jpeg;base64,/)
+  expect(submitted.screenshot).toBeUndefined()
+  expect(submitted.element).toMatchObject({ client: 'android', tagName: 'input' })
+  expect(submitted.element.selector).toBeTruthy()
+  expect(submitted.element.screenshotContextLevel).toBeUndefined()
   expect(await page.evaluate(() => window.__nativeCalls.length)).toBe(1)
 })
 
-test('native viewport failure still allows a report with its selected-element screenshot', async ({ page }) => {
+test('native viewport failure still allows a report with element diagnostics', async ({ page }) => {
+  await nativeFixture(page, 'failure')
   let submitted
   await page.route('**/api/error-reports', route => { submitted = route.request().postDataJSON(); return route.fulfill({ status: 201, json: { id: 1 } }) })
-  await nativeFixture(page, 'failure')
   await selectTarget(page)
   const dialog = page.getByRole('dialog', { name: 'Что работает неправильно?' })
   await expect(dialog.getByText('Не удалось создать снимок экрана.', { exact: false })).toBeVisible()
@@ -71,7 +91,8 @@ test('native viewport failure still allows a report with its selected-element sc
   await dialog.getByRole('button', { name: 'Отправить', exact: true }).click()
   await expect(dialog).toHaveCount(0)
   expect(submitted.viewportScreenshot).toBeUndefined()
-  expect(submitted.screenshot).toMatch(/^data:image\/jpeg;base64,/)
+  expect(submitted.screenshot).toBeUndefined()
+  expect(submitted.element.selector).toBeTruthy()
 })
 
 test('native Back cancels a pending copy and a late result cannot open the form', async ({ page }) => {

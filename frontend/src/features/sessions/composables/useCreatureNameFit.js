@@ -11,11 +11,32 @@ function enqueue(job){
     const jobs=[...pendingFits];pendingFits.clear()
     for(const entry of jobs)entry.reset()
     const sizes=jobs.map(entry=>entry.measure())
-    jobs.forEach((entry,index)=>entry.apply(sizes[index]))
+    fitWrappedNames(sizes.filter(size => size?.element))
+    jobs.forEach((entry,index)=>entry.apply(sizes[index]?.minimum ?? sizes[index]))
   })
 }
 
-export function useCreatureNameFit() {
+function fitsLineCount(element, maxLines) {
+  const lineHeight = parseFloat(getComputedStyle(element).lineHeight)
+  return element.offsetHeight <= maxLines * lineHeight + 0.5
+}
+
+function fitWrappedNames(fits) {
+  if (!fits.length) return
+  // Batch every trial size across the visible groups before reading layout.
+  for (let step = 0; step < 8; step++) {
+    for (const fit of fits) {
+      fit.trial = (fit.minimum + fit.maximum) / 2
+      fit.element.style.fontSize = `${fit.trial}px`
+    }
+    for (const fit of fits) {
+      if (fitsLineCount(fit.element, fit.maxLines)) fit.minimum = fit.trial
+      else fit.maximum = fit.trial
+    }
+  }
+}
+
+export function useCreatureNameFit({ maxLines = 1 } = {}) {
   const nameRow=ref(null),nameText=ref(null),observed=new Set()
   let observer,disposed=false
   const job={
@@ -24,6 +45,9 @@ export function useCreatureNameFit() {
       const row=nameRow.value,text=nameText.value
       if(disposed||!row||!text||!row.clientWidth)return null
       const base=parseFloat(getComputedStyle(text.parentElement).fontSize)
+      if (maxLines > 1) {
+        return fitsLineCount(text, maxLines) ? null : { element: text, minimum: 0.1, maximum: base, maxLines }
+      }
       const children=[...row.children].filter(child=>child.getClientRects().length)
       const siblings=children.filter(child=>!child.contains(text))
       const gap=parseFloat(getComputedStyle(row).columnGap)||0

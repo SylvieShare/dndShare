@@ -7,7 +7,7 @@ async function open(page,width){
   await page.setViewportSize({width,height:932})
   const encounter={active:true,round:3,turnIndex:0,combatants:[creature('guard','Страж','combat',0),creature('wolf','Волк','reserve',1),creature('fox','Лиса','reserve',2)]}
   const api=await sessionLayout(page,{url:'/sessions/test',participants:[],encounter})
-  await expect(page.locator('.chapter-canvas-stage')).toHaveCSS('background-image',/radial-gradient/,{timeout:15000})
+  await expect(page.locator('.chapter-canvas-stage--story')).toBeVisible({timeout:15000})
   await page.getByRole('button',{name:/Открыть бой/}).click()
   await expect(page.locator('.enc-wrap--workspace')).toBeVisible()
   await expect(page.locator('.chapter-canvas-stage')).toHaveCSS('background-image','none')

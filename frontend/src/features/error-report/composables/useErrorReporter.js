@@ -128,16 +128,9 @@ export function useErrorReporter() {
     event.stopImmediatePropagation()
 
     selectedElement.value = describeElement(target)
-    screenshotContextElements.value = screenshotContextsFor(target)
-    screenshotContextLevel.value = 0
-    updateScreenshotContextMetadata()
     selectedPageURL.value = window.location.href
     stopSelection()
     const session = ++screenshotSession
-    pendingScreenshot = { element: target, session }
-    screenshotDataURL.value = ''
-    screenshotError.value = ''
-    screenshotCapturing.value = true
     if (isAndroid) {
       preparingReport.value = true
       try {
@@ -155,6 +148,12 @@ export function useErrorReporter() {
       }
       if (session !== screenshotSession) return
       if (selectedPageURL.value !== window.location.href) { resetScreenshot(); return }
+    } else {
+      screenshotContextElements.value = screenshotContextsFor(target)
+      screenshotContextLevel.value = 0
+      updateScreenshotContextMetadata()
+      pendingScreenshot = { element: target, session }
+      screenshotCapturing.value = true
     }
     formOpen.value = true
   }

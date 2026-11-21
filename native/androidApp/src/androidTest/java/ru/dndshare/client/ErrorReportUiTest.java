@@ -106,8 +106,8 @@ public class ErrorReportUiTest {
             fourFingerTap(activity);
             waitFor(activity, "!!document.querySelector('.selection-hint')");
             evaluate(activity, "document.getElementById('native-report-target').click()");
-            waitFor(activity, "!!document.querySelector('.screenshot-preview')?.src.startsWith('data:image/jpeg;base64,')");
             waitFor(activity, "!!document.querySelector('.screenshot-viewport-preview')?.src.startsWith('data:image/jpeg;base64,')");
+            assertEquals("true", evaluate(activity, "!document.querySelector('.screenshot-preview-frame')"));
             String viewportURL = (String) new org.json.JSONTokener(evaluate(activity, "document.querySelector('.screenshot-viewport-preview').src")).nextValue();
             byte[] viewportBytes = Base64.decode(viewportURL.substring(viewportURL.indexOf(',') + 1), Base64.DEFAULT);
             assertTrue("Viewport must fit the server attachment limit", viewportBytes.length <= 2 * 1024 * 1024);
@@ -130,8 +130,8 @@ public class ErrorReportUiTest {
             }
             evaluate(activity, "Array.from(document.querySelectorAll('.aem-footer button')).find(button=>button.textContent.trim()==='Отправить').click()");
             waitFor(activity, "window.__nativeReport?.description==='Ошибка в Android' && !document.getElementById('error-report-form')");
-            assertEquals("true", evaluate(activity, "window.__nativeReport.element.client==='android' && window.__nativeReport.element.selector==='#native-report-target' && window.__nativeReport.screenshot.startsWith('data:image/jpeg;base64,')"));
-            assertEquals("true", evaluate(activity, "window.__nativeReport.viewportScreenshot.startsWith('data:image/jpeg;base64,') && window.__nativeReport.viewportScreenshot!==window.__nativeReport.screenshot"));
+            assertEquals("true", evaluate(activity, "window.__nativeReport.element.client==='android' && window.__nativeReport.element.selector==='#native-report-target' && window.__nativeReport.screenshot===undefined"));
+            assertEquals("true", evaluate(activity, "window.__nativeReport.viewportScreenshot.startsWith('data:image/jpeg;base64,')"));
             evaluate(activity, "window.fetch=window.__reportFetch;document.getElementById('native-report-target').remove();document.getElementById('native-report-webgl').remove()");
         }
     }
