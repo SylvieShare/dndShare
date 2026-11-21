@@ -82,6 +82,7 @@ function selectView(key) {
 </script>
 
 <style scoped>
+.chapter-toolbar { --workspace-subheader-inset: 0px; }
 .chapter-toolbar-center { display:flex;align-items:center;justify-content:center;min-width:0;max-width:100%;width:100%; }
 .chapter-toolbar-actions { display:flex;align-items:center;gap:var(--spacing-xs); }
 .chapter-toolbar-phone-actions { padding:0 var(--spacing-small) var(--spacing-xs); }

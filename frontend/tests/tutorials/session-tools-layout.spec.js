@@ -47,9 +47,39 @@ async function layout(page,header,tools,width,info) {
   await info.attach(`toolbar-${width}`,{body:await header.screenshot(),contentType:'image/png'})
 }
 
+async function checkSessionNavigation(header, width, info) {
+  const navigation = header.getByRole('navigation', { name: 'Раздел сессии' })
+  if (width >= 1200) {
+    await expect(header).toHaveClass(/workspace-header--navigation-inline/)
+    return
+  }
+
+  const frame = await navigation.boundingBox()
+  expect(frame.x).toBeCloseTo(0, 0)
+  expect(frame.x + frame.width).toBeCloseTo(width, 0)
+  await expect(navigation).toHaveCSS('overflow-x', 'auto')
+
+  const first = navigation.getByRole('button', { name: 'Сюжет', exact: true })
+  const last = navigation.getByRole('button', { name: 'Настройки', exact: true })
+  await first.focus()
+  await first.press('End')
+  await expect(last).toBeFocused()
+  await expect(last).toBeInViewport({ ratio: .99 })
+  await expect.poll(() => navigation.evaluate(node => node.scrollLeft)).toBeGreaterThan(0)
+  await last.press('Home')
+  await expect(first).toBeFocused()
+  await expect(first).toBeInViewport({ ratio: .99 })
+
+  if (width === 704) {
+    await navigation.evaluate(node => { node.scrollLeft = 24 })
+    await info.attach('session-tabs-scrolled-704', { body: await header.screenshot(), contentType: 'image/png' })
+  }
+}
+
 for(const width of [475,704,1440])test(`direct session tools and music header at ${width}`,async({page},info)=>{
   const {header,tools}=await open(page,width)
   await layout(page,header,tools,width,info)
+  await checkSessionNavigation(header,width,info)
   for(const [name,panel] of [['Экран показа','.presentation-menu'],['Таймеры','.session-timer-menu'],['Кубики','.dice-panel'],['Инвентарь','.session-inventory']]){
     const button=tools.getByRole('button',{name,exact:true})
     await button.click()
