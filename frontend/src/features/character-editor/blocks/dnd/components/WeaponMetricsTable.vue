@@ -20,7 +20,7 @@
       <div v-if="visibleProperties.length" class="weapon-metrics__cell weapon-metrics__properties" role="group" aria-label="Свойства оружия">
         <div class="weapon-metrics__property-list">
           <component :is="interactive ? 'button' : 'span'" v-for="(property, index) in visibleProperties" :key="property.id ?? index"
-            :type="interactive ? 'button' : undefined" class="weapon-metrics__property"
+            :type="interactive ? 'button' : undefined" class="weapon-metrics__property" data-sheet-swipe
             :class="{ 'weapon-metrics__property--described': interactive }"
             :aria-expanded="interactive ? openedKey === keyOf(property) : undefined"
             @click.stop="interactive && showDescription($event, property)" @pointerdown.stop
