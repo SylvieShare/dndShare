@@ -37,7 +37,7 @@
           @opening="phoneDnd && mobileSettings?.close()" />
         <template v-if="dnd">
           <CharacterBlock v-show="!phoneDnd" ref="restMenu" block-id="rest" :options="{ embedded: true, header: true, externalTrigger: phoneDnd }" />
-          <SettingsMenuTile v-if="phoneDnd" ref="mobileSettings" :block="{ props: { header: true } }" hide-history @opening="closeMobileTools">
+          <SettingsMenuTile v-if="phoneDnd" ref="mobileSettings" :block="{ props: { header: true } }" @opening="closeMobileTools">
             <template #shortcuts>
               <div v-if="hasSession" ref="sessionShortcut" />
               <ActionButton layout="stacked" variant="secondary" :disabled="!charCtx.ownerMode"

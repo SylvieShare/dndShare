@@ -1,5 +1,14 @@
 import { test, expect } from '@playwright/test'
 
+test('the session sheet menu for VTM keeps sources and PDF without undo or redo', async ({ page }) => {
+  await page.goto('/tests/tutorials/fixtures/character-sheet-save.html?vtm')
+  await page.locator('.csm').getByTitle('Меню', { exact: true }).click()
+  const menu = page.locator('.menu-dropdown[data-tutorial="character-menu"]')
+  await expect(menu.getByRole('button', { name: /Источники/ })).toBeVisible()
+  await expect(menu.getByRole('button', { name: 'Получить PDF' })).toBeVisible()
+  await expect(menu.getByRole('button', { name: /^(Отменить|Повторить) изменение$/ })).toHaveCount(0)
+})
+
 for (const live of [false, true])
   for (const mode of ['owner', 'dm'])
     test(`sheet modal persists edits for ${mode} with live=${live}`, async ({

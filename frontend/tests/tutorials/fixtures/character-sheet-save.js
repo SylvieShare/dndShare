@@ -16,7 +16,7 @@ const pinia = createPinia(),
 account.user = { id: 1, login: 'Игрок', roles: [] }
 account.status = 'success'
 window.savedCharacter = {
-  templateName: 'DND5',
+  templateName: params.has('vtm') ? 'VTM20' : 'DND5',
   userId: params.has('other') ? 2 : 1,
   version: 1,
   publicVisible: true,

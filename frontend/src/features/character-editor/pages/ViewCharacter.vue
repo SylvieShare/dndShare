@@ -129,13 +129,12 @@ const snapshotRecorder = createCharacterSnapshotRecorder(uuid, () => isOwner.val
 onBeforeUnmount(() => snapshotRecorder.dispose())
 
 const pendingSessionEvents = []
-const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError, reloadSave, flushSave, historyState, sync: documentSync } = useSaveDebounce(uuid, data, {
+const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError, reloadSave, flushSave, sync: documentSync } = useSaveDebounce(uuid, data, {
   version, serverDocument, canSave:()=>isOwner.value,
   takeEvents: () => pendingSessionEvents.splice(0),
   onMetadata: applyMetadata,
 })
 
-Object.assign(charCtx, { historyState, undo: () => documentSync.undo(), redo: () => documentSync.redo() })
 const redCommands=useRedCommands({uuid,version,canEdit:isOwner,flushSave,sync:documentSync})
 charCtx.redCommands=redCommands
 

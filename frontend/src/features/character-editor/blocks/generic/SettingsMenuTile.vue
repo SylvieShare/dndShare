@@ -19,7 +19,6 @@
         <CloneCharacterAction @cloned="open = false" />
         <TutorialRestart @restart="open = false" />
         <CharacterEditionAction @opened="open = false" />
-        <CharacterUndoActions v-if="!hideHistory" />
         <div v-if="ctx.saveStatus === 'pending' || ctx.saveStatus === 'saving'" class="sm-save" :class="ctx.saveStatus">
           <span class="sm-dot"></span>
           <span class="sm-save-label">{{ saveLabel }}</span>
@@ -61,7 +60,6 @@
 <script setup>
 import CharacterMenuPopover from '@/features/character-editor/components/CharacterMenuPopover.vue'
 import UtilityCell from '@/features/character-editor/components/UtilityCell.vue'
-import CharacterUndoActions from '@/features/character-editor/components/CharacterUndoActions.vue'
 import CharacterEditionAction from '@/features/character-editor/components/CharacterEditionAction.vue'
 import CloneCharacterAction from '@/features/character-editor/components/CloneCharacterAction.vue'
 import TutorialRestart from '@/features/tutorials/components/TutorialRestart.vue'
@@ -76,7 +74,7 @@ import ContentSourcesModal from '@/features/character-editor/components/ContentS
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { svgColorFilter } from '@/shared/lib/svgColorFilter'
 
-const props = defineProps({ block: Object, hideHistory: Boolean })
+const props = defineProps({ block: Object })
 const emit = defineEmits(['opening'])
 const ctx = inject('charCtx', { canEdit: false, canTogglePublic: false, publicVisible: false, saveStatus: 'idle', pendingSecondsLeft: 0 })
 const menuAnchor = ref(null)

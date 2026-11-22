@@ -17,7 +17,6 @@ const urgentFields = new Set([
 ])
 
 export function useSaveDebounce(uuid, data, options = {}) {
-  const historyState = ref({ canUndo: false, canRedo: false })
   const saveStatus = ref('idle'),
     saveError = ref(''),
     pendingSecondsLeft = ref(0)
@@ -55,7 +54,6 @@ export function useSaveDebounce(uuid, data, options = {}) {
       options.onMetadata?.(response.metadata)
     },
     onStatus(state) {
-      historyState.value = { canUndo: state.canUndo, canRedo: state.canRedo }
       saveStatus.value =
         state.status === 'conflict'
           ? 'error'
@@ -206,7 +204,6 @@ export function useSaveDebounce(uuid, data, options = {}) {
     globalThis.window?.removeEventListener('keydown', keydown)
   })
   return {
-    historyState,
     saveStatus,
     saveError,
     pendingSecondsLeft,

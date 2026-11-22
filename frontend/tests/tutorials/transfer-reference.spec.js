@@ -45,7 +45,7 @@ for (const width of [475, 834, 1440]) test(`session menu and transfer references
       if (index) expect(box.x).toBeGreaterThanOrEqual(boxes[index - 1].x + 48)
     }
     await gear.click()
-    await expect(settings.getByRole('button', { name: /^(Отменить|Повторить) изменение$/ })).toHaveCount(2)
+    await expect(settings.getByRole('button', { name: /^(Отменить|Повторить) изменение$/ })).toHaveCount(0)
     await page.keyboard.press('Escape')
   }
   await (await sheetTool(page, 'Отдых и рассвет')).click()
