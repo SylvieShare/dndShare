@@ -64,7 +64,7 @@ EncounterPreviewMinWidth (280). Между колонками оставлен L
 В шапке листа группа показателей с кубиками и добавлением состояния использует SheetHeaderMetricsWidth (480),
 SheetHeaderMetricHeight (64), SheetHeaderMetricMinWidth (56) и SheetHeaderMetricDie (32).
 В узком окне кнопки переносятся, сохраняя минимальную ширину. Увеличенные HP используют
-SheetHeaderHealthHeight (40), SheetHeaderHealthMinWidth (112),
+SheetHeaderHealthHeight (36), SheetHeaderHealthMinWidth (112),
 SheetHeaderHealthIcon (20) и типографику SheetHeaderHealth (30/32).
 
 Фиксированные метки режимов броска — системная графика интерфейса: прозрачные

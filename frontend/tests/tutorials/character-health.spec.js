@@ -7,10 +7,10 @@ async function sheetFixture(page) {
   return api
 }
 
-for (const width of [390, 834, 1440]) test(`large HP and separate header AC fit without overlap; passives stay in the menu at ${width}`, async ({ page }, testInfo) => {
+for (const width of [390, 475, 834, 1440]) test(`large HP and separate header AC fit without overlap; passives stay in the menu at ${width}`, async ({ page }, testInfo) => {
   const errors = []
   page.on('pageerror', error => errors.push(error.message))
-  await page.setViewportSize({ width, height: 900 })
+  await page.setViewportSize({ width, height: width === 475 ? 751 : 900 })
   const api = await sheetFixture(page)
   Object.assign(api.document().values.hp, { current: 18, max: { base: 23, bonuses: [] }, temp: 5 })
   await page.goto('/char/test')
@@ -26,7 +26,7 @@ for (const width of [390, 834, 1440]) test(`large HP and separate header AC fit 
   await expect(heading.locator('.heading-armor')).toHaveCount(0)
   await expect(page.locator('[data-header-metric="armor"] strong')).toHaveText('11')
   await expect(health).toHaveClass(/heading-health--enlarged/)
-  expect((await health.boundingBox()).height).toBeGreaterThanOrEqual(39.5)
+  await expect(health).toHaveCSS('height', '36px')
   await expect(health).toHaveCSS('border-top-width', '1px')
   await expect(health.locator('.health-beat')).toHaveAttribute('aria-hidden', 'true')
   await expect(health.locator('[role="meter"]')).toHaveCount(0)
@@ -55,6 +55,14 @@ for (const width of [390, 834, 1440]) test(`large HP and separate header AC fit 
   // Transformed bounds may exceed the CSS width by a floating-point fraction.
   expect((await heading.boundingBox()).width).toBeLessThanOrEqual(420.5)
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
+  if (width === 475) {
+    await health.click()
+    const editor = page.getByRole('dialog', { name: 'Здоровье', exact: true })
+    await expect(editor).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(editor).toHaveCount(0)
+    expect(api.writes).toEqual([])
+  }
   expect(errors).toEqual([])
 })
 
