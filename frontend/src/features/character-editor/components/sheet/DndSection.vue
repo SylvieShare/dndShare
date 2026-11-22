@@ -12,8 +12,8 @@
     <DndAbilities v-else-if="section === 'abilities'" :format="format" />
     <DndPersonality v-else-if="section === 'personality'" :format="format" />
     <template v-else-if="section === 'journal'">
-      <CharacterBlock block-id="diary" />
       <BaseTile :outlined="false" class="sheet-notes"><CharacterBlock block-id="notes" /></BaseTile>
+      <CharacterBlock block-id="diary" />
     </template>
   </div>
 </template>
