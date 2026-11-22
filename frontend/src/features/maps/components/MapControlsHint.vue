@@ -4,5 +4,10 @@ import WorkspaceControlsHint from '@/shared/ui/WorkspaceControlsHint.vue'
 defineProps({ lines: { type: Array, required: true } })
 </script>
 <style scoped>
-.map-controls-hint { --workspace-hint-inset: var(--map-overlay-left, 0px); }
+.map-controls-hint.workspace-controls-hint {
+  position: static;
+  max-width: min(420px, 100%);
+  max-height: min(50dvh, 320px);
+  pointer-events: auto;
+}
 </style>

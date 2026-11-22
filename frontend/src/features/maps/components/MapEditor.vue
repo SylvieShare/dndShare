@@ -127,8 +127,12 @@
           @resources="e.modelMemory = $event"
           @gesture="handleGesture"
           @camera-move="cameraMoved"
-        />
-        <MapEditingTools v-if="!playerPreview && !e.conflict" :editor="e" @paste="pasteFromToolbar" @cancel="cancelFromToolbar" @fill="e.fillRoom = !e.fillRoom; placement.cameraMoved()" />
+        >
+          <template v-if="!playerPreview && !e.conflict" #editing-tools>
+            <MapEditingTools :editor="e" @paste="pasteFromToolbar" @cancel="cancelFromToolbar"
+              @fill="e.fillRoom = !e.fillRoom; placement.cursor.moved()" />
+          </template>
+        </MapCanvas>
         <slot name="canvas-overlay" :editor="e" :canvas="canvas" />
         <MapSelectionPanel
           ref="selectionPanel"

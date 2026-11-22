@@ -39,22 +39,29 @@
       @close="loadingErrors.open.value = false"
       @retry="retry"
     />
-    <div class="map-canvas-corner">
-      <MapDownloadManager
-        :progress="downloads"
-        @retry="retry"
-        @details="loadingErrors.open.value = true"
-      />
-      <MapCanvasControls
-        v-if="!readonly"
-        :top-view="topView"
-        :flat="document.kind === 'image'"
-        @zoom="zoom"
-        @fit="fit"
-        @toggle-view="toggleView"
-      />
+    <div class="map-canvas-dock">
+      <div class="map-canvas-dock-row" :class="{ 'map-canvas-dock-row--flat': document.kind === 'image' }">
+        <div class="map-canvas-dock-actions">
+          <MapControlsHint v-if="!readonly && hintLines.length" :lines="hintLines" />
+          <slot name="editing-tools" />
+        </div>
+        <div class="map-canvas-corner">
+          <MapDownloadManager
+            :progress="downloads"
+            @retry="retry"
+            @details="loadingErrors.open.value = true"
+          />
+          <MapCanvasControls
+            v-if="!readonly"
+            :top-view="topView"
+            :flat="document.kind === 'image'"
+            @zoom="zoom"
+            @fit="fit"
+            @toggle-view="toggleView"
+          />
+        </div>
+      </div>
     </div>
-    <MapControlsHint v-if="!readonly && hintLines.length" :lines="hintLines" />
   </div>
 </template>
 <script setup>
@@ -399,23 +406,50 @@ defineExpose({
 .map-canvas-surface :deep(canvas) {
   display: block;
 }
-.map-canvas-corner {
+.map-canvas-dock {
+  container: map-dock / inline-size;
   position: absolute;
-  right: 16px;
-  bottom: 16px;
+  inset: 0;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 var(--spacing-large) var(--spacing-large) calc(var(--map-overlay-left, 0px) + var(--spacing-medium));
+  pointer-events: none;
+}
+.map-canvas-dock-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-small);
+}
+.map-canvas-dock-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-small);
+  min-width: 0;
+  max-width: 100%;
+}
+.map-canvas-corner {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 8px;
-  max-width: calc(100% - 32px);
-  pointer-events: none;
+  flex: none;
+  gap: var(--spacing-small);
+  margin-inline-start: auto;
+  max-width: 100%;
 }
 .map-canvas-corner > * {
   pointer-events: auto;
 }
 @container map-field (max-width: 599px) {
-  .map-canvas-corner { position: static; max-width: none; }
-  .map-canvas-corner :deep(.map-download-manager) { position: absolute; top: 12px; right: 16px; }
-  .map-canvas-corner :deep(.map-canvas-controls) { position: absolute; right: 16px; bottom: 16px; }
+  .map-canvas-corner :deep(.map-download-manager) { position: absolute; top: var(--spacing-medium); right: var(--spacing-large); }
+}
+/* Keep the three base actions reachable when both groups cannot fit side by side. */
+@container map-dock (width < 376px) {
+  .map-canvas-dock-row:not(.map-canvas-dock-row--flat) { flex-direction: column; align-items: stretch; }
+}
+@container map-dock (width < 324px) {
+  .map-canvas-dock-row { flex-direction: column; align-items: stretch; }
 }
 </style>
