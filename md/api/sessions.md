@@ -13,6 +13,10 @@
 ## Сессии и сцены
 
 - `GET|POST /api/sessions`, `GET|PATCH /api/sessions/{uuid}` and session delete;
+- `POST /api/sessions` creates the session, current chapter, first scene and
+  a text description block in one transaction. The starter chapter has
+  `imageId: 0` and the starter scene has no location or cover. Their metadata
+  can be edited before imagery is added.
 - join/leave/kick participant. `POST /api/sessions/{uuid}/join` accepts
   `{charId,replaceExisting}`; without explicit replacement it returns `409` when
   the character belongs to another session, while confirmed replacement moves

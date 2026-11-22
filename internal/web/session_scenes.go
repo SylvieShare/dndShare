@@ -224,7 +224,7 @@ func (s *Server) handleUpdateScene(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный статус сценария")
 		return
 	}
-	if !validSceneVisualChoice(req.LocationID, req.ImageID) {
+	if validSceneVisualChoice(previous.LocationID, previous.ImageID) && !validSceneVisualChoice(req.LocationID, req.ImageID) {
 		badRequest(w, "Выберите локацию или изображение сценария")
 		return
 	}

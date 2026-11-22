@@ -267,11 +267,11 @@ func (s *Store) GetCurrentChapters(ctx context.Context, sessionIDs []int64) (map
 	}
 	rows, err := s.pool.Query(ctx,
 		`SELECT s.id, ch.number, ch.name, arc."order", arc.name,
-		        image.url, ch.image_focal_x, ch.image_focal_y
+		        COALESCE(image.url, ''), ch.image_focal_x, ch.image_focal_y
 		 FROM dndshare."session" s
 		 JOIN dndshare.session_chapter ch ON ch.id = s.current_chapter_id
 		 JOIN dndshare.session_arc arc ON arc.id = ch.arc_id
-		 JOIN dndshare.storage_image image ON image.id = ch.image_id AND image.deleted = false
+		 LEFT JOIN dndshare.storage_image image ON image.id = ch.image_id AND image.deleted = false
 		 WHERE s.id = ANY($1)`,
 		sessionIDs,
 	)
@@ -293,7 +293,7 @@ func (s *Store) GetCurrentChapters(ctx context.Context, sessionIDs []int64) (map
 	return result, rows.Err()
 }
 
-// CreateSessionWithFirstArc создаёт сессию и её пустую первую арку одной транзакцией.
+// CreateSessionWithFirstArc creates the session and its starter story in one transaction.
 func (s *Store) CreateSessionWithFirstArc(ctx context.Context, userID int64, name string, description *string, systemID *int64, editionID ...*int64) (int64, string, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
@@ -313,8 +313,26 @@ func (s *Store) CreateSessionWithFirstArc(ctx context.Context, userID int64, nam
 	}
 
 	if _, err := tx.Exec(ctx,
-		`INSERT INTO dndshare.session_arc (session_id, "order", name) VALUES ($1, 1, $2)`,
-		id, "Основная арка",
+		`WITH starter_arc AS (
+			INSERT INTO dndshare.session_arc (session_id, "order", name)
+			VALUES ($1, 1, 'Основная арка')
+			RETURNING id
+		), starter_chapter AS (
+			INSERT INTO dndshare.session_chapter (session_id, arc_id, number, name, position_y)
+			SELECT $1, id, '1', 'Начало истории', 80 FROM starter_arc
+			RETURNING id
+		), starter_scene AS (
+			INSERT INTO dndshare.session_scene (chapter_id, name)
+			SELECT id, 'Первая сцена' FROM starter_chapter
+			RETURNING id
+		), starter_description AS (
+			INSERT INTO dndshare.session_scene_item (scene_id, "type", title, "data")
+			SELECT id, 'text', 'Описание сцены', '{"text":""}'::jsonb FROM starter_scene
+		)
+		UPDATE dndshare."session" AS session
+		SET current_chapter_id = starter_chapter.id
+		FROM starter_chapter
+		WHERE session.id = $1`, id,
 	); err != nil {
 		return 0, "", err
 	}

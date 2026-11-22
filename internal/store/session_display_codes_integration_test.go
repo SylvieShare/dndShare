@@ -26,7 +26,10 @@ func TestSessionDisplayCodesAndLookup(t *testing.T) {
 	  name text, description text, system_id bigint, source_version_id bigint, invite_code text, current_chapter_id bigint,
 	  created_at timestamptz DEFAULT now(), changed_at timestamptz DEFAULT now(), deleted bool DEFAULT false
 	);
-	CREATE TABLE dndshare.session_arc (session_id bigint, "order" int, name text);
+	CREATE TABLE dndshare.session_arc (id bigserial PRIMARY KEY, session_id bigint, "order" int, name text);
+	CREATE TABLE dndshare.session_chapter (id bigserial PRIMARY KEY, session_id bigint, arc_id bigint, number text, name text, position_y double precision);
+	CREATE TABLE dndshare.session_scene (id bigserial PRIMARY KEY, chapter_id bigint, name text);
+	CREATE TABLE dndshare.session_scene_item (scene_id bigint, "type" text, title text, "data" jsonb);
 	CREATE TABLE dndshare.session_presentation_state (session_id bigint);`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
 	exec(testSchemaFunctions(t))

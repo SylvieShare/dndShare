@@ -25,6 +25,10 @@ Frontend: `frontend/src/features/sessions`. Backend:
 `internal/web/sessions.go`, `session_scenes.go`, `session_world.go`, `music.go`
 and matching store files.
 
+В новой сессии уже есть текущая глава «Начало истории» в основной арке,
+«Первая сцена» и пустой блок «Описание сцены». Мастер может сразу открыть
+сценарий, заполнить описание и добавить обложки.
+
 ## Постоянная боковая панель
 
 У рабочего места мастера одна `SessionWorkspaceSidebar`, закреплённая под общей

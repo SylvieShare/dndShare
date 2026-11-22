@@ -43,7 +43,7 @@
         :submit-text="scene ? 'Сохранить' : 'Создать сценарий'"
         loading-text="Сохранение…"
         :loading="saving"
-        :can-submit="!!draft.name.trim() && (!!draft.imageId || !!draft.locationId)"
+        :can-submit="canSubmit"
         @cancel="$emit('close')"
         @submit="submit"
       />
@@ -99,9 +99,11 @@ const currentImageUrl = computed(() => {
 const inheritedImageLabel = computed(() => selectedLocation.value
   ? `Из локации «${selectedLocation.value.name}»`
   : 'Не выбрано')
+const canSubmit = computed(() => !!draft.name.trim()
+  && (!!draft.imageId || !!draft.locationId || (!!props.scene && !props.scene.imageId && !props.scene.locationId)))
 
 function submit() {
-  if (!draft.name.trim() || (!draft.imageId && !draft.locationId) || props.saving) return
+  if (!canSubmit.value || props.saving) return
   emit('save', {
     name: draft.name.trim(),
     status: draft.status,

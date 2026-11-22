@@ -12,7 +12,7 @@
     </div>
 
     <FormField label="Название" vertical>
-      <FormTextInput v-model:value="draft.name" :maxlength="160" @enter="submit" />
+      <FormTextInput v-model:value="draft.name" aria-label="Название" :maxlength="160" @enter="submit" />
     </FormField>
     <FormField label="Описание" vertical>
       <FormTextarea v-model:value="draft.description" :rows="3" :maxlength="2000" placeholder="Что происходит в этой главе" />
@@ -24,6 +24,7 @@
         :model-value="draft.imageId"
         default-key="city"
         :current-url="customPreview"
+        :allow-empty="allowMissingImage"
         allow-upload
         :custom-selected="source === 'custom'"
         :custom-preview="customPreview"
@@ -48,7 +49,7 @@
         :submit-text="chapter ? 'Сохранить' : 'Создать главу'"
         loading-text="Сохранение…"
         :loading="saving || uploading"
-        :can-submit="!!draft.number.trim() && !!draft.name.trim() && (!!draft.imageId || !!selectedFile)"
+        :can-submit="canSubmit"
         @cancel="$emit('close')"
         @submit="submit"
       />
@@ -92,6 +93,9 @@ const objectUrl = ref('')
 const uploading = ref(false)
 const uploadError = ref('')
 const previewPosition = computed(() => ({ objectPosition: `${draft.imageFocalX * 100}% ${draft.imageFocalY * 100}%` }))
+const allowMissingImage = computed(() => !!props.chapter && !props.chapter.imageId)
+const canSubmit = computed(() => !!draft.number.trim() && !!draft.name.trim()
+  && (!!draft.imageId || !!selectedFile.value || allowMissingImage.value))
 
 function pickCatalogImage(image) {
   source.value = 'catalog'
@@ -135,7 +139,7 @@ async function uploadSelected() {
 }
 
 async function submit() {
-  if (!draft.number.trim() || !draft.name.trim() || (!draft.imageId && !selectedFile.value) || props.saving || uploading.value) return
+  if (!canSubmit.value || props.saving || uploading.value) return
   uploadError.value = ''
   try {
     const selected = source.value === 'custom' ? await uploadSelected() : { id: draft.imageId }

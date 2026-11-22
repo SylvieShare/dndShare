@@ -73,7 +73,7 @@ type chapterMutationRequest struct {
 	PositionY   float64 `json:"positionY"`
 }
 
-func (s *Server) chapterMutation(w http.ResponseWriter, r *http.Request, userID, sessionID int64, body chapterMutationRequest) (store.ChapterMutation, bool) {
+func (s *Server) chapterMutation(w http.ResponseWriter, r *http.Request, userID, sessionID int64, body chapterMutationRequest, allowMissingImage bool) (store.ChapterMutation, bool) {
 	arc, err := s.store.GetSessionArc(r.Context(), body.ArcID)
 	if err != nil || arc.SessionID != sessionID {
 		badRequest(w, "Арка не принадлежит сессии")
@@ -93,7 +93,7 @@ func (s *Server) chapterMutation(w http.ResponseWriter, r *http.Request, userID,
 		badRequest(w, "Некорректный статус главы")
 		return store.ChapterMutation{}, false
 	}
-	if !s.validateSessionImage(w, r, userID, body.ImageID, "story") {
+	if !(allowMissingImage && body.ImageID == 0) && !s.validateSessionImage(w, r, userID, body.ImageID, "story") {
 		return store.ChapterMutation{}, false
 	}
 	if !finite(body.PositionX) || !finite(body.PositionY) {
@@ -119,7 +119,7 @@ func (s *Server) handleCreateChapter(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
-	mutation, ok := s.chapterMutation(w, r, userID, session.ID, body)
+	mutation, ok := s.chapterMutation(w, r, userID, session.ID, body, false)
 	if !ok {
 		return
 	}
@@ -145,7 +145,7 @@ func (s *Server) handleUpdateChapter(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
-	mutation, ok := s.chapterMutation(w, r, userID, session.ID, body)
+	mutation, ok := s.chapterMutation(w, r, userID, session.ID, body, chapter.ImageID == 0)
 	if !ok {
 		return
 	}
@@ -161,7 +161,7 @@ func (s *Server) handleUpdateChapter(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	if chapter.ImageID != mutation.ImageID {
+	if chapter.ImageID != 0 && chapter.ImageID != mutation.ImageID {
 		s.deleteOldImage(r, userID, chapter.ImageID)
 	}
 	updated, err := s.store.GetChapterByID(r.Context(), chapter.ID)
@@ -241,7 +241,9 @@ func (s *Server) handleDeleteChapter(w http.ResponseWriter, r *http.Request) {
 		conflict(w, "Сначала удалите или перенесите сцены этой главы")
 		return
 	}
-	s.deleteOldImage(r, userID, chapter.ImageID)
+	if chapter.ImageID != 0 {
+		s.deleteOldImage(r, userID, chapter.ImageID)
+	}
 	writeJSON(w, http.StatusNoContent, nil)
 }
 

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "backend": {
-    "version": "0.3.11",
-    "build": 12
+    "version": "0.3.12",
+    "build": 13
   },
   "frontend": {
-    "version": "0.3.254",
-    "build": 255
+    "version": "0.3.255",
+    "build": 256
   },
   "android": {
     "version": "0.3.8",
@@ -17,8 +17,8 @@
     "data": 1
   },
   "fingerprints": {
-    "backend": "252a311697e382b268dab9d4674a859eb6a418b5d9f71cb680787622d21dfb5e",
-    "frontend": "4b37a7decfa0979a319d5c357f58d2bbed4285f7c872f69f702e99ca956a711c",
+    "backend": "73b687801fee477b6dc5281a7477654852cf4c65a73a5306a4d6228ef0a418c9",
+    "frontend": "11b6b60f5c00e154836bab3f973d3cc8061e7df76d3890542930b1650bcafb08",
     "android": "5b1f6135ccccba076cc16844d21b2774fdb93030936e8529d4fd3f946b95131e"
   }
 }

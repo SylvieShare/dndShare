@@ -68,13 +68,13 @@ type ChapterMutation struct {
 
 const chapterSelect = `
 	SELECT ch.id, ch.session_id, ch.arc_id, arc."order", arc.name,
-	       ch.number, ch.name, ch.description, ch.status, ch.image_id,
+	       ch.number, ch.name, ch.description, ch.status, COALESCE(ch.image_id, 0),
 	       COALESCE(img.url, ''), catalog.catalog_key, ch.image_focal_x, ch.image_focal_y,
 	       ch.position_x, ch.position_y,
 	       (SELECT count(*) FROM dndshare.session_scene scene WHERE scene.chapter_id = ch.id)
 	FROM dndshare.session_chapter ch
 	JOIN dndshare.session_arc arc ON arc.id = ch.arc_id
-	JOIN dndshare.storage_image img ON img.id = ch.image_id AND img.deleted = false
+	LEFT JOIN dndshare.storage_image img ON img.id = ch.image_id AND img.deleted = false
 	LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = ch.image_id`
 
 func scanChapter(row pgx.Row) (SessionChapter, error) {
@@ -264,7 +264,7 @@ func (s *Store) UpdateChapter(ctx context.Context, id int64, input ChapterMutati
 	_, err := s.pool.Exec(ctx,
 		`UPDATE dndshare.session_chapter SET
 			arc_id = $2, number = $3, name = $4, description = $5, status = $6,
-			image_id = $7, image_focal_x = $8,
+			image_id = NULLIF($7::bigint, 0), image_focal_x = $8,
 			image_focal_y = $9, position_x = $10, position_y = $11
 		 WHERE id = $1`,
 		id, input.ArcID, input.Number, input.Name, input.Description, input.Status,
