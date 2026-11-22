@@ -3,8 +3,7 @@
     @resize="(width, rail) => { if (rail > 0) emit('navigation-width', rail); emit('sidebar-width', width) }">
     <p v-if="controller.selected" class="global-map-save-status" role="status">{{ controller.saving ? 'Сохраняем…' : controller.hasPending() ? 'Есть несохранённые изменения' : 'Сохранено' }}</p>
     <template v-if="tab === 'maps'">
-      <AddButton block label="Загрузить карту" :disabled="controller.busy || controller.maps.length >= 32" @click="file?.click()" />
-      <input ref="file" type="file" accept="image/*" aria-label="Изображение карты мира" hidden @change="upload" />
+      <AddButton block label="Загрузить карту" :disabled="controller.uploadDisabled" @click="emit('upload')" />
       <p class="map-hint">Изображения до 30 МБ. Другие форматы преобразуются в WebP. У каждой карты свои маршруты.</p>
       <LoadingState v-if="controller.busy" label="Обрабатываем карту…" compact />
       <BaseTile v-for="map in controller.maps" :key="map.id" framed class="global-map-thumbnail" :class="{ 'global-map-thumbnail--selected': map.id === controller.selectedId }" @click="controller.selectedId = map.id">
@@ -37,11 +36,10 @@ import { Check, Images, Route } from '@lucide/vue'
 import MapSidebar from '@/features/maps/components/MapSidebar.vue'
 import { waypointEntries } from '../lib/routePoints'
 const props = defineProps({ controller: Object, selectedRoute: String })
-const emit = defineEmits(['delete-map', 'add-route', 'select-route', 'delete-route', 'navigation-width', 'sidebar-width'])
-const sidebar = ref(null), file = ref(null), tab = ref('maps')
+const emit = defineEmits(['delete-map', 'add-route', 'select-route', 'delete-route', 'navigation-width', 'sidebar-width', 'upload'])
+const sidebar = ref(null), tab = ref('maps')
 const tabs = [{ key: 'maps', label: 'Карты мира', icon: Images }, { key: 'routes', label: 'Маршруты', icon: Route }]
 const locked = computed(() => props.controller.conflict || props.controller.busy)
-function upload(event) { props.controller.upload(event.target.files?.[0]); event.target.value = '' }
 defineExpose({ openRoutes: () => sidebar.value?.openTab('routes'), collapse: () => sidebar.value?.collapse() })
 </script>
 <style scoped>

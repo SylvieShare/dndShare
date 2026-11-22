@@ -5,11 +5,15 @@ import { activateGlobalMap, createGlobalMap, deleteGlobalMap, getGlobalMaps, sav
 import { useMapSync } from '@/features/maps/composables/useMapSync'
 import { prepareImageUpload, IMAGE_UPLOAD_MAX_BYTES } from '@/shared/lib/imageUpload'
 
+const maxMaps = 32
+
 export function useGlobalMaps(uuid) {
   const maps = ref([]), selectedId = ref(''), loading = ref(true), saving = ref(false)
   const busy = ref(false), editing = ref(false), error = ref(''), readError = ref(''), conflict = ref(false)
   // A background read can recover its own error without hiding a failed upload.
   const visibleError = computed({ get: () => error.value || readError.value, set: value => { error.value = value } })
+  const readFailed = computed(() => Boolean(readError.value))
+  const uploadDisabled = computed(() => busy.value || maps.value.length >= maxMaps)
   const selected = computed(() => maps.value.find(map => map.id === selectedId.value))
   const pending = new Set(), versions = new Map()
   const pendingCount = ref(0)
@@ -81,7 +85,7 @@ export function useGlobalMaps(uuid) {
   }
   async function upload(file) {
     if (!file || busy.value) return
-    if (maps.value.length >= 32) { error.value = 'В сессии может быть до 32 карт мира'; return }
+    if (maps.value.length >= maxMaps) { error.value = `В сессии может быть до ${maxMaps} карт мира`; return }
     busy.value = true; error.value = ''
     try {
       const prepared = await prepareImageUpload(file, { maxBytes: IMAGE_UPLOAD_MAX_BYTES })
@@ -122,5 +126,5 @@ export function useGlobalMaps(uuid) {
   function unload(event) { if (hasPending()) { event.preventDefault(); event.returnValue = '' } }
   window.addEventListener('beforeunload', unload)
   onBeforeUnmount(() => { stopped = true; clearTimeout(timer); window.removeEventListener('beforeunload', unload) })
-  return { maps, selectedId, selected, loading, saving, busy, editing, error: visibleError, conflict, connected, hasPending, load, change, persist, flush, upload, activate, remove, rename }
+  return { maps, selectedId, selected, loading, saving, busy, editing, error: visibleError, readFailed, uploadDisabled, conflict, connected, hasPending, load, change, persist, flush, upload, activate, remove, rename }
 }

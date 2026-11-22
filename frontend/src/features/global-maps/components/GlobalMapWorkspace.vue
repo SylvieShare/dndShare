@@ -2,7 +2,9 @@
   <section class="global-map-workspace" :style="{ '--world-navigation-width': `${navigationWidth}px`, '--world-panel-inset': `${Math.max(0, sidebarWidth - navigationWidth)}px` }" data-tutorial="session-global-map">
     <GlobalMapSidebar ref="sidebar" :controller="c" :selected-route="routeId"
       @add-route="addRoute" @select-route="selectRoute" @navigation-width="navigationWidth = $event" @sidebar-width="sidebarWidth = $event"
-      @delete-map="map => pending = { kind: 'map', item: map }" @delete-route="route => pending = { kind: 'route', item: route }" />
+      @delete-map="map => pending = { kind: 'map', item: map }" @delete-route="route => pending = { kind: 'route', item: route }"
+      @upload="chooseMapFile" />
+    <input ref="mapFile" type="file" accept="image/*" aria-label="Изображение карты мира" hidden @change="uploadMap" />
     <div class="global-map-main">
       <LoadingState v-if="c.loading" label="Открываем мир…" fill />
       <template v-else-if="c.selected">
@@ -21,7 +23,19 @@
         <GlobalMapRouteInspector :visible="routeFocus && !addMode && !continuing" :route="route" :routes="c.selected.routes" :chapters="chapters" :disabled="c.conflict || c.busy" @dismiss="routeFocus = false"
           @change="changeRoute" @reorder="reorder" @select-point="selectPoint" @delete-point="requestPointDelete(routeId, $event)" @add-mode="startAdding" />
       </template>
-      <div v-else class="global-map-empty"><Globe :size="56" :stroke-width="1.2" /><h2>Путь вашей истории</h2><p>Загрузите карту мира, региона или города слева.<br />Создавайте маршруты, отмечайте главы и оставляйте заметки прямо на карте.</p></div>
+      <div v-else-if="!c.readFailed" class="global-map-empty">
+        <div class="global-map-empty__content">
+          <div class="global-map-empty__icon" aria-hidden="true"><Globe :size="42" :stroke-width="1.4" /></div>
+          <h2>Добавьте карту мира</h2>
+          <p>Выберите изображение мира, региона или города, чтобы отмечать локации и прокладывать маршруты.</p>
+          <ActionButton class="global-map-empty__upload" :loading="c.busy" :disabled="c.uploadDisabled"
+            loading-label="Обрабатываем карту" @click="chooseMapFile">
+            <template #icon><Upload :size="20" aria-hidden="true" /></template>
+            {{ c.busy ? 'Обрабатываем карту…' : 'Загрузить карту' }}
+          </ActionButton>
+          <small>Изображение до 30 МБ</small>
+        </div>
+      </div>
       <div v-if="c.error" class="global-map-error" role="alert">{{ c.error }}
         <ActionButton variant="quiet" :disabled="c.saving || c.busy" @click="c.conflict ? reloadConfirm = true : retry()">{{ c.conflict ? 'Загрузить с сервера' : 'Повторить' }}</ActionButton>
       </div>
@@ -36,7 +50,7 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
 import { ActionButton, ConfirmDialog, LoadingState, useIsMobile } from '@sylvieshare/share-ui'
-import { Globe } from '@lucide/vue'
+import { Globe, Upload } from '@lucide/vue'
 import { useGlobalMaps } from '../composables/useGlobalMaps'
 import { useGlobalMapEditing } from '../composables/useGlobalMapEditing'
 import { pointIndex, resolvePoint } from '../lib/routePoints'
@@ -49,6 +63,7 @@ import WorkspaceCanvasControls from '@/shared/ui/WorkspaceCanvasControls.vue'
 const props = defineProps({ sessionUuid: { type: String, required: true }, participants: { type: Array, default: () => [] }, chapters: { type: Array, default: () => [] }, locations: { type: Array, default: () => [] }, currentChapterId: Number })
 const emit = defineEmits(['open-chapter', 'open-location'])
 const c = reactive(useGlobalMaps(props.sessionUuid))
+const mapFile = ref(null)
 const sidebar = ref(null), canvas = ref(null), navigationWidth = ref(77), sidebarWidth = ref(77), continuing = ref(false)
 const pending = ref(null), reloadConfirm = ref(false), leaveConfirm = ref(false), mobile = useIsMobile(760)
 const { routeId, pointId, addMode, routeFocus, route, point, inspectorRoute, index, select, selectRoute, selectPoint, startAdding, addRoute, addPoint, move,
@@ -65,6 +80,15 @@ const hintLines = computed(() => [
   'Delete — удалить выбранное',
   'Esc — отменить добавление или закрыть фокус',
 ])
+function chooseMapFile() {
+  if (!c.uploadDisabled) mapFile.value?.click()
+}
+function uploadMap(event) {
+  const input = event.currentTarget
+  const file = input.files?.[0]
+  input.value = ''
+  void c.upload(file)
+}
 function changeRoute(patch) { c.change(() => Object.assign(route.value, patch)) }
 function requestPointDelete(routeId, pointId) {
   const entry = c.selected.routes.find(route => route.id === routeId)?.points.find(point => point.id === pointId)

@@ -2,9 +2,30 @@
 .global-map-sidebar { z-index: 20; }
 .global-map-main { position: relative; margin-left: var(--world-navigation-width, 60px); flex: 1; min-width: 0; min-height: 0; }
 .global-map-zoom { position: absolute; z-index: 7; right: calc(var(--world-tools-inset) + 12px); bottom: 12px; }
-.global-map-empty { display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; gap: 14px; padding: 28px; text-align: center; color: var(--text-muted); }
-.global-map-empty h2 { margin: 0; color: var(--text-1); font: 28px var(--font-display); }
-.global-map-empty p { font-size: 13px; line-height: 1.6; }
+.global-map-empty {
+  display: flex;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: auto;
+  padding: var(--spacing-page);
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 9%, transparent), transparent 65%);
+  text-align: center;
+  color: var(--text-muted);
+}
+.global-map-empty__content { display: grid; justify-items: center; gap: var(--spacing-large); width: min(100%, 400px); margin: auto; }
+.global-map-empty__icon {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--accent) 16%, var(--surface));
+  color: var(--accent-soft);
+}
+.global-map-empty h2 { margin: 0; color: var(--text-1); font: clamp(24px, 4vw, 34px) / 1.2 var(--font-display); }
+.global-map-empty p { margin: 0; max-width: 36ch; font-size: 14px; line-height: 1.55; }
+.global-map-empty__upload { --action-button-min-height: var(--layout-touch-min); min-width: min(100%, 190px); }
+.global-map-empty small { font-size: 12px; }
 .global-map-error { position: absolute; z-index: 30; bottom: 74px; left: 14px; right: 14px; padding: 12px; border: 1px solid var(--danger); border-radius: 10px; background: var(--surface); color: var(--danger); font-size: 12px; }
 
 .global-map-point-inspector, .global-map-route-inspector { --workspace-focus-right: calc(var(--world-tools-inset) + 12px); max-width: max(0px, calc(100% - var(--world-tools-inset) - 24px)); }
