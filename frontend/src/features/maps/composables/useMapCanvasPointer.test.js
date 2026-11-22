@@ -52,9 +52,26 @@ function setup(
     emit,
     setView,
   );
-  const event = { pointerId: 1, button: 0, clientX: 20, clientY: 30 };
+  const event = { pointerId: 1, pointerType: "mouse", button: 0, clientX: 20, clientY: 30 };
   return { pointer, event, emit, setView };
 }
+it("clears mouse hover when a tap begins and restores it on the next mouse movement", () => {
+  const { pointer, event, emit } = setup();
+  const touch = { ...event, pointerId: 2, pointerType: "touch" };
+  pointer.move(event);
+  vi.advanceTimersByTime(16);
+  expect(emit).toHaveBeenLastCalledWith("gesture", expect.objectContaining({ phase: "hover", hit: { tileId: "tile", point: { x: 2, y: 3, elevation: 0.4 } } }));
+  pointer.down(touch);
+  expect(emit).toHaveBeenLastCalledWith("gesture", expect.objectContaining({ phase: "hover", hit: null }));
+  pointer.cancel(touch);
+  emit.mockClear();
+  pointer.move(touch);
+  vi.advanceTimersByTime(16);
+  expect(emit).not.toHaveBeenCalled();
+  pointer.move(event);
+  vi.advanceTimersByTime(16);
+  expect(emit).toHaveBeenCalledWith("gesture", expect.objectContaining({ phase: "hover", hit: expect.objectContaining({ tileId: "tile" }) }));
+});
 it("touch placement waits for a single tap and a second-finger cancellation never starts an edit", () => {
   const { pointer, event, emit } = setup(undefined, { tool: "paste", holdToDrag: false });
   const touch = { ...event, pointerType: "touch" };

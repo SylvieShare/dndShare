@@ -30,8 +30,8 @@
               :key="entry.name"
               class="class-card-ability"
               :class="{ 'class-card-ability--described': entry.description }"
-              @mouseenter="showAbilityTooltip($event, entry)"
-              @mouseleave="hideAbilityTooltip"
+              @pointerenter="canShowHoverHint($event) && showAbilityTooltip($event, entry)"
+              @pointerleave="isMousePointer($event) && hideAbilityTooltip()"
             >{{ entry.name }}</span>
           </b>
           <b v-else>{{ fact.value }}</b>
@@ -57,6 +57,7 @@
 </template>
 
 <script setup>
+import { canShowHoverHint, isMousePointer } from '@sylvieshare/share-ui'
 import { reactive } from 'vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 

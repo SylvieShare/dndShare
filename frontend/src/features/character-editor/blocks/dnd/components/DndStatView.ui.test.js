@@ -14,7 +14,7 @@ describe('DndStatView presentation', () => {
 
   it('opens the skill bonus breakdown after a short hover delay', () => {
     expect(source).toContain('const TOOLTIP_DELAY_MS = 450')
-    expect(source).toContain('@mouseenter="showTooltip($event, skill)"')
+    expect(source).toContain('@pointerenter="canShowHoverHint($event) && showTooltip($event, skill)"')
     expect(source).toContain('bonuses: skill.bonusDetails || []')
     expect(source).toContain('onBeforeUnmount(hideTooltip)')
   })

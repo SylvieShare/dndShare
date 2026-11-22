@@ -23,7 +23,7 @@
     "@capacitor/android": "8.6.0",
     "@capacitor/core": "8.6.0",
     "@lucide/vue": "^1.72.0",
-    "@sylvieshare/share-ui": "https://codeload.github.com/SylvieShare/share-ui/tar.gz/refs/tags/v0.81.0",
+    "@sylvieshare/share-ui": "https://codeload.github.com/SylvieShare/share-ui/tar.gz/refs/tags/v0.82.1",
     "@vue/devtools-api": "^8.2.1",
     "html-to-image": "1.11.13",
     "pinia": "^4.1.0",
@@ -39,6 +39,7 @@
     "eslint-plugin-vue": "^10.12.1",
     "fflate": "0.8.3",
     "globals": "^17.14.0",
+    "postcss-selector-parser": "7.1.7",
     "vite": "^8.3.8",
     "vitest": "^5.1.0"
   },

@@ -40,8 +40,8 @@
             :class="{ 'action-menu-source--open': open }"
             :title="`Действия: ${entry.name}`"
             @click="$emit('hide-tooltip')"
-            @mouseenter="e => !expanded && $emit('show-tooltip', e, entry)"
-            @mouseleave="!expanded && $emit('hide-tooltip')"
+            @pointerenter="canShowHoverHint($event) && !expanded && $emit('show-tooltip', $event, entry)"
+            @pointerleave="isMousePointer($event) && !expanded && $emit('hide-tooltip')"
           >
             <span class="abv-icon" aria-hidden="true">
               <ItemIcon v-if="expanded" :item="entry.item" :size="64" :fallback-to-type="false" />
@@ -106,9 +106,8 @@
 
 <script setup>
 import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
-import { SkeletonBlock } from '@sylvieshare/share-ui'
+import { RowActionMenu, SectionList, SkeletonBlock, canShowHoverHint, isMousePointer } from '@sylvieshare/share-ui'
 import { Activity, Plus } from '@lucide/vue'
-import { RowActionMenu, SectionList } from '@sylvieshare/share-ui'
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
 import SvgIcon from '@/shared/ui/SvgIcon.vue'
 import DndRichContent from '@/shared/ui/DndRichContent.vue'

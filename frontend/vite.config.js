@@ -4,6 +4,8 @@ import { designMedia } from './scripts/design-media.mjs'
 import { compressedAssets } from './scripts/compressedAssets.mjs'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import selectorParser from 'postcss-selector-parser'
+import { pointerHoverCss } from '@sylvieshare/share-ui/hover-css'
 import { fileURLToPath, URL } from 'node:url'
 
 const build = buildMetadata()
@@ -11,7 +13,7 @@ export default defineConfig(({ isPreview }) => ({
   define: { __DNDSHARE_BUILD__: JSON.stringify(build.frontend) },
   cacheDir: process.env.DNDSHARE_VITE_CACHE || undefined,
   plugins: [vue(), { name: 'dndshare-build-info', generateBundle() { this.emitFile({ type: 'asset', fileName: 'build-info.json', source: JSON.stringify(build.frontend) }) } }, compressedAssets()],
-  css: { postcss: { plugins: [designMedia(), androidInsets()] } },
+  css: { postcss: { plugins: [designMedia(), androidInsets(), pointerHoverCss(selectorParser)] } },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

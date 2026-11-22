@@ -24,9 +24,9 @@
             :class="{ 'weapon-metrics__property--described': interactive }"
             :aria-expanded="interactive ? openedKey === keyOf(property) : undefined"
             @click.stop="interactive && showDescription($event, property)" @pointerdown.stop
-            @mouseenter="interactive && property.desc && !opened && $emit('property-enter', $event, property)"
+            @pointerenter="canShowHoverHint($event) && interactive && property.desc && !opened && $emit('property-enter', $event, property)"
             @focus="interactive && property.desc && !opened && $emit('property-enter', $event, property)"
-            @mouseleave="$emit('property-leave')" @blur="$emit('property-leave')"
+            @pointerleave="isMousePointer($event) && $emit('property-leave')" @blur="$emit('property-leave')"
           >{{ property.label }}</component>
         </div>
       </div>
@@ -46,7 +46,7 @@
 import WeaponDamageBreakdown from './WeaponDamageBreakdown.vue'
 import CharacterCombatMetric from './CharacterCombatMetric.vue'
 import { computed, shallowRef } from 'vue'
-import { BasePopover, RichContent, ActionButton } from '@sylvieshare/share-ui'
+import { canShowHoverHint, isMousePointer, BasePopover, RichContent, ActionButton } from '@sylvieshare/share-ui'
 const props = defineProps({
   attack: { type: String, default: '' },
   attackRows: { type: Array, default: () => [] },

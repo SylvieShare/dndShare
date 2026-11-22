@@ -7,8 +7,8 @@
         :key="item.id"
         class="bs-compact-chip"
         :style="{ '--c': item.color || 'var(--text-muted)' }"
-        @mouseenter="showTooltip($event, item)"
-        @mouseleave="hideTooltip"
+        @pointerenter="canShowHoverHint($event) && showTooltip($event, item)"
+        @pointerleave="isMousePointer($event) && hideTooltip()"
       >
         <ItemIcon v-if="item.iconImageUrl || item.svg" class="bs-compact-svg-img" :item="item" :size="24" :fallback-to-type="false" :color="item.color || '#888888'" filter />
         <span v-else class="bs-compact-dot"></span>
@@ -48,8 +48,8 @@
         class="bs-tile"
         :color="item.color || 'var(--text-muted)'"
 
-        @mouseenter="showTooltip($event, item)"
-        @mouseleave="hideTooltip"
+        @pointerenter="canShowHoverHint($event) && showTooltip($event, item)"
+        @pointerleave="isMousePointer($event) && hideTooltip()"
       >
       <TileAccentStrip />
         <ItemIcon v-if="item.iconImageUrl || item.svg" class="bs-tile-svg" :item="item" :size="18" :fallback-to-type="false" :color="item.color || '#888888'" filter />
@@ -116,7 +116,7 @@
 
 <script setup>
 import { computed, inject, onMounted, ref } from 'vue'
-import { TileAccentStrip, MorphTile } from '@sylvieshare/share-ui'
+import { canShowHoverHint, isMousePointer, TileAccentStrip, MorphTile } from '@sylvieshare/share-ui'
 import BlockStatesPickerEditor from '@/features/character-editor/blocks/generic/components/BlockStatesPickerEditor'
 import BlockStatesSummaryView from '@/features/character-editor/blocks/generic/components/BlockStatesSummaryView'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
@@ -241,7 +241,7 @@ function hideTooltip() {
   transition: background 0.12s;
 }
 
-@media (hover: hover) { .bs-compact-chip:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
+@media (any-hover: hover) { .bs-compact-chip:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); } }
 
 .bs-compact-svg-img {
   width: 24px;
@@ -276,7 +276,7 @@ function hideTooltip() {
   flex: 0 0 auto;
 }
 
-@media (hover: hover) {
+@media (any-hover: hover) {
   .bs-compact-btn:hover {
     border-color: var(--text-muted);
     color: var(--text-2);
@@ -333,7 +333,7 @@ function hideTooltip() {
   background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
 }
 
-@media (hover: hover) {
+@media (any-hover: hover) {
   .bs-only-add :deep(.sa-trigger-text:hover) {
     border-color: color-mix(in srgb, var(--text-2) 72%, transparent);
     color: var(--text-on-accent);
@@ -399,7 +399,7 @@ function hideTooltip() {
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
 
-@media (hover: hover) {
+@media (any-hover: hover) {
   .bs-add-tile:hover { border-color: var(--accent); color: var(--text-2); background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 }
 

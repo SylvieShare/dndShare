@@ -20,7 +20,7 @@ export function useSkillDescription(rollMenu) {
       top: above ? null : rect.bottom + 8, bottom: above ? window.innerHeight - rect.top + 8 : null }
   }
   function showTooltip(event, skill) {
-    if (tooltip.value.pinned || rollMenu.value || !window.matchMedia('(hover: hover)').matches) return
+    if (tooltip.value.pinned || rollMenu.value) return
     hideTooltip()
     const value = details(event, skill, false)
     tooltipTimer = window.setTimeout(() => { tooltip.value = value; tooltipTimer = null }, TOOLTIP_DELAY_MS)

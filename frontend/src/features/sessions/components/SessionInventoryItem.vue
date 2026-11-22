@@ -3,7 +3,7 @@
     <template #trigger="{ open }">
       <InventoryBagItem :item-key="row.id" :item="item" :name="row.name" :count="row.entry?.count" v-bind="traits" :source="sortable.isSource(row)" :draggable="!busy" :disabled="busy || sortable.suppressNextClick"
         :class="{ 'action-menu-source--open': open }" @pointerdown="hideTooltip(); !busy && sortable.startDrag($event, row, 'session-inventory', index)"
-        @mouseenter="!sortable.dragging && showTooltip($event, display)" @mouseleave="hideTooltip" @focus="showTooltip($event, display)" @blur="hideTooltip" @click="hideTooltip" />
+        @pointerenter="canShowHoverHint($event) && !sortable.dragging && showTooltip($event, display)" @pointerleave="isMousePointer($event) && hideTooltip()" @focus="canShowHoverHint($event) && showTooltip($event, display)" @blur="hideTooltip" @click="hideTooltip" />
     </template>
     <template #default="{ close }">
       <InventoryItemMenuHeader :name="row.name" />
@@ -28,7 +28,7 @@ import { itemConsumable } from '@/features/items/lib/itemInstance'
 import { computed, watch } from 'vue'
 import { Send } from '@lucide/vue'
 import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
-import { RowActionMenu, RowActionSubmenu } from '@sylvieshare/share-ui'
+import { canShowHoverHint, isMousePointer, RowActionMenu, RowActionSubmenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import InventoryItemMenuHeader from '@/features/inventory/components/InventoryItemMenuHeader.vue'
 import InventoryItemTooltip from '@/features/inventory/components/InventoryItemTooltip.vue'

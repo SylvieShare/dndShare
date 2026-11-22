@@ -1,10 +1,12 @@
 import { onMounted, onBeforeUnmount } from "vue";
+import { isMousePointer } from "@sylvieshare/share-ui";
 
 export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
   let drag = null,
     holdTimer,
     moveFrame = 0,
     pendingMove;
+  let mouseHovering = false;
   function flushMove() {
     cancelAnimationFrame(moveFrame);
     moveFrame = 0;
@@ -86,6 +88,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
   function down(event) {
     flushMove();
     if (props.readonly || !getRenderer() || drag) return;
+    if (mouseHovering && !isMousePointer(event)) leave(event);
     if (["paste", "decal"].includes(props.tool) && event.button === 2) {
       event.preventDefault();
       emit("gesture", { phase: "cancel", event });
@@ -183,7 +186,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     if (!moveFrame) moveFrame = requestAnimationFrame(flushMove);
   }
   function applyMove(event) {
-    if (!getRenderer() || props.readonly) return;
+    if (!getRenderer() || props.readonly || (!drag && !isMousePointer(event))) return;
     // Pointer capture keeps navigation active outside the canvas bounds.
     const point =
       drag?.pan && !drag.orbit
@@ -202,6 +205,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
             }
           : pointAt(event);
     if (!drag) {
+      mouseHovering = true;
       emit("gesture", {
         phase: "hover",
         point,
@@ -298,6 +302,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     drag = null;
   }
   function leave(event) {
+    mouseHovering = false;
     if (!drag) emit("gesture", { phase: "hover", hit: null, event });
   }
   function key(event) {

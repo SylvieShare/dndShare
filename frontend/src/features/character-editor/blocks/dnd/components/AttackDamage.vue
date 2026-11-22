@@ -144,7 +144,7 @@ const hasDamage = computed(() => props.flatDamage !== null || props.damageParts.
 .ad-damage-menu { display: inline-flex; }
 
 .ad-clickable { cursor: pointer; transition: filter 0.12s, transform 0.08s; }
-@media (hover: hover) { .ad-clickable:hover { filter: brightness(1.22); } }
+@media (any-hover: hover) { .ad-clickable:hover { filter: brightness(1.22); } }
 .ad-clickable:active { filter: brightness(1.15); }
 .ad-clickable { min-height: 44px; }
 .ad-atk {

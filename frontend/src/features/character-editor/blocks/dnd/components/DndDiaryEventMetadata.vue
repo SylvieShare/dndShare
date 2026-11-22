@@ -1,7 +1,7 @@
 <template>
   <span v-if="source || audit.length" class="diary-meta" @click.stop @keydown.esc.stop="hide">
     <button type="button" aria-label="Информация о записи"
-      @mouseenter="show('audit', $event)" @mouseleave="hide" @focus="show('audit', $event)" @blur="hide" @click="show('audit', $event)">
+      @pointerenter="canShowHoverHint($event) && show('audit', $event)" @pointerleave="isMousePointer($event) && hide()" @focus="canShowHoverHint($event) && show('audit', $event)" @blur="hide" @click="show('audit', $event)">
       <Info :size="16" />
     </button>
     <ItemTooltip v-if="tooltip" :title="tooltip.kind === 'source' ? 'Из сценария' : 'История записи'"
@@ -21,6 +21,7 @@
 </template>
 
 <script setup>
+import { canShowHoverHint, isMousePointer } from '@sylvieshare/share-ui'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { Info } from '@lucide/vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'

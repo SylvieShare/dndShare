@@ -11,9 +11,9 @@
           class="wli-property"
           :class="{ 'wli-property--described': tag.desc }"
           :tabindex="tag.desc ? 0 : -1"
-          @mouseenter="showTagTooltip($event, tag)"
-          @mouseleave="hideTagTooltip"
-          @focus="showTagTooltip($event, tag)"
+          @pointerenter="canShowHoverHint($event) && showTagTooltip($event, tag)"
+          @pointerleave="isMousePointer($event) && hideTagTooltip()"
+          @focus="canShowHoverHint($event) && showTagTooltip($event, tag)"
           @blur="hideTagTooltip"
         >{{ tag.label }}</span>
       </template>
@@ -31,6 +31,7 @@
 </template>
 
 <script setup>
+import { canShowHoverHint, isMousePointer } from '@sylvieshare/share-ui'
 import { computed, ref } from 'vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import WeaponDamageMetric from '@/features/items/components/WeaponDamageMetric.vue'

@@ -8,8 +8,8 @@
         :key="item.id"
         class="bss-chip"
         :style="{ '--c': item.color || 'var(--text-muted)' }"
-        @mouseenter="$emit('show-tooltip', $event, item)"
-        @mouseleave="$emit('hide-tooltip')"
+        @pointerenter="canShowHoverHint($event) && $emit('show-tooltip', $event, item)"
+        @pointerleave="isMousePointer($event) && $emit('hide-tooltip')"
       >
         <ItemIcon v-if="item.iconImageUrl || item.svg" class="bss-icon" :item="item" :size="17" :fallback-to-type="false" :color="item.color || '#888888'" filter />
         <span v-else class="bss-dot"></span>
@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { MorphTile } from '@sylvieshare/share-ui'
+import { canShowHoverHint, isMousePointer, MorphTile } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 defineProps({

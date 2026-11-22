@@ -82,8 +82,8 @@
           :key="tag.id"
           class="wdc-tag"
           :class="{ 'wdc-tag-has-desc': tag.desc }"
-          @mouseenter="showTagTooltip($event, tag)"
-          @mouseleave="hideTagTooltip"
+          @pointerenter="canShowHoverHint($event) && showTagTooltip($event, tag)"
+          @pointerleave="isMousePointer($event) && hideTagTooltip()"
         >
           {{ tag.label }}
         </span>
@@ -111,7 +111,7 @@
 import { computed, ref } from 'vue'
 import { BookOpen, Swords, Tags } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import { DetailSection } from '@sylvieshare/share-ui'
+import { canShowHoverHint, isMousePointer, DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 import WeaponNotePanels from '@/features/items/components/WeaponNotePanels.vue'

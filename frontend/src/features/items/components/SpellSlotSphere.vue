@@ -119,7 +119,7 @@ watch(() => props.spent, (v) => {
   display: inline-block;
   cursor: pointer;
 }
-@media (hover: hover) and (pointer: fine) {
+@media (any-hover: hover) and (any-pointer: fine) {
   .ss:not(.ss-ro):hover,
   .ss-on:not(.ss-ro):hover ~ .ss-on:not(.ss-ro),
   .ss-off:not(.ss-ro):has(~ .ss-off:not(.ss-ro):hover) {

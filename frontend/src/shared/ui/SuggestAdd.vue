@@ -244,7 +244,7 @@ function deletePanelItem(item) {
   padding: 0 10px;
 }
 
-@media (hover: hover) {
+@media (any-hover: hover) {
   .sa-trigger:hover {
     border-color: var(--text-muted);
     color: var(--text-2);
@@ -363,7 +363,7 @@ function deletePanelItem(item) {
   transition: border-color 0.15s, color 0.15s;
 }
 
-@media (hover: hover) { .sa-panel-create-btn:hover { border-color: var(--text-muted); color: var(--text-2); } }
+@media (any-hover: hover) { .sa-panel-create-btn:hover { border-color: var(--text-muted); color: var(--text-2); } }
 
 .sa-panel-close-btn {
   width: 28px;
@@ -383,7 +383,7 @@ function deletePanelItem(item) {
   transition: color 0.12s, background 0.12s;
 }
 
-@media (hover: hover) { .sa-panel-close-btn:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); } }
+@media (any-hover: hover) { .sa-panel-close-btn:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); } }
 
 .sa-panel-search {
   padding: 0 14px 10px;

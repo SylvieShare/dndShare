@@ -11,7 +11,7 @@ describe('race select card presentation', () => {
   })
 
   it('shows ability descriptions in the shared item tooltip', () => {
-    expect(source).toContain('@mouseenter="showAbilityTooltip($event, entry)"')
+    expect(source).toContain('@pointerenter="canShowHoverHint($event) && showAbilityTooltip($event, entry)"')
     expect(source).toContain('<ItemTooltip')
   })
 

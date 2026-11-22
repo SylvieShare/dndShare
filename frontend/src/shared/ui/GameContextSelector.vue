@@ -175,6 +175,7 @@ onMounted(load)
 }
 
 .game-context-trigger:hover,
+.game-context-trigger:active,
 .game-context-trigger[aria-expanded='true'] {
   border-color: var(--border);
   background: var(--surface-raised);

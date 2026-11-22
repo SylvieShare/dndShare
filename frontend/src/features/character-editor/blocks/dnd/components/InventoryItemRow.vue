@@ -11,8 +11,8 @@
       :name="entry.display.name" :count="entry.count" :source="sortable.isSource(entry)" :draggable="canDrag"
       :disabled="draggedThisGesture || (!canManage && entry.item_id == null)" :status="entry.params?.magic?.attuned ? 'Настроен' : ''"
       :equipped="isEquipped(entry)" v-bind="traits" :class="{ 'action-menu-source--open': menuOpen }"
-      @pointerdown="hideTooltip(); onRowDown($event, entry, spaceId, index)" @mouseenter="!sortable.dragging && showTooltip($event, entry)"
-      @mouseleave="hideTooltip" @focus="showTooltip($event, entry)" @blur="hideTooltip" @click="hideTooltip" />
+      @pointerdown="hideTooltip(); onRowDown($event, entry, spaceId, index)" @pointerenter="canShowHoverHint($event) && !sortable.dragging && showTooltip($event, entry)"
+      @pointerleave="isMousePointer($event) && hideTooltip()" @focus="canShowHoverHint($event) && showTooltip($event, entry)" @blur="hideTooltip" @click="hideTooltip" />
   </template>
 
   <template #default="{ close }">
@@ -103,7 +103,7 @@ import { computed, inject, toRefs, unref } from 'vue'
 import { inventoryCellTraits } from '@/features/inventory/lib/cellTraits'
 import WeaponNotePanels from '@/features/items/components/WeaponNotePanels.vue'
 import { visibleWeaponNotes } from '@/features/character-editor/lib/weaponNotes'
-import { RowActionMenu, RowActionSubmenu, SkeletonBlock } from '@sylvieshare/share-ui'
+import { canShowHoverHint, isMousePointer, RowActionMenu, RowActionSubmenu, SkeletonBlock } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { ArrowRightLeft, Dices, ShieldCheck, Shirt } from '@lucide/vue'
 import { MAGIC_ITEM_TYPE_ID } from '@/features/character-editor/lib/characterMagicItems'

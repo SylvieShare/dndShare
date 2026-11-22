@@ -1,5 +1,9 @@
 @import './design-tokens.css';
 
+:root[data-share-no-hover] {
+  --hover-revealed-action-opacity: 1;
+}
+
 :root {
   --action-menu-trigger-press-scale: 1;
   --action-menu-item-press-scale: 1;

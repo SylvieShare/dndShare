@@ -62,7 +62,7 @@
                 role="option"
                 :aria-selected="activeIdx === result.displayIndex"
                 @mousedown.prevent="navigate(result)"
-                @mouseenter="activeIdx = result.displayIndex"
+                @pointerenter="canShowHoverHint($event) && (activeIdx = result.displayIndex)"
               >
                 <span class="hs-row-icon">
                   <BookOpenCheck v-if="result.kind === 'rule'" class="hs-icon-rule" aria-hidden="true" />
@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { LoadingIndicator } from '@sylvieshare/share-ui'
+import { canShowHoverHint, LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { BookOpenCheck } from '@lucide/vue'

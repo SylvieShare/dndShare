@@ -2,9 +2,9 @@
   <Teleport to="body">
     <TransitionGroup name="notification-stack" tag="div" class="notification-stack" aria-label="Уведомления" aria-live="polite" aria-relevant="additions">
       <BaseTile surface="popover" elevated :outlined="false" v-for="entry in store.entries" :key="entry.id" role="status" class="app-notification" :data-notification-type="entry.type"
-        @pointerenter="store.pause(entry.id, 'hover')" @pointerleave="store.resume(entry.id, 'hover')"
-        @focusin="store.pause(entry.id, 'focus')" @focusout="onFocusOut($event, entry.id)"
-        @pointerdown="swipe.onPointerDown($event, entry.id)" @pointermove="swipe.onPointerMove"
+        @pointerenter="isMousePointer($event) && store.pause(entry.id, 'hover')" @pointerleave="isMousePointer($event) && store.resume(entry.id, 'hover')"
+        @focusin="$event.target.matches(':focus-visible') && store.pause(entry.id, 'focus')" @focusout="onFocusOut($event, entry.id)"
+        @pointerdown="onPointerDown($event, entry.id)" @pointermove="swipe.onPointerMove"
         @pointerup="swipe.onPointerUp" @pointercancel="swipe.onPointerCancel">
         <button type="button" class="notification-close" aria-label="Закрыть уведомление" @click="store.dismiss(entry.id)"><X :size="16" /></button>
         <DiceRollNotification v-if="entry.type === 'dice'" :entry="{ ...entry.data, id: entry.id, title: entry.title }" @action="key => store.runAction(entry.id, key)" />
@@ -21,7 +21,7 @@
 </template>
 <script setup>
 import { onBeforeUnmount, watch } from 'vue'
-import { BaseTile, ActionButton } from '@sylvieshare/share-ui'
+import { ActionButton, BaseTile, isMousePointer } from '@sylvieshare/share-ui'
 import { X } from '@lucide/vue'
 import { useNotificationsStore } from '@/stores/notifications'
 import { useAccountStore } from '@/stores/account'
@@ -33,6 +33,10 @@ const store = useNotificationsStore()
 const account = useAccountStore()
 const swipe = useSwipeDismiss({ onDismiss: store.dismiss })
 watch(() => account.user?.id, () => store.clear())
+function onPointerDown(event, id) {
+  if (!isMousePointer(event)) store.resume(id, 'hover')
+  swipe.onPointerDown(event, id)
+}
 function onFocusOut(event, id) {
   if (!event.currentTarget.contains(event.relatedTarget)) store.resume(id, 'focus')
 }

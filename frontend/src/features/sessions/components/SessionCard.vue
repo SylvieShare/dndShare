@@ -45,6 +45,7 @@
             class="menu-btn"
             type="button"
             :aria-label="session.myRole === 'gm' ? 'Действия сессии' : 'Действия участия'"
+            :aria-expanded="menuOpen"
             @click="menuOpen = !menuOpen"
           >
             ⋯
@@ -377,9 +378,9 @@ const relativeDate = computed(() => {
 }
 
 .s-card:hover .menu-btn,
-.menu-btn:focus { opacity: 1; }
+.menu-btn:is(:focus-visible, [aria-expanded="true"]) { opacity: 1; }
 
-.menu-btn:hover { background: var(--surface-raised); color: var(--text-2); }
+.menu-btn:is(:hover, :active, [aria-expanded="true"]) { background: var(--surface-raised); color: var(--text-2); }
 
 .menu-item {
   padding: 9px 14px;

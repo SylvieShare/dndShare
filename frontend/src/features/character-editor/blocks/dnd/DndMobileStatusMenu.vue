@@ -9,8 +9,8 @@
           :style="{ '--status-color': item.color || 'var(--text-muted)' }"
           :aria-label="`${item.value} · ${item.duration}`"
           :title="`${item.value} · ${item.duration}`"
-          @mouseenter="showStatusTooltip($event, item)"
-          @mouseleave="hideStatusTooltip"
+          @pointerenter="canShowHoverHint($event) && showStatusTooltip($event, item)"
+          @pointerleave="isMousePointer($event) && hideStatusTooltip()"
         >
           <ItemIcon
             v-if="item.item?.iconImageUrl || item.item?.svg"
@@ -102,14 +102,13 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { Activity, BatteryLow, Sparkles } from '@lucide/vue'
-import { AppModalFrame } from '@sylvieshare/share-ui'
+import { AppModalFrame, RowActionMenu, canShowHoverHint, isMousePointer } from '@sylvieshare/share-ui'
 import CharacterStatusEditor from '@/features/character-editor/blocks/dnd/components/CharacterStatusEditor.vue'
 import DndExhaustionEditor from '@/features/character-editor/blocks/dnd/components/DndExhaustionEditor'
 import DndInspirationEditor from '@/features/character-editor/blocks/dnd/components/DndInspirationEditor'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import { RowActionMenu } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { normalizeExhaustion } from '@/features/character-editor/blocks/dnd/lib/exhaustion'
 import { isInspirationActive } from '@/features/character-editor/blocks/dnd/lib/mobileStatus'

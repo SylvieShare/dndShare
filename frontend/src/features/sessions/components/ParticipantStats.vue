@@ -4,7 +4,7 @@
     <p v-else-if="error" role="alert" :title="error">{{ error }}</p>
     <template v-else>
       <span v-for="indicator in indicators" :key="indicator.key" class="participant-stat" :class="{ 'participant-stat--passive': indicator.key !== 'ac' }" tabindex="0" :aria-label="`${indicator.label}: ${indicator.value}`"
-        @mouseenter="showTooltip($event, indicator)" @mouseleave="tooltip = null" @focus="showTooltip($event, indicator)" @blur="tooltip = null">
+        @pointerenter="canShowHoverHint($event) && showTooltip($event, indicator)" @pointerleave="isMousePointer($event) && (tooltip = null)" @focus="canShowHoverHint($event) && showTooltip($event, indicator)" @blur="tooltip = null">
         <strong>{{ indicator.value }}</strong><component :is="indicator.icon" :size="14" aria-hidden="true" />
       </span>
     </template>
@@ -14,7 +14,7 @@
 <script setup>
 import { computed, shallowRef } from 'vue'
 import { Eye, Search, Shield } from '@lucide/vue'
-import { LoadingIndicator } from '@sylvieshare/share-ui'
+import { canShowHoverHint, isMousePointer, LoadingIndicator } from '@sylvieshare/share-ui'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 import { useParticipantDefenses } from '../composables/useParticipantDefenses'
 const props = defineProps({ participant: { type: Object, required: true } })

@@ -66,8 +66,8 @@
         v-for="skill in skills"
         :key="skill.id"
         class="skill-item"
-        @mouseenter="showTooltip($event, skill)"
-        @mouseleave="hideHoverTooltip"
+        @pointerenter="canShowHoverHint($event) && showTooltip($event, skill)"
+        @pointerleave="isMousePointer($event) && hideHoverTooltip()"
         @touchmove.passive="hideTooltip"
       >
         <button type="button" class="skill-label" data-sheet-swipe
@@ -140,7 +140,7 @@
 </template>
 
 <script setup>
-import { MorphTile, MorphTileHeader, SkeletonBlock, TileAccentStrip } from '@sylvieshare/share-ui'
+import { canShowHoverHint, isMousePointer, MorphTile, MorphTileHeader, SkeletonBlock, TileAccentStrip } from '@sylvieshare/share-ui'
 import { computed, ref, shallowRef } from 'vue'
 import { layoutTokens } from '@/app/design-tokens'
 import { formatBonus as signed } from '@/shared/lib/dnd'

@@ -193,7 +193,7 @@ function closeEditor() {
   transition: border-color 0.15s;
 }
 .dq-card--clickable { cursor: pointer; }
-@media (hover: hover) {
+@media (any-hover: hover) {
   .dq-card--clickable:hover { border-color: color-mix(in srgb, var(--qc) 45%, var(--border)); }
 }
 

@@ -39,8 +39,8 @@
                   <span
                     class="item-reference-property-value"
                     :class="{ 'item-reference-property-value--described': isRoomyWeapon && property.desc }"
-                    @mouseenter="showPropertyTooltip($event, property)"
-                    @mouseleave="hidePropertyTooltip"
+                    @pointerenter="canShowHoverHint($event) && showPropertyTooltip($event, property)"
+                    @pointerleave="isMousePointer($event) && hidePropertyTooltip()"
                   >{{ property.label }}</span>
                 </template>
               </template>
@@ -93,6 +93,7 @@
 </template>
 
 <script setup>
+import { canShowHoverHint, isMousePointer } from '@sylvieshare/share-ui'
 import { computed, reactive } from 'vue'
 import { featCategoryLabel } from '@/features/items/lib/featCategory'
 import { ChevronRight, CircleHelp } from '@lucide/vue'

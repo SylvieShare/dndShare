@@ -17,9 +17,9 @@
             :aria-label="iconsOnly || header ? item.value : undefined"
             :aria-description="[statusPolarity(item.polarity).label, item.duration ? `Длительность: ${item.duration}` : '', item.level > 1 ? `Уровень ${item.level}` : ''].filter(Boolean).join(' · ')"
             @click="$emit('hide-tooltip')"
-            @mouseenter="$emit('show-tooltip', $event, item)"
-            @mouseleave="$emit('hide-tooltip')"
-            @focus="$emit('show-tooltip', $event, item)"
+            @pointerenter="canShowHoverHint($event) && $emit('show-tooltip', $event, item)"
+            @pointerleave="isMousePointer($event) && $emit('hide-tooltip')"
+            @focus="canShowHoverHint($event) && $emit('show-tooltip', $event, item)"
             @blur="$emit('hide-tooltip')"
           >
             <span class="dsov-icon">
@@ -85,7 +85,7 @@ import CharacterMenuActions from '@/features/character-editor/components/Charact
 import StatusMechanicsMenu from './StatusMechanicsMenu.vue'
 import { onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { BatteryLow, Hourglass, Minus, Plus, Sparkles } from '@lucide/vue'
-import { RowActionMenu } from '@sylvieshare/share-ui'
+import { canShowHoverHint, isMousePointer, RowActionMenu } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { statusIconItem } from '../../../lib/statusIcon'
@@ -280,7 +280,7 @@ function monogram(value) {
   cursor: pointer;
 }
 
-@media (hover: hover) {
+@media (any-hover: hover) {
   .dsov-effect:hover { transform: translateY(-1px); }
   .dsov--header .dsov-effect:hover { transform: none; }
   .dsov-add:hover { border-color: var(--text-muted); color: var(--text-2); }

@@ -1,7 +1,7 @@
 <template>
   <div ref="host" class="global-map-canvas" :class="{ 'global-map-canvas--adding': addMode && !readonly }"
     tabindex="0" aria-label="Мир. Колесо — масштаб, перетаскивание — перемещение, точки можно перетаскивать."
-    @pointerdown="down" @pointermove="movePointer" @pointerenter="continuation.track" @pointerleave="leavePointer" @contextmenu.prevent="lineContextMenu" @pointerup="endPointer" @pointercancel="v.end($event, true)"
+    @pointerdown="down" @pointermove="movePointer" @pointerenter="isMousePointer($event) && continuation.track($event)" @pointerleave="leavePointer" @contextmenu.prevent="lineContextMenu" @pointerup="endPointer" @pointercancel="v.end($event, true)"
     @lostpointercapture="v.end($event, true)" @wheel.prevent="hidePreview(); v.cancelDrag(); v.zoom(Math.exp(-$event.deltaY * .001), $event)" @keydown="key">
     <div class="global-map-world" :style="v.style">
       <img :key="imageGeneration" class="global-map-image" :src="imageUrl" alt="Карта мира" draggable="false" @load="v.load" @error="v.imageError = true" />
@@ -40,7 +40,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, shallowRef, watch } from 'vue'
 import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
-import { ActionButton, BasePopover, LoadingState, RowActionMenu, useIsMobile } from '@sylvieshare/share-ui'
+import { ActionButton, BasePopover, LoadingState, RowActionMenu, canShowHoverHint, isMousePointer, useIsMobile } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { pvAvatar, pvName } from '@/features/sessions/lib/participantView'
 import GlobalMapMarker from './GlobalMapMarker.vue'
@@ -111,7 +111,7 @@ let closeTimer
 function keepPreview() { clearTimeout(closeTimer) }
 function hidePreview() { keepPreview(); preview.value = null }
 function showPreview(event, routeId, point) {
-  if (event.pointerType === 'touch' || props.addMode || point.control || continuation.preview.value) return
+  if (!canShowHoverHint(event) || props.addMode || point.control || continuation.preview.value) return
   keepPreview(); preview.value = { id: point.id, routeId, anchor: event.currentTarget }
 }
 function queueClose() { keepPreview(); closeTimer = setTimeout(hidePreview, 160) }
@@ -146,7 +146,9 @@ function key(event) {
   if (event.key === '-') { event.preventDefault(); event.stopPropagation(); v.zoom(1 / 1.2) }
 }
 function down(event) {
-  hidePreview(); hoverLeg(event.target)
+  hidePreview()
+  if (isMousePointer(event)) hoverLeg(event.target)
+  else hoveredLeg.value = ''
   if (!event.target.closest('[data-segment-index], [data-control]')) clearLegSelection()
   if (event.metaKey || event.ctrlKey) host.value.focus({ preventScroll: true })
   if (!continuation.commit(event)) v.down(event)
@@ -162,10 +164,17 @@ function hoverLeg(target) {
   hoveredLeg.value = hit ? routeLegKey(route, Number(hit.dataset.segmentIndex ?? hit.dataset.position)) : ''
 }
 function movePointer(event) {
-  if (!v.dragging) hoverLeg(event.target)
-  continuation.track(event); v.move(event)
+  if (isMousePointer(event)) {
+    if (!v.dragging) hoverLeg(event.target)
+    continuation.track(event)
+  }
+  v.move(event)
 }
-function endPointer(event) { v.end(event); hoverLeg(document.elementFromPoint(event.clientX, event.clientY)) }
+function endPointer(event) {
+  v.end(event)
+  if (isMousePointer(event)) hoverLeg(document.elementFromPoint(event.clientX, event.clientY))
+  else hoveredLeg.value = ''
+}
 function leavePointer() { continuation.leave(); if (!v.dragging) hoveredLeg.value = '' }
 function clickMarker(event, marker) {
   if (event.metaKey || event.ctrlKey || props.addMode) return

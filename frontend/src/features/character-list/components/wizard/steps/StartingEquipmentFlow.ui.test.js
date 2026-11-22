@@ -60,7 +60,7 @@ describe('starting equipment wizard flow', () => {
     expect(itemReference).toContain('class="item-reference-economy"')
     expect(itemReference).toContain('.item-reference-economy > span + span::before { content: none; }')
     expect(itemReference).toContain('v-for="(property, propertyIndex) in weaponPropertyItems"')
-    expect(itemReference).toContain('@mouseenter="showPropertyTooltip($event, property)"')
+    expect(itemReference).toContain('@pointerenter="canShowHoverHint($event) && showPropertyTooltip($event, property)"')
     expect(itemReference).toContain('<ItemTooltip')
     expect(itemReference).toContain(':title="propertiesTooltip.title"')
     expect(itemReference).toContain(':desc="propertiesTooltip.desc"')

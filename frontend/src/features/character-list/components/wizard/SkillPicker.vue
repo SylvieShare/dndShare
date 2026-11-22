@@ -13,8 +13,8 @@
         :key="opt.id"
         class="skill"
         :class="{ on: isSelected(opt.id), off: !isSelected(opt.id) && atLimit }"
-        @mouseenter="showSkillTooltip($event, opt)"
-        @mouseleave="tooltip.visible = false"
+        @pointerenter="canShowHoverHint($event) && showSkillTooltip($event, opt)"
+        @pointerleave="isMousePointer($event) && (tooltip.visible = false)"
         @click="toggle(opt.id)"
       >
         <span class="box">
@@ -37,6 +37,7 @@
 </template>
 
 <script setup>
+import { canShowHoverHint, isMousePointer } from '@sylvieshare/share-ui'
 import { computed, inject, reactive } from 'vue'
 import { STAT_SHORT, formatMod } from '@/features/character-list/components/wizard/labels'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'

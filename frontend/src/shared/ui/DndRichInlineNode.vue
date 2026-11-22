@@ -25,9 +25,9 @@
     type="button"
     class="rich-node rich-node--item"
     :title="item ? `Открыть ${item.name}` : node.label"
-    @mouseenter="showItemTooltip"
-    @mouseleave="tooltipOpen = false"
-    @focus="showItemTooltip"
+    @pointerenter="canShowHoverHint($event) && showItemTooltip($event)"
+    @pointerleave="isMousePointer($event) && (tooltipOpen = false)"
+    @focus="canShowHoverHint($event) && showItemTooltip($event)"
     @blur="tooltipOpen = false"
     @click="itemModalOpen = true"
   >
@@ -97,7 +97,7 @@
 
 <script setup>
 import { computed, inject, ref, unref, watch } from 'vue'
-import { BasePopover, RichContent } from '@sylvieshare/share-ui'
+import { canShowHoverHint, isMousePointer, BasePopover, RichContent } from '@sylvieshare/share-ui'
 import { HeartPulse, Shield } from '@lucide/vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { parseDiceExpression } from '@/shared/lib/dice'

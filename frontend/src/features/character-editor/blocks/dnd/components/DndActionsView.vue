@@ -69,8 +69,8 @@
                   v-for="linked in linkedActions(action)"
                   :key="linked.code"
                   class="dav-linked-action"
-                  @mouseenter="showActionTooltip($event, linked)"
-                  @mouseleave="hideActionTooltip"
+                  @pointerenter="canShowHoverHint($event) && showActionTooltip($event, linked)"
+                  @pointerleave="isMousePointer($event) && hideActionTooltip()"
                 >{{ linked.value }}</span>
               </span>
 
@@ -154,13 +154,12 @@ import DndRichContent from '@/shared/ui/DndRichContent.vue'
 import MechanicTheses from '@/shared/ui/MechanicTheses.vue'
 import { computed, ref } from 'vue'
 import { BatteryLow, Dices } from '@lucide/vue'
-import { RowActionMenu, SectionList } from '@sylvieshare/share-ui'
+import { ActionButton, MorphTile, RowActionMenu, SectionList, TileAccentStrip, canShowHoverHint, isMousePointer } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import { MorphTile, TileAccentStrip, ActionButton } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   groups: { type: Array, default: () => [] },

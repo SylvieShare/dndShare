@@ -109,7 +109,7 @@ const iconStyle = computed(() => ({
   cursor: pointer;
   transition: color 0.12s, background 0.12s;
 }
-@media (hover: hover) {
+@media (any-hover: hover) {
   .stf-roll:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 }
 .stf-val { display: flex; align-items: baseline; gap: 2px; }

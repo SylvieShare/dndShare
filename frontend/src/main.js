@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { installPointerInput } from '@sylvieshare/share-ui'
 import App from './App.vue'
 import '@sylvieshare/share-ui/styles.css'
 import '@/app/fonts.css'
@@ -12,6 +13,7 @@ import { initializeUpdates } from '@/platform/updates'
 import { installConsoleErrorCapture } from '@/features/console-errors/lib/consoleErrorCapture'
 
 installConsoleErrorCapture()
+installPointerInput()
 
 async function start() {
     await initializeLocalPlatform()

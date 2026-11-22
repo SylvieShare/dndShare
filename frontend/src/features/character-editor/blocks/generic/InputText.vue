@@ -177,7 +177,7 @@ function stopEdit() {
   opacity: 0.35;
   transition: color 0.15s, opacity 0.15s;
 }
-@media (hover: hover) {
+@media (any-hover: hover) {
   .input-text-row:hover .field-edit-btn,
   .input-text-wrap:hover .field-edit-btn { color: var(--accent); opacity: 1; }
 }

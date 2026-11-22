@@ -14,7 +14,7 @@
         :aria-rowcount="8"
         :aria-colcount="8"
         @keydown="navigate"
-        @mouseleave="hover = null"
+        @pointerleave="isMousePointer($event) && (hover = null)"
       >
         <g v-for="y in 8" :key="y" role="row">
           <rect
@@ -32,7 +32,7 @@
               occupied: x <= model.width && y <= model.height,
               proposed: hover && x <= hover.x && y <= hover.y,
             }"
-            @mouseenter="hover = { x, y }"
+            @pointerenter="canShowHoverHint($event) && (hover = { x, y })"
             @click="choose(x, y)"
           />
         </g>
@@ -69,7 +69,7 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import { BaseTile, FormField, FormTextInput } from "@sylvieshare/share-ui";
+import { BaseTile, FormField, FormTextInput, canShowHoverHint, isMousePointer } from "@sylvieshare/share-ui";
 const props = defineProps({ model: Object, disabled: Boolean });
 const hover = ref(null);
 function choose(x, y) {

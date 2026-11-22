@@ -15,8 +15,7 @@
 
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { BasePopover, FloatingTooltip, RichContent } from '@sylvieshare/share-ui'
-import { isTouchActiveOrRecent } from '@/shared/lib/touchGuard'
+import { BasePopover, FloatingTooltip, RichContent, isMousePointer } from '@sylvieshare/share-ui'
 
 function truncateHtml(html, max) {
   const tmp = document.createElement('div')
@@ -50,21 +49,22 @@ function truncateHtml(html, max) {
 }
 
 const blocked = ref(false)
-const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
 
-function onTouchMove() {
+function dismissHint() {
   blocked.value = true
 }
 
-onMounted(() => {
-  if (isTouchDevice) {
-    if (!isTouchActiveOrRecent()) blocked.value = true
-    window.addEventListener('touchmove', onTouchMove, { passive: true })
-  }
-})
+function onPointerDown(event) {
+  if (event.pointerType && !isMousePointer(event)) dismissHint()
+}
 
+onMounted(() => {
+  window.addEventListener('pointerdown', onPointerDown, { capture: true, passive: true })
+  window.addEventListener('touchmove', dismissHint, { passive: true })
+})
 onUnmounted(() => {
-  if (isTouchDevice) window.removeEventListener('touchmove', onTouchMove)
+  window.removeEventListener('pointerdown', onPointerDown, true)
+  window.removeEventListener('touchmove', dismissHint)
 })
 
 const props = defineProps({

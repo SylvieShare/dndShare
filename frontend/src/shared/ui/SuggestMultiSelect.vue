@@ -181,7 +181,7 @@ function onCreated(item) {
   transition: border-color 0.15s, color 0.15s;
 }
 
-@media (hover: hover) { .sms-add-btn:hover { border-color: var(--text-muted); color: var(--text-2); } }
+@media (any-hover: hover) { .sms-add-btn:hover { border-color: var(--text-muted); color: var(--text-2); } }
 
 .sms-plus {
   position: relative;
@@ -218,7 +218,7 @@ function onCreated(item) {
   transition: color 0.12s, background 0.12s;
 }
 
-@media (hover: hover) { .sms-close-btn:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); } }
+@media (any-hover: hover) { .sms-close-btn:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); } }
 
 .sms-list {
   flex: 1;
@@ -236,7 +236,7 @@ function onCreated(item) {
   user-select: none;
 }
 
-@media (hover: hover) { .sms-item:hover { background: var(--surface-raised); } }
+@media (any-hover: hover) { .sms-item:hover { background: var(--surface-raised); } }
 .sms-item-on { background: color-mix(in srgb, var(--surface-raised) 72%, transparent); }
 
 .sms-icon {
@@ -258,7 +258,7 @@ function onCreated(item) {
   opacity: 0.8;
   transition: opacity 0.12s;
 }
-@media (hover: hover) { .sms-item:hover .sms-svg-img { opacity: 1; } }
+@media (any-hover: hover) { .sms-item:hover .sms-svg-img { opacity: 1; } }
 .sms-item-on .sms-svg-img { opacity: 1; }
 
 .sms-dot {
@@ -327,7 +327,7 @@ function onCreated(item) {
   font-size: 10px;
 }
 
-@media (hover: hover) { .sms-info-btn:hover { color: var(--text-2); background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); } }
+@media (any-hover: hover) { .sms-info-btn:hover { color: var(--text-2); background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); } }
 .sms-item-on .sms-info-btn { color: color-mix(in srgb, var(--c) 50%, var(--text-muted)); }
 
 .sms-empty {

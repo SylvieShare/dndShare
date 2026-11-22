@@ -1,7 +1,7 @@
 <template>
   <button
     ref="anchor" type="button" class="hph-trigger" :aria-expanded="open" :aria-controls="popoverId"
-    @pointerenter="onHover" @pointerleave="onLeave" @focus="show" @blur="scheduleClose" @click="show"
+    @pointerenter="showHint" @pointerleave="onLeave" @focus="showHint" @blur="scheduleClose" @click="show"
   >
     <span>Максимум хитов <Info :size="14" aria-hidden="true" /></span>
     <strong>{{ history.total }}</strong>
@@ -27,7 +27,7 @@
 <script setup>
 import { computed, onBeforeUnmount, ref, useId } from 'vue'
 import { Info } from '@lucide/vue'
-import { BasePopover } from '@sylvieshare/share-ui'
+import { BasePopover, canShowHoverHint, isMousePointer } from '@sylvieshare/share-ui'
 import { hpHistoryRows } from '../lib/hpHistory'
 
 const props = defineProps({ hp: { type: Object, required: true } })
@@ -38,8 +38,8 @@ const popoverId = useId()
 let closeTimer
 function cancelClose() { clearTimeout(closeTimer) }
 function show() { cancelClose(); open.value = true }
-function onHover(event) { if (event.pointerType !== 'touch') show() }
-function onLeave(event) { if (event.pointerType !== 'touch') scheduleClose() }
+function showHint(event) { if (canShowHoverHint(event)) show() }
+function onLeave(event) { if (isMousePointer(event)) scheduleClose() }
 function scheduleClose() {
   cancelClose()
   closeTimer = setTimeout(() => { open.value = false }, 180)

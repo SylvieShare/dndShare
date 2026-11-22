@@ -307,7 +307,7 @@ function close() {
   opacity: 0.35;
   transition: color 0.15s, opacity 0.15s;
 }
-@media (hover: hover) { .dci-edit:hover { color: var(--accent); opacity: 1; } }
+@media (any-hover: hover) { .dci-edit:hover { color: var(--accent); opacity: 1; } }
 .dci-edit:focus-visible { color: var(--accent); opacity: 1; }
 
 .dciw-body {

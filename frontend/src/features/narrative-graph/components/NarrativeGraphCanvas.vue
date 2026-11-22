@@ -47,7 +47,7 @@
               :d="edge.path"
               pathLength="100"
               stroke-dasharray="30 70"
-              @pointerenter="hoverEdgeEndpoint(edge)"
+              @pointerenter="isMousePointer($event) && hoverEdgeEndpoint(edge)"
               @pointerleave="leaveEdgeEndpoint(edge)"
               @pointerdown.stop="onEdgeEndpointDown($event, edge, 'from')"
             />
@@ -56,7 +56,7 @@
               :d="edge.reversePath"
               pathLength="100"
               stroke-dasharray="30 70"
-              @pointerenter="hoverEdgeEndpoint(edge)"
+              @pointerenter="isMousePointer($event) && hoverEdgeEndpoint(edge)"
               @pointerleave="leaveEdgeEndpoint(edge)"
               @pointerdown.stop="onEdgeEndpointDown($event, edge, 'to')"
             />
@@ -159,6 +159,7 @@
 </template>
 
 <script setup>
+import { isMousePointer } from '@sylvieshare/share-ui'
 import { useCanvasPinch } from '@/shared/composables/useCanvasPinch'
 import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import GraphSelectionBar from '@/features/narrative-graph/components/GraphSelectionBar.vue'
@@ -393,6 +394,7 @@ function onResizeDown(event, node) {
 
 function onPointerMove(event) {
   if (props.locked) return
+  if (!gesture.value && !isMousePointer(event)) return
   cursorWorld.value = pointInWorld(event)
   const hoveredNode = nodeAtClientPoint(event.clientX, event.clientY)
   if (props.linkingFrom) {

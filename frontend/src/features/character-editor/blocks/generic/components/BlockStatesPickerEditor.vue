@@ -119,7 +119,7 @@ function onCreated(item) {
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
 
-@media (hover: hover) {
+@media (any-hover: hover) {
   .bsp-add-btn:hover {
     border-color: var(--accent);
     color: var(--text-2);
@@ -169,7 +169,7 @@ function onCreated(item) {
   transition: border-color 0.12s, background 0.12s;
 }
 
-@media (hover: hover) {
+@media (any-hover: hover) {
   .bsp-item:hover {
     border-color: color-mix(in srgb, var(--c) 38%, var(--border));
     background: color-mix(in srgb, var(--c) 8%, var(--surface));

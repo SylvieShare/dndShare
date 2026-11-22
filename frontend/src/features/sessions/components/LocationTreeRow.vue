@@ -157,7 +157,8 @@ function drop(event) {
 .location-tree-copy strong { font-size: 12px; font-weight: 650; }
 .location-tree-copy small { color: var(--text-muted); font-size: 9px; }
 .location-tree-count { display: inline-flex; flex: none; align-items: center; gap: 3px; color: var(--text-muted); font-size: 9px; }
-.location-tree-edit { width: 25px; height: 25px; border-radius: 6px; cursor: pointer; opacity: 0; }
-.location-tree-row:hover .location-tree-edit, .location-tree-row--selected .location-tree-edit { opacity: 1; }
+.location-tree-edit { width: 25px; height: 25px; border-radius: 6px; cursor: pointer; opacity: var(--hover-revealed-action-opacity, 0); }
+.location-tree-row:hover .location-tree-edit,
+.location-tree-edit:focus-visible, .location-tree-row--selected .location-tree-edit { opacity: 1; }
 .location-tree-edit:hover { background: var(--surface-active); color: var(--text-1); }
 </style>
