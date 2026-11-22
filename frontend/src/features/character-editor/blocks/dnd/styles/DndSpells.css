@@ -20,7 +20,13 @@
   font-size: 13px;
   padding: 8px 4px;
 }
-.spells-level-list {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--layout-spell-card-gap);align-items:stretch;min-width:0}
+.spells-level-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--layout-spell-card-min-width)), 1fr));
+  gap: var(--layout-spell-card-gap);
+  align-items: stretch;
+  min-width: 0;
+}
 .spells-level-list>* {min-width:0}
 
 .sp-standalone { margin-bottom: 18px; }
