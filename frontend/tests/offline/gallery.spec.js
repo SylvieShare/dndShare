@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
+import { readFile } from 'node:fs/promises'
 import { fixture } from '../tutorials/fixtures/character-layout'
+import { fullPhoto, fullPhotoName, installGalleryDownload, legacyPhoto } from './fixtures/gallery-download.js'
 
 const photoUrl = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="180" height="240"><rect width="180" height="240" fill="#35313f"/><circle cx="90" cy="85" r="43" fill="#b79cec"/><path d="M20 240a70 90 0 01140 0" fill="#766098"/></svg>')
 const landscapeUrl = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="180"><rect width="360" height="180" fill="#35313f"/></svg>')
@@ -73,13 +75,41 @@ for (const width of [390, 834, 1440]) test(`gallery wraps in order at the bottom
   await page.screenshot({ path: `target/gallery-${width}.png` })
 })
 
-test('read-only galleries expose viewing without upload or removal', async ({ page }) => {
+test('read-only galleries expose viewing without upload, download or removal', async ({ page }) => {
   const api = await open(page, 390, false)
   const gallery = page.locator('[data-sheet-field="person_photos"]:visible')
   await expect(gallery.getByRole('button', { name: 'Добавить', exact: true })).toHaveCount(0)
   await gallery.getByRole('button', { name: 'Фотография 1', exact: true }).click()
   await expect(page.getByRole('button', { name: 'Посмотреть', exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Удалить', exact: true })).toHaveCount(0)
+  await expect(page.getByRole('menuitem', { name: 'Скачать изображение', exact: true })).toHaveCount(0)
+  expect(api.writes).toEqual([])
+})
+
+test('photo downloads preserve full bytes and format and can be retried after failure', async ({ page }) => {
+  await page.setViewportSize({ width: 704, height: 932 })
+  const api = await installGalleryDownload(page)
+  api.setStatus(503)
+  await page.goto('/char/test?tab=personality')
+  const gallery = page.locator('.photo-gallery')
+  await expect(gallery.locator('.photo-thumb img').first()).toHaveAttribute('src', '/gallery-thumb.png')
+  const menu = page.getByRole('menu', { name: 'Действия с фотографией', exact: true })
+  const action = menu.getByRole('menuitem', { name: 'Скачать изображение', exact: true })
+  await gallery.getByRole('button', { name: 'Фотография 1', exact: true }).click()
+  await action.click()
+  await expect(gallery.getByRole('alert')).toContainText('Не удалось скачать изображение')
+  await expect(gallery).toHaveAttribute('aria-busy', 'false')
+
+  api.setStatus(200)
+  for (const [index, name, bytes] of [[1, fullPhotoName, fullPhoto], [2, 'Фото 2.png', legacyPhoto]]) {
+    await gallery.getByRole('button', { name: `Фотография ${index}`, exact: true }).click()
+    const downloaded = page.waitForEvent('download')
+    await action.click()
+    const file = await downloaded
+    expect(file.suggestedFilename()).toBe(name)
+    expect(await readFile(await file.path())).toEqual(bytes)
+  }
+  await expect(gallery.getByRole('alert')).toHaveCount(0)
   expect(api.writes).toEqual([])
 })
 

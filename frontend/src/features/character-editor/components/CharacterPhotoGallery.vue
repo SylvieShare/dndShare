@@ -1,5 +1,5 @@
 <template>
-  <div v-if="photos.length || owner" class="photo-gallery" aria-label="Галерея персонажа" :aria-busy="uploading">
+  <div v-if="photos.length || owner" class="photo-gallery" aria-label="Галерея персонажа" :aria-busy="uploading || downloading">
     <MorphTileHeader title="Галерея" :show-edit="false"><template #aside><CharacterCoverControls :owner="ownerId" :photos="photos" /></template></MorphTileHeader>
     <div class="photo-strip">
       <RowActionMenu v-for="(photo, index) in photos" :key="photo.uid" follow-anchor title="Действия с фотографией" :trigger-attrs="{ style: { maxWidth: '100%' } }">
@@ -12,6 +12,8 @@
         <template #default="{ close }">
           <CharacterMenuActions :view="() => { viewing = photo; close() }" view-label="Посмотреть" :view-icon="Expand"
             :remove="owner ? () => { removing = photo; close() } : undefined" />
+          <RowActionItem v-if="owner && (photo.imageId || photo.url)" :icon="Download" :disabled="downloading"
+            @click="downloadPhoto(photo, index); close()">Скачать изображение</RowActionItem>
           <RowActionItem v-if="coverState.foldable" :icon="PanelsTopLeft" :disabled="!coverState.available || coverState.pendingOwner === ownerId && coverState.pendingPhotoUid === photo.uid" @click="present(photo); close()">
             {{ selected(photo) ? coverState.active ? 'Показать ещё раз на внешнем экране' : 'Возобновить показ на внешнем экране' : 'Показывать на внешнем экране' }}
             <small v-if="!coverState.available" class="photo-menu-hint">{{ coverState.reason }}</small>
@@ -35,9 +37,10 @@
 import CharacterMenuActions from './CharacterMenuActions.vue'
 import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
 import { ActionButton, AppModalFrame, ConfirmDialog, LoadingIndicator, MorphTileHeader, RowActionItem, RowActionMenu } from '@sylvieshare/share-ui'
-import { Expand, PanelsTopLeft, PanelTopClose, Plus } from '@lucide/vue'
+import { Download, Expand, PanelsTopLeft, PanelTopClose, Plus } from '@lucide/vue'
 import { prepareImageUpload, PORTRAIT_IMAGE_MAX_BYTES } from '@/shared/lib/imageUpload'
 import { coverState, showCoverPhoto, stopCoverPhoto, updateCoverGallery } from '@/platform/coverDisplay'
+import { saveDownload } from '@/platform/fileDownload'
 import CharacterPhotoImage from './CharacterPhotoImage.vue'
 import CharacterCoverControls from './CharacterCoverControls.vue'
 
@@ -50,8 +53,36 @@ const photos = computed(() => Array.isArray(props.value) ? props.value : [])
 function selected(photo) { return coverState.owner === ownerId.value && coverState.photoUid === photo.uid || coverState.pendingOwner === ownerId.value && coverState.pendingPhotoUid === photo.uid }
 function displayed(photo) { return coverState.active && coverState.owner === ownerId.value && coverState.photoUid === photo.uid }
 const input = ref(null), viewing = ref(null), removing = ref(null), error = ref(''), pending = ref([]), uploading = ref(false)
+const downloading = ref(false)
 let disposed = false
 const controller = new AbortController()
+const photoExtensions = new Map([
+  ['image/webp', 'webp'], ['image/png', 'png'], ['image/jpeg', 'jpg'], ['image/gif', 'gif'], ['image/avif', 'avif'],
+])
+
+async function downloadPhoto(photo, index) {
+  if (!owner.value || downloading.value) return
+  downloading.value = true
+  error.value = ''
+  try {
+    const source = photo.imageId ? `/api/storage/images/${encodeURIComponent(photo.imageId)}` : photo.url
+    const options = { signal: controller.signal }
+    let response = await fetch(source, options)
+    if ([403, 404].includes(response.status) && photo.url && photo.url !== source) {
+      response = await fetch(photo.url, options)
+    }
+    if (!response.ok) throw new Error()
+    const blob = await response.blob()
+    const extension = photoExtensions.get(blob.type)
+    if (!extension || !blob.size) throw new Error()
+    const baseName = photo.name?.split(/[\\/]/).at(-1).replace(/\.[^.]+$/, '').trim() || `Фото ${index + 1}`
+    if (!disposed) await saveDownload(blob, `${baseName}.${extension}`)
+  } catch {
+    if (!disposed) error.value = 'Не удалось скачать изображение. Повторите попытку.'
+  } finally {
+    downloading.value = false
+  }
+}
 
 async function selectFiles(event) {
   const files = [...event.target.files]

@@ -1,6 +1,7 @@
 import { isAndroid, nativeStore } from './storage'
 import { outboxStorage } from './journal'
 import { initializeCoverDisplay } from './coverDisplay'
+import { saveDownload } from './fileDownload'
 
 export function installAndroidLifecycle(router) {
   if (!isAndroid) return
@@ -11,14 +12,7 @@ export function installAndroidLifecycle(router) {
     try {
       const response = await fetch(anchor.href)
       if (!response.ok) throw new Error('Не удалось получить файл')
-      const blob = await response.blob()
-      const data = await new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = () => resolve(reader.result.split(',')[1])
-        reader.onerror = reject
-        reader.readAsDataURL(blob)
-      })
-      await nativeStore.saveFile({ name: anchor.download || 'dndshare-export', mime: blob.type || 'application/octet-stream', base64: data })
+      await saveDownload(await response.blob(), anchor.download || 'dndshare-export')
     } catch (error) { window.dispatchEvent(new CustomEvent('dndshare:platform-error', { detail: error.message })) }
   }
   const originalClick = HTMLAnchorElement.prototype.click
