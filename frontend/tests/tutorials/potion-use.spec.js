@@ -1,4 +1,4 @@
-import { openSessionPanel } from './fixtures/session-menu'
+import { openSessionPanel, sheetTool } from './fixtures/session-menu'
 import { applyDocumentPatches } from '../../src/shared/lib/documentPatch.js'
 import { test, expect } from '@playwright/test'
 import { TUTORIAL_REVISION } from '../../src/features/tutorials/lib/tutorialIdentity.js'
@@ -65,7 +65,10 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     await expect(page.locator('.view')).toBeVisible()
     if (mobile) await page.getByRole('button', { name: 'Предметы', exact: true }).click()
     else await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Снаряжение', exact: true }).click()
-    if (connected && !guest) await expect(page.locator('.character-workspace-header [data-tutorial="character-session"]')).toBeVisible()
+    if (connected && !guest) {
+      await expect(await sheetTool(page, 'Сессия')).toBeVisible()
+      if (mobile) await page.keyboard.press('Escape')
+    }
     if (mobile) await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/settling/)
     await page.evaluate(async () => {
       const stages = document.querySelectorAll('.inner-tabs-content, .inner-tab-pane, .mobile-swipe-track')

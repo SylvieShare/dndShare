@@ -1,11 +1,11 @@
 <template>
   <div ref="menuAnchor" class="sm-wrap">
-    <ActionButton v-if="block?.props?.header" variant="quiet" icon-only aria-label="Меню персонажа" title="Настройки персонажа" aria-haspopup="menu" :aria-expanded="open" @click="open = !open"><template #icon><Settings :size="layoutTokens['sheet-header-action-icon']" /></template></ActionButton>
-    <UtilityCell v-else-if="block?.props?.embedded" inline label="Меню персонажа" :active="open" aria-haspopup="menu" :aria-expanded="open" @click="open = !open">
+    <ActionButton v-if="block?.props?.header" variant="quiet" icon-only aria-label="Меню персонажа" title="Настройки персонажа" aria-haspopup="menu" :aria-expanded="open" @click="toggle"><template #icon><Settings :size="layoutTokens['sheet-header-action-icon']" /></template></ActionButton>
+    <UtilityCell v-else-if="block?.props?.embedded" inline label="Меню персонажа" :active="open" aria-haspopup="menu" :aria-expanded="open" @click="toggle">
       <template #icon><img v-if="iconSrc" class="sm-ic" :src="iconSrc" :style="iconStyle" alt="" aria-hidden="true" /></template>
       <span class="sm-sub">Меню</span>
     </UtilityCell>
-    <MorphTile :outlined="false" v-else class="sm-tile" :color="accent" interactive role="button" tabindex="0" :aria-expanded="open" aria-label="Меню персонажа" @click="open = !open" @keydown.enter.prevent="open = !open" @keydown.space.prevent="open = !open">
+    <MorphTile :outlined="false" v-else class="sm-tile" :color="accent" interactive role="button" tabindex="0" :aria-expanded="open" aria-label="Меню персонажа" @click="toggle" @keydown.enter.prevent="toggle" @keydown.space.prevent="toggle">
       <TileAccentStrip />
       <div class="sm-body">
         <img v-if="iconSrc" class="sm-ic" :src="iconSrc" :style="iconStyle" alt="" aria-hidden="true" />
@@ -15,10 +15,11 @@
 
     <CharacterMenuPopover v-model:open="open" :anchor="menuAnchor">
       <div class="sm-menu" data-tutorial="character-menu">
-              <CloneCharacterAction @cloned="open = false" />
+        <div v-if="$slots.shortcuts" class="sm-shortcuts"><slot name="shortcuts" /></div>
+        <CloneCharacterAction @cloned="open = false" />
         <TutorialRestart @restart="open = false" />
         <CharacterEditionAction @opened="open = false" />
-        <CharacterUndoActions />
+        <CharacterUndoActions v-if="!hideHistory" />
         <div v-if="ctx.saveStatus === 'pending' || ctx.saveStatus === 'saving'" class="sm-save" :class="ctx.saveStatus">
           <span class="sm-dot"></span>
           <span class="sm-save-label">{{ saveLabel }}</span>
@@ -75,10 +76,16 @@ import ContentSourcesModal from '@/features/character-editor/components/ContentS
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { svgColorFilter } from '@/shared/lib/svgColorFilter'
 
-const props = defineProps(['block'])
+const props = defineProps({ block: Object, hideHistory: Boolean })
+const emit = defineEmits(['opening'])
 const ctx = inject('charCtx', { canEdit: false, canTogglePublic: false, publicVisible: false, saveStatus: 'idle', pendingSecondsLeft: 0 })
 const menuAnchor = ref(null)
 const open = ref(false)
+function toggle() {
+  if (!open.value) emit('opening')
+  open.value = !open.value
+}
+defineExpose({ menuAnchor, close: () => { open.value = false } })
 const sourcesOpen = ref(false)
 useTutorialAction('character-menu', ({ onCleanup }) => {
   const previous = open.value
@@ -143,6 +150,12 @@ function updateSources(value) {
 
 /* ── Dropdown ── */
 .sm-menu { display: flex; flex-direction: column; gap: 4px; }
+.sm-shortcuts { display: flex; gap: var(--spacing-xs); padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-small); }
+.sm-shortcuts :deep(.share-action-button) {
+  --action-button-height: var(--layout-menu-action-size);
+  width: var(--layout-menu-action-size);
+  min-width: 0;
+}
 .sm-item { padding: 6px 8px; border-radius: 7px; }
 .sm-item:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 

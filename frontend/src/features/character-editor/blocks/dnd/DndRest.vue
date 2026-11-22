@@ -1,7 +1,7 @@
 <template>
   <div class="rest-block">
     <component :is="block?.props?.embedded ? 'div' : BaseTile" class="rest-tile" :class="{ 'rest-tile--header': block?.props?.header }" :color="block?.props?.embedded ? undefined : SHORT_COLOR">
-      <DndRestView :header="block?.props?.header" :embedded="block?.props?.embedded" :interactive="ownerMode" @short="onShort" @long="onLong" @dawn="ownerMode && (dawnOpen = true)" />
+      <DndRestView ref="restView" :anchor="block?.props?.externalTrigger ? menuAnchor : undefined" :header="block?.props?.header" :embedded="block?.props?.embedded" :interactive="ownerMode" @short="onShort" @long="onLong" @dawn="ownerMode && (dawnOpen = true)" />
     </component>
 
     <AppModalFrame v-if="dawnOpen" title="Рассвет" @close="dawnOpen = false"><DndDawnEditor :values="values" @apply="applyDawn" @close="dawnOpen = false" /></AppModalFrame>
@@ -29,7 +29,7 @@
 <script setup>
 import { logSpellSlotRecovery } from '@/features/character-editor/lib/sessionEventData'
 import DndDawnEditor from './components/DndDawnEditor.vue'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, nextTick, ref } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { BaseTile } from '@sylvieshare/share-ui'
 import DndLongRestEditor from '@/features/character-editor/blocks/dnd/components/DndLongRestEditor'
@@ -61,6 +61,14 @@ const dawnOpen = ref(false)
 const shortOpen = ref(false)
 const longOpen = ref(false)
 const shortStart = ref(null)
+const restView = ref(null), menuAnchor = ref(null)
+async function open(anchor) {
+  if (!anchor || !ownerMode.value) return
+  menuAnchor.value = anchor
+  await nextTick()
+  restView.value?.open()
+}
+defineExpose({ open, close: () => restView.value?.close() })
 
 const ownerMode = computed(() => charCtx.ownerMode)
 

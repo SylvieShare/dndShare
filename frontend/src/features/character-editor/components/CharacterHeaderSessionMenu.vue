@@ -1,6 +1,8 @@
 <template>
-  <div data-tutorial="character-session">
-    <ActionButton ref="trigger" variant="quiet" icon-only aria-label="Сессия" :title="heading"
+  <div v-show="!inSettings" :data-tutorial="inSettings ? undefined : 'character-session'">
+    <Teleport v-if="!inSettings || triggerTarget" :to="triggerTarget || 'body'" :disabled="!inSettings" defer>
+    <ActionButton ref="trigger" :variant="inSettings ? 'secondary' : 'quiet'" :layout="inSettings ? 'stacked' : 'inline'"
+      :icon-only="!inSettings" :data-tutorial="inSettings ? 'character-session' : undefined" aria-label="Сессия" :title="heading"
       aria-haspopup="menu" :aria-expanded="open" @click="toggle" @keydown.down.prevent="openMenu">
       <template #icon>
         <span class="session-icon">
@@ -9,8 +11,10 @@
           <span v-if="eventCount" class="session-count" :class="{ 'session-count--incoming': controller.incomingCount > 0 }">{{ eventCount > 99 ? '99+' : eventCount }}</span>
         </span>
       </template>
+      <span v-if="inSettings">Сессия</span>
     </ActionButton>
-    <CharacterMenuPopover v-model:open="open" :anchor="trigger?.$el" label="Сессия" role="menu">
+    </Teleport>
+    <CharacterMenuPopover v-model:open="open" :anchor="anchor" label="Сессия" role="menu">
       <div v-if="chapterLabel" class="session-heading">{{ heading }}</div>
       <ActionMenuItem :icon="ScrollText" @click="open = false; router.push(`/sessions/${session.uuid}`)">Открыть сессию</ActionMenuItem>
       <ActionMenuItem :icon="Users" @click="show('players')">
@@ -32,8 +36,14 @@ import { layoutTokens } from '@/app/design-tokens'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 import CharacterMenuPopover from './CharacterMenuPopover.vue'
 
-const props = defineProps({ session: { type: Object, required: true }, controller: { type: Object, required: true } })
+const props = defineProps({
+  session: { type: Object, required: true }, controller: { type: Object, required: true },
+  inSettings: Boolean, triggerTarget: Object, settingsAnchor: Object,
+})
+const emit = defineEmits(['opening'])
 const router = useRouter(), trigger = ref(null), open = ref(false)
+const anchor = computed(() => props.inSettings ? props.settingsAnchor : trigger.value?.$el)
+defineExpose({ close: () => { open.value = false } })
 const connection = inject('characterSessionConnection', null)
 const linkState = computed(() => connection?.value.uuid === props.session.uuid ? connection?.value.status : null)
 const linkLabel = computed(() => ({ connected: 'Связь с сессией установлена', error: 'Нет связи с сессией' }[linkState.value] || 'Подключение к сессии'))
@@ -41,21 +51,24 @@ const chapterLabel = computed(() => currentChapterLabel({ chapterNumber: props.s
 const heading = computed(() => [props.session.name, chapterLabel.value].filter(Boolean).join(' · '))
 const playerCount = computed(() => props.controller.state.playersLoaded ? props.controller.recipients.length : null)
 const eventCount = computed(() => props.controller.state.transfers.length + (props.controller.interactions?.state.pending.length || 0))
-// Panels outlive the menu. Their anchor must remain in the header after the item disappears.
-watch([() => props.controller, trigger], ([controller, button], _, cleanup) => {
-  const element = button?.$el
+// Panels stay anchored to a permanent header control when the shortcut disappears.
+watch([() => props.controller, anchor], ([controller, element], _, cleanup) => {
   if (!element) return
   for (const view of ['players', 'events']) controller.registerAnchor(view, element)
   cleanup(() => {
     for (const view of ['players', 'events']) controller.unregisterAnchor(view, element)
   })
 }, { flush: 'post' })
-function openMenu() { props.controller.close(); open.value = true }
+function openMenu() {
+  props.controller.close()
+  emit('opening')
+  open.value = true
+}
 function toggle() { if (open.value) open.value = false; else openMenu() }
 watch(() => props.session.uuid, () => { open.value = false })
 function show(view) {
   open.value = false
-  props.controller.open(view, trigger.value?.$el)
+  props.controller.open(view, anchor.value)
 }
 </script>
 

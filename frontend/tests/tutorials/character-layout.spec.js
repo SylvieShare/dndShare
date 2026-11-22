@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test'
 import { fixture } from './fixtures/character-layout'
+import { sheetTool } from './fixtures/session-menu.js'
 
 async function openHeaderAction(page, name) {
   await page.getByRole('button', { name: 'Действия персонажа', exact: true }).click()
-  await page.getByRole('menuitem', { name, exact: true }).click()
+  await page.getByRole('menuitem', { name }).click()
 }
 
 for (const width of [600, 834, 1100]) test(`tablet sheet uses a shared header and balanced stats at ${width}`, async ({ page }) => {
@@ -64,6 +65,7 @@ for (const width of [390, 834, 1440]) test(`VTM uses native composition at ${wid
 for (const width of [390, 834, 1440]) test(`health and sheet actions remain reachable at ${width}`, async ({ page }) => {
   await page.setViewportSize({ width, height: 640 })
   const api = await fixture(page)
+  api.document().values.inspiration = true
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
   const heading = page.locator('.dnd-heading')
   await expect(heading.locator('.heading-health')).toHaveText('18/23')
@@ -79,7 +81,7 @@ for (const width of [390, 834, 1440]) test(`health and sheet actions remain reac
   }
   await expect(heading.locator('.portrait-xp')).toHaveCount(0)
   const header = page.locator('.character-workspace-header')
-  await header.getByRole('button', {name:'Отдых и рассвет',exact:true}).click()
+  await (await sheetTool(page, 'Отдых и рассвет')).click()
   await expect(page.getByRole('menuitem', {name:'Короткий отдых'})).toBeVisible()
   await page.keyboard.press('Escape')
   await header.getByRole('button', {name:'Меню персонажа',exact:true}).click()

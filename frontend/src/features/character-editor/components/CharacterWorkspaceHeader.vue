@@ -32,10 +32,22 @@
     </template>
     <template #actions>
       <div class="heading-tools">
-        <CharacterHeaderSessionMenu v-if="!modal && session && transfers" :session="session" :controller="transfers" />
+        <CharacterHeaderSessionMenu v-if="hasSession" ref="sessionMenu" :session="session" :controller="transfers"
+          :in-settings="phoneDnd" :trigger-target="sessionShortcut" :settings-anchor="mobileSettings?.menuAnchor"
+          @opening="phoneDnd && mobileSettings?.close()" />
         <template v-if="dnd">
-          <CharacterBlock block-id="rest" :options="{ embedded: true, header: true }" />
-          <CharacterBlock block-id="settings" :options="{ header: true }" />
+          <CharacterBlock v-show="!phoneDnd" ref="restMenu" block-id="rest" :options="{ embedded: true, header: true, externalTrigger: phoneDnd }" />
+          <SettingsMenuTile v-if="phoneDnd" ref="mobileSettings" :block="{ props: { header: true } }" hide-history @opening="closeMobileTools">
+            <template #shortcuts>
+              <div v-if="hasSession" ref="sessionShortcut" />
+              <ActionButton layout="stacked" variant="secondary" :disabled="!charCtx.ownerMode"
+                aria-label="Отдых и рассвет" aria-haspopup="menu" @click="openMobileRest">
+                <template #icon><Moon :size="layoutTokens['sheet-header-action-icon']" aria-hidden="true" /></template>
+                Отдых
+              </ActionButton>
+            </template>
+          </SettingsMenuTile>
+          <CharacterBlock v-else block-id="settings" :options="{ header: true }" />
         </template>
       </div>
       <SettingsMenuTile v-if="showMenu" :block="{ props: { embedded: true } }" />
@@ -58,7 +70,8 @@ import CharacterBlock from './CharacterBlock.vue'
 import { useRouter } from 'vue-router'
 import { computed, inject, ref, watch } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
-import { ArrowLeft } from '@lucide/vue'
+import { ArrowLeft, Moon } from '@lucide/vue'
+import { layoutTokens } from '@/app/design-tokens'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
 import CharacterHeaderSessionMenu from './CharacterHeaderSessionMenu.vue'
 import SettingsMenuTile from '../blocks/generic/SettingsMenuTile.vue'
@@ -72,6 +85,20 @@ const props = defineProps({ dnd: Boolean, format: String, modal: Boolean, conten
   tabs: { type: Array, default: () => [] }, activeTab: Number })
 const emit = defineEmits(['select-tab', 'close'])
 const charCtx = inject('charCtx', {})
+const phoneDnd = computed(() => props.dnd && props.format === 'phone')
+const hasSession = computed(() => !props.modal && !!props.session && !!props.transfers)
+const mobileSettings = ref(null), sessionShortcut = ref(null), sessionMenu = ref(null), restMenu = ref(null)
+function closeMobileTools() {
+  sessionMenu.value?.close()
+  restMenu.value?.close()
+}
+function openMobileRest() {
+  const settings = mobileSettings.value
+  if (!settings?.menuAnchor) return
+  settings.close()
+  restMenu.value?.open(settings.menuAnchor)
+}
+watch(phoneDnd, closeMobileTools)
 const hasConditions = computed(() => !!(charCtx.characterStatuses?.entries?.length || charCtx.values?.exhaustion?.level > 0 || isInspirationActive(charCtx.values?.inspiration)))
 const workspace = ref(null)
 const profileEditor = ref(null), experienceEditor = ref(null), healthEditor = ref(null), armorEditor = ref(null), statusEditor = ref(null)

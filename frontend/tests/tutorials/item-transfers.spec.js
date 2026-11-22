@@ -1,4 +1,4 @@
-import { openSessionPanel } from './fixtures/session-menu'
+import { openSessionPanel, sheetTool } from './fixtures/session-menu'
 import { applyDocumentPatches } from '../../src/shared/lib/documentPatch.js'
 import { test, expect } from '@playwright/test'
 import { TUTORIAL_REVISION } from '../../src/features/tutorials/lib/tutorialIdentity.js'
@@ -64,13 +64,12 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
     if (mobile) await page.getByRole('button', {name:'Предметы',exact:true}).click()
     const header = page.locator('.character-workspace-header')
     await expect(header).toBeVisible()
-    const badge = header.locator('[data-tutorial="character-session"]')
-    const button = badge.getByRole('button', { name: 'Сессия', exact: true })
+    const button = await sheetTool(page, 'Сессия')
     await expect(button).toHaveAttribute('title', /Тайны долины.*Гл. 3 · Забытый храм/)
+    if (mobile) await page.keyboard.press('Escape')
     await expect(header.getByRole('button', { name:'К списку персонажей' })).toBeVisible()
 
     if (!mobile) await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Снаряжение', exact: true }).click()
-    await expect(page.locator('.character-workspace-header [data-tutorial="character-session"]')).toBeVisible()
     if (mobile) await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/settling/)
     await page.evaluate(async () => {
       const stages = document.querySelectorAll('.inner-tabs-content, .inner-tab-pane, .mobile-swipe-track')
