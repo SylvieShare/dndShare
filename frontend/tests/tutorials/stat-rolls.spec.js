@@ -28,7 +28,15 @@ for (const width of [390, 834, 1920]) {
         const expression = `${entry.mode === 'normal' ? 1 : 2}d20+${entry.bonus}${entry.scope === 'saving_throw' ? ' + 1d4' : ''}`
         const confirmation = menu.getByRole('menuitem', { name: 'Бросить', exact: true })
         await expect(confirmation).toHaveAttribute('aria-description', `Формула броска: ${expression}`)
+        await expect(confirmation).toHaveCSS('min-height', '64px')
         await expect(confirmation.locator('.damage-preview')).toBeVisible()
+        const dice = confirmation.locator('.damage-preview .system-die')
+        await expect(dice.first()).toHaveAttribute('aria-label', 'd20: 20')
+        await expect.poll(() => dice.evaluateAll(nodes => nodes.every(die => {
+          const fit = die.closest('.share-fit-content[data-fit-owner]').getBoundingClientRect()
+          const box = die.getBoundingClientRect()
+          return box.left >= fit.left - 1 && box.right <= fit.right + 1 && box.bottom <= fit.bottom + 1
+        }))).toBe(true)
         const formulaBox = await confirmation.locator('.damage-preview').boundingBox()
         const labelBox = await confirmation.locator('.ram-item__content').boundingBox()
         expect(formulaBox.x).toBeGreaterThanOrEqual(labelBox.x + labelBox.width)

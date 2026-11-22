@@ -1,7 +1,7 @@
 <template>
-  <component :is="unframed ? 'span' : BaseTile" v-if="expression" class="damage-preview" :class="{ 'damage-preview--unframed': unframed }" aria-label="Итоговая формула урона">
+  <component :is="unframed ? 'span' : BaseTile" v-if="expression" class="damage-preview" :class="{ 'damage-preview--unframed': unframed, 'damage-preview--inline': inline }" aria-label="Итоговая формула урона">
     <small v-if="label">{{ label }}</small>
-    <FitContent><span class="damage-preview-formula">
+    <FitContent :inline="inline"><span class="damage-preview-formula">
       <template v-for="(group, index) in groups" :key="index">
         <span v-if="index" aria-hidden="true">+</span>
         <DamageDice :parts="group.parts" :modifier="group.modifier" :size="size" :default-color="group.color || defaultColor" />
@@ -15,7 +15,7 @@ import { computed } from 'vue'
 import { BaseTile, FitContent } from '@sylvieshare/share-ui'
 import { parseDiceExpression } from '@/shared/lib/dice'
 import DamageDice from './DamageDice.vue'
-const props = defineProps({ unframed: Boolean, size: { type: Number, default: 26 }, defaultColor: { type: String, default: 'var(--accent-soft)' }, expression: { type: String, default: '' }, label: { type: String, default: 'Итоговый урон' } })
+const props = defineProps({ unframed: Boolean, inline: Boolean, size: { type: Number, default: 26 }, defaultColor: { type: String, default: 'var(--accent-soft)' }, expression: { type: String, default: '' }, label: { type: String, default: 'Итоговый урон' } })
 const groups = computed(() => {
   const result = new Map()
   for (const token of parseDiceExpression(props.expression)) {
@@ -31,6 +31,7 @@ const groups = computed(() => {
 <style scoped>
 .damage-preview { display: grid; gap: 6px; padding: 10px; }
 .damage-preview--unframed { padding: 0; }
+.damage-preview--inline { min-width: 0; grid-template-columns: minmax(0, 1fr); }
 .damage-preview > small { color: var(--text-muted); font-size: 11px; }
 .damage-preview-formula { display: flex; flex-wrap: var(--fit-content-wrap,wrap); align-items: flex-start; gap: 6px; color: var(--text-2); }
 </style>

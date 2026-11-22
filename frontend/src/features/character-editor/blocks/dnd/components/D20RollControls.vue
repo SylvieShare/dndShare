@@ -5,10 +5,10 @@
       <RollBonusOptions v-if="scope" :scope="scope" :character-context="characterContext" :roll-context="rollContext" v-model="excludedBonuses" />
     </div>
     <ActionButton v-if="dialog" :disabled="disabled" @click="!disabled && emit('roll', rollMode, excludedBonuses)">{{ rollLabel }}</ActionButton>
-    <RowActionItem v-else :action="action" :disabled="disabled" :aria-description="expression ? `Формула броска: ${expression}` : undefined" @click="!disabled && emit('roll', rollMode, excludedBonuses)">
+    <RowActionItem v-else :action="action" :size="expression ? 'large' : 'default'" :disabled="disabled" :aria-description="expression ? `Формула броска: ${expression}` : undefined" @click="!disabled && emit('roll', rollMode, excludedBonuses)">
       {{ rollLabel }}
       <template v-if="expression" #suffix>
-        <DamageFormulaPreview unframed label="" :size="26" :expression="expression" :default-color="color" :title="expression" aria-hidden="true" />
+        <DamageFormulaPreview unframed inline label="" :size="34" :expression="expression" :default-color="color" :title="expression" aria-hidden="true" />
       </template>
     </RowActionItem>
   </div>
