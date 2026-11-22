@@ -1,7 +1,7 @@
 <template>
   <div class="session-sidebar-host" aria-label="Боковая панель сессии">
     <MapSidebar :ref="node => controller.sidebar.value = node" :tab="controller.selected.value" :tabs="controller.tabs.value"
-      persistent-content :padded="false" tabs-label="Боковые вкладки сессии" collapse-label="Свернуть боковую панель"
+      persistent-content swipe-to-collapse :padded="false" tabs-label="Боковые вкладки сессии" collapse-label="Свернуть боковую панель"
       :preferred-width="layoutTokens['session-sidebar']" :compact-peek="format === 'phone' ? 0 : layoutTokens['session-sidebar-peek']"
       @update:tab="controller.selected.value = $event" @resize="controller.resize" @action="controller.action">
       <template v-if="controller.selected.value.startsWith('reserves:')" #header-title><slot name="reserve-title" /></template>

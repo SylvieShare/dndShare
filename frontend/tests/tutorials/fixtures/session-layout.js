@@ -2,7 +2,7 @@ import { fixture } from './character-layout.js'
 import { TUTORIAL_REVISION } from '../../../src/features/tutorials/lib/tutorialIdentity.js'
 import { applyDocumentPatches } from '../../../src/shared/lib/documentPatch.js'
 
-export async function sessionLayout(page, {url='/tests/tutorials/fixtures/tutorials.html?page=/sessions/test',participants:customParticipants,encounter:initialEncounter,music} = {}) {
+export async function sessionLayout(page, {url='/tests/tutorials/fixtures/tutorials.html?page=/sessions/test',navigate=path=>page.goto(path),participants:customParticipants,encounter:initialEncounter,music} = {}) {
   await fixture(page)
   if(music)await page.route(url=>['/api/music/tracks','/api/music/albums','/api/music/tags'].includes(url.pathname),route=>{
     const key=new URL(route.request().url()).pathname.split('/').at(-1)
@@ -44,7 +44,7 @@ export async function sessionLayout(page, {url='/tests/tutorials/fixtures/tutori
     if(path==='/api/items/by-ids')json={items:[{id:701,typeId:15,name:'Благословение',data:{polarity:'positive'}},{id:702,typeId:15,name:'Отравление',data:{polarity:'negative'}}].map(item=>({...item,svg:'<svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20" /></svg>'}))}
     await route.fulfill({json})
   })
-  await page.goto(url)
+  await navigate(url)
   await page.addStyleTag({content:'html,body,#app{margin:0;height:100%;overflow:hidden}body{background:var(--bg);color:var(--text-1);font-family:var(--font-ui)}'})
   return {encounter:()=>encounter,writes:encounterWrites,commitEncounter:()=>++encounterVersion}
 }

@@ -16,10 +16,13 @@
       '--map-sidebar-panel-width':
         panelWidth == null ? undefined : `${panelWidth}px`,
       '--map-sidebar-compact-peek': `${compactPeek}px`,
+      '--map-sidebar-swipe-reveal': swipeReveal == null ? undefined : `${swipeReveal}px`,
     }"
     :class="{
       'map-sidebar--collapsed': collapsed,
       'map-sidebar--opening': opening,
+      'map-sidebar--swipeable': swipeToCollapse,
+      'map-sidebar--dragging': swipeReveal != null,
     }"
   >
     <IconNavigation
@@ -35,9 +38,14 @@
       @select="toggleTab"
     />
     <div
+      ref="panel"
       class="map-sidebar-panel"
       :inert="collapsed"
       :aria-hidden="collapsed || undefined"
+      @touchstart.passive="closeSwipe.start"
+      v-on="swipeToCollapse ? { touchmove: closeSwipe.move } : {}"
+      @touchend.passive="closeSwipe.end"
+      @touchcancel.passive="closeSwipe.cancel"
     >
       <div class="map-sidebar-header">
         <header class="map-sidebar-heading">
@@ -83,8 +91,8 @@
 </template>
 <script setup>
 defineOptions({ inheritAttrs: false });
-import { inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { ActionButton, IconNavigation } from "@sylvieshare/share-ui";
+import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { ActionButton, createDrawerSwipe, IconNavigation, isSortableGestureActive } from "@sylvieshare/share-ui";
 import { PanelLeftClose } from "@lucide/vue";
 import { layoutTokens, motionTokens, spacingTokens } from "@/app/design-tokens";
 import { workspaceSidebarContext } from '@/shared/lib/workspaceSidebarContext';
@@ -95,6 +103,7 @@ const props = defineProps({
   collapseAt: { type: Number, default: layoutTokens.desktop - 1 },
   workspaceKey: { type: String, default: '' },
   persistentContent: Boolean,
+  swipeToCollapse: Boolean,
   padded: { type: Boolean, default: true },
   collapseLabel: { type: String, default: 'Свернуть панель карты' },
   compactPeek: { type: Number, default: layoutTokens['map-compact-peek'] },
@@ -115,6 +124,7 @@ if (hosted) {
   }, { immediate: true });
 }
 const element = ref(null);
+const panel = ref(null);
 const content = ref(null);
 const navigation = ref(null);
 const collapsed = ref(
@@ -123,8 +133,18 @@ const collapsed = ref(
 const opening = ref(false);
 const closing = ref(false);
 let closeMotionId = 0;
-const moving = ref(false);
-function trackMotion(event, active) { if (event.target === element.value && event.propertyName === 'width') moving.value = active; }
+const widthMoving = ref(false);
+const swipeReveal = ref(null);
+const moving = computed(() => widthMoving.value || swipeReveal.value != null);
+function trackMotion(event, active) { if (event.target === element.value && event.propertyName === 'width') widthMoving.value = active; }
+const closeSwipe = createDrawerSwipe({
+  enabled: () => props.swipeToCollapse && !collapsed.value && !opening.value && !isSortableGestureActive(),
+  width: () => panel.value?.offsetWidth || 0,
+  update: value => {
+    swipeReveal.value = value == null ? null : Math.max(0, Math.min(value, panel.value.offsetWidth));
+  },
+  commit: collapse,
+});
 const panelWidth = ref(null);
 let observer,
   revealTimer = 0;
@@ -200,6 +220,7 @@ function toggleTab(key) {
 function openTab(key) {
   if (props.tabs.find(tab => tab.key === key)?.action) { emit('action', key); return; }
   if (hosted) { host.select(props.workspaceKey, key); return; }
+  closeSwipe.cancel();
   const reveal = collapsed.value;
   closeMotionId += 1;
   closing.value = false;
@@ -217,6 +238,8 @@ function openTab(key) {
 function collapse() {
   if (hosted) { host.collapse(); return; }
   if (collapsed.value) return;
+  closeSwipe.reset();
+  swipeReveal.value = null;
   pageAnimation?.cancel();
   const id = ++closeMotionId;
   closing.value = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -334,6 +357,17 @@ defineExpose({
 .map-sidebar--collapsed .map-sidebar-panel {
   opacity: 0;
   transform: translateX(-8px);
+}
+.map-sidebar--swipeable.map-sidebar--collapsed .map-sidebar-panel {
+  transform: translateX(-100%);
+}
+.map-sidebar--dragging {
+  width: calc(var(--layout-map-rail) + var(--map-sidebar-swipe-reveal));
+  transition: none;
+}
+.map-sidebar--dragging .map-sidebar-panel {
+  transform: translateX(calc(var(--map-sidebar-swipe-reveal) - 100%));
+  transition: none;
 }
 .map-sidebar-heading {
   margin-bottom: 0;
