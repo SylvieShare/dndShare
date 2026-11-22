@@ -1,27 +1,41 @@
 <template>
   <section class="session-map-workspace" data-tutorial="session-map">
     <SessionMapTabsHeader
-      :maps="headerMaps"
+      v-if="!integratedHeader"
+      :maps="mapEntries"
       :selected="c.selectedID"
       :on-air="c.display?.visible ? c.display.mapId : ''"
       :busy="c.loading || c.saving"
       @select="select"
       @rename="renaming = $event"
       @add="picker = true"
-      ><SessionMapCreaturePicker v-if="workspace?.editor" ref="creaturePicker" :editor="workspace.editor" :candidates="candidates" :selected="tokens.focused" :error="tokens.error" @focus="focusCreature" @place="placeCreature" @drag="dragCreature" /><SessionMapToolbar
-        v-if="c.display"
-        :editor="workspace?.editor"
-        :controller="c"
-        :screen-path="screenPath"
-        @view="showBroadcastView"
-        @capture="capture"
-    /></SessionMapTabsHeader>
+    ><div ref="standaloneTools" /></SessionMapTabsHeader>
+    <Teleport v-if="integratedHeader && sidebarHost?.target.value" :to="sidebarHost.target.value">
+      <SessionMapListPanel v-show="active && sidebarHost.selected.value === 'sessionMaps:list'"
+        :maps="mapEntries" :selected="c.selectedID" :on-air="c.display?.visible ? c.display.mapId : ''"
+        :busy="c.loading || c.saving" @select="selectFromSidebar" @rename="renaming = $event" @add="picker = true" />
+    </Teleport>
+    <Teleport :to="mapToolsTarget || 'body'" :disabled="!mapToolsTarget">
+      <div v-show="mapToolsTarget" class="session-map-tools" :class="{ 'session-map-tools--panel': integratedHeader }">
+        <div v-if="integratedHeader" class="session-map-tools__heading">
+          <h3>Карта сессии</h3>
+          <a v-if="session?.displayCode" :href="screenPath" target="_blank" rel="noopener"
+            aria-label="Открыть экран карты" title="Открыть экран карты"><ExternalLink :size="17" aria-hidden="true" /></a>
+        </div>
+        <SessionMapToolbar v-if="c.display" :editor="workspace?.editor" :controller="c" :screen-path="screenPath"
+          :in-panel="integratedHeader" @view="viewBroadcast" @capture="capture">
+          <SessionMapCreaturePicker v-if="workspace?.editor" ref="creaturePicker" :editor="workspace.editor"
+            :candidates="candidates" :selected="tokens.focused" :error="tokens.error" :show-label="integratedHeader"
+            @focus="focusCreature" @place="placeCreature" @drag="dragCreature" />
+        </SessionMapToolbar>
+      </div>
+    </Teleport>
     <div
       id="session-map-content"
       class="session-map-content"
-      role="tabpanel"
+      :role="integratedHeader ? undefined : 'tabpanel'"
       :aria-labelledby="
-        c.selectedID ? `session-map-tab-${c.selectedID}` : undefined
+        !integratedHeader && c.selectedID ? `session-map-tab-${c.selectedID}` : undefined
       "
     >
       <Transition name="session-map-page" mode="out-in">
@@ -112,13 +126,13 @@
 </template>
 <script setup>
 import "../styles/maps.css";
-import { computed, nextTick, provide, reactive, ref, watch } from "vue";
+import { computed, inject, nextTick, onBeforeUnmount, provide, reactive, ref, watch } from "vue";
 import {
   ActionButton,
   ConfirmDialog,
   LoadingState,
 } from "@sylvieshare/share-ui";
-import { Map } from "@lucide/vue";
+import { ExternalLink, Map } from "@lucide/vue";
 import { useSessionMaps } from "../composables/useSessionMaps";
 import { useSuggestStore } from "@/stores/suggest";
 import { sessionTokens } from "../composables/sessionTokens";
@@ -128,12 +142,16 @@ import {
   withCreaturePortraits,
 } from "../lib/sessionCreatures";
 import { normalizeSessionMap } from "../lib/sessionMapState";
+import { useAppLayout } from "@/shared/composables/useAppLayout";
+import { sessionMapScreenContext } from "@/shared/lib/sessionMapScreenContext";
+import { workspaceSidebarContext } from "@/shared/lib/workspaceSidebarContext";
 import MapEditor from "./MapEditor.vue";
 import SessionMapCreaturePicker from "./SessionMapCreaturePicker.vue";
 import SessionMapCreatureFocus from "./SessionMapCreatureFocus.vue";
 import SessionMapToolbar from "./SessionMapToolbar.vue";
 import SessionMapPicker from "./SessionMapPicker.vue";
 import SessionMapTabsHeader from "./SessionMapTabsHeader.vue";
+import SessionMapListPanel from "./SessionMapListPanel.vue";
 import SessionMapTabDialog from "./SessionMapTabDialog.vue";
 import { useSessionMapBroadcast } from "../composables/useSessionMapBroadcast";
 const props = defineProps({
@@ -145,6 +163,17 @@ const props = defineProps({
   active: { type: Boolean, default: true },
 });
 const emit = defineEmits(["inspector-resize", "participant"]);
+const sidebarHost = inject(workspaceSidebarContext, null);
+const mapScreen = inject(sessionMapScreenContext, null);
+const { format } = useAppLayout();
+const standaloneTools = ref(null);
+const mapToolsTarget = computed(() => props.integratedHeader
+  ? (props.active ? mapScreen?.target.value?.element : null)
+  : standaloneTools.value);
+const unregisterMaps = props.integratedHeader && sidebarHost?.register('sessionMaps', {
+  tabs: () => [{ key: 'list', label: 'Карты', icon: Map }],
+});
+onBeforeUnmount(() => { if (unregisterMaps) unregisterMaps(); });
 const c = reactive(useSessionMaps(props.sessionUuid)),
   workspace = ref(null),
   creaturePicker = ref(null),
@@ -157,7 +186,7 @@ sizes.ensure(18).catch(() => {});
 const candidates = computed(() =>
   sessionCreatures(props.participants, props.encounter, sizes.items(18)),
 );
-const headerMaps = computed(() =>
+const mapEntries = computed(() =>
   c.maps.map((map) =>
     map.id === workspace.value?.editor?.draft.id
       ? { ...map, name: workspace.value.editor.draft.name }
@@ -190,7 +219,7 @@ const tokenDrag = useCatalogueDrag(
         tokens.gesture({ phase: "start", point }, workspace.value.editor);
       const placed=!!workspace.value?.editor && !tokens.pending;
       this.cancel();
-      if(placed)creaturePicker.value?.close();
+      if (placed) closePlacementTools();
     },
     cancel() {
       if (workspace.value?.editor)
@@ -201,7 +230,11 @@ const tokenDrag = useCatalogueDrag(
 function focusCreature(item) {
   tokenDrag.cancel();
   tokens.focus(item);
+  closePlacementTools();
+}
+function closePlacementTools() {
   creaturePicker.value?.close();
+  mapScreen?.target.value?.close();
 }
 function dragCreature(item, event) {
   workspace.value?.cancelPlacement();
@@ -220,12 +253,19 @@ watch(
     if (!active) tokenDrag.cancel();
   },
 );
-function placeCreature(item){tokens.place(item);creaturePicker.value?.close()}
+function placeCreature(item) {
+  tokens.place(item);
+  closePlacementTools();
+}
 const { broadcastView, source, capture, showBroadcastView } =
   useSessionMapBroadcast(c, workspace, prepareLeave, select);
 const screenPath = computed(
   () => `/map-screen/${props.session?.displayCode || ""}`,
 );
+function viewBroadcast() {
+  mapScreen?.target.value?.close();
+  void showBroadcastView();
+}
 watch(
   () => c.selectedID,
   (id) => {
@@ -254,6 +294,9 @@ async function select(id) {
     return true;
   }
   return false;
+}
+async function selectFromSidebar(id) {
+  if (await select(id) && format.value !== 'desktop') sidebarHost?.collapse();
 }
 async function rename(id, name) {
   const editor = workspace.value?.editor;
@@ -316,6 +359,18 @@ defineExpose({
   height: 100%;
   min-height: 0;
 }
+.session-map-tools { display: flex; min-width: 0; }
+.session-map-tools--panel {
+  display: grid;
+  gap: var(--spacing-small);
+  padding: var(--spacing-small);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.session-map-tools--panel h3 { margin: 0; color: var(--text-1); font-size: 13px; }
+.session-map-tools__heading { display: flex; align-items: center; justify-content: space-between; }
+.session-map-tools__heading a { display: grid; place-items: center; width: 32px; height: 32px; color: var(--text-2); }
+.session-map-tools__heading a:hover { color: var(--accent-soft); }
 .session-map-page-enter-active,
 .session-map-page-leave-active {
   transition: opacity 150ms ease;

@@ -7,7 +7,7 @@
       <template v-if="controller.selected.value.startsWith('reserves:')" #header-title><slot name="reserve-title" /></template>
       <template v-if="controller.selected.value === 'players'" #header-actions><slot name="players-actions" /></template>
       <template v-else-if="controller.selected.value.startsWith('reserves:')" #header-actions><slot name="reserve-actions" /></template>
-      <template v-if="$slots['selection-header']" #header-content>
+      <template v-if="$slots['selection-header'] && !controller.selected.value.startsWith('sessionMaps:')" #header-content>
         <div class="session-sidebar-header-controls"><slot name="selection-header" /></div>
       </template>
       <div :ref="node => controller.target.value = node" class="session-sidebar-panels">

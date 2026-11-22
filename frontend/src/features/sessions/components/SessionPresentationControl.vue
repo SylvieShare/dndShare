@@ -12,17 +12,17 @@
     >
       <MonitorUp :size="24" /><span class="session-tool-label">Экран</span><span class="presentation-control-dot" :class="{ connected: hasConnectedScreens }" />
     </button>
-    <BasePopover v-model:open="open" :anchor="anchor || trigger" min-width="min(360px, calc(100vw - 16px))" :placement="anchor ? 'bottom-end' : 'right-start'" transition-preset="action-menu">
-      <div class="presentation-menu">
+    <BasePopover v-model:open="open" :anchor="anchor || trigger" min-width="min(360px, calc(100vw - 16px))" :placement="anchor ? 'bottom-end' : 'right-start'" transition-preset="action-menu" role="dialog" aria-label="Экран показа">
+      <div class="presentation-menu" :class="{ 'presentation-menu--map': mapScreen?.active.value }">
         <header>
           <div>
             <span>{{ settingsOpen ? 'НАСТРОЙКИ ТРАНСЛЯЦИИ' : 'ЭКРАН ПОКАЗА' }}</span>
-            <strong>{{ settingsOpen ? 'Оформление и данные' : presentation.activeLabel.value }}</strong>
+            <strong>{{ settingsOpen ? 'Оформление и данные' : mapScreen?.active.value ? 'Материалы и бой' : presentation.activeLabel.value }}</strong>
           </div>
           <nav class="presentation-menu-header-actions">
             <button v-if="settingsOpen" type="button" title="Назад к управлению" aria-label="Назад к управлению" @click="settingsOpen = false"><ArrowLeft :size="15" /></button>
             <button v-else type="button" title="Настройки трансляции" aria-label="Настройки трансляции" @click="settingsOpen = true"><Settings2 :size="15" /></button>
-            <a v-if="displayCode" :href="displayPath" target="_blank" rel="noopener" title="Открыть экран показа"><ExternalLink :size="15" /></a>
+            <a v-if="displayCode" :href="displayPath" target="_blank" rel="noopener" :title="mapScreen?.active.value ? 'Открыть экран боя и материалов' : 'Открыть экран показа'"><ExternalLink :size="15" /></a>
           </nav>
         </header>
         <template v-if="!settingsOpen">
@@ -58,6 +58,7 @@
               ><X :size="14" aria-hidden="true" />Убрать</button>
             </span>
           </div>
+          <div v-if="mapScreen?.active.value" :ref="setMapToolsTarget" />
           <section>
             <h3>Эффект на экране игроков</h3>
             <div class="presentation-effects">
@@ -138,9 +139,10 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { ArrowLeft, Ban, CloudFog, CloudLightning, CloudRain, Copy, ExternalLink, Eye, EyeOff, Flame, HeartPulse, Image, Maximize2, MonitorUp, ScrollText, Settings2, Skull, Snowflake, Swords, Video, Volume2, X } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
+import { sessionMapScreenContext } from '@/shared/lib/sessionMapScreenContext'
 
 const props = defineProps({ showTrigger: { type: Boolean, default: true }, anchor: Object,
   sessionUuid: { type: String, required: true }, isDm: { type: Boolean, default: false },
@@ -161,6 +163,11 @@ async function copyDisplayLink() {
 const trigger = ref(null)
 const open = ref(false)
 const settingsOpen = ref(false)
+const mapScreen = inject(sessionMapScreenContext, null)
+function setMapToolsTarget(element) {
+  if ((mapScreen.target.value?.element ?? null) === element) return
+  mapScreen.target.value = element ? { element, close: () => { open.value = false } } : null
+}
 const scaleDraft = ref(100)
 const effects = [
   { key: 'none', label: 'Без эффекта', icon: Ban, color: 'var(--text-muted)' },
@@ -204,6 +211,7 @@ defineExpose({ open, toggle: () => { open.value = !open.value } })
 </script>
 
 <style scoped>
+.presentation-menu--map { max-height: max(160px, min(620px, calc(100dvh - 100px))); overflow: auto; overscroll-behavior: contain; }
 .session-tool-label { font: 700 10px/1.2 var(--font-ui); }
 .presentation-code { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .presentation-code > span { display: grid; gap: 4px; }

@@ -2,12 +2,14 @@
   <div
     v-if="controller.display"
     class="session-map-broadcast"
+    :class="{ 'session-map-broadcast--panel': inPanel }"
     role="toolbar"
     aria-label="Трансляция карты"
     data-tutorial="session-map-broadcast"
   >
     <ActionButton
-      icon-only
+      :icon-only="!inPanel"
+      class="session-map-broadcast-toggle"
       :variant="selectedOnAir ? 'primary' : 'quiet'"
       :aria-pressed="selectedOnAir"
       :aria-label="
@@ -22,6 +24,7 @@
         )
       "
       ><template #icon><MonitorUp :size="20" /></template
+      ><template v-if="inPanel">{{ selectedOnAir ? 'Остановить показ' : 'Показать выбранную карту' }}</template
     ></ActionButton>
     <ActionButton
       variant="quiet"
@@ -44,7 +47,7 @@
     <ActionButton
       v-if="activeMap?.document.kind === 'tiles'"
       variant="quiet"
-      layout="stacked"
+      :layout="inPanel ? 'inline' : 'stacked'"
       :disabled="controller.displaySaving || !editor"
       aria-label="Отобразить текущий вид"
       title="Отобразить текущий вид"
@@ -53,12 +56,14 @@
     >
     <ActionButton
       v-else-if="activeMap?.document.kind === 'image'"
-      icon-only
+      :icon-only="!inPanel"
       variant="quiet"
       aria-label="Калибровка экрана"
       @click="calibration = true"
       ><template #icon><Settings :size="17" /></template
+      ><template v-if="inPanel">Калибровка</template
     ></ActionButton>
+    <slot />
   </div>
   <AppModalFrame
     v-if="calibration"
@@ -88,6 +93,7 @@ const props = defineProps({
   editor: Object,
   controller: Object,
   screenPath: String,
+  inPanel: Boolean,
 });
 const emit = defineEmits(["view", "capture"]);
 const activeMap = computed(
@@ -151,4 +157,19 @@ const cameraName = computed(() => {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.session-map-broadcast--panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-xs);
+}
+.session-map-broadcast--panel .session-map-broadcast-toggle,
+.session-map-broadcast--panel .session-map-current-camera {
+  grid-column: 1 / -1;
+  max-width: none;
+}
+.session-map-broadcast--panel .session-map-current-camera {
+  justify-content: flex-start;
+  background: var(--surface-raised);
+}
+.session-map-broadcast--panel > button { --action-button-min-height: var(--layout-touch-min); }
 </style>

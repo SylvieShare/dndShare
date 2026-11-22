@@ -260,7 +260,8 @@
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, provide, reactive, watch } from 'vue'
+import { computed, defineAsyncComponent, provide, reactive, shallowRef, watch } from 'vue'
+import { sessionMapScreenContext } from '@/shared/lib/sessionMapScreenContext'
 import { onBeforeRouteLeave, useRoute } from 'vue-router'
 import { ref } from 'vue'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
@@ -348,6 +349,7 @@ async function openGlobalChapter(chapter) {
   await openChapterScenes(chapter)
 }
 const mapVisible = computed(() => isDm.value && primaryView.value === 'maps')
+provide(sessionMapScreenContext, { active: mapVisible, target: shallowRef(null) })
 watch(mapVisible, (visible) => { if (visible) mapVisited.value = true }, { immediate: true })
 onBeforeRouteLeave(async () => {
   if (globalMapWorkspace.value && !(await globalMapWorkspace.value.prepareLeave())) return false
