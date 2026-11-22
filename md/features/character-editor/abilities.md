@@ -94,8 +94,8 @@ short rest at Sorcerer level 20.
 Damage defenses use the same source-adapter pattern. `values.defenses` stores
 manual `{damage_type,kind}` rows, where `kind` is `resistance`, `immunity` or
 `vulnerability`; ability items may contribute level-gated rows through
-`data.defenses`. The sheet and print view merge both sources. Manual rows stay
-editable, while contributed rows show their exact ability source and cannot be
+`data.defenses`. The sheet and print view merge both sources. The editor lists editable rows in
+«Дополнительные защиты». Contributed rows show their exact ability source and cannot be
 changed from the character. Equal rows are collapsed for display, but opposite
 effects are intentionally preserved instead of inventing a conflict rule.
 Choice-dependent defenses use `choice_defenses`: a rule points to another owned

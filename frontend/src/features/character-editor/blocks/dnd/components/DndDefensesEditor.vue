@@ -1,6 +1,6 @@
 <template>
   <EditorPanel compact>
-    <EditorSection title="Ручные защиты">
+    <EditorSection title="Дополнительные защиты">
       <div v-if="defenses.length" class="dde-list">
         <div v-for="(row, index) in defenses" :key="index" class="dde-row">
           <SuggestPicker
