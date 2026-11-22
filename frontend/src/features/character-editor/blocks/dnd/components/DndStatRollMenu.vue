@@ -1,6 +1,6 @@
 <template>
   <BasePopover
-    :open="true"
+    :open="open"
     :anchor="anchor"
     :z-index="4100"
     transition-preset="action-menu"
@@ -22,7 +22,7 @@
     </div></template>
     </CharacterMenuActions>
     <div class="stat-roll-mode-label">Режим броска</div>
-    <D20RollControls :scope="scope" :mode="mode" :cancelled="cancelled" :bonus="total" :color="color" @roll="(mode, excluded) => emit('roll', mode, excluded)" />
+    <D20RollControls :key="selectionKey" :scope="scope" :mode="mode" :cancelled="cancelled" :bonus="total" :color="color" @roll="(mode, excluded) => emit('roll', mode, excluded)" />
   </BasePopover>
 </template>
 <script setup>
@@ -32,6 +32,8 @@ import SystemDie from '@/shared/ui/SystemDie.vue'
 import { formatBonus as signed } from '@/shared/lib/dnd'
 import D20RollControls from './D20RollControls.vue'
 defineProps({
+  open: Boolean,
+  selectionKey: String,
   anchor: { type: Object, required: true },
   title: { type: String, required: true },
   color: { type: String, required: true },

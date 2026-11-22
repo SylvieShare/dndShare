@@ -1,8 +1,37 @@
 import { test, expect } from '@playwright/test'
+import { expectStatMenuExit, recordStatMenuExit } from './fixtures/stat-menu-motion.js'
 
 const statSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L4 13h6l-1 9 11-13h-7z"/></svg>'
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/svg/*', route => route.fulfill({ contentType: 'image/svg+xml', body: statSvg }))
+})
+
+test('stat roll menus animate out and are immediately inert when dismissed', async ({ page }) => {
+  await page.setViewportSize({ width: 704, height: 932 })
+  await page.goto('/tests/tutorials/fixtures/stat-rolls.html')
+  await recordStatMenuExit(page)
+  const trigger = page.getByRole('button', { name: 'Скрытность — проверка', exact: true })
+  const menu = page.getByRole('menu', { name: 'Скрытность', exact: true })
+  const dismissals = [
+    () => page.keyboard.press('Escape'),
+    () => page.mouse.click(5, 5),
+    () => trigger.press('Enter'),
+    () => menu.getByRole('menuitem', { name: 'Бросить', exact: true }).click(),
+  ]
+  for (const dismiss of dismissals) {
+    await trigger.click()
+    await expectStatMenuExit(page, 'Скрытность', dismiss)
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false')
+  }
+  expect(await page.evaluate(() => window.rolls)).toHaveLength(1)
+
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await trigger.click()
+  await expect(menu).toBeVisible()
+  const start = await page.evaluate(() => window.statMenuExits.length)
+  await page.keyboard.press('Escape')
+  await expect(page.locator('.base-popover[aria-label="Скрытность"]')).toHaveCount(0)
+  expect(await page.evaluate(() => window.statMenuExits.length)).toBe(start)
 })
 
 for (const width of [390, 834, 1920]) {

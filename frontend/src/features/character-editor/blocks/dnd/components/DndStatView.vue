@@ -97,15 +97,16 @@
     </div>
 
     <DndStatRollMenu
-      v-if="rollMenu"
-      :key="`${rollMenu.kind}:${rollMenu.id || ''}`"
-      :anchor="rollMenu.anchor"
+      v-if="rollMenuContent"
+      :open="!!rollMenu"
+      :selection-key="`${rollMenuContent.kind}:${rollMenuContent.id ?? ''}`"
+      :anchor="rollMenuContent.anchor"
       :color="color"
-      :scope="rollMenu.kind === 'save' ? 'saving_throw' : 'ability_check'"
-      :title="rollMenu.title" :total="rollMenu.total" :details="rollMenu.details"
+      :scope="rollMenuContent.kind === 'save' ? 'saving_throw' : 'ability_check'"
+      :title="rollMenuContent.title" :total="rollMenuContent.total" :details="rollMenuContent.details"
       :editable="showEdit && mode !== 'panel'" @edit="editSelection"
-      :mode="rollMenu.mode"
-      :cancelled="rollMenu.cancelled"
+      :mode="rollMenuContent.mode"
+      :cancelled="rollMenuContent.cancelled"
       @close="rollMenu = null"
       @roll="confirmRoll"
     />
@@ -180,6 +181,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['edit', 'roll-stat', 'roll-save', 'roll-skill'])
 const rollMenu = shallowRef(null)
+// Retain the last selection while BasePopover animates its closing panel.
+const rollMenuContent = shallowRef(null)
 const { tooltip, showTooltip, hideTooltip, hideHoverTooltip, toggleDescription } = useSkillDescription(rollMenu)
 const titleElement = ref(null), titleContainer = ref(null)
 useStatTitleFit(titleElement, titleContainer, () => props.title, () => props.mobileVariant)
@@ -193,7 +196,7 @@ function openRollMenu(event, kind, skill) {
     rollMenu.value = null
     return
   }
-  rollMenu.value = {
+  const selection = {
     anchor, kind, id: skill?.id,
     title: skill?.title || `${props.title} — ${kind === 'save' ? 'спасбросок' : 'проверка'}`,
     total: skill?.bonus ?? (kind === 'save' ? props.save : props.checkTotal ?? props.mod),
@@ -201,6 +204,8 @@ function openRollMenu(event, kind, skill) {
     mode: skill?.rollMode || (kind === 'save' ? props.saveMode : props.checkMode),
     cancelled: skill?.rollModeCancelled ?? (kind === 'save' ? props.saveModeCancelled : props.checkModeCancelled),
   }
+  rollMenuContent.value = selection
+  rollMenu.value = selection
 }
 
 function basicDetails(kind) {
@@ -213,12 +218,14 @@ function basicDetails(kind) {
   ]
 }
 function editSelection() {
-  const { kind, id } = rollMenu.value
+  const selection = rollMenu.value
+  if (!selection) return
   rollMenu.value = null
-  emit('edit', kind, id)
+  emit('edit', selection.kind, selection.id)
 }
 function confirmRoll(mode, excluded) {
   const selection = rollMenu.value
+  if (!selection) return
   rollMenu.value = null
   if (selection.kind === 'skill') emit('roll-skill', selection.id, mode, excluded)
   else emit(`roll-${selection.kind}`, mode, excluded)
