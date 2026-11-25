@@ -70,7 +70,7 @@ func (s *Server) handleUpdateSessionQuest(w http.ResponseWriter, r *http.Request
 	if !ok {
 		return
 	}
-	id, ok := sessionWorldPathID(w, r, "questId")
+	id, ok := positivePathID(w, r, "questId")
 	if !ok {
 		return
 	}
@@ -100,7 +100,7 @@ func (s *Server) handleDeleteSessionQuest(w http.ResponseWriter, r *http.Request
 	if !ok {
 		return
 	}
-	id, ok := sessionWorldPathID(w, r, "questId")
+	id, ok := positivePathID(w, r, "questId")
 	if !ok {
 		return
 	}

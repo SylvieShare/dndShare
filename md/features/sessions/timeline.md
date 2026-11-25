@@ -284,7 +284,7 @@ picker. При наведении и фокусе на предмет показ
 Выбор варианта и результат открываются через `AppModalFrame`; источник
 состояния формы — `usePotionApplications` в контроллере обмена листа.
 
-Применение зелий и связанных эффектов использует `ItemTransferAction` и `ApplicationSummary`. `SessionTransferApproval` открывает выбор конечной цели мастером и сбрасывает сохранение боя перед запросом. `EncounterAppliedEffects` отображает экземпляры NPC и подключает общий `StatusMechanicsMenu` через адаптер `npcApplicationContext`; отдельного меню правил яда для NPC нет. `StatusMechanicsMenu` также используется в меню состояния листа.
+Применение зелий и связанных эффектов использует `ItemTransferAction` и `ApplicationSummary`. `SessionTransferApproval` открывает выбор конечной цели мастером и сбрасывает сохранение боя перед запросом. Эффекты NPC отображает `EncounterStatuses`. Через `SessionStatusIcons` он передаёт экземпляры и `npcApplicationContext` в `DndStatusOverviewView`. Его меню `StatusMechanicsMenu` обслуживает и лист персонажа.
 
 Цвет кубиков лечения — `var(--success)` (зелёный), временных хитов — `var(--info)`. Урон сохраняет цвет каждого типа из справочника. `DiceRollResult` берёт цвет части формулы, затем переданный цвет/`result.color`; хроника и уведомления событий передают сохранённый `data.color`. Тот же цвет используется в превью применения и результате, у лечения заклинаниями и костей хитов отдыха.
 

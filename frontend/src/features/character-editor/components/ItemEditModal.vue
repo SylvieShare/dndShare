@@ -81,8 +81,10 @@ import { contentSourcesApi } from '@/shared/api/contentSourcesApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'
 import {
-  collectSuggestIds as schemaCollectSuggestIds,
+  collectItemRefIds,
+  collectSuggestIds,
   defaultDataForFields,
+  missingRequiredField,
   normalizeDataForSave,
 } from '@/features/handbook/objects/lib/schemaFields'
 import { itemFieldEditorKey, useItemFieldEditor } from './useItemFieldEditor'
@@ -122,21 +124,14 @@ const formData = reactive({})
 const automation = reactive(itemAutomationDraft(props.item))
 const hidden = ref(!!props.item?.hidden)
 const saving = ref(false)
-const missingRequiredFields = computed(() => editableTypeFields.value.filter((field) => {
-  if (!field.required) return false
-  const value = formData[field.key]
-  if (field.type === 'item') return !(Number(value) > 0)
-  if (Array.isArray(value)) return value.length === 0
-  if (typeof value === 'string') return !value.trim()
-  return value == null
-}))
+const missingRequiredFields = computed(() => editableTypeFields.value.filter(field => missingRequiredField(field, formData[field.key])))
 const editorValidation = reactive(new Map())
 const canSubmit = computed(() => ready.value && !!formName.value.trim() && missingRequiredFields.value.length === 0 && editorValidation.size === 0)
 const picker = reactive({ open: false, typeId: null, onPick: null })
 const narrow = useMediaQuery('(max-width: 760px)')
 const persistedItem = ref(null)
 const media = useItemMedia()
-const fieldEditor = useItemFieldEditor(formData, openItemPicker)
+const fieldEditor = useItemFieldEditor(openItemPicker)
 Object.defineProperties(fieldEditor, {
   zIndex: { get: () => props.zIndex },
   itemTypeId: { get: () => props.typeId },
@@ -165,7 +160,7 @@ async function loadForm() {
       contentSources.value = sourceRes?.sources || []
     }
 
-    for (const id of schemaCollectSuggestIds(typeFields.value)) {
+    for (const id of collectSuggestIds(typeFields.value)) {
       suggestStore.ensure(id)
     }
 
@@ -180,8 +175,7 @@ async function loadForm() {
       formNameEn.value = props.initialNameEn
       selectedContentSourceIds.value = contentSources.value.filter((source) => source.isDefault && Number(source.nativeSourceVersionId) === Number(selectedId)).map((source) => source.id)
     }
-    fieldEditor.initSections(typeFields.value)
-    fieldEditor.ensureItemNames(fieldEditor.collectItemRefIds(typeFields.value, formData))
+    fieldEditor.ensureItemNames(collectItemRefIds(typeFields.value, formData))
 
     ready.value = true
     await nextTick()

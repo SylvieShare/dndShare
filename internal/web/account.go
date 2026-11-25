@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"dndshare/internal/store"
+	"dndshare/internal/uuid"
 )
 
 func init() { registerRoutes((*Server).routesAccount) }
@@ -106,7 +107,7 @@ func (s *Server) handleChangeAccountPassword(w http.ResponseWriter, r *http.Requ
 		serverError(w, err)
 		return
 	}
-	token, err := newUUID()
+	token, err := uuid.New()
 	if err != nil {
 		serverError(w, err)
 		return

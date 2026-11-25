@@ -19,15 +19,13 @@
         <strong>{{ title }}</strong>
         <span v-if="subtitle">{{ subtitle }}</span>
       </span>
-      <span v-if="plainDescription" class="subrace-card-description">{{ plainDescription }}</span>
+      <span v-if="description" class="subrace-card-description">{{ description }}</span>
     </span>
   </button>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-
-const props = defineProps({
+defineProps({
   title: { type: String, default: '' },
   subtitle: { type: String, default: '' },
   description: { type: String, default: '' },
@@ -36,15 +34,6 @@ const props = defineProps({
   selected: { type: Boolean, default: false },
 })
 defineEmits(['select'])
-
-const plainDescription = computed(() => String(props.description || '')
-  .replace(/<[^>]*>/g, ' ')
-  .replace(/&nbsp;/gi, ' ')
-  .replace(/&amp;/gi, '&')
-  .replace(/&quot;/gi, '"')
-  .replace(/&#39;/gi, "'")
-  .replace(/\s+/g, ' ')
-  .trim())
 </script>
 
 <style scoped>

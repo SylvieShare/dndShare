@@ -5,7 +5,7 @@ export const SUBCLASS_ITEM_TYPE = 17
 
 export function itemReferenceId(value) {
   const raw = value && typeof value === 'object' ? value.id : value
-  if (raw == null || raw === '') return null
+  if (typeof raw !== 'number' && typeof raw !== 'string') return null
   const id = Number(raw)
   return Number.isInteger(id) && id > 0 ? id : null
 }

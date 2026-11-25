@@ -7,7 +7,7 @@ func (s *Server) handleReorderJournalEntries(w http.ResponseWriter, r *http.Requ
 	if !ok {
 		return
 	}
-	sectionID, ok := journalPathID(w, r, "sectionId")
+	sectionID, ok := positivePathID(w, r, "sectionId")
 	if !ok {
 		return
 	}

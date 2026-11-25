@@ -3,7 +3,6 @@ package web
 import (
 	"errors"
 	"net/http"
-	"strconv"
 
 	"dndshare/internal/store"
 )
@@ -20,15 +19,6 @@ func (s *Server) routesSessionSceneGraph(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/sessions/{uuid}/block-edges", s.handleCreateSceneBlockEdge)
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/block-edges/{edgeId}", s.handleUpdateSceneBlockEdge)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/block-edges/{edgeId}", s.handleDeleteSceneBlockEdge)
-}
-
-func sceneGraphPathInt64(w http.ResponseWriter, r *http.Request, key string) (int64, bool) {
-	id, err := strconv.ParseInt(r.PathValue(key), 10, 64)
-	if err != nil {
-		badRequest(w, "bad "+key)
-		return 0, false
-	}
-	return id, true
 }
 
 func (s *Server) requireSceneAccess(w http.ResponseWriter, r *http.Request) (store.SceneSession, bool) {
@@ -57,7 +47,7 @@ func (s *Server) handleGetSceneGraph(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	chapterID, ok := sceneGraphPathInt64(w, r, "chapterId")
+	chapterID, ok := pathInt64(w, r, "chapterId")
 	if !ok || !s.requireChapterInSession(w, r, chapterID, sess.ID) {
 		return
 	}
@@ -83,7 +73,7 @@ func (s *Server) handleMoveScenePosition(w http.ResponseWriter, r *http.Request)
 	if !ok {
 		return
 	}
-	sceneID, ok := sceneGraphPathInt64(w, r, "sceneId")
+	sceneID, ok := pathInt64(w, r, "sceneId")
 	if !ok {
 		return
 	}
@@ -161,7 +151,7 @@ func (s *Server) handleDeleteSceneEdge(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	edgeID, ok := sceneGraphPathInt64(w, r, "edgeId")
+	edgeID, ok := pathInt64(w, r, "edgeId")
 	if !ok {
 		return
 	}
@@ -193,7 +183,7 @@ func (s *Server) handleUpdateSceneEdge(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	edgeID, ok := sceneGraphPathInt64(w, r, "edgeId")
+	edgeID, ok := pathInt64(w, r, "edgeId")
 	if !ok {
 		return
 	}
@@ -248,7 +238,7 @@ func (s *Server) handleGetSceneBlockGraph(w http.ResponseWriter, r *http.Request
 	if !ok {
 		return
 	}
-	sceneID, ok := sceneGraphPathInt64(w, r, "sceneId")
+	sceneID, ok := pathInt64(w, r, "sceneId")
 	if !ok {
 		return
 	}
@@ -336,7 +326,7 @@ func (s *Server) handleDeleteSceneBlockEdge(w http.ResponseWriter, r *http.Reque
 	if !ok {
 		return
 	}
-	edgeID, ok := sceneGraphPathInt64(w, r, "edgeId")
+	edgeID, ok := pathInt64(w, r, "edgeId")
 	if !ok {
 		return
 	}
@@ -368,7 +358,7 @@ func (s *Server) handleUpdateSceneBlockEdge(w http.ResponseWriter, r *http.Reque
 	if !ok {
 		return
 	}
-	edgeID, ok := sceneGraphPathInt64(w, r, "edgeId")
+	edgeID, ok := pathInt64(w, r, "edgeId")
 	if !ok {
 		return
 	}

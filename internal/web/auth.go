@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"dndshare/internal/store"
+	"dndshare/internal/uuid"
 )
 
 func init() { registerRoutes((*Server).routesAuth) }
@@ -202,7 +203,7 @@ func (s *Server) handleRegistration(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) establishSession(w http.ResponseWriter, r *http.Request, userID int64) error {
-	token, err := newUUID()
+	token, err := uuid.New()
 	if err != nil {
 		return err
 	}

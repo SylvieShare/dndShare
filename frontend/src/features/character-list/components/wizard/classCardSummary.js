@@ -1,44 +1,19 @@
+import { plainOriginDescription, plainOriginText } from '@/features/items/lib/originPresentation'
+import { pushFact, suggestNames } from './cardSummaryFacts'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { grantedSpellsAt } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { STAT_FULL, SUGGEST16_TO_STAT } from '@/features/character-list/components/wizard/labels'
 import { dieLabel } from '@/shared/lib/systemDice'
 import { actionableItemChoices } from '@/features/items/lib/itemChoices'
 
-function cleanText(value) {
-  return String(value || '')
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/&nbsp;/gi, ' ')
-    .replace(/&amp;/gi, '&')
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;/gi, "'")
-    .replace(/\s+/g, ' ')
-    .replace(/\s+([,.!?;:])/g, '$1')
-    .trim()
-}
-
-function resolved(ids, typeId, suggestValue) {
-  return [...new Set((ids || []).map((id) => suggestValue(typeId, id)).filter(Boolean))]
-}
-
 function statNames(ids) {
   return [...new Set((ids || []).map((id) => STAT_FULL[SUGGEST16_TO_STAT[Number(id)]]).filter(Boolean))]
-}
-
-function pushFact(facts, label, value, wide = false, entries = []) {
-  if (value) facts.push({ label, value, wide, entries })
 }
 
 function ownerIds(rows) {
   return (Array.isArray(rows) ? rows : [])
     .map((row) => Number(row?.id ?? row))
     .filter(Number.isFinite)
-}
-
-export function shortClassDescription(charClass, limit = 220) {
-  const source = charClass?.data?.short_description || charClass?.data?.summary || charClass?.data?.description || ''
-  const text = cleanText(source)
-  if (text.length <= limit) return text
-  return `${text.slice(0, limit).replace(/\s+\S*$/, '')}…`
 }
 
 export function classCardSummary({ charClass, classAbilities = [], suggestValue = () => '', subclasses = [] }) {
@@ -48,9 +23,9 @@ export function classCardSummary({ charClass, classAbilities = [], suggestValue 
   pushFact(facts, 'Ключевые характеристики', statNames(data.primary_abilities).join(', '))
   pushFact(facts, 'Спасброски', statNames(data.saves).join(', '))
 
-  const armor = resolved(data.armor_prof, 3, suggestValue)
-  const weapons = resolved(data.weapon_prof, 4, suggestValue)
-  const tools = resolved(data.tool_prof, 5, suggestValue)
+  const armor = suggestNames(data.armor_prof, 3, suggestValue)
+  const weapons = suggestNames(data.weapon_prof, 4, suggestValue)
+  const tools = suggestNames(data.tool_prof, 5, suggestValue)
   const proficiencies = [
     armor.length ? `доспехи: ${armor.join(', ')}` : '',
     weapons.length ? `оружие: ${weapons.join(', ')}` : '',
@@ -74,7 +49,7 @@ export function classCardSummary({ charClass, classAbilities = [], suggestValue 
   if (Number(data.subclass_level) === 1 && subclasses.length) choices.push('архетип')
 
   return {
-    description: shortClassDescription(charClass),
+    description: plainOriginDescription(charClass, 220),
     facts,
     choices,
     subclasses: [...new Set(subclasses.filter(Boolean))],
@@ -92,7 +67,7 @@ export function subclassCardSummary({ subclass, charClass, classAbilities = [], 
     .filter((ability) => ability?.name)
     .map((ability) => ({
       name: ability.name,
-      description: cleanText(ability.data?.desc || ability.data?.description || ''),
+      description: plainOriginText(ability.data?.desc || ability.data?.description || ''),
     }))
 
   const spellNames = new Map((spellPool || []).map((spell) => [Number(spell.id), spell.name]))
@@ -107,14 +82,14 @@ export function subclassCardSummary({ subclass, charClass, classAbilities = [], 
 
   const data = subclass?.data || {}
   const proficiencies = [
-    ...resolved(data.armor_prof, 3, suggestValue),
-    ...resolved(data.weapon_prof, 4, suggestValue),
-    ...resolved(data.tool_prof, 5, suggestValue),
+    ...suggestNames(data.armor_prof, 3, suggestValue),
+    ...suggestNames(data.weapon_prof, 4, suggestValue),
+    ...suggestNames(data.tool_prof, 5, suggestValue),
   ]
   if (proficiencies.length) benefits.push({ name: `Владения: ${proficiencies.join(', ')}`, description: '' })
 
   return {
-    description: shortClassDescription(subclass, 160),
+    description: plainOriginDescription(subclass, 160),
     benefits,
   }
 }

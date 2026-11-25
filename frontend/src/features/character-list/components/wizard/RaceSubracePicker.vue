@@ -3,7 +3,7 @@
     <div class="sheet-section-title">Происхождение</div>
     <div class="subrace-grid">
       <SubraceSelectCard v-for="option in options" :key="option.id" :title="option.name"
-        :subtitle="asiSummary(option)" :description="shortRaceDescription(option)"
+        :subtitle="asiSummary(option)" :description="plainOriginDescription(option, 220)"
         :monogram="monogramOf(option.name)" :image-url="option.coverImageUrl || ''"
         :selected="modelValue?.id === option.id" @select="$emit('update:modelValue', option)" />
     </div>
@@ -19,7 +19,7 @@
 import { computed } from 'vue'
 import SubraceSelectCard from './SubraceSelectCard.vue'
 import { asiSummary, monogramOf } from './labels'
-import { shortRaceDescription } from './raceCardSummary'
+import { plainOriginDescription, plainOriginText } from '@/features/items/lib/originPresentation'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import RaceSpellList from '@/features/items/components/RaceSpellList.vue'
 import RaceAbilityList from '@/features/items/components/RaceAbilityList.vue'
@@ -27,8 +27,8 @@ import { featuresForBinding } from '@/features/character-editor/settings/dnd/cre
 const props = defineProps({ options: { type: Array, default: () => [] }, modelValue: { type: Object, default: null }, raceId: { type: Number, default: null }, abilities: { type: Array, default: () => [] } })
 defineEmits(['update:modelValue'])
 const showFullDescription = computed(() => {
-  const full = shortRaceDescription({ data: { description: props.modelValue?.data?.description } }, Infinity)
-  return full && full !== shortRaceDescription(props.modelValue)
+  const full = plainOriginText(props.modelValue?.data?.description)
+  return full && full !== plainOriginDescription(props.modelValue, 220)
 })
 const selectedAbilities = computed(() => featuresForBinding(props.abilities, { raceId: props.raceId, subraceId: props.modelValue?.id }, 20)
   .filter(ability => ability.data?.subrace_ids?.length))

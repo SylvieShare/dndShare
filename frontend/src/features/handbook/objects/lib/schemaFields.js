@@ -1,3 +1,31 @@
+import { itemReferenceId, itemReferenceIds } from '@/shared/lib/dndItemTypes'
+
+export function collectItemRefIds(fields, data) {
+  const ids = []
+  for (const field of fields || []) {
+    const value = data?.[field.key]
+    if (field.type === 'item') {
+      const id = itemReferenceId(value)
+      if (id != null) ids.push(id)
+    } else if (field.type === 'item_array') {
+      ids.push(...itemReferenceIds(value))
+    } else if (field.type === 'object' && value) {
+      ids.push(...collectItemRefIds(field.fields, value))
+    } else if (field.type === 'object_array' && Array.isArray(value)) {
+      for (const row of value) ids.push(...collectItemRefIds(field.fields, row))
+    }
+  }
+  return ids
+}
+
+export function missingRequiredField(field, value) {
+  if (!field.required) return false
+  if (field.type === 'item') return itemReferenceId(value) == null
+  if (Array.isArray(value)) return value.length === 0
+  if (typeof value === 'string') return !value.trim()
+  return value == null
+}
+
 export function getSuggestId(field) {
   if (!field) return null
   return field.suggest_id ?? field.suggest_type_id ?? field.suggestTypeId ?? null

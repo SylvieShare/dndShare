@@ -1,17 +1,17 @@
 import { describe, expect, it } from 'vitest'
-import { raceCardSummary, shortRaceDescription } from './raceCardSummary'
+import { raceCardSummary } from './raceCardSummary'
 
 describe('race card summary', () => {
   it('turns handbook html into a compact plain-text description', () => {
-    expect(shortRaceDescription({ data: { description: '<p>Древний&nbsp;народ <b>гор</b>.</p>' } }))
+    expect(raceCardSummary({ race: { data: { description: '<p>Древний&nbsp;народ <b>гор</b>.</p>' } } }).description)
       .toBe('Древний народ гор.')
   })
 
   it('prefers a mechanics-free short description over the expanded article', () => {
-    expect(shortRaceDescription({ data: {
+    expect(raceCardSummary({ race: { data: {
       short_description: 'Живёт между двумя культурами и ищет собственный путь.',
       description: '<p>Получает +2 к Харизме и другие преимущества.</p>',
-    } })).toBe('Живёт между двумя культурами и ищет собственный путь.')
+    } } }).description).toBe('Живёт между двумя культурами и ищет собственный путь.')
   })
 
   it('collects base grants and lists subraces without applying their grants', () => {

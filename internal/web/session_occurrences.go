@@ -102,7 +102,7 @@ func (s *Server) handleUpdateSessionOccurrence(w http.ResponseWriter, r *http.Re
 	if !ok {
 		return
 	}
-	id, ok := journalPathID(w, r, "occurrenceId")
+	id, ok := positivePathID(w, r, "occurrenceId")
 	if !ok {
 		return
 	}
@@ -127,7 +127,7 @@ func (s *Server) handleDeleteSessionOccurrence(w http.ResponseWriter, r *http.Re
 	if !ok {
 		return
 	}
-	id, ok := journalPathID(w, r, "occurrenceId")
+	id, ok := positivePathID(w, r, "occurrenceId")
 	if !ok {
 		return
 	}

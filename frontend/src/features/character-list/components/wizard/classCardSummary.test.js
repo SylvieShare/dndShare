@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { classCardSummary, shortClassDescription, subclassCardSummary } from './classCardSummary'
+import { classCardSummary, subclassCardSummary } from './classCardSummary'
 
 describe('class card summary', () => {
   it('turns handbook html into a compact plain-text description', () => {
-    expect(shortClassDescription({ data: { description: '<p>Мастер&nbsp;<b>оружия</b>.</p>' } }))
+    expect(classCardSummary({ charClass: { data: { description: '<p>Мастер&nbsp;<b>оружия</b>.</p>' } } }).description)
       .toBe('Мастер оружия.')
   })
 

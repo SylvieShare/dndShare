@@ -3,29 +3,20 @@ package storage
 import (
 	"context"
 	"fmt"
+	"regexp"
+	"time"
+
+	"dndshare/internal/uuid"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
-	"io"
-	"regexp"
-	"time"
 )
 
 var mapAssetKey = regexp.MustCompile(`^map-models/[0-9a-f]{64}\.(glb|stl|webp)$`)
 var mapUploadKey = regexp.MustCompile(`^map-model-uploads/[0-9a-f-]{36}\.(glb|stl|webp)$`)
 
-func (s *Service) UploadMapAsset(ctx context.Context, body io.Reader, size int64, key, mime string) (StoredObject, error) {
-	if !mapAssetKey.MatchString(key) {
-		return StoredObject{}, fmt.Errorf("invalid map asset key")
-	}
-	if mime != "model/gltf-binary" && mime != "model/stl" && mime != "image/webp" {
-		return StoredObject{}, fmt.Errorf("invalid map asset MIME type")
-	}
-	return s.put(ctx, body, size, key, mime)
-}
-
 func (s *Service) PresignMapUpload(ctx context.Context, mime string, size int64, ext string) (string, string, error) {
-	id, err := newUUID()
+	id, err := uuid.New()
 	if err != nil {
 		return "", "", err
 	}

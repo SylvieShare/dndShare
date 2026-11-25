@@ -1,12 +1,12 @@
-package storage
+package uuid
 
 import (
 	"crypto/rand"
 	"fmt"
 )
 
-// newUUID генерирует случайный UUIDv4 для ключей объектов.
-func newUUID() (string, error) {
+// New генерирует случайный UUIDv4.
+func New() (string, error) {
 	b := make([]byte, 16)
 	if _, err := rand.Read(b); err != nil {
 		return "", fmt.Errorf("generate UUID: %w", err)

@@ -1,3 +1,4 @@
+import { missingRequiredField } from '@/features/handbook/objects/lib/schemaFields'
 import { timeError } from '@/shared/lib/spellPresentation'
 import { catalogueField, catalogueFieldVisible } from './catalogueFields'
 import { costError, isCostRange } from '@/features/items/lib/itemCost'
@@ -13,7 +14,7 @@ export function catalogueValidation(fields, data, typeId) {
       const path = prefix ? `${prefix}.${raw.key}` : raw.key
       if (raw.readonly || !catalogueFieldVisible(raw, values, typeId, path, data)) continue
       const field = catalogueField(raw, typeId, path), value = values[raw.key]
-      if (field.required && (value == null || value === '' || Array.isArray(value) && !value.length)) errors.push(`Заполните «${field.name}».`)
+      if (missingRequiredField(field, value)) errors.push(`Заполните «${field.name}».`)
       if (value == null || value === '') continue
       if ((['usable.healing', 'usable.temporary_hp'].includes(path) || path.endsWith('duration.formula')) && !formulaValid(value)) errors.push(`«${field.name}»: используйте число или формулу, например 2d4 + 2.`)
       if (['int', 'float'].includes(field.type)) {

@@ -1,18 +1,23 @@
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
+import { createPinia } from 'pinia'
 import { describe, expect, it } from 'vitest'
+import { renderComponent } from '../../../../tests/unit/renderComponent'
+import CatalogueFields from '@/features/items/editor/catalogue/CatalogueFields.vue'
+import { itemFieldEditorKey } from './useItemFieldEditor'
 
-const modal = readFileSync(fileURLToPath(new URL('./ItemEditModal.vue', import.meta.url)), 'utf8')
-const field = readFileSync(fileURLToPath(new URL('./ItemSchemaField.vue', import.meta.url)), 'utf8')
-
-describe('handbook item editor schema constraints', () => {
-  it('hides derived fields and blocks submit until required references are selected', () => {
-    expect(modal).toContain('typeFields.value.filter(field => !field.readonly)')
-    expect(modal).toContain('const missingRequiredFields = computed')
-    expect(modal).toContain("if (field.type === 'item') return !(Number(value) > 0)")
-    expect(modal).toContain(':disabled="!canSubmit || saving"')
-    expect(modal).toContain('Заполните обязательные поля')
-    expect(field).toContain('v-if="field.required"')
-    expect(field).toContain(':aria-required="field.required || undefined"')
+describe('handbook item editor schema fields', () => {
+  it('marks the required reference, displays the saved item and omits derived fields', async () => {
+    const fields = [
+      { key: 'parent', name: 'Родитель', type: 'item', item_type: 8, required: true },
+      { key: 'derived', name: 'Расчётное поле', type: 'text', readonly: true },
+      { key: 'note', name: 'Примечание', type: 'textarea' },
+    ]
+    const data = { parent: { id: 42 }, note: 'Две строки' }
+    const html = await renderComponent(CatalogueFields, { typeId: 16, fields, data, rootData: data }, {
+      plugins: [createPinia()],
+      provide: [[itemFieldEditorKey, { itemRefLabel: id => id === 42 ? 'Эльф' : '', zIndex: 4500 }]],
+    })
+    expect(html).toMatch(/<button[^>]*aria-required="true"[^>]*>Эльф<\/button>/)
+    expect(html).not.toContain('Расчётное поле')
+    expect(html).toMatch(/<textarea[^>]*>Две строки<\/textarea>/)
   })
 })

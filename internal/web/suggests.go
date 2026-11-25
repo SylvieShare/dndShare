@@ -382,16 +382,6 @@ func optionalUserPtr(r *http.Request) *int64 {
 	return nil
 }
 
-// pathInt64 разбирает числовой path-параметр или отвечает 400.
-func pathInt64(w http.ResponseWriter, r *http.Request, name string) (int64, bool) {
-	v, err := strconv.ParseInt(r.PathValue(name), 10, 64)
-	if err != nil {
-		badRequest(w, "bad "+name)
-		return 0, false
-	}
-	return v, true
-}
-
 // optionalInt64Query — числовой query-параметр как *int64 (nil, если отсутствует/пуст).
 func optionalInt64Query(r *http.Request, name string) *int64 {
 	v := r.URL.Query().Get(name)

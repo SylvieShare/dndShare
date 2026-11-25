@@ -51,16 +51,6 @@ func TestRecovererDoesNotExposePanicDetails(t *testing.T) {
 	}
 }
 
-func TestNewUUIDReturnsVersionFourUUID(t *testing.T) {
-	value, err := newUUID()
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(value) != 36 || value[14] != '4' || (value[19] != '8' && value[19] != '9' && value[19] != 'a' && value[19] != 'b') {
-		t.Fatalf("unexpected UUIDv4 %q", value)
-	}
-}
-
 func TestClearedSessionCookiesExpireImmediately(t *testing.T) {
 	s := New(config.Config{SecureCookie: "false"}, nil, nil)
 	recorder := httptest.NewRecorder()

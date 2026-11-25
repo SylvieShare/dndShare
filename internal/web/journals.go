@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -245,15 +244,6 @@ func (s *Server) handleGetJournal(w http.ResponseWriter, r *http.Request) {
 	if ok {
 		s.writeJournalResponse(w, r, http.StatusOK, journalResponse{Journal: &journal, CanEdit: true})
 	}
-}
-
-func journalPathID(w http.ResponseWriter, r *http.Request, key string) (int64, bool) {
-	id, err := strconv.ParseInt(r.PathValue(key), 10, 64)
-	if err != nil || id <= 0 {
-		badRequest(w, "Некорректный идентификатор")
-		return 0, false
-	}
-	return id, true
 }
 
 func cleanJournalSection(w http.ResponseWriter, req journalSectionRequest) (journalSectionRequest, bool) {

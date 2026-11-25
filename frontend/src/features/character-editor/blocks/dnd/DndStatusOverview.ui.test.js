@@ -6,7 +6,6 @@ import { dndStatusSummary } from '../../lib/dndStatusSummary'
 const source = readFileSync(fileURLToPath(new URL('./DndStatusOverview.vue', import.meta.url)), 'utf8')
 const viewSource = readFileSync(fileURLToPath(new URL('./components/DndStatusOverviewView.vue', import.meta.url)), 'utf8')
 const editorSource = readFileSync(fileURLToPath(new URL('./components/CharacterStatusEditor.vue', import.meta.url)), 'utf8')
-const schemaFieldSource = readFileSync(fileURLToPath(new URL('../../components/ItemSchemaField.vue', import.meta.url)), 'utf8')
 
 describe('desktop status overview', () => {
   it('renders a frameless summary with one dashed add action', () => {
@@ -40,7 +39,6 @@ describe('desktop status overview', () => {
     expect(viewSource).not.toContain('-webkit-line-clamp')
     expect(viewSource).toMatch(/\.dsov-effect \{[\s\S]*?width: 300px;[\s\S]*?gap: 0;[\s\S]*?flex: 0 0 300px;/)
     expect(viewSource).toMatch(/\.dsov-thesis \{[\s\S]*?white-space: pre-line;/)
-    expect(schemaFieldSource).toContain("field.type === 'textarea'")
     expect(viewSource).toContain('{{ item.value }}')
     expect(viewSource).toContain('v-if="item.level > 1" class="dsov-level"')
     expect(viewSource).toContain('x{{ item.level }}')

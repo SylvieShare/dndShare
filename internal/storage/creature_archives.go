@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"time"
 
+	"dndshare/internal/uuid"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
@@ -22,7 +23,7 @@ type CreatureArchiveObject struct {
 }
 
 func (s *Service) PresignCreatureArchiveUpload(ctx context.Context, size int64) (string, string, error) {
-	id, err := newUUID()
+	id, err := uuid.New()
 	if err != nil {
 		return "", "", err
 	}

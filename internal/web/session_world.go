@@ -4,7 +4,6 @@ import (
 	"errors"
 	"net/http"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"dndshare/internal/store"
@@ -58,24 +57,6 @@ type npcMutationRequest struct {
 type sessionWorldMutationResponse struct {
 	World store.SessionWorld `json:"world"`
 	ID    int64              `json:"id"`
-}
-
-func sessionWorldPathID(w http.ResponseWriter, r *http.Request, key string) (int64, bool) {
-	id, err := strconv.ParseInt(r.PathValue(key), 10, 64)
-	if err != nil || id <= 0 {
-		badRequest(w, "Некорректный идентификатор")
-		return 0, false
-	}
-	return id, true
-}
-
-func validSessionWorldIDs(ids []int64) bool {
-	for _, id := range ids {
-		if id <= 0 {
-			return false
-		}
-	}
-	return true
 }
 
 func locationMutation(
@@ -222,7 +203,7 @@ func (s *Server) handleUpdateSessionLocation(w http.ResponseWriter, r *http.Requ
 	if !ok {
 		return
 	}
-	id, ok := sessionWorldPathID(w, r, "locationId")
+	id, ok := positivePathID(w, r, "locationId")
 	if !ok {
 		return
 	}
@@ -258,7 +239,7 @@ func (s *Server) handleMoveSessionLocation(w http.ResponseWriter, r *http.Reques
 	if !ok {
 		return
 	}
-	id, ok := sessionWorldPathID(w, r, "locationId")
+	id, ok := positivePathID(w, r, "locationId")
 	if !ok {
 		return
 	}
@@ -284,7 +265,7 @@ func (s *Server) handleDeleteSessionLocation(w http.ResponseWriter, r *http.Requ
 	if !ok {
 		return
 	}
-	id, ok := sessionWorldPathID(w, r, "locationId")
+	id, ok := positivePathID(w, r, "locationId")
 	if !ok {
 		return
 	}
@@ -333,7 +314,7 @@ func (s *Server) handleUpdateSessionNPC(w http.ResponseWriter, r *http.Request) 
 	if !ok {
 		return
 	}
-	id, ok := sessionWorldPathID(w, r, "npcId")
+	id, ok := positivePathID(w, r, "npcId")
 	if !ok {
 		return
 	}
@@ -369,7 +350,7 @@ func (s *Server) handleDeleteSessionNPC(w http.ResponseWriter, r *http.Request) 
 	if !ok {
 		return
 	}
-	id, ok := sessionWorldPathID(w, r, "npcId")
+	id, ok := positivePathID(w, r, "npcId")
 	if !ok {
 		return
 	}

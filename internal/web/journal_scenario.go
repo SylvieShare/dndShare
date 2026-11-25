@@ -103,7 +103,7 @@ func (s *Server) handleAppendScenarioJournalItem(w http.ResponseWriter, r *http.
 	if !ok {
 		return
 	}
-	itemID, ok := journalPathID(w, r, "itemId")
+	itemID, ok := positivePathID(w, r, "itemId")
 	if !ok {
 		return
 	}

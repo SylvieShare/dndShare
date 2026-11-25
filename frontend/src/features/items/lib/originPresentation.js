@@ -64,16 +64,21 @@ export function hitDieLabel(data) {
   return dieLabel(data?.hit_die) || '—'
 }
 
-export function plainOriginDescription(item, limit = 180) {
-  const source = item?.data?.short_description || item?.data?.summary || item?.data?.description || ''
-  const text = String(source)
+export function plainOriginText(value) {
+  return String(value || '')
     .replace(/<[^>]*>/g, ' ')
     .replace(/&nbsp;/gi, ' ')
     .replace(/&amp;/gi, '&')
     .replace(/&quot;/gi, '"')
     .replace(/&#39;/gi, "'")
     .replace(/\s+/g, ' ')
+    .replace(/\s+([,.!?;:])/g, '$1')
     .trim()
+}
+
+export function plainOriginDescription(item, limit = 180) {
+  const source = item?.data?.short_description || item?.data?.summary || item?.data?.description || ''
+  const text = plainOriginText(source)
   if (text.length <= limit) return text
   return `${text.slice(0, limit).replace(/\s+\S*$/, '')}…`
 }

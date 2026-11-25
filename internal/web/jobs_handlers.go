@@ -16,14 +16,6 @@ func init() {
 
 // --- shared json helpers (порт обращений к Map/JsonNode) ---
 
-func parseJSONMap(raw json.RawMessage) (map[string]any, bool) {
-	var m map[string]any
-	if err := json.Unmarshal(raw, &m); err != nil || m == nil {
-		return nil, false
-	}
-	return m, true
-}
-
 func asAnySlice(v any) ([]any, bool) {
 	s, ok := v.([]any)
 	return s, ok
@@ -32,17 +24,6 @@ func asAnySlice(v any) ([]any, bool) {
 func asAnyMap(v any) (map[string]any, bool) {
 	m, ok := v.(map[string]any)
 	return m, ok
-}
-
-func asLong(v any) (int64, bool) {
-	switch n := v.(type) {
-	case float64:
-		return int64(n), true
-	case json.Number:
-		i, err := n.Int64()
-		return i, err == nil
-	}
-	return 0, false
 }
 
 func mustMarshal(v any) json.RawMessage {

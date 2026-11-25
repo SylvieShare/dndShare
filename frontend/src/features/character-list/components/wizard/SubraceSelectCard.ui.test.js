@@ -1,3 +1,5 @@
+import SubraceSelectCard from './SubraceSelectCard.vue'
+import { renderComponent } from '../../../../../tests/unit/renderComponent'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
@@ -11,8 +13,8 @@ describe('subrace select card presentation', () => {
     expect(source).toContain('aspect-ratio: 3 / 2')
   })
 
-  it('keeps the subrace description inside the card', () => {
-    expect(source).toContain('class="subrace-card-description"')
-    expect(source).toContain('{{ plainDescription }}')
+  it('shows the plain description supplied by the picker once', async () => {
+    const html = await renderComponent(SubraceSelectCard, { description: 'Эльф &amp; человек' })
+    expect(html).toContain('Эльф &amp;amp; человек')
   })
 })

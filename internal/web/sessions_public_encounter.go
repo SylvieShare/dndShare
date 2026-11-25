@@ -426,17 +426,6 @@ func numberValue(data map[string]any, key string) (float64, bool) {
 	}
 }
 
-func int64Slice(value any) []int64 {
-	values, _ := value.([]any)
-	result := make([]int64, 0, len(values))
-	for _, value := range values {
-		if number, ok := value.(float64); ok {
-			result = append(result, int64(number))
-		}
-	}
-	return result
-}
-
 func uniqueInt64s(values []int64) []int64 {
 	seen := make(map[int64]struct{}, len(values))
 	result := make([]int64, 0, len(values))

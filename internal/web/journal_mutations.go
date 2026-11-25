@@ -48,7 +48,7 @@ func (s *Server) handleUpdateJournalSection(w http.ResponseWriter, r *http.Reque
 		conflict(w, "Дата и название меняются в расписании кампании")
 		return
 	}
-	sectionID, ok := journalPathID(w, r, "sectionId")
+	sectionID, ok := positivePathID(w, r, "sectionId")
 	if !ok {
 		return
 	}
@@ -77,7 +77,7 @@ func (s *Server) handleDeleteJournalSection(w http.ResponseWriter, r *http.Reque
 		conflict(w, "Удаляйте сессию в расписании кампании")
 		return
 	}
-	sectionID, ok := journalPathID(w, r, "sectionId")
+	sectionID, ok := positivePathID(w, r, "sectionId")
 	if !ok {
 		return
 	}
@@ -93,7 +93,7 @@ func (s *Server) handleCreateJournalEntry(w http.ResponseWriter, r *http.Request
 	if !ok {
 		return
 	}
-	sectionID, ok := journalPathID(w, r, "sectionId")
+	sectionID, ok := positivePathID(w, r, "sectionId")
 	if !ok {
 		return
 	}
@@ -122,7 +122,7 @@ func (s *Server) handleUpdateJournalEntry(w http.ResponseWriter, r *http.Request
 	if !ok {
 		return
 	}
-	entryID, ok := journalPathID(w, r, "entryId")
+	entryID, ok := positivePathID(w, r, "entryId")
 	if !ok {
 		return
 	}
@@ -159,7 +159,7 @@ func (s *Server) handleDeleteJournalEntry(w http.ResponseWriter, r *http.Request
 	if !ok {
 		return
 	}
-	entryID, ok := journalPathID(w, r, "entryId")
+	entryID, ok := positivePathID(w, r, "entryId")
 	if !ok {
 		return
 	}

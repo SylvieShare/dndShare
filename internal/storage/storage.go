@@ -10,11 +10,11 @@ import (
 	"strings"
 	"time"
 
+	"dndshare/internal/config"
+	"dndshare/internal/uuid"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-
-	"dndshare/internal/config"
 )
 
 // Service — порт ObjectStorageService: загрузка/удаление объектов и presigned GET
@@ -205,11 +205,11 @@ func (s *Service) UploadVideo(ctx context.Context, body io.Reader, size int64, f
 
 // UploadSVGBytes загружает SVG-разметку как image/svg+xml.
 func (s *Service) UploadSVGBytes(ctx context.Context, data []byte, folder string) (StoredObject, error) {
-	uuid, err := newUUID()
+	objectID, err := uuid.New()
 	if err != nil {
 		return StoredObject{}, err
 	}
-	key := strings.TrimRight(folder, "/") + "/" + uuid + ".svg"
+	key := strings.TrimRight(folder, "/") + "/" + objectID + ".svg"
 	return s.put(ctx, bytes.NewReader(data), int64(len(data)), key, "image/svg+xml")
 }
 
@@ -334,11 +334,11 @@ func (s *Service) buildKey(filename, folder string) (string, error) {
 	if prefix == "" {
 		prefix = strings.TrimRight(s.cfg.KeyPrefix, "/")
 	}
-	uuid, err := newUUID()
+	objectID, err := uuid.New()
 	if err != nil {
 		return "", err
 	}
-	return prefix + "/" + uuid + ext, nil
+	return prefix + "/" + objectID + ext, nil
 }
 
 func (s *Service) buildURL(key string) string {

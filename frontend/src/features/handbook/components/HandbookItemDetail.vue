@@ -148,7 +148,8 @@ import { Pencil } from '@lucide/vue'
 import ItemDetailHeader from '@/features/handbook/components/ItemDetailHeader.vue'
 import { useSuggestStore } from '@/stores/suggest'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
-import { getSuggestId, isFieldVisible } from '@/features/handbook/objects/lib/schemaFields'
+import { itemReferenceId } from '@/shared/lib/dndItemTypes'
+import { collectItemRefIds, getSuggestId, isFieldVisible } from '@/features/handbook/objects/lib/schemaFields'
 import AbilityDetailContent from '@/features/items/detail-components/AbilityDetailContent'
 import BackgroundDetailContent from '@/features/items/detail-components/BackgroundDetailContent.vue'
 import ArmorDetailContent from '@/features/items/detail-components/ArmorDetailContent'
@@ -257,25 +258,10 @@ const visibleFields = computed(() => {
   return typeFields.value.filter(f => isFieldVisible(f, props.item.data || {}))
 })
 
-function collectItemRefIds(fields, data) {
-  const ids = []
-  for (const field of fields || []) {
-    const value = data?.[field.key]
-    if (field.type === 'item') {
-      if (value != null) ids.push(value)
-    } else if (field.type === 'object' && value) {
-      ids.push(...collectItemRefIds(field.fields, value))
-    } else if (field.type === 'object_array' && Array.isArray(value)) {
-      for (const row of value) ids.push(...collectItemRefIds(field.fields, row))
-    }
-  }
-  return ids
-}
-
 watch(
-  () => props.item,
-  (item) => {
-    if (item) ensureItemNames(collectItemRefIds(typeFields.value, item.data || {}))
+  [() => props.item, typeFields],
+  ([item, fields]) => {
+    if (item) ensureItemNames(collectItemRefIds(fields, item.data))
   },
   { immediate: true },
 )
@@ -290,7 +276,8 @@ function getSuggestLabel(field, valueId) {
   return getSuggests(field).find(s => s.id === valueId)?.value || String(valueId)
 }
 
-function getItemRefLabel(id) {
+function getItemRefLabel(value) {
+  const id = itemReferenceId(value)
   if (id == null) return '—'
   return itemName(id) || ('#' + id)
 }

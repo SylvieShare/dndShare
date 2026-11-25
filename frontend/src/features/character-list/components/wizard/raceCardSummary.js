@@ -1,34 +1,9 @@
+import { plainOriginDescription } from '@/features/items/lib/originPresentation'
+import { pushFact, suggestNames } from './cardSummaryFacts'
 import { extractGrants } from '@/features/character-editor/settings/dnd/creation/grants'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { STAT_SHORT } from '@/features/character-list/components/wizard/labels'
 import { actionableItemChoices } from '@/features/items/lib/itemChoices'
-
-function cleanText(value) {
-  return String(value || '')
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/&nbsp;/gi, ' ')
-    .replace(/&amp;/gi, '&')
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;/gi, "'")
-    .replace(/\s+/g, ' ')
-    .replace(/\s+([,.!?;:])/g, '$1')
-    .trim()
-}
-
-function resolved(ids, typeId, suggestValue) {
-  return [...new Set((ids || []).map((id) => suggestValue(typeId, id)).filter(Boolean))]
-}
-
-function pushFact(facts, label, value, wide = false, entries = []) {
-  if (value) facts.push({ label, value, wide, entries })
-}
-
-export function shortRaceDescription(race, limit = 220) {
-  const source = race?.data?.short_description || race?.data?.summary || race?.data?.description || ''
-  const text = cleanText(source)
-  if (text.length <= limit) return text
-  return `${text.slice(0, limit).replace(/\s+\S*$/, '')}…`
-}
 
 export function raceCardSummary({ race, raceAbilities = [], suggestValue = () => '', subraces = [], selected = false, raceVariant = null, subrace = null }) {
   const grants = extractGrants({ race, subrace, raceVariant })
@@ -41,13 +16,13 @@ export function raceCardSummary({ race, raceAbilities = [], suggestValue = () =>
   pushFact(facts, 'Скорость', grants.speed != null ? `${grants.speed} фт` : '')
   const sizes = [...new Set((race?.data?.variants || []).map(v => v.size).filter(Boolean))]
   pushFact(facts, 'Размер', !raceVariant && sizes.length > 1 ? sizes.join(' / ') : grants.size || '')
-  pushFact(facts, 'Языки', resolved(grants.languages, 6, suggestValue).join(', '), true)
+  pushFact(facts, 'Языки', suggestNames(grants.languages, 6, suggestValue).join(', '), true)
 
   const proficiencies = [
-    ...resolved(grants.skillProficiencies, 15, suggestValue),
-    ...resolved(grants.proficiencies.armor, 3, suggestValue),
-    ...resolved(grants.proficiencies.weapon, 4, suggestValue),
-    ...resolved(grants.proficiencies.tool, 5, suggestValue),
+    ...suggestNames(grants.skillProficiencies, 15, suggestValue),
+    ...suggestNames(grants.proficiencies.armor, 3, suggestValue),
+    ...suggestNames(grants.proficiencies.weapon, 4, suggestValue),
+    ...suggestNames(grants.proficiencies.tool, 5, suggestValue),
   ]
   pushFact(facts, 'Владения', proficiencies.join(', '), true)
 
@@ -68,7 +43,7 @@ export function raceCardSummary({ race, raceAbilities = [], suggestValue = () =>
   if (featureChoices && !choices.includes('особенности')) choices.push('особенности')
 
   return {
-    description: shortRaceDescription(race),
+    description: plainOriginDescription(race, 220),
     facts,
     choices,
     subraces: [...new Set(subraces.filter(Boolean))],
