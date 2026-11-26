@@ -3,7 +3,7 @@ import { h } from 'vue'
 import { renderComponent } from '../../../../tests/unit/renderComponent'
 import { createPinia } from 'pinia'
 import AbilityEditor from './AbilityEditor.vue'
-import DamageRollOptions from '@/features/character-editor/blocks/dnd/components/DamageRollOptions.vue'
+import WeaponRollSettings from '@/features/character-editor/blocks/dnd/components/WeaponRollSettings.vue'
 import schema from '../../../../../resources/items/item_4_shema.json'
 import { itemFieldEditorKey } from '@/features/character-editor/components/useItemFieldEditor'
 vi.mock('@/shared/ui/InputDescription.vue', () => ({ default: { render: () => h('textarea') } }))
@@ -38,12 +38,12 @@ describe('ability mechanic composition', () => {
     expect(html).not.toContain('Свои подписи переключателя')
   })
   it('offers independent choices and a single roll without enumerating their combinations', async () => {
-    const html = await renderComponent(DamageRollOptions, { versatile: true, actions: [{ key: 'sneak', label: 'Скрытая атака', dice: 'd6', dice_count: 3 }] })
+    const html = await renderComponent(WeaponRollSettings, { scope: 'damage', versatile: true, actions: [{ key: 'sneak', label: 'Скрытая атака', dice: 'd6', dice_count: 3 }] })
     expect(html).toContain('Критическое попадание')
     expect(html).toContain('Двумя руками')
     expect(html).toContain('Скрытая атака')
-    expect(html).toContain('aria-label="Добавит +3к6"')
+    expect(html).toContain('+3к6')
     expect(html.match(/Бросить на урон/g)).toHaveLength(1)
-    expect(html.match(/role="switch"/g)).toHaveLength(3)
+    expect(html.match(/aria-pressed="false"/g)).toHaveLength(3)
   })
 })

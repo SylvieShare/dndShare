@@ -41,10 +41,9 @@
     <CharacterRollDialog v-if="directRoll" :key="`${directRoll.scope}:${directRoll.selection?.key || ''}`" :title="`${ctx.itemTitle(entry)} · ${directRoll.scope === 'attack' ? 'Атака' : 'Урон'}`" @close="closeRoll">
       <template #preview><WeaponRollPreview :scope="directRoll.scope" :attack-bonus="previewAttackSummary.bonus" :attack-rows="previewAttackRows" :attack-color="previewAttackColor"
         :heading="selectedAlternative?.title" :damage-rows="selectedAlternative?.rows || previewDamageRows" /></template>
-      <WeaponAlternativeDamageMenu v-if="directRoll.selection" dialog :entry="entry" :selection="directRoll.selection" @preview="rollPreview = $event"
+      <WeaponAlternativeDamageMenu v-if="directRoll.selection" :entry="entry" :selection="directRoll.selection" @preview="rollPreview = $event"
         @roll-step="options => { closeRoll(); ctx.rollWeaponUseStep(entry, options.weaponUseKey, options.stepKey) }" />
-      <WeaponRollSettings v-else dialog :scope="directRoll.scope" :weapon="ctx.item(entry)" :weapon-title="ctx.itemTitle(entry)"
-        :summary="menuSummary" :weapon-uid="entry.uid" :actions="weaponDamageActions"
+      <WeaponRollSettings v-else :scope="directRoll.scope" :weapon-uid="entry.uid" :actions="weaponDamageActions"
         :uses="ctx.weaponUses(entry)" @preview="rollPreview = $event"
         :bonus-action-option="options => ctx.bonusActionDamageOption(entry, options)" :versatile="hasTwoHandedDamage"
         @attack="options => rollAttack(closeRoll, options)" @roll="options => rollDamage(closeRoll, options)"
@@ -110,7 +109,6 @@ const { collapsed, toggle: toggleCollapsed } = useWeaponDisclosure(ctx.charCtx, 
 const { attackSummary: previewAttackSummary, attackRows: previewAttackRows, attackColor: previewAttackColor,
   damageRows: previewDamageRows, alternativeDamage: previewAlternatives } = useWeaponCardPreview(ctx, () => props.entry, () => rollPreview.value)
 const selectedAlternative = computed(() => previewAlternatives.value.find(row => row.key === directRoll.value?.selection?.key))
-function menuSummary(options, scope) { return ctx.weaponMenuSummary(props.entry, options, scope) }
 function closeRoll() { directRoll.value = null; rollPreview.value = null }
 function openDirectRoll(scope, event, selection) {
   if (!ctx.charCtx.ownerMode || props.entry.params?.creation?.expired || (!ctx.item(props.entry) && (scope === 'attack' || !hasDamage.value))) return

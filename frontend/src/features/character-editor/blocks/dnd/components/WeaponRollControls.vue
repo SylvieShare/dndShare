@@ -1,12 +1,5 @@
 <template>
-  <div class="weapon-roll-controls" :class="{ 'weapon-roll-controls--attack': scope === 'attack', 'weapon-roll-controls--dialog': dialog }" role="group" :aria-label="scope === 'attack' ? 'Атака' : 'Урон'">
-    <div v-if="weaponTitle && !dialog" class="weapon-roll-heading">
-      <ItemIcon v-if="weapon?.iconImageUrl || weapon?.svg" :item="weapon" :size="40" />
-      <Swords v-else :size="34" aria-hidden="true" />
-      <div><strong>{{ weaponTitle }} · {{ scope === 'attack' ? 'Атака' : 'Урон' }}</strong>
-        <small v-if="summary?.ability">{{ summary.ability }}</small></div>
-      <b v-if="scope === 'attack' && summary">{{ signed(summary.bonus) }}</b>
-    </div>
+  <div class="weapon-roll-controls" role="group" :aria-label="scope === 'attack' ? 'Атака' : 'Урон'">
     <RollModePicker v-if="scope === 'attack'" :model-value="attackRollMode" neutral-mode="auto" @update:model-value="emit('update:attackRollMode', $event)" />
     <div v-if="baseOptions.length" class="weapon-roll-options dnd-roll-option-strip" role="group" :aria-label="scope === 'damage' ? 'Параметры урона' : 'Способ атаки'">
       <ChoiceCard v-for="option in baseOptions" :key="option.key" layout="icon" centered selection-indicator="outline"
@@ -28,27 +21,23 @@
       </template>
     </RollBonusOptions>
     <small v-if="blocked" role="alert">{{ blocked.resourceError }}</small>
-    <ActionButton v-if="dialog" :disabled="!!blocked" @click="!blocked && emit('roll')">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</ActionButton>
-    <RowActionItem v-else :disabled="!!blocked" :action="scope === 'attack' ? 'attack' : 'damage'" @click="!blocked && emit('roll')">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
-    <WeaponUseDamageMenu v-if="scope === 'damage'" :dialog="dialog" :weapon-uid="weaponUid" :uses="uses" @roll="emit('roll-step', $event)" />
+    <ActionButton :disabled="!!blocked" @click="!blocked && emit('roll')">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</ActionButton>
+    <WeaponUseDamageMenu v-if="scope === 'damage'" :weapon-uid="weaponUid" :uses="uses" @roll="emit('roll-step', $event)" />
   </div>
 </template>
 <script setup>
-import { Crosshair, Swords, Hand, Sparkles, Zap } from '@lucide/vue'
-import { signedOrZero as signed } from '@/shared/lib/dnd'
-import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import { Crosshair, Hand, Sparkles, Zap } from '@lucide/vue'
 import RollModePicker from './RollModePicker.vue'
 import RollBonusOptions from './RollBonusOptions.vue'
 import WeaponBonusTransferSelector from './WeaponBonusTransferSelector.vue'
 import { ActionButton, ChoiceCard } from '@sylvieshare/share-ui'
-import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import WeaponRollOption from './WeaponRollOption.vue'
 import WeaponUseDamageMenu from './WeaponUseDamageMenu.vue'
 import { weaponDamageActionFormula, weaponDamageActionParts } from '@/shared/lib/weaponDamageOptions'
 import { computed, inject, toRef } from 'vue'
 import { useWeaponBonusTransfer } from '../composables/useWeaponBonusTransfer'
 import './RollOptionTiles.css'
-const props = defineProps({ dialog: Boolean, weapon: Object, weaponTitle: String, summary: Object, weaponUid: String,
+const props = defineProps({ weaponUid: String,
   attackRollMode: { type: String, default: 'auto' }, uses: { type: Array, default: () => [] }, useKey: { type: String, default: '' },
   scope: { type: String, default: 'damage' }, options: { type: Array, default: () => [] }, excludedBonuses: { type: Array, default: () => [] },
   critical: Boolean, twoHanded: Boolean, bonusAction: Boolean, bonusActionOption: Object, versatile: Boolean, thrown: Boolean })
@@ -93,21 +82,10 @@ const blocked = computed(() => props.useKey && (!chosenUse.value || chosenUse.va
 const emit = defineEmits(['update:attackRollMode', 'update:useKey', 'update:critical', 'update:twoHanded', 'update:bonusAction', 'update:excludedBonuses', 'select', 'amount', 'roll', 'roll-step'])
 </script>
 <style scoped>
-.weapon-roll-heading { display: flex; align-items: center; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border-strong); }
-.weapon-roll-heading > svg { flex: none; color: var(--text-2); }
-.weapon-roll-heading div { min-width: 0; flex: 1; overflow-wrap: anywhere; }
-.weapon-roll-heading small { display: block; color: var(--text-muted); margin-top: 3px; }
 .weapon-roll-controls {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-label);
-  padding: var(--spacing-small);
-  width: var(--layout-roll-mode-menu-width);
-  max-width: min(100%, calc(100vw - 32px));
-  max-height: calc(100dvh - 32px);
   min-width: 0;
-  overflow-y: auto;
-  box-sizing: border-box;
 }
-.weapon-roll-controls--dialog {width:100%;max-width:none;max-height:none;padding:0;overflow:visible}
 </style>

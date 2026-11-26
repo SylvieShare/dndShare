@@ -26,7 +26,7 @@
   </BaseTile>
   <CharacterRollDialog v-if="selection" :key="selection.scope" :title="`${title} · ${selection.scope === 'attack' ? 'Атака' : 'Урон'}`" @close="closeMenu">
     <template #preview><WeaponRollPreview :scope="selection.scope" :attack-bonus="previewAttackSummary.bonus" :attack-rows="previewAttackRows" :attack-color="previewAttackColor" :damage-rows="previewDamageRows" :damage-type="damageType" /></template>
-    <WeaponRollSettings dialog :scope="selection.scope" :weapon-title="title" :weapon="iconItem" :summary="summary"
+    <WeaponRollSettings :scope="selection.scope"
       @preview="preview = $event"
       @attack="options => run('attack', options)"
       @roll="options => run(options.critical ? 'critical' : 'damage', options)" />

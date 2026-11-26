@@ -276,16 +276,14 @@ function weaponBaseSources(entry, expression, { critical = false, twoHanded = fa
   return [...rows, ...modifierSources(entry, true)]
 }
 
-function weaponMenuSummary(entry, options, scope) {
+function weaponMenuSummary(entry, options) {
   const use = weaponUses.choices(entry).find(rule => rule.key === options.weaponUseKey)
   const prepaid = weaponUseDamageSelection(charCtx.values, entry.uid, options.actionKeys || []).action
   const mode = use?.attack_mode || prepaid?.prepaid.attackMode
   const prepared = mode ? { ...entry, _attackMode: mode, _improvisedThrow: false }
     : prepareWeaponRollEntry(entry, item(entry), propertyItems(entry), weaponDamageActions(entry), options.actionKeys)
   const context = weaponEffectContext(prepared)
-  return { title: itemTitle(entry), item: item(entry), ability: weaponAbilityName(prepared),
-    bonus: attackBonus(prepared), mode: attackMode(context, options.attackRollMode),
-    parts: scope === 'damage' ? damageRolls.previewSources(entry, options) : modifierSources(prepared, false) }
+  return { bonus: attackBonus(prepared), mode: attackMode(context, options.attackRollMode), parts: modifierSources(prepared, false) }
 }
 
 function attackBonus(entry) {
@@ -342,7 +340,7 @@ function attackMode(context, manualMode) {
 const damageRolls = useWeaponDamageRolls(charCtx, { item, propertyItems, weaponDamageActions, damagePartsRaw,
   damageExpression, damageExpressionTwoHanded, criticalDamageExpression, criticalDamageExpressionTwoHanded,
   weaponBaseSources, bonusActionDamageOption, extraCriticalDice, itemTitle, spend: weaponMechanics.spend, planWeaponUse: weaponUses.plan })
-const { damagePreview, rollDamage } = damageRolls
+const { rollDamage } = damageRolls
 
 function hasWeaponDamage(entry) {
   return damagePartsRaw(entry).length > 0 || damageBonus(entry) !== 0
@@ -524,7 +522,6 @@ provide('weaponsBlockCtx', reactive({
   rollAttack,
   rollDamage,
   rollWeaponUseStep: weaponUses.rollStep,
-  damagePreview,
   damageSources: damageRolls.previewSources,
   weaponUseSources: damageRolls.previewUseSources,
   weaponMenuSummary,

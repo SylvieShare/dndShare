@@ -1,13 +1,12 @@
 import { createSSRApp, h } from 'vue'
 import { renderToString } from 'vue/server-renderer'
 import { createPinia } from 'pinia'
-import { expect, it, vi } from 'vitest'
+import { expect, it } from 'vitest'
 import { useSuggestStore } from '@/stores/suggest'
 import MagicEquipmentAdditions from './MagicEquipmentAdditions.vue'
 import MagicItemDetailSummary from './MagicItemDetailSummary.vue'
 import WeaponRollControls from '@/features/character-editor/blocks/dnd/components/WeaponRollControls.vue'
 import { weaponDamageMenuOptions } from '@/shared/lib/weaponDamageOptions'
-import DamageRollOptions from '@/features/character-editor/blocks/dnd/components/DamageRollOptions.vue'
 
 const actions = [
   { key: 'throw', label: 'Метнуть', condition: 'При попадании брошенным молотом.', dice: 'd8', dice_count: 1, attack_mode: 'thrown' },
@@ -28,12 +27,10 @@ it('presents conditions and additive dice beside magic enhancements without expo
 })
 it('makes the giant option visibly conditional and initially disabled in the weapon menu', async () => {
   const html = await render(WeaponRollControls, { scope: 'damage', options: weaponDamageMenuOptions(actions, []), versatile: true })
-  expect(html).toContain('damage-dependent-option')
   expect(html).toContain(actions[1].condition)
   expect(html).toMatch(/<button(?=[^>]*disabled)(?=[^>]*aria-label="Цель — великан")[^>]*>/)
   expect(html).toContain('Бросить на урон')
-  expect(html).toContain('aria-label="Добавит +1к8"')
-  expect(html).toContain('--dd-size:26px')
+  expect(html).toContain('+1к8')
   expect(html).toContain('<svg')
 })
 it('provides background icons for every populated magic-item cover card and rail', async () => {
@@ -45,32 +42,18 @@ it('places each option above its own roll and repeats only shared attack modes',
   const attack = await render(WeaponRollControls, { scope: 'attack', options: weaponDamageMenuOptions(actions, [], false, 'attack'), versatile: true })
   const damage = await render(WeaponRollControls, { scope: 'damage', options: weaponDamageMenuOptions(actions, []), versatile: true })
   expect(attack).toContain('aria-label="Метнуть"')
-  for (const text of ['Критическое попадание', 'Двумя руками', 'Цель — великан', 'Добавит', 'При попадании']) expect(attack).not.toContain(text)
-  for (const text of ['Критическое попадание', 'Двумя руками', 'Цель — великан', 'aria-label="Метнуть"', 'Добавит +1к8']) expect(damage).toContain(text)
+  for (const text of ['Критическое попадание', 'Двумя руками', 'Цель — великан', '+1к8', 'При попадании']) expect(attack).not.toContain(text)
+  for (const text of ['Критическое попадание', 'Двумя руками', 'Цель — великан', 'aria-label="Метнуть"', '+1к8']) expect(damage).toContain(text)
   expect(attack.indexOf('aria-label="Метнуть"')).toBeLessThan(attack.indexOf('Бросить на атаку'))
   expect(damage.indexOf('Цель — великан')).toBeLessThan(damage.indexOf('Бросить на урон'))
 })
 
-it('keeps options out of the top-level weapon menu until a submenu opens', async () => {
-  // The browser-only popover unregisters listeners even while initially closed.
-  vi.stubGlobal('document', { removeEventListener: vi.fn() })
-  vi.stubGlobal('window', { removeEventListener: vi.fn() })
-  try {
-    const html = await render(DamageRollOptions, { actions, canAttack: true, versatile: true })
-    expect(html).toContain('Бросить на атаку')
-    expect(html).toContain('Бросить на урон')
-    for (const text of ['Критическое попадание', 'Двумя руками', 'Цель — великан', 'aria-label="Метнуть"']) expect(html).not.toContain(text)
-  } finally { vi.unstubAllGlobals() }
-})
-
-it('separates added damage, renders three resource cells instead of a toggle and places preview below', async () => {
+it('renders three resource cells and keeps the roll action below them', async () => {
   const options = weaponDamageMenuOptions([{ key: 'striking', label: 'Усилить удар', dice: 'd6', dice_count: 1, uses_resource: true, resource_cost: 1, resource_units_max: 3,
     resource: { key: 'staff', title: 'Заряды', value: 2, total: 10 } }], [])
-  const html = await render(WeaponRollControls, { options, preview: '1d6{Дробящий}+5{Дробящий}' })
+  const html = await render(WeaponRollControls, { options })
   expect(html).toContain('Усилить удар: 3 заряда')
   expect(html).toMatch(/<button(?=[^>]*disabled)(?=[^>]*aria-label="Усилить удар: 3 заряда")[^>]*>/)
-  expect(html).not.toContain('aria-label="Усилить удар" role="switch"')
-  expect(html.indexOf('Усилить удар')).toBeLessThan(html.indexOf('Итоговый урон'))
-  expect(html.indexOf('Итоговый урон')).toBeLessThan(html.indexOf('Бросить на урон'))
-  expect(html).toContain('--dd-size:26px')
+  expect(html.match(/aria-label="Усилить удар: [123] заряд/g)).toHaveLength(3)
+  expect(html.indexOf('Усилить удар')).toBeLessThan(html.indexOf('Бросить на урон'))
 })

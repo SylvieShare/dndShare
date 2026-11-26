@@ -1,7 +1,5 @@
 <template>
   <WeaponRollControls
-    :dialog="dialog"
-    :summary="rollSummary" :weapon="weapon" :weapon-title="weaponTitle"
     :scope="scope" :weapon-uid="weaponUid" :uses="uses"
     :options="menuOptions(scope)" :bonus-action-option="availableBonusAction" :versatile="versatile" :thrown="thrown"
     v-model:attack-roll-mode="attackRollMode" v-model:use-key="useKey" v-model:critical="critical"
@@ -17,7 +15,7 @@ import { changeSelectedTarget } from '@/features/character-editor/lib/selectedTa
 import { computed, inject, ref, unref, watch } from 'vue'
 import WeaponRollControls from './WeaponRollControls.vue'
 import { damageAttackMode, selectedDamageActions, toggleDamageAction, weaponDamageMenuOptions } from '@/shared/lib/weaponDamageOptions'
-const props = defineProps({ dialog: Boolean, summary: Function, weapon: Object, weaponTitle: String, weaponUid: String, actions: { type: Array, default: () => [] }, versatile: Boolean, scope: { type: String, required: true }, preview: Function, bonusActionOption: Function, uses: { type: Array, default: () => [] } })
+const props = defineProps({ weaponUid: String, actions: { type: Array, default: () => [] }, versatile: Boolean, scope: { type: String, required: true }, bonusActionOption: Function, uses: { type: Array, default: () => [] } })
 const charCtx = inject('charCtx', {})
 const selectedKeys = computed(() => [...selected.value, ...props.actions.filter(action => action.target_choice?.selected).map(action => action.key)])
 const emit = defineEmits(['roll', 'attack', 'roll-step', 'preview'])
@@ -31,9 +29,7 @@ const options = computed(() => ({ critical: critical.value, twoHanded: props.ver
   bonusAction: bonusAction.value && !!availableBonusAction.value,
   attackRollMode: attackRollMode.value, excludedBonuses: [...excludedBonuses.value], weaponUseKey: useKey.value, actionAmounts: { ...amounts.value },
   actionKeys: selectedDamageActions(props.actions, selectedKeys.value).map(action => action.key) }))
-const rollSummary = computed(() => props.summary?.(options.value, props.scope))
-watch([options, rollSummary], ([current, summary]) => emit('preview', { scope: props.scope, options: current, summary,
-  expression: !props.summary ? props.preview?.(current) || '' : '' }), { immediate: true })
+watch(options, current => emit('preview', { scope: props.scope, options: current }), { immediate: true })
 function setAmount(key, amount) {
   const option = menuOptions('damage').find(row => row.key === key)
   if (!option?.units || !Number.isInteger(amount) || amount < 0 || amount > option.units.max) return

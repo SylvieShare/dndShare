@@ -7,28 +7,54 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"strconv"
 
 	"dndshare/internal/store"
 )
 
-const maxItemIconBytes int64 = 5 << 20
+const maxItemImageBytes int64 = 5 << 20
 
-func init() { registerRoutes((*Server).routesItemIcons) }
-
-func (s *Server) routesItemIcons(mux *http.ServeMux) {
-	mux.HandleFunc("POST /api/items/{id}/icon-image", s.handleUploadItemIconImage)
-	mux.HandleFunc("DELETE /api/items/{id}/icon", s.handleClearItemIcon)
+type itemImageSlot struct {
+	name        string
+	allowJPEG   bool
+	formatError string
+	set         func(*store.Store, context.Context, int64, int64, bool, string, string, string, string, int64) (int64, store.ItemIconRefs, error)
+	clear       func(*store.Store, context.Context, int64, int64, bool) (store.ItemIconRefs, error)
 }
 
-func (s *Server) handleUploadItemIconImage(w http.ResponseWriter, r *http.Request) {
+func init() { registerRoutes((*Server).routesItemImages) }
+
+func (s *Server) routesItemImages(mux *http.ServeMux) {
+	s.registerItemImageSlot(mux, itemImageSlot{
+		name:        "icon",
+		formatError: "only PNG and WebP icons are allowed",
+		set:         (*store.Store).SetItemIconImage,
+		clear:       (*store.Store).ClearItemIcon,
+	})
+	s.registerItemImageSlot(mux, itemImageSlot{
+		name:        "cover",
+		allowJPEG:   true,
+		formatError: "only PNG, WebP and JPEG covers are allowed",
+		set:         (*store.Store).SetItemCoverImage,
+		clear:       (*store.Store).ClearItemCover,
+	})
+}
+
+func (s *Server) registerItemImageSlot(mux *http.ServeMux, slot itemImageSlot) {
+	mux.HandleFunc("POST /api/items/{id}/"+slot.name+"-image", func(w http.ResponseWriter, r *http.Request) {
+		s.uploadItemImage(w, r, slot)
+	})
+	mux.HandleFunc("DELETE /api/items/{id}/"+slot.name, func(w http.ResponseWriter, r *http.Request) {
+		s.clearItemImage(w, r, slot)
+	})
+}
+
+func (s *Server) uploadItemImage(w http.ResponseWriter, r *http.Request, slot itemImageSlot) {
 	uid, ok := mustUser(w, r)
 	if !ok {
 		return
 	}
-	itemID, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
-	if err != nil {
-		badRequest(w, "bad id")
+	itemID, ok := pathInt64(w, r, "id")
+	if !ok {
 		return
 	}
 	isAdmin, ok := s.hasRole(w, r, uid, RoleHandbookAdmin, RoleAdmin)
@@ -44,14 +70,14 @@ func (s *Server) handleUploadItemIconImage(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	r.Body = http.MaxBytesReader(w, r.Body, maxItemIconBytes+1<<20)
+	r.Body = http.MaxBytesReader(w, r.Body, maxItemImageBytes+1<<20)
 	file, header, err := r.FormFile("file")
 	if err != nil {
 		badRequest(w, "file is required")
 		return
 	}
 	defer file.Close()
-	if header.Size <= 0 || header.Size > maxItemIconBytes {
+	if header.Size <= 0 || header.Size > maxItemImageBytes {
 		badRequest(w, "file must be between 1 byte and 5 MB")
 		return
 	}
@@ -63,8 +89,8 @@ func (s *Server) handleUploadItemIconImage(w http.ResponseWriter, r *http.Reques
 		return
 	}
 	contentType := http.DetectContentType(prefix[:n])
-	if contentType != "image/png" && contentType != "image/webp" {
-		badRequest(w, "only PNG and WebP icons are allowed")
+	if contentType != "image/png" && contentType != "image/webp" && !(slot.allowJPEG && contentType == "image/jpeg") {
+		badRequest(w, slot.formatError)
 		return
 	}
 	body := io.MultiReader(bytes.NewReader(prefix[:n]), file)
@@ -74,13 +100,13 @@ func (s *Server) handleUploadItemIconImage(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	imageID, replaced, err := s.store.SetItemIconImage(
+	imageID, replaced, err := slot.set(s.store,
 		r.Context(), itemID, uid, isAdmin, stored.Key, stored.URL,
 		safeUploadFileName(header.Filename), contentType, header.Size,
 	)
 	if err != nil {
 		if deleteErr := s.s3.DeleteObject(r.Context(), stored.Key); deleteErr != nil {
-			log.Printf("delete unattached item icon %q: %v", stored.Key, deleteErr)
+			log.Printf("delete unattached item %s %q: %v", slot.name, stored.Key, deleteErr)
 		}
 		if errors.Is(err, store.ErrNotFound) {
 			unauthorized(w)
@@ -91,26 +117,25 @@ func (s *Server) handleUploadItemIconImage(w http.ResponseWriter, r *http.Reques
 	}
 	s.cleanupItemIcon(r, replaced)
 	writeJSON(w, http.StatusOK, map[string]any{
-		"iconImageId":  imageID,
-		"iconImageUrl": stored.URL,
+		slot.name + "ImageId":  imageID,
+		slot.name + "ImageUrl": stored.URL,
 	})
 }
 
-func (s *Server) handleClearItemIcon(w http.ResponseWriter, r *http.Request) {
+func (s *Server) clearItemImage(w http.ResponseWriter, r *http.Request, slot itemImageSlot) {
 	uid, ok := mustUser(w, r)
 	if !ok {
 		return
 	}
-	itemID, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
-	if err != nil {
-		badRequest(w, "bad id")
+	itemID, ok := pathInt64(w, r, "id")
+	if !ok {
 		return
 	}
 	isAdmin, ok := s.hasRole(w, r, uid, RoleHandbookAdmin, RoleAdmin)
 	if !ok {
 		return
 	}
-	refs, err := s.store.ClearItemIcon(r.Context(), itemID, uid, isAdmin)
+	refs, err := slot.clear(s.store, r.Context(), itemID, uid, isAdmin)
 	if errors.Is(err, store.ErrNotFound) {
 		unauthorized(w)
 		return

@@ -1,17 +1,15 @@
 <template>
   <RowActionSeparator v-if="rows.length" />
   <div v-for="row in rows" :key="`${row.useKey}:${row.step.key}`" class="weapon-use-menu-step">
-    <ActionButton v-if="dialog" variant="secondary" :disabled="row.disabled" :title="row.error || undefined" @click="!row.disabled && $emit('roll', { weaponUseKey: row.useKey, stepKey: row.step.key })">{{ row.step.title }}</ActionButton>
-    <RowActionItem v-else action="damage" :disabled="row.disabled" :title="row.error || undefined" @click="!row.disabled && $emit('roll', { weaponUseKey: row.useKey, stepKey: row.step.key })">{{ row.step.title }}</RowActionItem>
+    <ActionButton variant="secondary" :disabled="row.disabled" :title="row.error || undefined" @click="!row.disabled && $emit('roll', { weaponUseKey: row.useKey, stepKey: row.step.key })">{{ row.step.title }}</ActionButton>
   </div>
 </template>
 <script setup>
 import { computed, inject, unref } from 'vue'
 import { weaponUseState } from '@/features/character-editor/lib/weaponUses'
-import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import { ActionButton } from '@sylvieshare/share-ui'
-const props = defineProps({ dialog: Boolean, weaponUid: String, uses: { type: Array, default: () => [] } })
+const props = defineProps({ weaponUid: String, uses: { type: Array, default: () => [] } })
 defineEmits(['roll'])
 const charCtx = inject('charCtx', {})
 const rows = computed(() => {

@@ -9,7 +9,7 @@ export function useWeaponCardPreview(ctx, entry, preview) {
   const selected = computed(() => ctx.weaponDamageActions(entry()).filter(action => action.target_choice?.selected).map(action => action.key))
   const options = computed(() => preview()?.damageKey ? { actionKeys: selected.value }
     : preview()?.options || { actionKeys: selected.value })
-  const attackSummary = computed(() => ctx.weaponMenuSummary(entry(), options.value, 'attack'))
+  const attackSummary = computed(() => ctx.weaponMenuSummary(entry(), options.value))
   const attackRows = computed(() => weaponAttackFormula(attackSummary.value,
     ctx.charCtx.characterDerivedEffects?.rollBonusOptions?.({ kind: 'attack' }) || [], options.value.excludedBonuses || []))
   const attackColor = computed(() => weaponAttackColor(attackSummary.value.mode))

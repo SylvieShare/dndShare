@@ -6,7 +6,6 @@ import CharacterCombatMetric from '../../../src/features/character-editor/blocks
 import WeaponDamageBreakdown from '../../../src/features/character-editor/blocks/dnd/components/WeaponDamageBreakdown.vue'
 import DamageDice from '../../../src/features/character-editor/blocks/dnd/components/DamageDice.vue'
 import DamageFormulaPreview from '../../../src/features/character-editor/blocks/dnd/components/DamageFormulaPreview.vue'
-import AttackDamage from '../../../src/features/character-editor/blocks/dnd/components/AttackDamage.vue'
 import SaveFormulaPreview from '../../../src/features/sessions/components/SaveFormulaPreview.vue'
 const state = reactive({ width: 160, count: 10 })
 window.formulaState = state
@@ -18,6 +17,6 @@ createApp({ render: () => h('main', { style: `width:${state.width}px;max-width:1
   ['weapon', () => row(WeaponDamageBreakdown)],
   ['dice', () => h(DamageDice, { parts: parts(), modifier: 3 })],
   ['preview', () => h(DamageFormulaPreview, { expression: expression(), label: 'Формула' })],
-  ['attack', () => h(AttackDamage, { attack: '+12345', damageParts: parts() })],
+  ['attack', () => h(CharacterCombatMetric, { kind: 'attack', label: 'Атака' }, { default: () => row(WeaponDamageBreakdown) })],
   ['save', () => h(SaveFormulaPreview, { profile: { mode: 'advantage', bonus: 7, formula: expression() } })],
 ].map(([name, render]) => h('section', { 'data-formula-case': name, style: 'width:100%;min-width:0;margin-bottom:16px' }, render()))) }).mount('#app')

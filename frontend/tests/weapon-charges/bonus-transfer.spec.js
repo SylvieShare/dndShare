@@ -1,13 +1,14 @@
 import { test, expect } from '@playwright/test'
+import { closeWeaponRoll, openWeaponRoll, rollDialog, submitRoll, weaponCard } from './roll-actions'
+test.use({ reducedMotion: 'reduce' })
+
 const url = '/tests/weapon-charges/bonus-transfer.html'
-async function menu(page, scope = 'Бросить на атаку') {
- await page.getByRole('button', { name: 'Оружие', exact: true }).click()
- await page.getByRole('menuitem', { name: scope, exact: true }).click()
-}
+const title = 'Защитник'
+const openRoll = (page, scope) => openWeaponRoll(page, title, scope)
 for (const width of [1280, 390]) test(`transfer uses quantity cells, updates AC and persists until reset (${width})`, async ({ page }) => {
  await page.setViewportSize({ width, height: 844 }); await page.goto(url)
  await expect(page.getByRole('button', { name: 'Сбросить перенос' })).toHaveCount(0)
- await menu(page)
+ await openRoll(page)
  const cells = page.getByRole('group', { name: 'Перенести в защиту', exact: true }).getByRole('button')
  await expect(cells).toHaveCount(3)
  await expect(cells.nth(0)).toHaveAttribute('aria-pressed', 'false')
@@ -16,23 +17,26 @@ for (const width of [1280, 390]) test(`transfer uses quantity cells, updates AC 
  await expect(cells.nth(2)).toHaveAttribute('aria-pressed', 'false')
  await expect(page.getByText('+2 к КД · +1 к атаке и урону', { exact: true })).toBeVisible()
  await expect(page.getByTestId('ac')).toHaveText('КД: 12')
- await page.getByRole('menuitem', { name: 'Бросить на атаку', exact: true }).last().click()
- expect(await page.evaluate(() => window.attackBonus)).toBe(6)
+ await submitRoll(page).click()
+ expect(await page.evaluate(() => window.attackResults.at(-1).total)).toBe(16)
  await page.reload()
+ await expect(page.getByTestId('ac')).toHaveText('КД: 12')
+ await weaponCard(page, title).locator('summary').filter({ hasText: /к КД/ }).click()
  await expect(page.getByText('+2 к КД', { exact: true })).toBeVisible()
- await menu(page, 'Бросить на урон')
+ await openRoll(page, 'damage')
  await expect(page.getByRole('group', { name: 'Перенести в защиту', exact: true })).toHaveCount(0)
- await expect(page.getByLabel('Итоговая формула урона')).toContainText('4')
- await page.keyboard.press('Escape'); await page.keyboard.press('Escape')
+ await expect(rollDialog(page).getByLabel('Состав урона')).toContainText('Магия оружия')
+ await closeWeaponRoll(page)
  await page.getByRole('button', { name: 'Сбросить перенос' }).click()
  await expect(page.getByTestId('ac')).toHaveText('КД: 10')
  await expect(page.getByRole('button', { name: 'Сбросить перенос' })).toHaveCount(0)
 })
 test('readers see the bonus; stowing or losing attunement suspends it', async ({ page }) => {
- await page.goto(url); await menu(page)
+ await page.goto(url); await openRoll(page)
  await page.getByRole('group', { name: 'Перенести в защиту', exact: true }).getByRole('button').nth(2).click()
- await page.keyboard.press('Escape'); await page.keyboard.press('Escape')
+ await closeWeaponRoll(page)
  await page.evaluate(() => window.ctx.ownerMode = false)
+ await weaponCard(page, title).locator('summary').filter({ hasText: /к КД/ }).click()
  await expect(page.getByText('+3 к КД', { exact: true })).toBeVisible()
  await expect(page.getByRole('button', { name: 'Сбросить перенос' })).toHaveCount(0)
  await page.evaluate(() => { window.ctx.ownerMode = true; window.ctx.values.weapon[0].params.magic.attuned = false })

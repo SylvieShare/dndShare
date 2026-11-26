@@ -139,7 +139,7 @@ export function useWeaponCalc({
     ].filter(part => part.label || part.diceSides)
   }
 
-  // Raw dice parts (no flat modifier merged in) for the shared AttackDamage component — the flat
+  // Raw dice parts (no flat modifier merged in) for damage calculation and previews — the flat
   // modifier is passed alongside via `damageBonus`.
   function damagePartsRaw(entry) {
     return [

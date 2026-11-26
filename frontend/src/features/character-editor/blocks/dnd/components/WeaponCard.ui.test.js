@@ -15,7 +15,6 @@ describe('weapon card actions', () => {
     expect(source).toContain('() => editWeapon(closeMenu)')
     expect(source).toContain('>Переместить в вещи</RowActionItem>')
     expect(source).toContain('() => deleteWeapon(closeMenu)')
-    expect(source).not.toContain('<DamageRollOptions')
     expect(source).not.toContain('action="damage"')
     expect(source).not.toContain('action="critical"')
     expect(source).not.toContain('action="feature-damage"')
